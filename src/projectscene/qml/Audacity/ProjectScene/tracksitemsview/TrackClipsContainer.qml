@@ -399,7 +399,7 @@ TrackItemsContainer {
                                 speedPercentage: itemData.speedPercentage
                                 isSpeedModified: itemData.isSpeedModified
                                 clipSelected: itemData.selected
-                                clipIntersectsSelection: itemData.intersectsSelection
+                                clipMovesWithSelection: itemData.movesWithSelection
                                 isMultiSelectionActive: root.isMultiSelectionActive
                                 isDataSelected: root.isDataSelected
                                 clipFocused: itemData.focused

@@ -30,6 +30,8 @@ using ClipId = TrackItemId;
 using LabelId = TrackItemId;
 constexpr TrackItemId INVALID_TRACK_ITEM = -1;
 
+constexpr int64_t NO_GROUP_ID = -1;
+
 using TrackIdList = std::vector<TrackId>;
 
 struct TrackItemKey

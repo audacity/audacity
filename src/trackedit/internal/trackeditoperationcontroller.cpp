@@ -8,7 +8,10 @@
 
 #include "trackediterrors.h"
 
+#include "framework/global/containers.h"
 #include "framework/global/defer.h"
+
+#include <unordered_set>
 
 namespace au::trackedit {
 TrackeditOperationController::TrackeditOperationController(const muse::modularity::ContextPtr& ctx,
@@ -403,51 +406,90 @@ muse::RetVal<ItemKeys> TrackeditOperationController::moveItems(
 
 bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset, bool completed)
 {
-    ClipKeyList clipsInRange = selectionController()->clipsIntersectingRangeSelection();
-    LabelKeyList labelsInRange = selectionController()->labelsIntersectingRangeSelection();
-
-    if (clipsInRange.empty() && labelsInRange.empty()) {
+    const ItemKeys items = withWholeGroups({ selectionController()->clipsIntersectingRangeSelection(),
+                                             selectionController()->labelsIntersectingRangeSelection() });
+    if (items.empty()) {
         return false;
     }
 
-    secs_t clampedOffset = timePositionOffset;
+    const secs_t offset = clampRangeMoveOffset(items, timePositionOffset);
 
-    for (const auto& clipKey : clipsInRange) {
-        secs_t startTime = clipsInteraction()->clipStartTime(clipKey);
-        if (startTime + clampedOffset < 0.0) {
-            clampedOffset = -startTime;
-        }
-    }
+    clipsInteraction()->changeClipsStartTime(items.clips, offset, completed);
 
-    auto prj = globalContext()->currentTrackeditProject();
-    for (const auto& labelKey : labelsInRange) {
-        trackedit::Label label = prj->label(labelKey);
-        if (label.isValid() && label.startTime + clampedOffset < 0.0) {
-            clampedOffset = -label.startTime;
-        }
-    }
-
-    secs_t dataSelStart = selectionController()->dataSelectedStartTime();
-    if (dataSelStart + clampedOffset < 0.0) {
-        clampedOffset = -dataSelStart;
-    }
-
-    clipsInteraction()->changeClipsStartTime(clipsInRange, clampedOffset, completed);
-
-    if (!labelsInRange.empty()) {
-        labelsInteraction()->moveLabels(labelsInRange, clampedOffset, 0);
+    if (!items.labels.empty()) {
+        labelsInteraction()->moveLabels(items.labels, offset, 0);
     }
 
     selectionController()->setDataSelectedStartTime(
-        selectionController()->dataSelectedStartTime() + clampedOffset, false);
+        selectionController()->dataSelectedStartTime() + offset, false);
     selectionController()->setDataSelectedEndTime(
-        selectionController()->dataSelectedEndTime() + clampedOffset, false);
+        selectionController()->dataSelectedEndTime() + offset, false);
 
     if (completed) {
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Items moved"), muse::trc("trackedit", "Move items"));
     }
 
     return true;
+}
+
+ItemKeys TrackeditOperationController::rangeSelectionMoveItems() const
+{
+    return withWholeGroups({ selectionController()->clipsIntersectingRangeSelection(),
+                             selectionController()->labelsIntersectingRangeSelection() });
+}
+
+ItemKeys TrackeditOperationController::withWholeGroups(const ItemKeys& items) const
+{
+    std::unordered_set<int64_t> groupIds;
+    for (const ClipKey& clipKey : items.clips) {
+        groupIds.insert(clipsInteraction()->clipGroupId(clipKey));
+    }
+    for (const LabelKey& labelKey : items.labels) {
+        groupIds.insert(labelsInteraction()->labelGroupId(labelKey));
+    }
+    groupIds.erase(NO_GROUP_ID);
+
+    ItemKeys result = items;
+    for (const int64_t groupId : groupIds) {
+        const ItemKeys group = itemsInGroup(groupId);
+        for (const ClipKey& clipKey : group.clips) {
+            if (!muse::contains(result.clips, clipKey)) {
+                result.clips.push_back(clipKey);
+            }
+        }
+        for (const LabelKey& labelKey : group.labels) {
+            if (!muse::contains(result.labels, labelKey)) {
+                result.labels.push_back(labelKey);
+            }
+        }
+    }
+
+    return result;
+}
+
+secs_t TrackeditOperationController::clampRangeMoveOffset(const ItemKeys& items, secs_t offset) const
+{
+    for (const ClipKey& clipKey : items.clips) {
+        const secs_t startTime = clipsInteraction()->clipStartTime(clipKey);
+        if (startTime + offset < 0.0) {
+            offset = -startTime;
+        }
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    for (const LabelKey& labelKey : items.labels) {
+        const Label label = prj->label(labelKey);
+        if (label.isValid() && label.startTime + offset < 0.0) {
+            offset = -label.startTime;
+        }
+    }
+
+    const secs_t dataSelStart = selectionController()->dataSelectedStartTime();
+    if (dataSelStart + offset < 0.0) {
+        offset = -dataSelStart;
+    }
+
+    return offset;
 }
 
 void TrackeditOperationController::cancelItemDragEdit()
