@@ -3,6 +3,8 @@
 */
 #include "commandparamsmodel.h"
 
+#include <algorithm>
+
 using namespace au::macromanager;
 using namespace muse;
 using namespace muse::rcommand;
@@ -17,6 +19,7 @@ CommandParamsModel::ParamType toParamType(DataType type)
     case DataType::Double: return CommandParamsModel::ParamType::Float;
     case DataType::Bool: return CommandParamsModel::ParamType::Boolean;
     case DataType::List: return CommandParamsModel::ParamType::Array;
+    case DataType::Enum: return CommandParamsModel::ParamType::Enum;
     default: return CommandParamsModel::ParamType::String;
     }
 }
@@ -74,6 +77,7 @@ QVariant CommandParamsModel::data(const QModelIndex& index, int role) const
     case MinRole: return item.min;
     case MaxRole: return item.max;
     case ValueRole: return item.value;
+    case OptionsRole: return item.options;
     default: return QVariant();
     }
 }
@@ -91,7 +95,8 @@ QHash<int, QByteArray> CommandParamsModel::roleNames() const
         { TypeRole, "type" },
         { MinRole, "min" },
         { MaxRole, "max" },
-        { ValueRole, "value" }
+        { ValueRole, "value" },
+        { OptionsRole, "options" }
     };
 
     return roles;
@@ -116,10 +121,13 @@ void CommandParamsModel::load(const QString& command, const QVariantMap& params)
         item.type = toParamType(arg.dataType);
         item.min = boundValue(arg.min);
         item.max = boundValue(arg.max);
+        item.options = Val(arg.allowedValues.value_or(ValList())).toQVariant().toList();
 
         const QVariant stored = params.value(item.key);
         if (item.type == ParamType::Array) {
             item.value = stored.toStringList().join(", ");
+        } else if (item.type == ParamType::Enum) {
+            item.value = item.options.contains(stored) ? stored : item.options.value(0, QString());
         } else {
             item.value = stored.isValid() ? stored : defaultValue(item.type, item.min);
         }
