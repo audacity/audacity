@@ -4,6 +4,7 @@
  * TC3.1 step 4: skipping kept the projects. Quit Audacity quits.
  *
  * @testflow allow-recovery
+ * @testflow expect-quit 2
  */
 
 var u = require("steps/TestUtils.js");
