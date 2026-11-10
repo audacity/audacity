@@ -140,5 +140,27 @@ PreferencesPage {
                 }
             }
         }
+
+        SeparatorLine {}
+
+        TrackRulerFormatSection {
+            id: trackRulerFormatSection
+
+            rulerTypeModel: editPreferencesModel.trackRulerTypeList
+            defaultRulerType: editPreferencesModel.defaultTrackRulerType
+
+            navigation.section: root.navigationSection
+            navigation.order: zoomToggleSection.navigationOrderEnd + 1
+
+            onDefaultRulerTypeChangeRequested: function (rulerType) {
+                editPreferencesModel.setDefaultTrackRulerType(rulerType)
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
     }
 }
