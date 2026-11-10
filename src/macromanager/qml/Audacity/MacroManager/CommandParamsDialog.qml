@@ -76,6 +76,7 @@ StyledDialogView {
                     required property var min
                     required property var max
                     required property var value
+                    required property var options
 
                     property NavigationPanel navigationPanel: NavigationPanel {
                         name: "CommandParam" + row.index
@@ -106,6 +107,8 @@ StyledDialogView {
                                 return numberField
                             case CommandParamsModel.Boolean:
                                 return booleanField
+                            case CommandParamsModel.Enum:
+                                return enumField
                             default:
                                 return textField
                             }
@@ -157,6 +160,24 @@ StyledDialogView {
 
                             onClicked: {
                                 paramsModel.setValue(row.index, !checked)
+                            }
+                        }
+                    }
+
+                    Component {
+                        id: enumField
+
+                        StyledDropdown {
+                            id: dropdown
+
+                            model: row.options
+                            currentIndex: dropdown.indexOfValue(row.value)
+
+                            navigation.panel: row.navigationPanel
+                            navigation.order: 0
+
+                            onActivated: function (index, value) {
+                                paramsModel.setValue(row.index, value)
                             }
                         }
                     }

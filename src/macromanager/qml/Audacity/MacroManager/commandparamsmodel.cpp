@@ -3,6 +3,8 @@
 */
 #include "commandparamsmodel.h"
 
+#include <algorithm>
+
 using namespace au::macromanager;
 using namespace muse;
 using namespace muse::rcommand;
@@ -17,8 +19,32 @@ CommandParamsModel::ParamType toParamType(DataType type)
     case DataType::Double: return CommandParamsModel::ParamType::Float;
     case DataType::Bool: return CommandParamsModel::ParamType::Boolean;
     case DataType::List: return CommandParamsModel::ParamType::Array;
+    case DataType::Enum: return CommandParamsModel::ParamType::Enum;
     default: return CommandParamsModel::ParamType::String;
     }
+}
+
+QVariantList toOptions(const std::optional<ValList>& allowedValues)
+{
+    QVariantList options;
+    for (const Val& allowedValue : allowedValues.value_or(ValList())) {
+        const QString value = QString::fromStdString(allowedValue.toString());
+        options << QVariantMap { { "text", value }, { "value", value } };
+    }
+    return options;
+}
+
+QVariant enumValue(const QVariantList& options, const QVariant& stored)
+{
+    const bool storedIsAllowed = std::ranges::any_of(options, [&stored](const QVariant& option) {
+        return option.toMap().value("value") == stored;
+    });
+
+    if (storedIsAllowed) {
+        return stored;
+    }
+
+    return options.isEmpty() ? QVariant(QString()) : options.first().toMap().value("value");
 }
 
 QVariant defaultValue(CommandParamsModel::ParamType type, const QVariant& min)
@@ -74,6 +100,7 @@ QVariant CommandParamsModel::data(const QModelIndex& index, int role) const
     case MinRole: return item.min;
     case MaxRole: return item.max;
     case ValueRole: return item.value;
+    case OptionsRole: return item.options;
     default: return QVariant();
     }
 }
@@ -91,7 +118,8 @@ QHash<int, QByteArray> CommandParamsModel::roleNames() const
         { TypeRole, "type" },
         { MinRole, "min" },
         { MaxRole, "max" },
-        { ValueRole, "value" }
+        { ValueRole, "value" },
+        { OptionsRole, "options" }
     };
 
     return roles;
@@ -116,10 +144,13 @@ void CommandParamsModel::load(const QString& command, const QVariantMap& params)
         item.type = toParamType(arg.dataType);
         item.min = boundValue(arg.min);
         item.max = boundValue(arg.max);
+        item.options = toOptions(arg.allowedValues);
 
         const QVariant stored = params.value(item.key);
         if (item.type == ParamType::Array) {
             item.value = stored.toStringList().join(", ");
+        } else if (item.type == ParamType::Enum) {
+            item.value = enumValue(item.options, stored);
         } else {
             item.value = stored.isValid() ? stored : defaultValue(item.type, item.min);
         }

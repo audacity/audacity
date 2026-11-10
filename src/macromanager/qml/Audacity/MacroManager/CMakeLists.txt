@@ -39,3 +39,7 @@ qt_add_qml_module(macromanager_qml
 )
 
 fixup_qml_module_dependencies(macromanager_qml)
+
+if (AU_BUILD_MACROMANAGER_TESTS)
+    add_subdirectory(tests)
+endif()
