@@ -53,6 +53,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
         }, muse::async::Asyncable::Mode::SetReplace);
 
         controller()->isRecordingChanged().onNotify(this, [this]() {
+            updateMonitoredTracks();
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
 
@@ -140,7 +141,8 @@ std::map<au::trackedit::TrackId, TrackInputChannels> routeInputChannels(const Wr
 void Au3AudioInput::updateMonitoredTracks()
 {
     std::map<trackedit::TrackId, TrackInputChannels> tracks;
-    if (Au3Project* project = projectRef()) {
+    Au3Project* project = controller()->isRecording() ? nullptr : projectRef();
+    if (project) {
         tracks = routeInputChannels(ChooseRecordingTracks(*project, trackNavigationController()->focusedTrack(), m_inputChannelsCount),
                                     m_inputChannelsCount);
     }
@@ -203,6 +205,11 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
     int64_t key) const
 {
     return m_inputMeter->dataChanged(audio::IAudioMeter::TrackId { key });
+}
+
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput::recordInputChannelSignalChanges() const
+{
+    return m_inputMeter->dataChanged(audio::IAudioMeter::TrackId { audio::IAudioMeter::InputChannelsTrackId });
 }
 
 void Au3AudioInput::startAudioEngineMonitoring() const

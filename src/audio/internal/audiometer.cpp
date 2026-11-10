@@ -15,7 +15,6 @@ namespace au::audio {
 namespace {
 constexpr double updatePeriod = 1 / 60.0;
 constexpr auto decayDbPerSecond = 36.0f;
-constexpr int64_t MASTER_TRACK_ID = -2;
 }
 
 std::unique_ptr<IAudioMeter> IAudioMeter::create()
@@ -125,7 +124,7 @@ void AudioMeter::push(uint8_t channel, const InterleavedSampleData& sampleData, 
         m_hangoverCount.store(std::ceil(hangoverTime / updatePeriod));
     }
     const QueueSample value = getSamplesMaxValue(sampleData.buffer, sampleData.frames, sampleData.nChannels);
-    m_lockFreeQueue.Put(QueueItem { trackId.value_or(TrackId { MASTER_TRACK_ID }), channel, value, sampleData.dacTime });
+    m_lockFreeQueue.Put(QueueItem { trackId.value_or(TrackId { MainMeterTrackId }), channel, value, sampleData.dacTime });
 }
 
 void AudioMeter::start(double sampleRate)
@@ -153,7 +152,7 @@ void AudioMeter::stop()
 
 muse::async::Channel<audioch_t, MeterSignal> AudioMeter::dataChanged(const std::optional<TrackId>& oTrackId)
 {
-    const auto trackId = oTrackId.value_or(TrackId { MASTER_TRACK_ID });
+    const auto trackId = oTrackId.value_or(TrackId { MainMeterTrackId });
     auto& channel = m_trackData[trackId].notificationChannel;
     channel.onClose(this, [this, trackId]() {
         m_trackData.erase(trackId);

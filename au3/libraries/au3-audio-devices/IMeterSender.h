@@ -40,6 +40,10 @@ public:
         bool operator<(const TrackId& other) const { return value < other.value; }
     };
 
+    //! Each input channel, as captured: pushed while recording and while monitoring.
+    //! Must match audio::IAudioMeter::InputChannelsTrackId (checked in Au3AudioMeter)
+    static constexpr int64_t InputChannelsTrackId = -3;
+
     virtual ~IMeterSender() = default;
     virtual void push(uint8_t channel, const InterleavedSampleData& sampleData, const std::optional<TrackId>& = std::nullopt) = 0;
     virtual void start(double sampleRate) = 0;

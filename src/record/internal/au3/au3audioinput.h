@@ -45,6 +45,7 @@ public:
 
     muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
     muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
+    muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordInputChannelSignalChanges() const override;
 
     TrackInputChannels monitoredInputChannels(trackedit::TrackId trackId) const override;
     muse::async::Notification monitoredTracksChanged() const override;

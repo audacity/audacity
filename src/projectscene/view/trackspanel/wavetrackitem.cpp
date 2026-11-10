@@ -279,15 +279,16 @@ void WaveTrackItem::checkMainAudioInput()
     m_inputChannels = record()->audioInput()->monitoredInputChannels(trackId());
 
     if (m_inputChannels.empty()) {
-        record()->audioInput()->recordSignalChanges().disconnect(this);
+        record()->audioInput()->recordInputChannelSignalChanges().disconnect(this);
         if (wasMonitored) {
             resetAudioChannelsVolumePressure();
         }
         return;
     }
 
-    record()->audioInput()->recordSignalChanges().onReceive(this,
-                                                            [this](const audioch_t inputChannel, const audio::MeterSignal& meterSignal) {
+    record()->audioInput()->recordInputChannelSignalChanges().onReceive(this,
+                                                                        [this](const audioch_t inputChannel,
+                                                                               const audio::MeterSignal& meterSignal) {
         showInputSignal(inputChannel, meterSignal);
     }, muse::async::Asyncable::Mode::SetReplace);
 }
