@@ -18,6 +18,7 @@
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "audio/iaudioengine.h"
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "au3wrap/au3types.h"
@@ -43,6 +44,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
     friend class Au3RecordTests;
 
