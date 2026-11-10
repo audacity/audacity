@@ -205,6 +205,11 @@ muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput
     return m_inputMeter->dataChanged(audio::IAudioMeter::TrackId { key });
 }
 
+muse::async::Channel<au::audio::audioch_t, au::audio::MeterSignal> Au3AudioInput::recordInputChannelSignalChanges() const
+{
+    return m_inputMeter->dataChanged(audio::IAudioMeter::TrackId { audio::IAudioMeter::InputChannelsTrackId });
+}
+
 void Au3AudioInput::startAudioEngineMonitoring() const
 {
     muse::async::Async::call(this, [this]() {

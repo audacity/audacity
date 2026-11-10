@@ -27,6 +27,7 @@ public:
 
     virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const = 0;
     virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordTrackSignalChanges(int64_t key) const = 0;
+    virtual muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordInputChannelSignalChanges() const = 0;
 
     virtual TrackInputChannels monitoredInputChannels(trackedit::TrackId trackId) const = 0;
     virtual muse::async::Notification monitoredTracksChanged() const = 0;
