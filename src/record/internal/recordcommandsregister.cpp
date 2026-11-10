@@ -18,20 +18,11 @@ const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
         RECORD_START_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Record"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Record"),
-        InputSchema(),
-        Decoration(IconCode::Code::RECORD_FILL)
-    },
-    CommandInfo{
-        RECORD_ON_CURRENT_TRACK_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Record on current track"),
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Record on current track"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::RECORD_FILL)
     },
     CommandInfo{
         RECORD_ON_NEW_TRACK_COMMAND,
@@ -67,7 +58,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set record level"),
         InputSchema(),
-        Decoration(IconCode::Code::MICROPHONE)
+        Decoration(IconCode::Code::MICROPHONE),
+        Availability::Dispatch
     },
     CommandInfo{
         RECORD_TOGGLE_MIC_METERING_COMMAND,
@@ -104,7 +96,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Set up a timed recording"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch | Availability::Shortcut | Availability::MCP
+        Availability::UI
     },
 };
 }

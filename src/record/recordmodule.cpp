@@ -6,7 +6,6 @@
 #include "modularity/ioc.h"
 
 #include "framework/interactive/iinteractiveuriregister.h"
-#include "ui/iuiactionsregister.h"
 #include "rcommand/icommandsregister.h"
 #include "rcommand/icommandsstate.h"
 
@@ -15,15 +14,12 @@
 #include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
 #include "internal/recordmetercontroller.h"
-#include "internal/recorduiactions.h"
 #include "internal/timedrecordingscenario.h"
 #include "internal/au3/au3record.h"
 
 using namespace au::record;
 using namespace muse;
 using namespace muse::modularity;
-using namespace muse::ui;
-using namespace muse::actions;
 
 static const std::string mname("record");
 
@@ -76,7 +72,6 @@ IContextSetup* RecordModule::newContext(const muse::modularity::ContextPtr& ctx)
 void RecordContext::registerExports()
 {
     m_controller = std::make_shared<RecordController>(iocContext());
-    m_uiActions = std::make_shared<RecordUiActions>(iocContext(), m_controller);
     m_record = std::make_shared<Au3Record>(iocContext());
     m_timedRecordingScenario = std::make_shared<TimedRecordingScenario>(iocContext());
 
@@ -100,14 +95,8 @@ void RecordContext::onInit(const IApplication::RunMode& mode)
     }
 
     m_controller->init();
-    m_uiActions->init();
     m_record->init();
     m_timedRecordingScenario->init();
-
-    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void RecordContext::onDeinit()

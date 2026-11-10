@@ -34,10 +34,8 @@
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/translation.h"
-#include "framework/rcommand/actiontocommand.h"
 
 #include "au3cloud/cloudcommands.h"
-#include "playback/playbackcommands.h"
 #include "project/projectcommands.h"
 #include "project/types/projecttypes.h"
 #include "projectscene/projectscenecommands.h"
@@ -47,21 +45,11 @@
 
 using namespace au::appshell;
 using namespace muse;
-using namespace muse::actions;
 using namespace muse::rcommand;
 
 static const QString TRACK_VIEW_SECTION_NAME("TrackViewSection");
 static const QString TIMELINE_SECTION_NAME("TimelineSection");
 static const QString VERTICAL_RULER_CONTROL_NAME("VerticalRuler");
-
-static CommandQuery quitConv(const Command& command, const ActionData& args)
-{
-    CommandQuery query(command);
-    if (args.count() > 1) {
-        query.addParam(INSTALLER_PATH_PARAM, Val(args.arg<std::string>(1)));
-    }
-    return query;
-}
 
 void ApplicationActionController::preInit()
 {
@@ -102,16 +90,6 @@ void ApplicationActionController::init()
     cd->onRequest(this, APP_EDITING_PREFERENCES_COMMAND, [this]() { return openEditingPreferencesDialog(); });
     cd->onRequest(this, APP_SPECTROGRAM_PREFERENCES_COMMAND, [this]() { return openSpectrogramPreferencesDialog(); });
 
-    cd->onRequest(this, APP_COPY_COMMAND, [this]() { return doGlobalCopy(); });
-    cd->onRequest(this, APP_CUT_COMMAND, [this]() { return doGlobalCut(); });
-    cd->onRequest(this, APP_PASTE_COMMAND, [this]() { return doGlobalPaste(); });
-    cd->onRequest(this, APP_UNDO_COMMAND, [this]() { return doGlobalUndo(); });
-    cd->onRequest(this, APP_REDO_COMMAND, [this]() { return doGlobalRedo(); });
-    cd->onRequest(this, APP_DELETE_COMMAND, [this]() { return doGlobalDelete(); });
-    cd->onRequest(this, APP_CANCEL_COMMAND, [this]() { return doGlobalCancel(); });
-    cd->onRequest(this, APP_TRIGGER_COMMAND, [this]() { return doGlobalTrigger(); });
-    cd->onRequest(this, APP_ENTER_COMMAND, [this]() { return doGlobalEnter(); });
-    cd->onRequest(this, APP_SHIFT_ENTER_COMMAND, [this]() { return doGlobalShiftEnter(); });
     cd->onRequest(this, APP_CONTEXT_MENU_COMMAND, [this]() { return doGlobalContextMenu(); });
 
     for (const auto& [command, dockName] : toggleDockCommands()) {
@@ -120,56 +98,11 @@ void ApplicationActionController::init()
             return make_ok();
         });
     }
-
-    //! Note: This table won't be necessary after the actions to commands complete refactor.
-    //! It will be removed on https://github.com/audacity/audacity/issues/12321
-    static const std::vector<ActionToCommand> actionToCommand = {
-        { "quit", APP_QUIT_COMMAND, quitConv },
-        { "toggle-transport", APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND, {} },
-        { "toggle-tracks", APP_TOGGLE_TRACKS_PANEL_COMMAND, {} },
-        { "toggle-history", APP_TOGGLE_HISTORY_PANEL_COMMAND, {} },
-        { "toggle-macro-manager", APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND, {} },
-        { "toggle-statusbar", APP_TOGGLE_STATUSBAR_COMMAND, {} },
-        { "restart", APP_RESTART_COMMAND, {} },
-        { "fullscreen", APP_TOGGLE_FULLSCREEN_COMMAND, {} },
-        { "about-audacity", APP_ABOUT_COMMAND, {} },
-        { "about-qt", APP_ABOUT_QT_COMMAND, {} },
-        { "online-handbook", APP_ONLINE_HANDBOOK_COMMAND, {} },
-        { "ask-help", APP_ASK_HELP_COMMAND, {} },
-        { "preference-dialog", APP_PREFERENCES_COMMAND, {} },
-        { "revert-factory", APP_REVERT_FACTORY_COMMAND, {} },
-        { "audio-settings", APP_AUDIO_SETTINGS_COMMAND, {} },
-        { "shortcuts-preferences", APP_SHORTCUTS_PREFERENCES_COMMAND, {} },
-        { "editing-preferences", APP_EDITING_PREFERENCES_COMMAND, {} },
-        { "spectrogram-preferences", APP_SPECTROGRAM_PREFERENCES_COMMAND, {} },
-        { "action://copy", APP_COPY_COMMAND, {} },
-        { "action://cut", APP_CUT_COMMAND, {} },
-        { "action://paste", APP_PASTE_COMMAND, {} },
-        { "action://undo", APP_UNDO_COMMAND, {} },
-        { "action://redo", APP_REDO_COMMAND, {} },
-        { "action://delete", APP_DELETE_COMMAND, {} },
-        { "action://cancel", APP_CANCEL_COMMAND, {} },
-        { "action://trigger", APP_TRIGGER_COMMAND, {} },
-        { "action://enter", APP_ENTER_COMMAND, {} },
-        { "action://shift-enter", APP_SHIFT_ENTER_COMMAND, {} },
-        { "action://context-menu", APP_CONTEXT_MENU_COMMAND, {} },
-    };
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 }
 
 muse::async::Channel<DockName> ApplicationActionController::dockToggleRequested() const
 {
     return m_dockToggleRequested;
-}
-
-const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
-{
-    static const std::vector<ActionCode> PROHIBITED_WHILE_RECORDING {
-        "quit",
-        "restart",
-    };
-
-    return PROHIBITED_WHILE_RECORDING;
 }
 
 void ApplicationActionController::onDragEnterEvent(QDragEnterEvent* event)
@@ -269,14 +202,6 @@ void ApplicationActionController::onDropEvent(QDropEvent* event)
             });
         });
     }
-}
-
-bool ApplicationActionController::canReceiveAction(const ActionCode& code) const
-{
-    if (recordController()->isRecording()) {
-        return !muse::contains(prohibitedActionsWhileRecording(), code);
-    }
-    return true;
 }
 
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
@@ -574,129 +499,6 @@ bool ApplicationActionController::isProjectOpened() const
     bool hasProject = globalContext()->currentProject() != nullptr;
     bool isOpened = uiContextResolver()->matchWithCurrent(context::UiCtxProjectOpened);
     return hasProject && isOpened;
-}
-
-bool ApplicationActionController::isProjectOpenedAndFocused() const
-{
-    bool isOpened = isProjectOpened();
-    bool isFocused = uiContextResolver()->matchWithCurrent(context::UiCtxProjectFocused);
-    return isOpened && isFocused;
-}
-
-muse::Ret ApplicationActionController::doGlobalCopy()
-{
-    if (!isProjectOpenedAndFocused()) {
-        return make_ret(Ret::Code::NotSupported);
-    }
-
-    commandDispatcher()->dispatch(trackedit::TRACKEDIT_COPY_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalCut()
-{
-    if (!isProjectOpenedAndFocused()) {
-        return make_ret(Ret::Code::NotSupported);
-    }
-
-    commandDispatcher()->dispatch(trackedit::TRACKEDIT_CUT_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalPaste()
-{
-    if (!isProjectOpened()) {
-        return make_ret(Ret::Code::NotSupported);
-    }
-
-    commandDispatcher()->dispatch(trackedit::TRACKEDIT_PASTE_DEFAULT_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalUndo()
-{
-    if (!isProjectOpened()) {
-        return make_ret(Ret::Code::NotSupported);
-    }
-
-    commandDispatcher()->dispatch(trackedit::TRACKEDIT_UNDO_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalRedo()
-{
-    if (!isProjectOpened()) {
-        return make_ret(Ret::Code::NotSupported);
-    }
-
-    commandDispatcher()->dispatch(trackedit::TRACKEDIT_REDO_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalDelete()
-{
-    if (!isProjectOpenedAndFocused()) {
-        return make_ret(Ret::Code::NotSupported);
-    }
-
-    commandDispatcher()->dispatch(trackedit::TRACKEDIT_DELETE_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalCancel()
-{
-    if (isProjectOpenedAndFocused()) {
-        commandDispatcher()->dispatch(trackedit::TRACKEDIT_CANCEL_COMMAND);
-        return make_ok();
-    }
-
-    commandDispatcher()->dispatch(muse::ui::ESCAPE_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalTrigger()
-{
-    if (isProjectOpened()) {
-        commandDispatcher()->dispatch(playback::PLAYBACK_TOGGLE_PLAY_STOP_COMMAND);
-        return make_ok();
-    }
-
-    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalEnter()
-{
-    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
-    if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
-        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-        return make_ok();
-    }
-
-    if (isProjectOpenedAndFocused()) {
-        commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND);
-        return make_ok();
-    }
-
-    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-    return make_ok();
-}
-
-muse::Ret ApplicationActionController::doGlobalShiftEnter()
-{
-    const muse::ui::INavigationSection* activeSection = navigationController()->activeSection();
-    if (activeSection && activeSection->name() != TRACK_VIEW_SECTION_NAME) {
-        commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-        return make_ok();
-    }
-
-    if (isProjectOpenedAndFocused()) {
-        commandDispatcher()->dispatch(trackedit::TRACK_NAVIGATION_RANGE_SELECTION_COMMAND);
-        return make_ok();
-    }
-
-    commandDispatcher()->dispatch(muse::ui::TRIGGER_CONTROL_COMMAND);
-    return make_ok();
 }
 
 muse::Ret ApplicationActionController::doGlobalContextMenu()

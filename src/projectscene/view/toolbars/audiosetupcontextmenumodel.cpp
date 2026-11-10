@@ -42,6 +42,29 @@ void AudioSetupContextMenuModel::handleMenuItem(const QString& itemId)
     });
 }
 
+void AudioSetupContextMenuModel::onCommandStateChanged(const Command& command, const CommandState& state)
+{
+    AbstractMenuModel::onCommandStateChanged(command, state);
+
+    static const std::vector<Command> CHECKED_BY_PARAM_COMMANDS {
+        playback::PLAYBACK_CHANGE_AUDIO_API_COMMAND,
+        playback::PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND,
+        playback::PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND,
+        playback::PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND,
+    };
+
+    if (muse::contains(CHECKED_BY_PARAM_COMMANDS, command)) {
+        makeMenuItems();
+    }
+}
+
+MenuItem* AudioSetupContextMenuModel::makeQueryMenuItem(const CommandQuery& query, const muse::TranslatableString& title)
+{
+    MenuItem* item = makeMenuItem(query, title);
+    item->setCommandQuery(query);
+    return item;
+}
+
 void AudioSetupContextMenuModel::makeMenuItems()
 {
     MenuItemList items {
@@ -63,7 +86,7 @@ MenuItemList AudioSetupContextMenuModel::makeHostItems()
 
     const auto& apiList = audioDriverController()->apis();
     for (size_t i = 0; i < apiList.size(); ++i) {
-        MenuItem* item = makeMenuItem(make_query(playback::PLAYBACK_CHANGE_AUDIO_API_COMMAND, {
+        MenuItem* item = makeQueryMenuItem(make_query(playback::PLAYBACK_CHANGE_AUDIO_API_COMMAND, {
             { playback::PLAYBACK_CHANGE_AUDIO_API_INDEX_PARAM, muse::Val(static_cast<int>(i)) },
         }), muse::TranslatableString::untranslatable(muse::String::fromStdString(apiList.at(i))));
         if (currentApi == apiList.at(i)) {
@@ -90,7 +113,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
                                                ? muse::TranslatableString("audio setup", "System default")
                                                : muse::TranslatableString("audio setup", "System default: %1")
                                                .arg(muse::String::fromStdString(resolvedDevice));
-        MenuItem* item = makeMenuItem(make_query(playback::PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND, {
+        MenuItem* item = makeQueryMenuItem(make_query(playback::PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND, {
             { playback::PLAYBACK_CHANGE_PLAYBACK_DEVICE_IS_DEFAULT_PARAM, muse::Val(true) },
         }), title);
         if (usesSystemDefaultOutput) {
@@ -101,7 +124,7 @@ MenuItemList AudioSetupContextMenuModel::makePlaybackDevicesItems()
     }
 
     for (size_t i = 0; i < outputDevicesList.size(); ++i) {
-        MenuItem* item = makeMenuItem(make_query(playback::PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND, {
+        MenuItem* item = makeQueryMenuItem(make_query(playback::PLAYBACK_CHANGE_PLAYBACK_DEVICE_COMMAND, {
             { playback::PLAYBACK_CHANGE_PLAYBACK_DEVICE_INDEX_PARAM, muse::Val(static_cast<int>(i)) },
         }), muse::TranslatableString::untranslatable(muse::String::fromStdString(outputDevicesList.at(i))));
         if (currentOutputDevice == outputDevicesList.at(i)) {
@@ -129,7 +152,7 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
                                                ? muse::TranslatableString("audio setup", "System default")
                                                : muse::TranslatableString("audio setup", "System default: %1")
                                                .arg(muse::String::fromStdString(resolvedDevice));
-        MenuItem* item = makeMenuItem(make_query(playback::PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND, {
+        MenuItem* item = makeQueryMenuItem(make_query(playback::PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND, {
             { playback::PLAYBACK_CHANGE_RECORDING_DEVICE_IS_DEFAULT_PARAM, muse::Val(true) },
         }), title);
         if (usesSystemDefaultInput) {
@@ -140,7 +163,7 @@ MenuItemList AudioSetupContextMenuModel::makeRecordingDevicesItems()
     }
 
     for (size_t i = 0; i < inputDevicesList.size(); ++i) {
-        MenuItem* item = makeMenuItem(make_query(playback::PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND, {
+        MenuItem* item = makeQueryMenuItem(make_query(playback::PLAYBACK_CHANGE_RECORDING_DEVICE_COMMAND, {
             { playback::PLAYBACK_CHANGE_RECORDING_DEVICE_INDEX_PARAM, muse::Val(static_cast<int>(i)) },
         }), muse::TranslatableString::untranslatable(muse::String::fromStdString(inputDevicesList.at(i))));
         if (currentInputDevice == inputDevicesList.at(i)) {
@@ -170,7 +193,7 @@ MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
 
     for (int i = 0; i < inputChannelsAvailable; ++i) {
         int channelNumber = i + 1;
-        MenuItem* item = makeMenuItem(make_query(playback::PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND, {
+        MenuItem* item = makeQueryMenuItem(make_query(playback::PLAYBACK_CHANGE_INPUT_CHANNELS_COMMAND, {
             { playback::PLAYBACK_CHANGE_INPUT_CHANNELS_INDEX_PARAM, muse::Val(channelNumber) },
         }), muse::TranslatableString::untranslatable(channelName(channelNumber)));
 

@@ -10,6 +10,7 @@
 namespace au::spectrogram {
 namespace {
 using muse::rcommand::Arg;
+using muse::rcommand::Availability;
 using muse::rcommand::CommandInfo;
 using muse::rcommand::DataType;
 using muse::rcommand::Decoration;
@@ -25,7 +26,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                     { TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, Arg(DataType::Int, u"Id of the track") },
                 }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
 };
 }

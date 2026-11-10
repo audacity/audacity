@@ -1,0 +1,8 @@
+[
+    {
+        "scope": "APP",
+        "shortcuts": [
+            { "command": "command://app/preferences", "sequences": ["Ctrl+,"] }
+        ]
+    }
+]

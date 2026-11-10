@@ -6,7 +6,6 @@
 
 #include <qobjectdefs.h>
 
-#include "actions/actiontypes.h"
 #include "global/types/number.h"
 #include "trackedit/trackedittypes.h"
 #include "trackedit/dom/track.h"
@@ -209,18 +208,6 @@ public:
     };
     Q_ENUM(Preset)
 };
-
-constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?colorindex=%1";
-inline muse::actions::ActionQuery makeClipColorChangeAction(trackedit::ClipColorIndex colorIndex)
-{
-    return muse::actions::ActionQuery(muse::String(COLOR_CHANGE_ACTION).arg(colorIndex));
-}
-
-constexpr const char16_t* TRACK_COLOR_CHANGE_ACTION = u"action://trackedit/track/change-color?colorindex=%1";
-inline muse::actions::ActionQuery makeTrackColorChangeAction(trackedit::ClipColorIndex colorIndex)
-{
-    return muse::actions::ActionQuery(muse::String(TRACK_COLOR_CHANGE_ACTION).arg(colorIndex));
-}
 }
 
 #endif // AU_PROJECTSCENE_TRACKTYPES_H

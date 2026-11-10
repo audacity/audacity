@@ -31,9 +31,9 @@ QVariant defaultValue(CommandParamsModel::ParamType type, const QVariant& min)
     }
 }
 
-QVariant boundValue(const Val& val)
+QVariant boundValue(const std::optional<Val>& val)
 {
-    return val.isNull() ? QVariant() : val.toQVariant();
+    return val ? val->toQVariant() : QVariant();
 }
 
 QVariant toParamValue(CommandParamsModel::ParamType type, const QVariant& value)
@@ -112,8 +112,8 @@ void CommandParamsModel::load(const QString& command, const QVariantMap& params)
     for (const auto& [key, arg] : info.inputSchema.args) {
         Item item;
         item.key = QString::fromStdString(key);
-        item.description = arg.description.toQString();
-        item.type = toParamType(arg.type);
+        item.description = QString::fromStdString(arg.description);
+        item.type = toParamType(arg.dataType);
         item.min = boundValue(arg.min);
         item.max = boundValue(arg.max);
 

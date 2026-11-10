@@ -30,9 +30,7 @@
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/rcommand/icommandsregister.h"
 #include "framework/rcommand/icommandsstate.h"
-#include "framework/ui/iuiactionsregister.h"
 
-#include "internal/applicationuiactions.h"
 #include "internal/applicationactioncontroller.h"
 #include "internal/appshellcommandsregister.h"
 #include "internal/appshellcommandsstate.h"
@@ -126,7 +124,6 @@ muse::modularity::IContextSetup* AppShellModule::newContext(const muse::modulari
 void AppShellContext::registerExports()
 {
     m_applicationActionController = std::make_shared<ApplicationActionController>(iocContext());
-    m_applicationUiActions = std::make_shared<ApplicationUiActions>(iocContext(), m_applicationActionController);
     m_sessionsManager = std::make_shared<SessionsManager>(iocContext());
 
     ioc()->registerExport<IApplicationActionController>(mname, m_applicationActionController);
@@ -158,13 +155,7 @@ void AppShellContext::onInit(const muse::IApplication::RunMode& mode)
     }
 
     m_applicationActionController->init();
-    m_applicationUiActions->init();
     m_sessionsManager->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_applicationUiActions);
-    }
 }
 
 void AppShellContext::onAllInited(const muse::IApplication::RunMode& mode)

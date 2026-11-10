@@ -421,9 +421,11 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
     MenuItemList items;
     const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
     for (const auto& info : colorInfos) {
-        MenuItem* item = makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, {
+        const CommandQuery query = make_query(trackedit::TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND, {
             { trackedit::TRACKEDIT_COLOR_INDEX_PARAM, Val(info.index) },
-        }), info.title);
+        });
+        MenuItem* item = makeMenuItem(query, info.title);
+        item->setCommandQuery(query);
         item->setIconColor(QString::fromStdString(projectSceneConfiguration()->clipColor(info.index).toString()));
         items << item;
     }
@@ -435,9 +437,12 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackFormatItems()
 {
     muse::uicomponents::MenuItemList items;
     for (const auto& formatInfo : trackedit::availableTrackFormats()) {
-        items << makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND, {
+        const CommandQuery query = make_query(trackedit::TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND, {
             { trackedit::TRACKEDIT_FORMAT_PARAM, Val(static_cast<int>(formatInfo.format)) },
-        }), formatInfo.description);
+        });
+        MenuItem* item = makeMenuItem(query, formatInfo.description);
+        item->setCommandQuery(query);
+        items << item;
     }
     return items;
 }
@@ -446,11 +451,15 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
 {
     muse::uicomponents::MenuItemList items;
     for (const auto& rate : audioDriverController()->sampleRates()) {
-        items << makeMenuItem(make_query(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_COMMAND, {
+        const CommandQuery query = make_query(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_COMMAND, {
             { trackedit::TRACKEDIT_RATE_PARAM, Val(static_cast<int>(rate)) },
-        }),
-                              //: %1 is a sample rate in hertz, e.g. "44100 Hz"
-                              muse::TranslatableString("trackcontextmenu", "%1 Hz").arg(muse::String::number(static_cast<int>(rate))));
+        });
+        MenuItem* item = makeMenuItem(query,
+                                      //: %1 is a sample rate in hertz, e.g. "44100 Hz"
+                                      muse::TranslatableString("trackcontextmenu", "%1 Hz").arg(muse::String::number(
+                                                                                                    static_cast<int>(rate))));
+        item->setCommandQuery(query);
+        items << item;
     }
     items << makeSeparator();
     items << makeMenuItem(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND);

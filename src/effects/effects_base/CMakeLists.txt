@@ -48,8 +48,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscommandsregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscommandsstate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscommandsstate.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsproviderinitializer.cpp

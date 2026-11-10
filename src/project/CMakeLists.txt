@@ -70,8 +70,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectcreator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectcreator.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp

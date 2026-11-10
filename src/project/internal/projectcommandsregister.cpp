@@ -46,7 +46,8 @@ const std::vector<CommandInfo> commandInfos = {
                 { PROJECT_ID_PARAM, Arg(DataType::String, u"Cloud project id") },
                 { PROJECT_SNAPSHOT_ID_PARAM, Arg(DataType::String, u"Cloud project snapshot id") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PROJECT_CLEAR_RECENT_COMMAND,
@@ -78,7 +79,8 @@ const std::vector<CommandInfo> commandInfos = {
                 { PROJECT_FILES_PARAM, Arg(DataType::List, u"Paths of the media files to import") },
                 { PROJECT_REMOVE_AFTER_IMPORT_PARAM, Arg(DataType::Bool, u"Remove the files after importing them") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         PROJECT_SAVE_COMMAND,
@@ -105,7 +107,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Save to cloud…"),
         InputSchema(),
-        Decoration(IconCode::Code::CLOUD_FILE)
+        Decoration(IconCode::Code::CLOUD_FILE),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_CLOSE_COMMAND,
@@ -123,7 +126,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Share audio"),
         InputSchema(),
-        Decoration(IconCode::Code::SHARE_AUDIO)
+        Decoration(IconCode::Code::SHARE_AUDIO),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_OPEN_CLOUD_AUDIO_FILE_COMMAND,
@@ -134,7 +138,8 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema({
                 { PROJECT_AUDIO_ID_PARAM, Arg(DataType::String, u"Cloud audio file id") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch | Availability::API
     },
     CommandInfo{
         PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_COMMAND,
@@ -154,7 +159,8 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema({
                 { PROJECT_ID_PARAM, Arg(DataType::String, u"Cloud project id") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         PROJECT_EXPORT_AUDIO_COMMAND,
@@ -192,7 +198,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show metadata editor"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_OPEN_CUSTOM_FFMPEG_OPTIONS_COMMAND,
@@ -201,7 +208,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open the custom FFmpeg export options"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
     CommandInfo{
         PROJECT_OPEN_CUSTOM_MAPPING_COMMAND,
@@ -210,7 +218,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Open the custom export channel mapping"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::Dispatch
     },
 };
 }

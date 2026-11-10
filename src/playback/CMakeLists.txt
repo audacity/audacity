@@ -36,8 +36,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.h

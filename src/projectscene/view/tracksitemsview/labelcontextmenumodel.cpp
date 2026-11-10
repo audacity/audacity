@@ -52,8 +52,8 @@ void LabelContextMenuModel::load()
         makeMenu(muse::TranslatableString("label", "Paste and…"), pasteAndItems, "menu-paste-and"),
         makeMenu(muse::TranslatableString("label", "Delete and…"), deleteAndItems, "menu-delete-and"),
         makeSeparator(),
-        makeMenuItem("group-items"),
-        makeMenuItem("ungroup-items"),
+        makeMenuItem(trackedit::TRACKEDIT_GROUP_ITEMS_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_UNGROUP_ITEMS_COMMAND),
     };
 
     setItems(items);

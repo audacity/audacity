@@ -273,10 +273,10 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenuItem(trackedit::TRACKEDIT_UNDO_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_REDO_COMMAND),
         makeSeparator(),
-        makeMenuItem(APP_CUT_COMMAND),
-        makeMenuItem(APP_COPY_COMMAND),
-        makeMenuItem(APP_PASTE_COMMAND),
-        makeMenuItem(APP_DELETE_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_CUT_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_COPY_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_DEFAULT_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_DELETE_COMMAND),
         makeSeparator(),
         makeMenuItem(trackedit::TRACKEDIT_DUPLICATE_COMMAND),
         // TODO: we should only show those trackedit actions when in the trackedit context,
@@ -357,7 +357,7 @@ MenuItem* AppMenuModel::makeViewMenu()
 MenuItem* AppMenuModel::makeRecordMenu()
 {
     MenuItemList recordItems {
-        makeMenuItem(record::RECORD_ON_CURRENT_TRACK_COMMAND),
+        makeMenuItem(record::RECORD_START_COMMAND),
         makeMenuItem(record::RECORD_ON_NEW_TRACK_COMMAND),
         makeMenuItem(record::RECORD_LEAD_IN_RECORDING_COMMAND),
         makeMenuItem(record::RECORD_TIMED_RECORDING_COMMAND),
@@ -617,16 +617,19 @@ MenuItemList AppMenuModel::makeZoomItems()
 
 MenuItemList AppMenuModel::makeMixItems()
 {
-    MenuItemList items {
-        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
-            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(false) }
-        })),
-        makeMenuItem(muse::rcommand::make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
-            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(true) }
-        }), TranslatableString("appshell-menu-mix", "Mix and render to new track")),
+    auto makeMixItem = [this](bool toNewTrack, const TranslatableString& title) {
+        const CommandQuery query = make_query(trackedit::TRACKEDIT_MIX_AND_RENDER_COMMAND, {
+            { trackedit::TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(toNewTrack) }
+        });
+        MenuItem* item = makeMenuItem(query, title);
+        item->setCommandQuery(query);
+        return item;
     };
 
-    return items;
+    return MenuItemList {
+        makeMixItem(false, {}),
+        makeMixItem(true, TranslatableString("appshell-menu-mix", "Mix and render to new track")),
+    };
 }
 
 muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
@@ -643,7 +646,8 @@ MenuItemList AppMenuModel::makeEffectsItems()
 {
     MenuItemList items {
         makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
-        makeMenuItem(projectscene::PROJECTSCENE_ADD_REALTIME_EFFECTS_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND,
+                     TranslatableString("appshell-menu-effect", "Add track effects")),
         makeSeparator(),
         makeMenuItem(effects::EFFECTS_REPEAT_LAST_EFFECT_COMMAND),
     };

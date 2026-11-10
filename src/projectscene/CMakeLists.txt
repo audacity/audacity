@@ -33,8 +33,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectviewstatecreator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectviewstatecreator.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectsceneactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsregister.cpp

@@ -4,34 +4,18 @@
 #include "recordcontroller.h"
 
 #include "framework/global/translation.h"
-#include "framework/rcommand/actiontocommand.h"
 
 #include "../recordcommands.h"
 
 using namespace muse;
 using namespace au::record;
 using namespace muse::async;
-using namespace muse::actions;
 using namespace muse::rcommand;
-
-namespace {
-const ActionQuery RECORD_START_QUERY("action://record/start");
-const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
-const ActionQuery RECORD_STOP_QUERY("action://record/stop");
-const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
-const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
-const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
-
-const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
-const ActionCode RECORD_ON_NEW_TRACK_CODE("record-on-new-track");
-const ActionCode RECORD_TIMED_RECORDING_CODE("timer-record");
-}
 
 void RecordController::init()
 {
     auto cd = commandDispatcher();
     cd->onRequest(this, RECORD_START_COMMAND, [this]() { return toggleRecord(); });
-    cd->onRequest(this, RECORD_ON_CURRENT_TRACK_COMMAND, [this]() { return toggleRecord(); });
     cd->onRequest(this, RECORD_ON_NEW_TRACK_COMMAND, [this]() { return recordOnNewTrack(); });
     cd->onRequest(this, RECORD_PAUSE_COMMAND, [this]() { return pause(); });
     cd->onRequest(this, RECORD_STOP_COMMAND, [this]() { return stop(); });
@@ -39,19 +23,6 @@ void RecordController::init()
     cd->onRequest(this, RECORD_TOGGLE_INPUT_MONITORING_COMMAND, [this]() { return toggleInputMonitoring(); });
     cd->onRequest(this, RECORD_LEAD_IN_RECORDING_COMMAND, [this]() { return leadInRecording(); });
     cd->onRequest(this, RECORD_TIMED_RECORDING_COMMAND, [this]() { return timedRecordingScenario()->openSetup(); });
-
-    static const std::vector<ActionToCommand> actionToCommand = {
-        { RECORD_START_QUERY.toString(), RECORD_START_COMMAND, {} },
-        { RECORD_ON_CURRENT_TRACK_CODE, RECORD_ON_CURRENT_TRACK_COMMAND, {} },
-        { RECORD_ON_NEW_TRACK_CODE, RECORD_ON_NEW_TRACK_COMMAND, {} },
-        { RECORD_PAUSE_QUERY.toString(), RECORD_PAUSE_COMMAND, {} },
-        { RECORD_STOP_QUERY.toString(), RECORD_STOP_COMMAND, {} },
-        { RECORD_TOGGLE_MIC_METERING.toString(), RECORD_TOGGLE_MIC_METERING_COMMAND, {} },
-        { RECORD_TOGGLE_INPUT_MONITORING.toString(), RECORD_TOGGLE_INPUT_MONITORING_COMMAND, {} },
-        { RECORD_LEAD_IN_RECORDING_QUERY.toString(), RECORD_LEAD_IN_RECORDING_COMMAND, {} },
-        { RECORD_TIMED_RECORDING_CODE, RECORD_TIMED_RECORDING_COMMAND, {} },
-    };
-    registerActionToCommand(this, actionToCommand, commandDispatcher(), dispatcher());
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
@@ -330,29 +301,6 @@ void RecordController::setCurrentRecordStatus(RecordStatus status)
 
     m_currentRecordStatus = status;
     m_isRecordingChanged.notify();
-}
-
-bool RecordController::canReceiveAction(const ActionCode& code) const
-{
-    if (globalContext()->currentProject() == nullptr) {
-        return false;
-    }
-
-    if (code == RECORD_START_QUERY.toString()
-        || code == RECORD_ON_CURRENT_TRACK_CODE
-        || code == RECORD_ON_NEW_TRACK_CODE) {
-        return !playbackController()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
-    }
-
-    if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString() || code == RECORD_TIMED_RECORDING_CODE) {
-        return !playbackController()->isPlaying() && !isRecording();
-    }
-
-    if (code == RECORD_STOP_QUERY.toString()) {
-        return isRecording();
-    }
-
-    return true;
 }
 
 void RecordController::onProjectChanged()
