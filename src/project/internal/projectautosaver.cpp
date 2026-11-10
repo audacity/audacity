@@ -61,7 +61,7 @@ void ProjectAutoSaver::init()
         if (const auto project = currentProject()) {
             if (project->isNewlyCreated() && !project->isImported()) {
                 // Autosave newly created projects to enable session restoration
-                Ret ret = project->save(project->path(), SaveMode::AutoSave);
+                Ret ret = project->autoSave();
                 if (!ret) {
                     LOGE() << "[autosave] failed to save project, err: " << ret.toString();
                     return;
@@ -129,15 +129,8 @@ void ProjectAutoSaver::onTrySave()
         return;
     }
 
-    if (!project->canSave()) {
-        LOGD() << "[autosave] project could not be saved";
-        return;
-    }
-
-    const muse::io::path_t savePath = project->path();
-
     // Perform autosave to enable session restoration
-    Ret ret = project->save(savePath, SaveMode::AutoSave);
+    Ret ret = project->autoSave();
     if (!ret) {
         LOGE() << "[autosave] failed to save project, err: " << ret.toString();
         return;

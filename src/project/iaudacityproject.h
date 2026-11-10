@@ -50,6 +50,7 @@ public:
 
     virtual muse::async::Notification needSaveChanged() const { return muse::async::Notification(); }
     virtual muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;
+    virtual muse::Ret autoSave() = 0;
 
     virtual const au::trackedit::ITrackeditProjectPtr trackeditProject() const = 0;
 

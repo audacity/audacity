@@ -195,6 +195,11 @@ void Au3ProjectAccessor::saveThumbnail(std::vector<uint8_t> pngData)
     ProjectThumbnail::Get(m_data->projectRef()).SetData(std::move(pngData));
 }
 
+bool Au3ProjectAccessor::autoSave()
+{
+    return ProjectFileIO::Get(m_data->projectRef()).AutoSave();
+}
+
 bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
 {
     auto& project = m_data->projectRef();
