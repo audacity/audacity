@@ -342,6 +342,10 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
 
     std::map<int, int> channelSampleDistance;
     int top = 0;
+
+    const auto value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate())) * ClipFades::Get(*waveClip).gainAt(
+        adjustedTime);
+
     for (size_t i = 0; i < waveClip->NChannels(); i++) {
         waveMetrics.height = channelHeight[i];
 
@@ -350,8 +354,6 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
             continue;
         }
 
-        const double value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate()))
-                             * ClipFades::Get(*waveClip).gainAt(adjustedTime);
         const auto tt = oneSample * value;
 
         const auto adjustedYPos = position.y() - top;
