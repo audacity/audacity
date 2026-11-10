@@ -26,7 +26,8 @@ public:
         Integer,
         Float,
         Boolean,
-        Array
+        Array,
+        Enum
     };
     Q_ENUM(ParamType)
 
@@ -52,7 +53,8 @@ private:
         TypeRole,
         MinRole,
         MaxRole,
-        ValueRole
+        ValueRole,
+        OptionsRole
     };
 
     struct Item {
@@ -62,6 +64,7 @@ private:
         QVariant min;
         QVariant max;
         QVariant value;
+        QVariantList options;
     };
 
     QString m_title;
