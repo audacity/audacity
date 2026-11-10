@@ -9,9 +9,9 @@ run-name: "[AU4] Update: Release Info (${{ inputs.mode }}${{ inputs.tag && forma
 #   feed/all.json, feed/all.test.json  the notes of the previous releases
 #
 # The release must be published: the GitHub API returns no draft by tag.
-# au4_deploy.yml calls this after creating the draft release, behind the
-# production gate: publish the release, then approve. Run it by hand to
-# redo a feed.
+# au4_deploy.yml calls this after creating the draft release: publish the
+# release, then approve. Run it by hand to redo a feed. Either way the job
+# waits for the production gate: the feed is what every user's updater reads.
 
 on:
   workflow_dispatch:
@@ -33,11 +33,6 @@ on:
         description: 'Release tag (the latest stable release by default)'
         type: string
         required: false
-      environment:
-        description: "Environment: 'production' to require approval"
-        type: string
-        required: false
-        default: ''
 
 jobs:
   update_release_info:
@@ -46,7 +41,7 @@ jobs:
     permissions:
       contents: read # to read the release
     environment:
-      name: ${{ inputs.environment }} # may be blank, then there is no gate
+      name: production # requires approval, also when run by hand
       url: ${{ github.server_url }}/${{ github.repository }}/releases/${{ inputs.tag && format('tag/{0}', inputs.tag) || 'latest' }}
     env:
       MODE: ${{ inputs.mode }}

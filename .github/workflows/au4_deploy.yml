@@ -151,7 +151,7 @@ jobs:
         generate_release_notes: false
 
   update_release_info:
-    name: Update release info
+    name: Update release info # approve its production gate once the draft release is published: the feed reads the published release
     needs:
       - plan # to access outputs
       - create_release
@@ -161,4 +161,3 @@ jobs:
     with:
       mode: ${{ inputs.release_type == 'stable' && 'stable' || 'testing' }}
       tag: ${{ needs.plan.outputs.tag_name }}
-      environment: production # approve once the draft release is published: the feed reads the published release
