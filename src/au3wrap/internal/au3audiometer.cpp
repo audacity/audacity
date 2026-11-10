@@ -4,6 +4,9 @@
 #include "au3audiometer.h"
 
 namespace au::au3 {
+static_assert(IMeterSender::InputChannelsTrackId == audio::IAudioMeter::InputChannelsTrackId,
+              "The input channels meter key must be the same on both sides");
+
 Au3AudioMeter::Au3AudioMeter(std::unique_ptr<audio::IAudioMeter> audioMeter)
     : m_audioMeter{std::move(audioMeter)}
 {
