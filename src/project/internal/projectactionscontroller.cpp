@@ -496,6 +496,10 @@ bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bo
         }
 
         if (btn == IInteractive::Button::Save) {
+            if (recordController()->isRecording() && !recordController()->stopRecording()) {
+                LOGE() << "Couldn't stop an ongoing recording. Aborting project close.";
+                return false;
+            }
             if (!saveProject()) {
                 return false;
             }

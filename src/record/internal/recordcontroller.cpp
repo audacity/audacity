@@ -18,7 +18,7 @@ void RecordController::init()
     cd->onRequest(this, RECORD_START_COMMAND, [this]() { return toggleRecord(); });
     cd->onRequest(this, RECORD_ON_NEW_TRACK_COMMAND, [this]() { return recordOnNewTrack(); });
     cd->onRequest(this, RECORD_PAUSE_COMMAND, [this]() { return pause(); });
-    cd->onRequest(this, RECORD_STOP_COMMAND, [this]() { return stop(); });
+    cd->onRequest(this, RECORD_STOP_COMMAND, [this]() { return stopRecording(); });
     cd->onRequest(this, RECORD_TOGGLE_MIC_METERING_COMMAND, [this]() { return toggleMicMetering(); });
     cd->onRequest(this, RECORD_TOGGLE_INPUT_MONITORING_COMMAND, [this]() { return toggleInputMonitoring(); });
     cd->onRequest(this, RECORD_LEAD_IN_RECORDING_COMMAND, [this]() { return leadInRecording(); });
@@ -83,7 +83,7 @@ Ret RecordController::toggleRecord()
     }
 
     if (isRecording()) {
-        return stop();
+        return stopRecording();
     }
 
     return start();
@@ -92,7 +92,7 @@ Ret RecordController::toggleRecord()
 Ret RecordController::recordOnNewTrack()
 {
     if (isRecording()) {
-        return stop();
+        return stopRecording();
     }
 
     return startWithNewTrack();
@@ -186,7 +186,7 @@ Ret RecordController::resume()
     return make_ok();
 }
 
-Ret RecordController::stop()
+Ret RecordController::stopRecording()
 {
     IF_ASSERT_FAILED(record()) {
         return make_ret(Ret::Code::InternalError);
@@ -300,6 +300,9 @@ void RecordController::setCurrentRecordStatus(RecordStatus status)
     }
 
     m_currentRecordStatus = status;
+    if (status == RecordStatus::Running) {
+        projectHistory()->markUnsaved();
+    }
     m_isRecordingChanged.notify();
 }
 
@@ -308,7 +311,7 @@ void RecordController::onProjectChanged()
     au::project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
         prj->aboutCloseBegin().onNotify(this, [this]() {
-            stop();
+            stopRecording();
         });
     }
 }

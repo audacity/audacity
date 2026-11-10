@@ -24,6 +24,7 @@
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/icloudprojectsprovider.h"
 #include "effects/effects_base/imissingeffectchecker.h"
+#include "record/irecordcontroller.h"
 
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectfilescontroller.h"
@@ -54,6 +55,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::rc
     muse::ContextInject<importexport::IImporter> importer { this };
     muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<effects::IMissingEffectChecker> missingEffectChecker { this };
+    muse::ContextInject<record::IRecordController> recordController{ this };
 
 public:
     ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);
