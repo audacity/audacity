@@ -360,6 +360,7 @@ void UndoManager::VisitStates(
 void UndoManager::MarkUnsaved()
 {
     saved = -1;
+    EnqueueMessage({ UndoRedoMessage::Modified });
 }
 
 bool UndoManager::UnsavedChanges() const
