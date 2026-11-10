@@ -34,6 +34,11 @@ void AudioMeter::decay(LevelState& level)
     }
 }
 
+bool AudioMeter::isSilent(const Levels& levels)
+{
+    return levels.peak.db <= leastDb && levels.peak.hangover == 0 && levels.rms.db <= leastDb && levels.rms.hangover == 0;
+}
+
 void AudioMeter::maybeBumpUp(LevelState& level, float newLinValue, int hangover)
 {
     const auto newPeakDb = muse::linear_to_db(newLinValue);
@@ -88,6 +93,10 @@ AudioMeter::AudioMeter(std::unique_ptr<ITimer> playingTimer, std::unique_ptr<ITi
                         { muse::db_to_linear(levels.peak.db), levels.peak.db },
                         { muse::db_to_linear(levels.rms.db), levels.rms.db } });
             }
+            // Silence has been sent: stop sending it until the channel is pushed again
+            std::erase_if(trackData.channelLevels, [](const auto& entry) {
+                return isSilent(entry.second);
+            });
         }
     });
 }
@@ -129,11 +138,8 @@ void AudioMeter::push(uint8_t channel, const InterleavedSampleData& sampleData, 
 
 void AudioMeter::start(double sampleRate)
 {
+    // Levels left from the previous stream keep decaying, so that meters no longer fed fall to silence
     m_stoppingTimer->stop();
-    for (auto& [trackId, trackData] : m_trackData) {
-        trackData.channelLevels.clear();
-    }
-
     m_playingTimer->start();
     m_sampleRate = sampleRate;
     m_running.store(true);
