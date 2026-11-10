@@ -21,6 +21,34 @@
             },
             "group": { "kind": "test", "isDefault": true },
             "problemMatcher": []
+        },
+        {
+            // Runs one test case: a script, or a .testflow series.
+            // The picker requires the Command Variable extension
+            "label": "testflow: run test case",
+            "type": "shell",
+            // Escaping the picker does not cancel the task: VS Code leaves ${input:testflowScript}
+            // unsubstituted, which run_testflow.sh rejects before starting anything
+            "command": "buildscripts/tools/run_testflow.sh '${input:testflowScript}'",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": { "BUILD_DIR": "${config:au4.testflowBuildDir}" }
+            },
+            "group": "test",
+            "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "testflowScript",
+            "type": "command",
+            "command": "extension.commandvariable.file.pickFile",
+            "args": {
+                // Top-level scripts and series: steps/ holds helpers, and the scripts of a series
+                // cannot run on their own
+                "include": "share/testflowscripts/{*.js,*.testflow}",
+                "description": "Testflow test case to run"
+            }
         }
     ]
 }

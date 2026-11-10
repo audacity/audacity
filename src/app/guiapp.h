@@ -9,6 +9,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/multiwindows/imultiwindowsprovider.h"
 #include "framework/multiwindows/singleinstance.h"
 #include "framework/ui/internal/guiapplication.h"
 
@@ -26,6 +27,7 @@ namespace au::app {
 class GuiApp : public muse::ui::GuiApplication, public muse::async::Asyncable
 {
     muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
 public:
     GuiApp(const std::shared_ptr<AudacityCmdOptions>& options);

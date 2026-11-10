@@ -62,7 +62,7 @@ QString GuiApp::mainWindowQmlPath(const QString& platform) const
 
 void GuiApp::showContextSplash(const muse::modularity::ContextPtr& ctxId)
 {
-    if (m_splashScreen) {
+    if (!multiwindowsProvider()->isFirstWindow()) {
         return;
     }
 

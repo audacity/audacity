@@ -42,6 +42,7 @@
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Contextable
 {
+protected:
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
@@ -76,8 +77,8 @@ public:
 
 protected:
     virtual StartupModeType resolveStartupModeType() const;
-    //! NOTE Whether session restore or first launch setup may replace the resolved mode
-    virtual bool allowsStartupModeOverride() const;
+    virtual bool allowsFirstLaunchOverride() const;
+    virtual bool allowsRecoveryOverride() const;
     virtual void showStartupDialogsIfNeed(StartupModeType modeType);
 
     bool hasExplicitStartupTarget() const;
