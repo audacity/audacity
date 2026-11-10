@@ -108,6 +108,7 @@ private:
     bool m_outputOnly = false;
 
     record::TrackInputChannels m_inputChannels;
+    bool m_inputSignalLive = false;
     std::array<float, 2> m_mixedInputPressure {};
     std::array<float, 2> m_mixedInputRMS {};
 };

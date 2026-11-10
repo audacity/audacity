@@ -47,6 +47,10 @@ void WaveTrackItem::init(const trackedit::Track& track)
 
     record()->audioInput()->recordTrackSignalChanges(trackId())
     .onReceive(this, [this](audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+        // The level left from the last recording keeps decaying; the live input takes over once it arrives
+        if (m_inputSignalLive) {
+            return;
+        }
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -284,6 +288,7 @@ void WaveTrackItem::checkMainAudioInput()
     m_mixedInputRMS.fill(0.f);
 
     if (m_inputChannels.empty()) {
+        m_inputSignalLive = false;
         record()->audioInput()->recordInputChannelSignalChanges().disconnect(this);
         if (wasMonitored) {
             resetAudioChannelsVolumePressure();
@@ -300,6 +305,8 @@ void WaveTrackItem::checkMainAudioInput()
 
 void WaveTrackItem::showInputSignal(const audioch_t inputChannel, const audio::MeterSignal& meterSignal)
 {
+    m_inputSignalLive = true;
+
     if (inputChannel < m_mixedInputPressure.size()) {
         m_mixedInputPressure[inputChannel] = meterSignal.peak.amplitude;
         m_mixedInputRMS[inputChannel] = meterSignal.rms.amplitude;
