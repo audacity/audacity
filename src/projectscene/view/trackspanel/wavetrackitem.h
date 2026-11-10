@@ -3,9 +3,10 @@
 */
 #pragma once
 
+#include <array>
+
 #include "framework/global/iapplication.h"
 
-#include "audio/driver/iaudiodrivercontroller.h"
 #include "playback/iplayback.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "record/irecord.h"
@@ -30,7 +31,6 @@ class WaveTrackItem : public TrackItem
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
-    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
     muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
@@ -92,6 +92,7 @@ protected:
     void setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
     void checkMainAudioInput();
+    void showInputSignal(const trackedit::audioch_t inputChannel, const audio::MeterSignal& meterSignal);
     void muteOrSoloChanged();
 
     bool isAudible() const override;
@@ -105,6 +106,9 @@ private:
     float m_rightChannelRMS = playback::MIN_DISPLAYED_DBFS;
 
     bool m_outputOnly = false;
-    bool m_recordStreamChannelsMatch = 0;
+
+    record::TrackInputChannels m_inputChannels;
+    std::array<float, 2> m_mixedInputPressure { playback::MIN_DISPLAYED_DBFS, playback::MIN_DISPLAYED_DBFS };
+    std::array<float, 2> m_mixedInputRMS { playback::MIN_DISPLAYED_DBFS, playback::MIN_DISPLAYED_DBFS };
 };
 }

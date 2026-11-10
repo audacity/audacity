@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <map>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
@@ -44,12 +46,16 @@ public:
     muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
     muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
 
+    TrackInputChannels monitoredInputChannels(trackedit::TrackId trackId) const override;
+    muse::async::Notification monitoredTracksChanged() const override;
+
 private:
     au3::Au3Project* projectRef() const;
 
     void initMeter();
     bool isTrackMeterMonitoring() const;
-    int getFocusedTrackChannels() const;
+    void subscribeToTrackChanges();
+    void updateMonitoredTracks();
 
     void updateAudioEngineMonitoring() const;
     void startAudioEngineMonitoring() const;
@@ -60,6 +66,7 @@ private:
     mutable muse::async::Channel<float> m_recordVolumeChanged;
     const std::shared_ptr<au::au3::Au3AudioMeter> m_inputMeter;
     int m_inputChannelsCount{};
-    int m_focusedTrackChannels{};
+    std::map<trackedit::TrackId, TrackInputChannels> m_monitoredTracks;
+    muse::async::Notification m_monitoredTracksChanged;
 };
 }
