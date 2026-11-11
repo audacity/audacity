@@ -37,12 +37,11 @@ Item {
 
         readonly property int handleSize: 32
 
-        //! Where the fades end and start, in this item's coordinates
-        readonly property real fadeInEnd: root.fadeInWidth - root.clipOffset
-        readonly property real fadeOutStart: root.clipWidth - root.clipOffset - root.fadeOutWidth
+        readonly property real fadeInX: -root.clipOffset
+        readonly property real fadeOutX: root.clipWidth - root.clipOffset - root.fadeOutWidth
 
-        readonly property real fadeInLineCenter: fadeInEnd - 0.5
-        readonly property real fadeOutLineCenter: fadeOutStart + 0.5
+        readonly property real fadeInLineCenter: fadeInX + root.fadeInWidth - 0.5
+        readonly property real fadeOutLineCenter: fadeOutX + 0.5
 
         // When the handles collide, each is pushed to its side by half the overlap: when the lines are aligned,
         // the handles are on either side of them.
@@ -66,7 +65,7 @@ Item {
 
         isFadeIn: true
         fadeWidth: root.fadeInWidth
-        fadeLeft: prv.fadeInEnd - root.fadeInWidth
+        fadeX: prv.fadeInX
         fadeType: root.fadeInType
         drawingTop: root.drawingTop
 
@@ -96,7 +95,7 @@ Item {
 
         isFadeIn: false
         fadeWidth: root.fadeOutWidth
-        fadeLeft: prv.fadeOutStart
+        fadeX: prv.fadeOutX
         fadeType: root.fadeOutType
         drawingTop: root.drawingTop
 

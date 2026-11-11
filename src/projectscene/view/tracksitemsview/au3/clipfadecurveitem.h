@@ -18,7 +18,7 @@ class ClipFadeCurveItem : public QQuickPaintedItem
 
     Q_PROPERTY(bool isFadeIn READ isFadeIn WRITE setIsFadeIn FINAL)
     //! Where the fade starts, in this item's coordinates: possibly far outside it, which only needs to span the visible part of the fade
-    Q_PROPERTY(qreal fadeLeft READ fadeLeft WRITE setFadeLeft FINAL)
+    Q_PROPERTY(qreal fadeX READ fadeX WRITE setFadeX FINAL)
     Q_PROPERTY(qreal fadeWidth READ fadeWidth WRITE setFadeWidth FINAL)
     Q_PROPERTY(FadeTypes::Type fadeType READ fadeType WRITE setFadeType FINAL)
     //! Above it, the fade isn't drawn
@@ -33,8 +33,8 @@ public:
 
     bool isFadeIn() const { return m_isFadeIn; }
     void setIsFadeIn(bool isFadeIn);
-    qreal fadeLeft() const { return m_fadeLeft; }
-    void setFadeLeft(qreal left);
+    qreal fadeX() const { return m_fadeX; }
+    void setFadeX(qreal left);
     qreal fadeWidth() const { return m_fadeWidth; }
     void setFadeWidth(qreal width);
     FadeTypes::Type fadeType() const { return m_fadeType; }
@@ -52,7 +52,7 @@ private:
     void drawCurve(QPainter& painter) const;
 
     bool m_isFadeIn = true;
-    qreal m_fadeLeft = 0;
+    qreal m_fadeX = 0;
     qreal m_fadeWidth = 0;
     FadeTypes::Type m_fadeType = FadeTypes::Type::LINEAR;
     qreal m_drawingTop = 0;

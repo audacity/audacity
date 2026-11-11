@@ -50,7 +50,7 @@ void ClipFadeCurveItem::set(T& member, const T& value)
 }
 
 void ClipFadeCurveItem::setIsFadeIn(bool isFadeIn) { set(m_isFadeIn, isFadeIn); }
-void ClipFadeCurveItem::setFadeLeft(qreal left) { set(m_fadeLeft, left); }
+void ClipFadeCurveItem::setFadeX(qreal x) { set(m_fadeX, x); }
 void ClipFadeCurveItem::setFadeWidth(qreal width) { set(m_fadeWidth, width); }
 void ClipFadeCurveItem::setFadeType(FadeTypes::Type type) { set(m_fadeType, type); }
 void ClipFadeCurveItem::setDrawingTop(qreal top) { set(m_drawingTop, top); }
@@ -73,7 +73,7 @@ void ClipFadeCurveItem::paint(QPainter* painter)
 void ClipFadeCurveItem::drawBoundaryLine(QPainter& painter) const
 {
     // Drawn just inside the fade
-    const qreal x = m_isFadeIn ? m_fadeLeft + m_fadeWidth - 0.5 : m_fadeLeft + 0.5;
+    const qreal x = m_isFadeIn ? m_fadeX + m_fadeWidth - 0.5 : m_fadeX + 0.5;
     if (x < 0 || x > width()) {
         return;
     }
@@ -99,8 +99,8 @@ void ClipFadeCurveItem::drawBoundaryLine(QPainter& painter) const
 void ClipFadeCurveItem::drawCurve(QPainter& painter) const
 {
     // Only the part of the fade within this item: when zoomed in, drawing all of it would mean huge coordinates
-    const qreal visibleLeft = std::max<qreal>(m_fadeLeft, 0);
-    const qreal visibleRight = std::min<qreal>(m_fadeLeft + m_fadeWidth, width());
+    const qreal visibleLeft = std::max<qreal>(m_fadeX, 0);
+    const qreal visibleRight = std::min<qreal>(m_fadeX + m_fadeWidth, width());
     const qreal visibleWidth = visibleRight - visibleLeft;
     if (m_fadeWidth <= 0 || visibleWidth <= 0) {
         return;
@@ -113,7 +113,7 @@ void ClipFadeCurveItem::drawCurve(QPainter& painter) const
     line.reserve(segmentCount + 1);
     for (int i = 0; i <= segmentCount; ++i) {
         const qreal x = visibleLeft + i * visibleWidth / segmentCount;
-        const qreal position = (x - m_fadeLeft) / m_fadeWidth;
+        const qreal position = (x - m_fadeX) / m_fadeWidth;
         // From the silent end of the fade
         const qreal gain = ClipFades::fadeGain(au3Type, m_isFadeIn ? position : 1 - position);
         line << QPointF(x, height() * (1 - gain));

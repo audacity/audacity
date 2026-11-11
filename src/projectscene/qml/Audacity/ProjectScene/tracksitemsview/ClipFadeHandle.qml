@@ -10,7 +10,7 @@ Item {
     required property bool isFadeIn
     required property real fadeWidth
     //! Where the fade starts, in parent coordinates: possibly far outside the parent, which only spans the visible part of the clip
-    required property real fadeLeft
+    required property real fadeX
 
     //! The fade line is always drawn, the handle only when this is true
     property bool handleVisible: true
@@ -28,8 +28,8 @@ Item {
         id: prv
 
         //! Where the fade meets the clip's edge, and where it meets the unfaded part, in parent coordinates
-        readonly property real clipEdgeX: root.isFadeIn ? root.fadeLeft : root.fadeLeft + root.fadeWidth
-        readonly property real boundaryX: root.isFadeIn ? root.fadeLeft + root.fadeWidth : root.fadeLeft
+        readonly property real clipEdgeX: root.isFadeIn ? root.fadeX : root.fadeX + root.fadeWidth
+        readonly property real boundaryX: root.isFadeIn ? root.fadeX + root.fadeWidth : root.fadeX
     }
 
     ClipHandleIcon {

@@ -11,7 +11,7 @@ Item {
     required property bool isFadeIn
     required property real fadeWidth
     //! Where the fade starts: possibly far outside this item, which only spans the visible part of the clip
-    required property real fadeLeft
+    required property real fadeX
     required property int fadeType
     //! Above it, the fade isn't drawn
     property real drawingTop: 0
@@ -35,13 +35,13 @@ Item {
     ClipFadeCurveItem {
         id: curve
 
-        x: Math.floor(Math.max(root.fadeLeft, 0))
-        width: Math.max(0, Math.ceil(Math.min(root.fadeLeft + root.fadeWidth, root.width)) - x)
+        x: Math.floor(Math.max(root.fadeX, 0))
+        width: Math.max(0, Math.ceil(Math.min(root.fadeX + root.fadeWidth, root.width)) - x)
         height: root.height
         visible: width > 0
 
         isFadeIn: root.isFadeIn
-        fadeLeft: root.fadeLeft - x
+        fadeX: root.fadeX - x
         fadeWidth: root.fadeWidth
         fadeType: root.fadeType
         drawingTop: root.drawingTop
@@ -56,7 +56,7 @@ Item {
 
         isFadeIn: root.isFadeIn
         fadeWidth: root.fadeWidth
-        fadeLeft: root.fadeLeft
+        fadeX: root.fadeX
 
         onFadeEditStarted: root.fadeEditStarted()
 
