@@ -63,17 +63,21 @@ jobs:
 
         if [[ -n "${TAG}" ]]; then
           # A draft is not visible to a read-only token, so "not found" means draft or wrong tag.
-          if ! info="$(gh release view "${TAG}" --json isDraft,isPrerelease --jq '"\(.isDraft) \(.isPrerelease)"' 2>&1)"; then
+          if ! info="$(gh release view "${TAG}" --json isDraft,isPrerelease,body --jq '"\(.isDraft) \(.isPrerelease) \(.body|length)"' 2>&1)"; then
             echo "::error ::No published release ${TAG} (${info}): publish the draft release first"
             exit 1
           fi
-          read -r draft prerelease <<<"${info}"
+          read -r draft prerelease body_length <<<"${info}"
           if [[ "${draft}" == 'true' ]]; then
             echo "::error ::${TAG} is a draft: publish the release first"
             exit 1
           fi
           if [[ "${prerelease}" == 'true' && "${MODE}" == 'stable' ]]; then
             echo "::error ::${TAG} is a pre-release, it cannot go to the stable feed"
+            exit 1
+          fi
+          if (( body_length == 0 )); then
+            echo "::error ::${TAG} has no release notes: the update dialog shows them, write them first"
             exit 1
           fi
         fi
