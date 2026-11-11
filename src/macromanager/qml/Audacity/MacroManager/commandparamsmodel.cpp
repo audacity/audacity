@@ -4,6 +4,7 @@
 #include "commandparamsmodel.h"
 
 #include <algorithm>
+#include <vector>
 
 using namespace au::macromanager;
 using namespace muse;
@@ -134,13 +135,18 @@ void CommandParamsModel::load(const QString& command, const QVariantMap& params)
 {
     const CommandInfo& info = commandsRegister()->commandInfo(Command(command.toStdString()));
 
+    std::vector<std::pair<std::string, Arg> > args(info.inputSchema.args.begin(), info.inputSchema.args.end());
+    std::ranges::stable_sort(args, {}, [](const std::pair<std::string, Arg>& entry) {
+        return entry.second.uiHints.order;
+    });
+
     beginResetModel();
 
     m_items.clear();
-    for (const auto& [key, arg] : info.inputSchema.args) {
+    for (const auto& [key, arg] : args) {
         Item item;
         item.key = QString::fromStdString(key);
-        item.description = QString::fromStdString(arg.description);
+        item.description = arg.label.isEmpty() ? arg.description.qTranslated() : arg.label.qTranslated();
         item.type = toParamType(arg.dataType);
         item.min = boundValue(arg.min);
         item.max = boundValue(arg.max);

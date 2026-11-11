@@ -55,6 +55,12 @@ protected:
         return m_model.data(m_model.index(0), role);
     }
 
+    QVariant roleValue(int row, const QByteArray& roleName) const
+    {
+        const int role = m_model.roleNames().key(roleName);
+        return m_model.data(m_model.index(row), role);
+    }
+
     void load(const QVariantMap& params)
     {
         m_model.load(QString::fromStdString(ENUM_COMMAND.toString()), params);
@@ -108,4 +114,49 @@ TEST_F(MacroManager_CommandParamsModelTests, EnumParamSavesTheSelectedValue)
     m_model.setValue(0, "Project");
 
     EXPECT_EQ(m_model.params().value(QString::fromStdString(ENUM_KEY)).toString(), "Project");
+}
+
+TEST_F(MacroManager_CommandParamsModelTests, ParamsFollowTheDeclarationOrder)
+{
+    m_info.inputSchema = InputSchema({
+        { "start", Arg(DataType::Float, u"Start") },
+        { "end", Arg(DataType::Float, u"End") },
+        { "relativeTo", Arg(DataType::String, u"Relative to") },
+    });
+
+    load({});
+
+    ASSERT_EQ(m_model.rowCount(), 3);
+    EXPECT_EQ(roleValue(0, "key").toString(), "start");
+    EXPECT_EQ(roleValue(1, "key").toString(), "end");
+    EXPECT_EQ(roleValue(2, "key").toString(), "relativeTo");
+}
+
+TEST_F(MacroManager_CommandParamsModelTests, ParamsWithTheSameOrderKeepTheKeyOrder)
+{
+    m_info.inputSchema = InputSchema();
+    m_info.inputSchema.args = {
+        { "start", Arg(DataType::Float, u"Start") },
+        { "end", Arg(DataType::Float, u"End") },
+    };
+
+    load({});
+
+    ASSERT_EQ(m_model.rowCount(), 2);
+    EXPECT_EQ(roleValue(0, "key").toString(), "end");
+    EXPECT_EQ(roleValue(1, "key").toString(), "start");
+}
+
+TEST_F(MacroManager_CommandParamsModelTests, ParamUsesTheLabelWhenSet)
+{
+    m_info.inputSchema = InputSchema({
+        { "start", Arg(DataType::Float, TranslatableString("test", "Start (seconds)"),
+                       TranslatableString::untranslatable("Start offset in seconds")) },
+        { "end", Arg(DataType::Float, u"End offset in seconds") },
+    });
+
+    load({});
+
+    EXPECT_EQ(roleValue(0, "description").toString(), "Start (seconds)");
+    EXPECT_EQ(roleValue(1, "description").toString(), "End offset in seconds");
 }
