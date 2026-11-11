@@ -11,8 +11,8 @@
 #ifndef __AUDACITY_WAVETRACK__
 #define __AUDACITY_WAVETRACK__
 
-#include "au3-stretching-sequence/ClipInterface.h"
-#include "au3-stretching-sequence/PlaybackDirection.h"
+#include "au3-clip-processing/ClipInterface.h"
+#include "au3-clip-processing/PlaybackDirection.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-math/SampleCount.h"
 #include "au3-math/SampleFormat.h"
@@ -70,7 +70,9 @@ using ProgressReporter = std::function<void (double)>;
 
 class Envelope;
 class WaveTrack;
-namespace WaveTrackUtilities { struct EmptyCopyAccess; }
+namespace WaveTrackUtilities {
+struct EmptyCopyAccess;
+}
 
 struct WaveTrackMessage {
     WaveClipHolder pClip{};

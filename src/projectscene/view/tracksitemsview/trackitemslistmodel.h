@@ -4,6 +4,7 @@
 #pragma once
 
 #include <functional>
+#include <optional>
 
 #include <QAbstractListModel>
 #include <QColor>
@@ -151,5 +152,6 @@ private:
 
     QList<ViewTrackItem*> m_dragGhostItems;
     QPointer<TrackItemsMoveController> m_moveController;
+    std::optional<trackedit::TrackItemKey> m_editedItem;
 };
 }

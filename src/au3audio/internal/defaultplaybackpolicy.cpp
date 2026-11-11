@@ -114,7 +114,7 @@ DefaultPlaybackPolicy::GetPlaybackSlice(
     double deltat = (frames / mRate) * mLastPlaySpeed;
 
     if (deltat > realTimeRemaining) {
-        toProduce = frames = 0.5 + (realTimeRemaining * mRate) / mLastPlaySpeed;
+        toProduce = frames = mRemaining;
 
         double extra = 0;
         if (RevertToOldDefault(schedule)) {

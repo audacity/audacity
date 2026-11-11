@@ -3,6 +3,9 @@
 */
 #pragma once
 
+#include <functional>
+#include <optional>
+
 #include "framework/global/modularity/ioc.h"
 
 #include "ui/iuiconfiguration.h"
@@ -52,6 +55,11 @@ public:
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
     Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
 
+    Q_INVOKABLE void startClipFadeEdit(const ClipKey& key);
+    Q_INVOKABLE bool changeClipFadeIn(const ClipKey& key, double duration, bool completed);
+    Q_INVOKABLE bool changeClipFadeOut(const ClipKey& key, double duration, bool completed);
+    Q_INVOKABLE void cancelClipFadeEdit();
+
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
 
@@ -87,8 +95,12 @@ private:
 
     bool isKeyboardTriggered() const;
 
+    bool changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change);
+
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
+    //! As it was before the fade edit
+    std::optional<trackedit::Clip> m_fadeEditedClip;
 };
 }
