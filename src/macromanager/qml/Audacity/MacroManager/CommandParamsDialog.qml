@@ -28,7 +28,8 @@ StyledDialogView {
         readonly property int contentWidth: 360
         readonly property int margins: 16
         readonly property int rowsSpacing: 12
-        readonly property int labelFieldSpacing: 4
+        readonly property int itemSpacing: 8
+        readonly property int fieldWidth: 160
         readonly property int buttonsTopMargin: 16
         readonly property int buttonWidth: 64
         readonly property int buttonHeight: 28
@@ -66,7 +67,7 @@ StyledDialogView {
             Repeater {
                 model: paramsModel
 
-                delegate: ColumnLayout {
+                delegate: RowLayout {
                     id: row
 
                     required property int index
@@ -77,6 +78,8 @@ StyledDialogView {
                     required property var max
                     required property var value
                     required property var options
+                    required property bool optional
+                    required property bool included
 
                     property NavigationPanel navigationPanel: NavigationPanel {
                         name: "CommandParam" + row.index
@@ -88,7 +91,28 @@ StyledDialogView {
 
                     Layout.fillWidth: true
 
-                    spacing: prv.labelFieldSpacing
+                    spacing: prv.itemSpacing
+
+                    Item {
+                        implicitWidth: includedCheckBox.implicitWidth
+                        implicitHeight: includedCheckBox.implicitHeight
+
+                        CheckBox {
+                            id: includedCheckBox
+
+                            visible: row.optional
+                            checked: row.included
+
+                            navigation.panel: row.navigationPanel
+                            navigation.order: 0
+                            navigation.enabled: visible
+                            navigation.accessible.name: row.description.length > 0 ? row.description : row.key
+
+                            onClicked: {
+                                paramsModel.setIncluded(row.index, !checked)
+                            }
+                        }
+                    }
 
                     StyledTextLabel {
                         Layout.fillWidth: true
@@ -98,7 +122,9 @@ StyledDialogView {
                     }
 
                     Loader {
-                        Layout.fillWidth: true
+                        Layout.preferredWidth: prv.fieldWidth
+
+                        enabled: row.included
 
                         sourceComponent: {
                             switch (row.type) {
@@ -122,7 +148,7 @@ StyledDialogView {
                             currentText: row.value
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 0
+                            navigation.order: 1
 
                             onTextChanged: function (newTextValue) {
                                 paramsModel.setValue(row.index, newTextValue)
@@ -141,7 +167,7 @@ StyledDialogView {
                             step: 1
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 0
+                            navigation.order: 1
 
                             onValueEdited: function (newValue) {
                                 paramsModel.setValue(row.index, newValue)
@@ -156,7 +182,7 @@ StyledDialogView {
                             checked: row.value
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 0
+                            navigation.order: 1
 
                             onClicked: {
                                 paramsModel.setValue(row.index, !checked)
@@ -174,7 +200,7 @@ StyledDialogView {
                             currentIndex: dropdown.indexOfValue(row.value)
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 0
+                            navigation.order: 1
 
                             onActivated: function (index, value) {
                                 paramsModel.setValue(row.index, value)
