@@ -28,6 +28,10 @@ concurrency:
   group: au4_deploy-${{ github.ref }}
   cancel-in-progress: false
 
+defaults:
+  run:
+    shell: bash # with pipefail: a failing make_tag_name.sh must fail the plan, not be masked by tee
+
 env:
   # Audacity's names for the framework's release scripts:
   # tag 'Audacity-4.0.2' or 'Audacity-4.1.0-beta-2', release 'Audacity 4.0.2' or 'Audacity 4.1.0 Beta 2'
