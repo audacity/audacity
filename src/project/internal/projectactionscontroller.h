@@ -83,6 +83,7 @@ private:
     bool doCloseOpenedProject(bool quitApp, bool discardUnsavedChanges, std::function<void()> onClosedLater = nullptr);
     void askAboutSavingThenClose(const IAudacityProjectPtr& project, bool quitApp, std::function<void()> onClosedLater);
     bool closeAsAnswered(const IAudacityProjectPtr& project, muse::IInteractive::Button btn, bool quitApp);
+    bool stopOngoingRecording();
     bool finishClosingProject(const IAudacityProjectPtr& project, bool quitApp);
     project::IAudacityProjectPtr currentProject() const;
 

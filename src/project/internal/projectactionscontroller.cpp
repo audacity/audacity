@@ -528,8 +528,7 @@ bool ProjectActionsController::closeAsAnswered(const IAudacityProjectPtr& projec
 {
     switch (btn) {
     case IInteractive::Button::Save:
-        if (recordController()->isRecording() && !recordController()->stopRecording()) {
-            LOGE() << "Couldn't stop an ongoing recording. Aborting project close.";
+        if (!stopOngoingRecording()) {
             return false;
         }
         if (!saveProject()) {
@@ -541,6 +540,9 @@ bool ProjectActionsController::closeAsAnswered(const IAudacityProjectPtr& projec
         }
         return finishClosingProject(project, quitApp);
     case IInteractive::Button::DontSave:
+        if (!stopOngoingRecording()) {
+            return false;
+        }
         return finishClosingProject(project, quitApp);
     case IInteractive::Button::Cancel:
         return false;
@@ -548,6 +550,16 @@ bool ProjectActionsController::closeAsAnswered(const IAudacityProjectPtr& projec
         assert(false);
         return false;
     }
+}
+
+//! NOTE Before saving, or the recording is not saved; before closing anyway, or the project is closed under it
+bool ProjectActionsController::stopOngoingRecording()
+{
+    if (recordController()->isRecording() && !recordController()->stopRecording()) {
+        LOGE() << "Couldn't stop an ongoing recording. Aborting project close.";
+        return false;
+    }
+    return true;
 }
 
 bool ProjectActionsController::finishClosingProject(const IAudacityProjectPtr& project, const bool quitApp)

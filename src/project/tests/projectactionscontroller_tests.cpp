@@ -155,12 +155,29 @@ TEST_F(ProjectActionsControllerTests, DontSaveWhileRecording_ClosesWithoutSaving
 {
     answer(Button::DontSave);
 
-    //! [THEN] Nothing is saved, the project is closed
+    //! [THEN] Nothing is saved; the recording is stopped, then the project is closed
     EXPECT_CALL(*m_project, save(_, _)).Times(0);
-    EXPECT_CALL(*m_project, close()).Times(1);
+    {
+        InSequence seq;
+        EXPECT_CALL(*m_recordController, stopRecording()).Times(1);
+        EXPECT_CALL(*m_project, close()).Times(1);
+    }
 
     //! [WHEN] Closing and choosing not to save
     EXPECT_TRUE(closeOpenedProject());
+}
+
+TEST_F(ProjectActionsControllerTests, DontSaveWhenRecordingCannotBeStopped_KeepsProjectOpen)
+{
+    //! [GIVEN] The recording cannot be stopped
+    ON_CALL(*m_recordController, stopRecording()).WillByDefault(Return(muse::make_ret(muse::Ret::Code::UnknownError)));
+
+    //! [THEN] The project is not closed under the recording
+    answer(Button::DontSave);
+    EXPECT_CALL(*m_project, close()).Times(0);
+
+    //! [WHEN] Closing and choosing not to save
+    EXPECT_FALSE(closeOpenedProject());
 }
 
 TEST_F(ProjectActionsControllerTests, SaveWhenRecordingCannotBeStopped_KeepsProjectOpen)
