@@ -89,7 +89,9 @@ jobs:
     needs:
       - plan # to access outputs
       - build
-    if: ${{ ! failure() && ! cancelled() && inputs.create_tag }}
+    # Explicit success: a platform build cancelled by the runner service (not failed) leaves
+    # failure() false and cancelled() false, and the release would wait for approval anyway.
+    if: ${{ needs.plan.result == 'success' && needs.build.result == 'success' && inputs.create_tag }}
     runs-on: ubuntu-24.04
     permissions:
       contents: write # to push the tag and create the release
