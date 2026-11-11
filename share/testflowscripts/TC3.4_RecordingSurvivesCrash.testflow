@@ -1,0 +1,5 @@
+# TC3.4: A recording survives a crash, in a new project
+#
+# Each script runs in a new app process, all sharing one profile, in this order.
+TC3.4_RecordingSurvivesCrash/1_RecordAndCrash.js
+TC3.4_RecordingSurvivesCrash/2_Recover.js
