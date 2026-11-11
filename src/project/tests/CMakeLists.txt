@@ -12,6 +12,8 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditprojectcreatormock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/cloudprojectsprovidermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/dummyeffectinstancefactory.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/recentfilescontrollermock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/au3audiocomservicemock.h
     ${CMAKE_CURRENT_LIST_DIR}/audacityproject_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectrecovery_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectspersistence_tests.cpp
@@ -20,6 +22,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/clipfadespersistence_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playbackfades_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/waveformfades_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/projectactionscontroller_tests.cpp
 )
 
 set(MODULE_TEST_LINK
@@ -31,6 +34,7 @@ set(MODULE_TEST_LINK
     au3-realtime-effects
     au3-wave-track-paint
     trackedit
+    exporter # ProjectActionsController injects the concrete ExportConfiguration
     muse::actions
     muse::draw
     sqlite # required for SQLITE_CANTOPEN and SQLITE_READONLY macros used in audacityproject_tests.cpp

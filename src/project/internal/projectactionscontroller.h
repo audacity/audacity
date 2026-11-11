@@ -57,6 +57,8 @@ class ProjectActionsController : public IProjectFilesController, public muse::rc
     muse::ContextInject<effects::IMissingEffectChecker> missingEffectChecker { this };
     muse::ContextInject<record::IRecordController> recordController{ this };
 
+    friend class ProjectActionsControllerTests;
+
 public:
     ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);
 

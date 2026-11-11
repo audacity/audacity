@@ -92,6 +92,18 @@ const std::vector<CommandInfo> commandInfos = {
         Decoration()
     },
     CommandInfo{
+        PROJECT_SAVE_AT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Save at"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Save the project at a given path"),
+        InputSchema({
+                { PROJECT_PATH_PARAM, Arg(DataType::String, u"Path to save the project at") },
+            }),
+        Decoration(),
+        Availability::Internal
+    },
+    CommandInfo{
         PROJECT_SAVE_AS_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Save &as…"),

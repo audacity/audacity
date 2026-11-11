@@ -92,6 +92,10 @@ void ProjectActionsController::init()
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
     cd->onRequest(this, PROJECT_SAVE_AS_COMMAND, [this]() { return Ret(saveProject(SaveMode::SaveAs)); });
+    cd->onRequest(this, PROJECT_SAVE_AT_COMMAND, [this](const Params& params) {
+        const muse::io::path_t path = params.count(PROJECT_PATH_PARAM) ? params.at(PROJECT_PATH_PARAM).toPath() : muse::io::path_t();
+        return path.empty() ? make_ret(Ret::Code::BadArgs) : Ret(saveProject(path));
+    });
     cd->onRequest(this, PROJECT_CLOSE_COMMAND, [this]() { return closeProject(); });
 
     cd->onRequest(this, PROJECT_SHARE_AUDIO_COMMAND, [this]() { return shareAudio(); });
