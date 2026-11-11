@@ -30,6 +30,7 @@
 #include <QFileOpenEvent>
 #include <QWindow>
 #include <QMimeData>
+#include <QPointer>
 
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
@@ -207,8 +208,16 @@ void ApplicationActionController::onDropEvent(QDropEvent* event)
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 {
     if (event->type() == QEvent::Close && watched == mainWindow()->qWindow()) {
+        //! NOTE: the close is deferred if there are unsaved changes and the user is asked what to do.
+        //! When this `eventFilter` re-enters, we'll have the answer and can do the rest synchronously.
+        const auto closeAgain = [window = QPointer<QWindow>(mainWindow()->qWindow())]() {
+            if (window) {
+                window->close();
+            }
+        };
+
         if (multiwindowsProvider()->windowCount() > 1) {
-            if (!projectFilesController()->closeOpenedProject()) {
+            if (!projectFilesController()->closeOpenedProject(false, closeAgain)) {
                 event->ignore();
                 return true;
             }
@@ -225,7 +234,7 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
         }
 #ifdef Q_OS_MAC
         // On macos closing the last window does not exit the app
-        if (!projectFilesController()->closeOpenedProject()) {
+        if (!projectFilesController()->closeOpenedProject(false, closeAgain)) {
             event->ignore();
             return true;
         }
@@ -321,7 +330,8 @@ bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
 
     for (const auto& ctx : allContexts) {
         auto pfc = muse::modularity::ioc(ctx)->resolve<project::IProjectFilesController>("appshell");
-        if (pfc && !pfc->closeOpenedProject()) {
+        // Same re-entry approach as in `eventFilter`.
+        if (pfc && !pfc->closeOpenedProject(false, [this, installerPath]() { quit(installerPath); })) {
             return false;
         }
     }
@@ -349,7 +359,8 @@ bool ApplicationActionController::quit(const muse::io::path_t& installerPath)
 
 muse::Ret ApplicationActionController::restart()
 {
-    if (!projectFilesController()->closeOpenedProject(false)) {
+    //! If the user is asked about saving, restarting resumes once the project is closed
+    if (!projectFilesController()->closeOpenedProject(false, [this]() { restart(); })) {
         return make_ret(Ret::Code::Cancel);
     }
 

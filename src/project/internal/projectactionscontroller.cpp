@@ -461,9 +461,9 @@ muse::Ret ProjectActionsController::closeProject()
     return Ret(closeOpenedProject(false));
 }
 
-bool ProjectActionsController::closeOpenedProject(const bool quitApp)
+bool ProjectActionsController::closeOpenedProject(const bool quitApp, std::function<void()> onClosedLater)
 {
-    return doCloseOpenedProject(quitApp, false);
+    return doCloseOpenedProject(quitApp, false, std::move(onClosedLater));
 }
 
 bool ProjectActionsController::quitDiscardingUnsavedChanges()
@@ -476,16 +476,12 @@ bool ProjectActionsController::quitDiscardingUnsavedChanges()
     return true;
 }
 
-bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bool discardUnsavedChanges)
+bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bool discardUnsavedChanges,
+                                                    std::function<void()> onClosedLater)
 {
     if (m_isProjectClosing) {
         return false;
     }
-
-    m_isProjectClosing = true;
-    DEFER {
-        m_isProjectClosing = false;
-    };
 
     const IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
@@ -493,27 +489,69 @@ bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bo
     }
 
     if (!discardUnsavedChanges && project->hasUnsavedChanges()) {
-        const IInteractive::Button btn = askAboutSavingProject(project);
+        askAboutSavingThenClose(project, quitApp, std::move(onClosedLater));
+        return false;
+    }
 
-        if (btn == IInteractive::Button::Cancel) {
+    m_isProjectClosing = true;
+    const bool closed = finishClosingProject(project, quitApp);
+    m_isProjectClosing = false;
+    return closed;
+}
+
+void ProjectActionsController::askAboutSavingThenClose(const IAudacityProjectPtr& project, const bool quitApp,
+                                                       std::function<void()> onClosedLater)
+{
+    m_isProjectClosing = true;
+
+    //! NOTE A promise keeps its callbacks, and what they capture, alive for good: the project is held weakly
+    const auto onAnswer = [this, weakProject = std::weak_ptr(project), quitApp, onClosedLater](IInteractive::Button btn) {
+        const IAudacityProjectPtr project = weakProject.lock();
+        const bool closed = project && closeAsAnswered(project, btn, quitApp);
+
+        //! NOTE Only now may a project be closed again, which is what `onClosedLater` typically does
+        m_isProjectClosing = false;
+
+        if (closed && onClosedLater) {
+            onClosedLater();
+        }
+    };
+
+    askAboutSavingProject(project).onResolve(this, [onAnswer](const IInteractive::Result& result) {
+        onAnswer(result.standardButton());
+    });
+}
+
+//! Saves or not, as answered to `askAboutSavingProject`, then closes: whether the project was closed
+bool ProjectActionsController::closeAsAnswered(const IAudacityProjectPtr& project, const IInteractive::Button btn,
+                                               const bool quitApp)
+{
+    switch (btn) {
+    case IInteractive::Button::Save:
+        if (recordController()->isRecording() && !recordController()->stopRecording()) {
+            LOGE() << "Couldn't stop an ongoing recording. Aborting project close.";
+            return false;
+        }
+        if (!saveProject()) {
             return false;
         }
 
-        if (btn == IInteractive::Button::Save) {
-            if (recordController()->isRecording() && !recordController()->stopRecording()) {
-                LOGE() << "Couldn't stop an ongoing recording. Aborting project close.";
-                return false;
-            }
-            if (!saveProject()) {
-                return false;
-            }
-
-            if (audioComService()->syncingInProgressChanged().val) {
-                return false;
-            }
+        if (audioComService()->syncingInProgressChanged().val) {
+            return false;
         }
+        return finishClosingProject(project, quitApp);
+    case IInteractive::Button::DontSave:
+        return finishClosingProject(project, quitApp);
+    case IInteractive::Button::Cancel:
+        return false;
+    default:
+        assert(false);
+        return false;
     }
+}
 
+bool ProjectActionsController::finishClosingProject(const IAudacityProjectPtr& project, const bool quitApp)
+{
     if (project->isCloudProject() && !askAboutStoppingCloudSync()) {
         return false;
     }
@@ -803,7 +841,7 @@ muse::io::paths_t ProjectActionsController::selectImportFiles()
     return filePaths;
 }
 
-IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityProjectPtr project)
+muse::async::Promise<IInteractive::Result> ProjectActionsController::askAboutSavingProject(IAudacityProjectPtr project)
 {
     std::string title;
 
@@ -816,14 +854,12 @@ IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityPr
 
     std::string body = muse::trc("project", "Your changes will be lost if you don’t save them.");
 
-    IInteractive::Result result = interactive()->warningSync(title, body, {
+    return interactive()->warning(title, body, {
         IInteractive::Button::DontSave,
         IInteractive::Button::Cancel,
         IInteractive::Button::Save
     }, IInteractive::Button::Save, { IInteractive::Option::WithIcon },
-                                                             muse::trc("project", "Unsaved changes"));
-
-    return result.standardButton();
+                                  muse::trc("project", "Unsaved changes"));
 }
 
 Ret ProjectActionsController::canSaveProject() const
@@ -1792,8 +1828,12 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     }
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();
-        closeOpenedProject(false);
-        openCloudProject(localPath, {}, {}, true);
+        const auto openCloudProjectForced = [this, localPath]() {
+                openCloudProject(localPath, {}, {}, true);
+            };
+        if (closeOpenedProject(false, openCloudProjectForced)) {
+            openCloudProjectForced();
+        }
         break;
     }
     default:

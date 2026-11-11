@@ -215,7 +215,7 @@ TEST_F(FactoryResetActionTests, ConfirmWarning_CancelRestart_NoRestart)
     .Times(1);
 
     //! [THEN] No restart, no project close
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(_)).Times(0);
+    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(_, _)).Times(0);
     EXPECT_CALL(*m_application, restart()).Times(0);
 
     //! [WHEN] User confirms warning, cancels restart
@@ -236,7 +236,7 @@ TEST_F(FactoryResetActionTests, ConfirmRestart_SingleWindow_Restarts)
     ON_CALL(*m_multiWindowsProvider, windowCount())
     .WillByDefault(Return(size_t(1)));
 
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
+    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false, _))
     .WillOnce(Return(true));
 
     //! [THEN] Settings are reset and app restarts
@@ -264,7 +264,7 @@ TEST_F(FactoryResetActionTests, ConfirmRestart_MultiWindow_QuitsAll)
     ON_CALL(*m_multiWindowsProvider, windowCount())
     .WillByDefault(Return(size_t(3)));
 
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
+    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false, _))
     .WillOnce(Return(true));
 
     //! [THEN] Settings are reset
@@ -292,7 +292,7 @@ TEST_F(FactoryResetActionTests, ConfirmRestart_ProjectCloseRejected_NoRestart)
     setupRestartDialog();
 
     //! [GIVEN] Project close is rejected by user
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
+    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false, _))
     .WillOnce(Return(false));
 
     //! [THEN] Settings are still reset (happens before restart attempt)

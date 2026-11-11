@@ -15,6 +15,11 @@ module.exports = {
         api.navigation.right()
         api.navigation.trigger()
     },
+    // Open the most recent project; false if there is none
+    openMostRecentProject: function () {
+        // Row 0 is "New project". Row 1 is the most recent project: its tile, then its menu
+        return api.navigation.triggerControl("RecentProjects", "RecentProjectsGrid", [1, 0])
+    },
     // Create new project
     createNewProject: function () {
         Navigation.triggerControl("RecentProjects", "RecentProjectsGrid", "New project")

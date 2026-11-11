@@ -67,7 +67,7 @@ public:
     [[nodiscard]] muse::Ret openProject(const ProjectFile& file) override;
     bool isUrlSupported(const QUrl& url) const override;
     bool isFileSupported(const muse::io::path_t& path) const override;
-    bool closeOpenedProject(bool quitApp = false) override;
+    bool closeOpenedProject(bool quitApp = false, std::function<void()> onClosedLater = nullptr) override;
     bool quitDiscardingUnsavedChanges() override;
     bool saveProject(const muse::io::path_t& path = muse::io::path_t()) override;
     bool saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
@@ -80,7 +80,10 @@ public:
     bool isProjectOpened(const muse::io::path_t& projectPath) const;
 
 private:
-    bool doCloseOpenedProject(bool quitApp, bool discardUnsavedChanges);
+    bool doCloseOpenedProject(bool quitApp, bool discardUnsavedChanges, std::function<void()> onClosedLater = nullptr);
+    void askAboutSavingThenClose(const IAudacityProjectPtr& project, bool quitApp, std::function<void()> onClosedLater);
+    bool closeAsAnswered(const IAudacityProjectPtr& project, muse::IInteractive::Button btn, bool quitApp);
+    bool finishClosingProject(const IAudacityProjectPtr& project, bool quitApp);
     project::IAudacityProjectPtr currentProject() const;
 
     muse::Ret newProject();
@@ -109,7 +112,7 @@ private:
     bool shouldRetryLoadAfterError(const muse::Ret& ret, const muse::io::path_t& filepath);
     void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath) const;
 
-    muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
+    muse::async::Promise<muse::IInteractive::Result> askAboutSavingProject(IAudacityProjectPtr project);
 
     muse::Ret canSaveProject() const;
     bool saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false);
