@@ -72,6 +72,14 @@ public:
     MOCK_METHOD(int, labelEditorColumnFormat, (const std::string& columnName), (const, override));
     MOCK_METHOD(void, setLabelEditorColumnFormat, (const std::string& columnName, int format), (const, override));
 
+    MOCK_METHOD(trackedit::TrackViewType, defaultTrackViewType, (), (const, override));
+    MOCK_METHOD(void, setDefaultTrackViewType, (trackedit::TrackViewType), (override));
+    MOCK_METHOD(muse::async::Notification, defaultTrackViewTypeChanged, (), (const, override));
+
+    MOCK_METHOD(trackedit::TrackRulerType, defaultRulerType, (), (const, override));
+    MOCK_METHOD(void, setDefaultRulerType, (trackedit::TrackRulerType), (override));
+    MOCK_METHOD(muse::async::Notification, defaultRulerTypeChanged, (), (const, override));
+
     MOCK_METHOD(ZoomPresets::Preset, zoomPreset1, (), (const, override));
     MOCK_METHOD(void, setZoomPreset1, (ZoomPresets::Preset preset), (override));
     MOCK_METHOD(ZoomPresets::Preset, zoomPreset2, (), (const, override));

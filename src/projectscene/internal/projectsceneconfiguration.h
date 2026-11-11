@@ -76,6 +76,14 @@ public:
     int labelEditorColumnFormat(const std::string& columnName) const override;
     void setLabelEditorColumnFormat(const std::string& columnName, int format) const override;
 
+    trackedit::TrackViewType defaultTrackViewType() const override;
+    void setDefaultTrackViewType(trackedit::TrackViewType type) override;
+    muse::async::Notification defaultTrackViewTypeChanged() const override;
+
+    trackedit::TrackRulerType defaultRulerType() const override;
+    void setDefaultRulerType(trackedit::TrackRulerType scale) override;
+    muse::async::Notification defaultRulerTypeChanged() const override;
+
     ZoomPresets::Preset zoomPreset1() const override;
     void setZoomPreset1(ZoomPresets::Preset preset) override;
     ZoomPresets::Preset zoomPreset2() const override;
@@ -96,5 +104,7 @@ private:
     muse::async::Notification m_playbackOnRulerClickEnabledChanged;
     muse::async::Notification m_updateDisplayWhilePlayingEnabledChanged;
     muse::async::Notification m_pinnedPlayHeadEnabledChanged;
+    muse::async::Notification m_defaultTrackViewTypeChanged;
+    muse::async::Notification m_defaultRulerTypeChanged;
 };
 }

@@ -328,6 +328,12 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     d.rulerType.val = defaultRulerType;
     d.viewType.val = defaultViewType;
 
+    // A track created with a spectrogram default view needs frequency selection too
+    if (defaultViewType == trackedit::TrackViewType::Spectrogram
+        || defaultViewType == trackedit::TrackViewType::WaveformAndSpectrogram) {
+        frequencySelectionController()->setShowsSpectrogram(trackId, true);
+    }
+
     d.viewType.ch.onReceive(this, [this, trackId](auto) {
         const auto prj = globalContext()->currentTrackeditProject();
         if (prj) {

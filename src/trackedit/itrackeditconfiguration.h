@@ -39,5 +39,10 @@ public:
     virtual PasteInsertBehavior pasteInsertBehavior() const = 0;
     virtual void setPasteInsertBehavior(PasteInsertBehavior value) = 0;
     virtual muse::async::Notification pasteInsertBehaviorChanged() const = 0;
+
+    // Name given to new audio tracks. Never empty: falls back to the translated "Audio".
+    virtual std::string defaultAudioTrackName() const = 0;
+    virtual void setDefaultAudioTrackName(const std::string& name) = 0;
+    virtual muse::async::Notification defaultAudioTrackNameChanged() const = 0;
 };
 }
