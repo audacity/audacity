@@ -109,6 +109,16 @@ jobs:
       with:
         path: build.artifacts
 
+    - name: Give a lone artifact its directory # download-artifact extracts a single artifact into the path itself
+      run: |
+        if [[ -f build.artifacts/env/upload_artifact_name.env ]]; then
+          name="$(< build.artifacts/env/upload_artifact_name.env)"
+          mkdir build.artifacts.tmp
+          mv build.artifacts "build.artifacts.tmp/${name}"
+          mv build.artifacts.tmp build.artifacts
+          echo "Moved the only artifact to build.artifacts/${name}"
+        fi
+
     - name: Collate release binaries
       run: |
         muse/buildscripts/ci/release/collate_release_binaries.sh
