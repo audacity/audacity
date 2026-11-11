@@ -1,0 +1,5 @@
+# TC3.3: Save a new project, and open it again
+#
+# Each script runs in a new app process, all sharing one profile, in this order.
+TC3.3_SaveNewProject/1_CreateAndSave.js
+TC3.3_SaveNewProject/2_Reopen.js
