@@ -4,6 +4,7 @@
 #include "commandparamsmodel.h"
 
 #include <algorithm>
+#include <ranges>
 #include <vector>
 
 using namespace au::macromanager;
@@ -102,6 +103,8 @@ QVariant CommandParamsModel::data(const QModelIndex& index, int role) const
     case MaxRole: return item.max;
     case ValueRole: return item.value;
     case OptionsRole: return item.options;
+    case OptionalRole: return item.optional;
+    case IncludedRole: return item.included;
     default: return QVariant();
     }
 }
@@ -120,7 +123,9 @@ QHash<int, QByteArray> CommandParamsModel::roleNames() const
         { MinRole, "min" },
         { MaxRole, "max" },
         { ValueRole, "value" },
-        { OptionsRole, "options" }
+        { OptionsRole, "options" },
+        { OptionalRole, "optional" },
+        { IncludedRole, "included" }
     };
 
     return roles;
@@ -151,6 +156,8 @@ void CommandParamsModel::load(const QString& command, const QVariantMap& params)
         item.min = boundValue(arg.min);
         item.max = boundValue(arg.max);
         item.options = toOptions(arg.allowedValues);
+        item.optional = arg.presence == Presence::Optional;
+        item.included = !item.optional || params.contains(item.key);
 
         const QVariant stored = params.value(item.key);
         if (item.type == ParamType::Array) {
@@ -182,10 +189,22 @@ void CommandParamsModel::setValue(int row, const QVariant& value)
     emit dataChanged(idx, idx, { ValueRole });
 }
 
+void CommandParamsModel::setIncluded(int row, bool included)
+{
+    if (row < 0 || row >= m_items.size() || !m_items.at(row).optional) {
+        return;
+    }
+
+    m_items[row].included = included;
+
+    const QModelIndex idx = index(row);
+    emit dataChanged(idx, idx, { IncludedRole });
+}
+
 QVariantMap CommandParamsModel::params() const
 {
     QVariantMap params;
-    for (const Item& item : m_items) {
+    for (const Item& item : m_items | std::views::filter(&Item::included)) {
         params[item.key] = toParamValue(item.type, item.value);
     }
 
