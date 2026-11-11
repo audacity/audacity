@@ -41,6 +41,7 @@ public:
 
     Q_INVOKABLE void load(const QString& command, const QVariantMap& params);
     Q_INVOKABLE void setValue(int row, const QVariant& value);
+    Q_INVOKABLE void setIncluded(int row, bool included);
     Q_INVOKABLE QVariantMap params() const;
 
 signals:
@@ -54,7 +55,9 @@ private:
         MinRole,
         MaxRole,
         ValueRole,
-        OptionsRole
+        OptionsRole,
+        OptionalRole,
+        IncludedRole
     };
 
     struct Item {
@@ -65,6 +68,8 @@ private:
         QVariant max;
         QVariant value;
         QVariantList options;
+        bool optional = false;
+        bool included = true;
     };
 
     QString m_title;
