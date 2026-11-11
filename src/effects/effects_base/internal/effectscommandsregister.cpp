@@ -23,7 +23,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Repeat last effect"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         EFFECTS_PLUGIN_MANAGER_COMMAND,
@@ -152,8 +153,8 @@ void EffectsCommandsRegister::reload()
 
     for (const EffectMeta& meta : effects) {
         const muse::String title = utils::effectDisplayTitle(meta);
-        const Availabilities availabilities = meta.isLoadable() && meta.isActivated ? Availabilities(Availability::All)
-                                              : Availabilities(Availability::Internal);
+        const bool usable = meta.isLoadable() && meta.isActivated;
+        const Availabilities availabilities = usable ? Availabilities(Availability::All) : Availabilities(Availability::Internal);
 
         m_commandInfos.push_back(CommandInfo {
             makeEffectOpenCommand(meta.id),
@@ -161,7 +162,7 @@ void EffectsCommandsRegister::reload()
             TranslatableString::untranslatable(meta.description),
             InputSchema(),
             Decoration(),
-            availabilities
+            usable ? Availabilities(Availability::UI) : Availabilities(Availability::Internal)
         });
 
         m_commandInfos.push_back(CommandInfo {
