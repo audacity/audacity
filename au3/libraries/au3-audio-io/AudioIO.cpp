@@ -221,8 +221,8 @@ void AudioIO::Deinit()
 
 bool AudioIO::ValidateDeviceNames(const wxString& play, const wxString& rec)
 {
-    const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(getPlayDevIndex(play));
-    const PaDeviceInfo* rInfo = Pa_GetDeviceInfo(getRecordDevIndex(rec));
+    const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(DeviceManager::getPlayDevIndex(play));
+    const PaDeviceInfo* rInfo = Pa_GetDeviceInfo(DeviceManager::getRecordDevIndex(rec));
 
     // Valid iff both defined and the same api.
     return pInfo != nullptr && rInfo != nullptr && pInfo->hostApi == rInfo->hostApi;
@@ -494,7 +494,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
     // with drivers that support it
     if (gPrefs->ReadBool(wxT("/AudioIO/ASIO/UseDeviceSampleRate"), true)) {
         const int asioDevIndex
-            =numPlaybackChannels > 0 ? getPlayDevIndex() : getRecordDevIndex();
+            =numPlaybackChannels > 0 ? DeviceManager::getPlayDevIndex() : DeviceManager::getRecordDevIndex();
         if (DeviceManager::IsAsioDevice(asioDevIndex)) {
             mRate = DeviceManager::GetAsioDeviceCurrentSampleRate(asioDevIndex);
         }
@@ -554,7 +554,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
 
         // this sets the device index to whatever is "right" based on preferences,
         // then defaults
-        playbackParameters.device = getPlayDevIndex();
+        playbackParameters.device = DeviceManager::getPlayDevIndex();
 
         const PaDeviceInfo* playbackDeviceInfo;
         playbackDeviceInfo = Pa_GetDeviceInfo(playbackParameters.device);
@@ -608,7 +608,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
         const PaDeviceInfo* captureDeviceInfo;
         // retrieve the index of the device set in the prefs, or a sensible
         // default if it isn't set/valid
-        captureParameters.device = getRecordDevIndex();
+        captureParameters.device = DeviceManager::getRecordDevIndex();
 
         captureDeviceInfo = Pa_GetDeviceInfo(captureParameters.device);
 
@@ -1724,12 +1724,12 @@ double AudioIO::GetBestRate(bool capturing, bool playing, double sampleRate)
     long supportedRate = 0;
 
     if (capturing && !playing) {
-        supportedRate = GetClosestSupportedCaptureRate(-1, sampleRate);
+        supportedRate = DeviceManager::GetClosestSupportedCaptureRate(-1, sampleRate);
     } else if (playing && !capturing) {
-        supportedRate = GetClosestSupportedPlaybackRate(-1, sampleRate);
+        supportedRate = DeviceManager::GetClosestSupportedPlaybackRate(-1, sampleRate);
     } else { // we assume capturing and playing - the alternative would be a
              // bit odd
-        supportedRate = GetClosestSupportedSampleRate(-1, -1, sampleRate);
+        supportedRate = DeviceManager::GetClosestSupportedSampleRate(-1, -1, sampleRate);
     }
 
     /* if we get here, there is a problem - the project rate isn't supported
