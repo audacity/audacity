@@ -31,6 +31,9 @@ void AudioEngineSwitcher::activate(const AudioBackend& backend)
 {
     m_engine = backend.engine;
     m_driver = backend.driverController;
+    if (backend.activated) {
+        backend.activated();
+    }
 
     // Drops the subscriptions to the previous backend
     m_relay = std::make_unique<muse::async::Asyncable>();

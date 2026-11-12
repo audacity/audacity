@@ -9,6 +9,7 @@
 
 namespace au::audio {
 class AudioDriverController;
+class IDeviceOpener;
 }
 
 namespace au::portaudiodevices {
@@ -22,5 +23,7 @@ public:
 
     //! Of the PortAudio devices, with the settings of AudioIO
     virtual std::shared_ptr<audio::AudioDriverController> driverController() const = 0;
+    //! Opens PortAudio streams as AudioIO does, on the devices of its settings
+    virtual std::shared_ptr<audio::IDeviceOpener> deviceOpener() const = 0;
 };
 }

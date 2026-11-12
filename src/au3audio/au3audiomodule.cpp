@@ -37,7 +37,9 @@ void Au3AudioModule::resolveImports()
     }
     const auto driverController = portAudio->driverController();
     driverController->setAudioEngine(m_audioEngine);
-    backendRegister->registerBackend({ "portaudio", m_audioEngine, driverController });
+    // AudioIO shares the PortAudio devices with other engines: the driver controller follows the active one
+    backendRegister->registerBackend({ "portaudio", m_audioEngine, driverController,
+                                       [this, driverController] { driverController->setAudioEngine(m_audioEngine); } });
 }
 
 void Au3AudioModule::onInit(const muse::IApplication::RunMode&)

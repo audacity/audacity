@@ -17,6 +17,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iaudiobackendregister.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiometer.h
+    ${CMAKE_CURRENT_LIST_DIR}/idevice.h
     ${CMAKE_CURRENT_LIST_DIR}/isystemaudiodeviceslistener.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audioengineswitcher.cpp

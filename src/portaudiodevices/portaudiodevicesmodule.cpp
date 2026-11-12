@@ -9,6 +9,7 @@
 
 #include "au3-audio-devices/DeviceManager.h"
 
+#include "internal/portaudiodevice.h"
 #include "internal/portaudiodevices.h"
 
 using namespace au::portaudiodevices;
@@ -23,9 +24,11 @@ public:
         : m_driverController{std::move(driverController)} {}
 
     std::shared_ptr<au::audio::AudioDriverController> driverController() const override { return m_driverController; }
+    std::shared_ptr<au::audio::IDeviceOpener> deviceOpener() const override { return m_deviceOpener; }
 
 private:
     const std::shared_ptr<au::audio::AudioDriverController> m_driverController;
+    const std::shared_ptr<au::audio::IDeviceOpener> m_deviceOpener = std::make_shared<PortAudioDeviceOpener>();
 };
 }
 

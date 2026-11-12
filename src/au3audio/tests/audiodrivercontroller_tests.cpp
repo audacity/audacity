@@ -111,6 +111,16 @@ public:
         m_controller.m_applying = applying;
     }
 
+    void setPendingSystemDevicesChange(bool pending)
+    {
+        m_controller.m_pendingSystemDevicesChange = pending;
+    }
+
+    bool pendingSystemDevicesChange() const
+    {
+        return m_controller.m_pendingSystemDevicesChange;
+    }
+
     AudioDriverController m_controller { std::make_unique<portaudiodevices::PortAudioDevices>(), "AudioIO" };
     std::shared_ptr<NiceMock<audio::AudioEngineMock> > m_audioEngine;
     std::shared_ptr<NiceMock<muse::ApplicationMock> > m_application;
@@ -266,5 +276,27 @@ TEST_F(AudioDriverControllerTests, Apply_ReentrantRequestIsRejectedWithoutChangi
 
     EXPECT_EQ(result.status, audio::ApplyStatus::Busy);
     EXPECT_EQ(m_controller.configuration().bufferLength, 100.0);
+}
+
+TEST_F(AudioDriverControllerTests, AnEngineSetLaterIsTheOneWhoseStopTriggersAPendingDeviceChange)
+{
+    //! [GIVEN] a device change waits for the stream of the engine set first to stop ...
+    muse::async::Notification firstStopped;
+    ON_CALL(*m_audioEngine, streamStopped()).WillByDefault(Return(firstStopped));
+    m_controller.setAudioEngine(m_audioEngine);
+    setPendingSystemDevicesChange(true);
+
+    //! ... and another engine, busy, is set
+    const auto second = std::make_shared<NiceMock<audio::AudioEngineMock> >();
+    muse::async::Notification secondStopped;
+    ON_CALL(*second, streamStopped()).WillByDefault(Return(secondStopped));
+    ON_CALL(*second, isBusy()).WillByDefault(Return(true));
+    m_controller.setAudioEngine(second);
+
+    //! [THEN] the first engine's stop doesn't trigger the change, the second's does: it waits again, the engine being busy
+    EXPECT_CALL(*second, isBusy()).Times(1);
+    firstStopped.notify();
+    secondStopped.notify();
+    EXPECT_TRUE(pendingSystemDevicesChange());
 }
 }
