@@ -6,7 +6,9 @@
 set(MODULE_TEST exporter_tests)
 
 set(MODULE_TEST_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/au3exportparameters_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/exportcommandoptions_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/exportdefaults_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/exportutils_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/ffmpegmetadata_tests.cpp

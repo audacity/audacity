@@ -3,6 +3,7 @@
 */
 
 #include "au3exporter.h"
+#include "au3exportparameters.h"
 
 #include <algorithm>
 #include <optional>
@@ -797,6 +798,11 @@ ExportParameters Au3Exporter::cloudExportParameters(const std::string& format) c
     }
 
     return {};
+}
+
+muse::RetVal<ExportParameters> Au3Exporter::exportParameters(const ExportFormatSettings& settings, int sampleRate) const
+{
+    return au3ExportParameters(settings, sampleRate);
 }
 
 bool Au3Exporter::isCustomFFmpegExportFormat() const

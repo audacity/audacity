@@ -45,6 +45,7 @@ public:
     std::vector<std::string> formatExtensions(const std::string& format) const override;
     std::vector<std::string> cloudPreferredAudioFormats(bool preferLossless) const override;
     ExportParameters cloudExportParameters(const std::string& format) const override;
+    muse::RetVal<ExportParameters> exportParameters(const ExportFormatSettings& settings, int sampleRate) const override;
     bool isCustomFFmpegExportFormat() const override;
     bool hasMetadata() const override;
 

@@ -20,11 +20,15 @@ set(MODULE_SRC
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exportparameters.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exportparameters.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3ffmpegoptionsaccessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3ffmpegoptionsaccessor.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandoptions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandoptions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.cpp
@@ -44,6 +48,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/channelmappingtableviewmodel.h
 
     #types
+    ${CMAKE_CURRENT_LIST_DIR}/types/exportformatsettings.h
     ${CMAKE_CURRENT_LIST_DIR}/types/exporttypes.h
 
 )
@@ -63,6 +68,7 @@ set(MODULE_LINK
         au3-tags
         au3-track
         au3-wave-track
+        SndFile::sndfile
 )
 
 set(MODULE_USE_UNITY OFF)
