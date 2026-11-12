@@ -138,6 +138,11 @@ public:
         m_controller->playSelectionAction();
     }
 
+    void playFromStart()
+    {
+        m_controller->playFromStartAction();
+    }
+
     void stop()
     {
         m_controller->stopAction();
@@ -1430,6 +1435,50 @@ TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
 
     //! [THEN] The playback cursor is at the selection start
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
+}
+
+TEST_F(PlaybackControllerTests, PlayFromStart_WhenStopped_PlaysFromZero)
+{
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    seek(30.0);
+
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(secs_t(0.0))))
+    .Times(1);
+
+    playFromStart();
+
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(0.0));
+}
+
+TEST_F(PlaybackControllerTests, PlayFromStart_WhilePlaying_Restarts)
+{
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(1);
+
+    playFromStart();
+}
+
+TEST_F(PlaybackControllerTests, PlayFromStart_WhileRecording_DoesNothing)
+{
+    EXPECT_CALL(*m_recordController, isRecording())
+    .WillRepeatedly(Return(true));
+
+    EXPECT_CALL(*m_player, seek(_, _))
+    .Times(0);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
+
+    playFromStart();
 }
 
 TEST_F(PlaybackControllerTests, SuspendPlayback_RestoresAtInterruptedPosition)

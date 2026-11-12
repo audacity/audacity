@@ -78,6 +78,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration(IconCode::Code::STOP_FILL)
     },
+    makeCommandInfo<PlayFromStartCommand>(),
     CommandInfo{
         PLAYBACK_REWIND_START_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short

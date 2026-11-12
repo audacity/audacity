@@ -62,6 +62,7 @@ void PlaybackController::init()
     cd->onRequest(this, PLAYBACK_TOGGLE_PLAY_STOP_COMMAND, [this]() { return togglePlayStopAction(); });
     cd->onRequest(this, PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_COMMAND, [this]() { return togglePlayStopAndSetCursorAction(); });
     cd->onRequest(this, PLAYBACK_PLAY_SELECTION_COMMAND, [this]() { return playSelectionAction(); });
+    cd->onRequest<PlayFromStartCommand>(this, [this](const PlayFromStartCommand&) { return playFromStartAction(); });
     cd->onRequest(this, PLAYBACK_PLAY_TRACKS_COMMAND, [this](const Params& params) { return playTracksAction(params); });
     cd->onRequest(this, PLAYBACK_PAUSE_COMMAND, [this]() { return pauseAction(); });
     cd->onRequest(this, PLAYBACK_STOP_COMMAND, [this]() { return stopAction(); });
@@ -456,6 +457,22 @@ muse::Ret PlaybackController::playSelectionAction()
     }
 
     m_isPlayingSelection = true;
+    return make_ok();
+}
+
+muse::Ret PlaybackController::playFromStartAction()
+{
+    if (!isPlayAllowed()) {
+        LOGW() << "playback not allowed";
+        return make_ret(Ret::Code::Busy);
+    }
+
+    if (!isStopped()) {
+        stop();
+    }
+
+    doSeek(0.0, false);
+    doPlay();
     return make_ok();
 }
 
