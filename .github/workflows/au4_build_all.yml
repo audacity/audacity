@@ -1,0 +1,101 @@
+name: '[AU4] Build: All'
+run-name: '[AU4] Build: All - ${{ inputs.build_mode }}'
+
+# Builds the chosen platforms with one build number, so that the packages of
+# one run belong together (a release is one build number on every platform).
+
+on:
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: 'Platforms to build: linux macos windows sources'
+        required: true
+        default: 'linux macos windows sources'
+      build_mode:
+        description: 'Build mode: devel, nightly, testing, stable'
+        required: true
+        default: 'devel'
+      sentry_project:
+        description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
+        required: false
+        default: ''
+
+  workflow_call:
+    inputs:
+      platforms:
+        description: 'Platforms to build: linux macos windows sources'
+        type: string
+        required: true
+        default: 'linux macos windows sources'
+      build_mode:
+        description: 'Build mode: devel, nightly, testing, stable'
+        type: string
+        required: true
+        default: 'devel'
+      sentry_project:
+        description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
+        type: string
+        required: false
+        default: ''
+
+jobs:
+  generate_build_number:
+    name: Generate build number
+    runs-on: ubuntu-24.04
+    outputs:
+      build_number: ${{ steps.make_build_number.outputs.build_number }}
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v7
+      with:
+        persist-credentials: false
+        sparse-checkout: buildscripts/ci/common
+
+    - name: Generate build number
+      id: make_build_number
+      run: |
+        cmake -P buildscripts/ci/common/make_build_number_env.cmake
+        BUILD_NUMBER=$(cat build.artifacts/env/build_number.env)
+        echo "build_number=${BUILD_NUMBER}" >> $GITHUB_OUTPUT
+
+  linux:
+    name: Linux
+    needs: generate_build_number
+    if: contains(inputs.platforms, 'linux')
+    uses: ./.github/workflows/au4_build_linux.yml
+    secrets: inherit
+    with:
+      build_mode: ${{ inputs.build_mode }}
+      sentry_project: ${{ inputs.sentry_project }}
+      build_number: ${{ needs.generate_build_number.outputs.build_number }}
+
+  macos:
+    name: macOS
+    needs: generate_build_number
+    if: contains(inputs.platforms, 'macos')
+    uses: ./.github/workflows/au4_build_macos.yml
+    secrets: inherit
+    with:
+      build_mode: ${{ inputs.build_mode }}
+      sentry_project: ${{ inputs.sentry_project }}
+      build_number: ${{ needs.generate_build_number.outputs.build_number }}
+
+  windows:
+    name: Windows
+    needs: generate_build_number
+    if: contains(inputs.platforms, 'windows')
+    uses: ./.github/workflows/au4_build_windows.yml
+    secrets: inherit
+    with:
+      build_mode: ${{ inputs.build_mode }}
+      sentry_project: ${{ inputs.sentry_project }}
+      build_number: ${{ needs.generate_build_number.outputs.build_number }}
+
+  sources:
+    name: Sources
+    needs: generate_build_number
+    if: contains(inputs.platforms, 'sources')
+    uses: ./.github/workflows/au4_build_sources.yml
+    with:
+      build_mode: ${{ inputs.build_mode }}
+      build_number: ${{ needs.generate_build_number.outputs.build_number }}

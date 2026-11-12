@@ -1,9 +1,11 @@
 # PrepareDepsSources.cmake - pre-fetch dep sources into the cache.
 #
-#   cmake [-DEXTDEPS_CACHE=<dir>] -P buildscripts/cmake/PrepareDepsSources.cmake
+#   cmake [-DEXTDEPS_CACHE=<dir>] [-DMUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT=OFF] \
+#       -P buildscripts/cmake/PrepareDepsSources.cmake
 #
 # This lets source/REBUILD and offline/distro builds configure without network.
-# SYSTEM deps and deps without a recipe are skipped.
+# SYSTEM deps and deps without a recipe are skipped. With crashpad off, as in a
+# distro build, its toolchains (about 1 GB) are left out.
 
 cmake_minimum_required(VERSION 3.24)
 set(_self_dir "${CMAKE_CURRENT_LIST_DIR}")
@@ -146,6 +148,9 @@ endfunction()
 
 # Run the manifest once per OS_IS_WIN value so the cache is the platform union
 # (openssl is non-Windows). Fetching is idempotent (SHA-checked).
+if (NOT DEFINED MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT)
+    set(MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT ON)
+endif()
 macro(_pds_manifest win)
     set(OS_IS_LIN FALSE)
     set(OS_IS_FBSD FALSE)
@@ -158,7 +163,6 @@ macro(_pds_manifest win)
     set(MUSE_MODULE_DRAW ON)
     set(MUSE_MODULE_AUDIO ON)
     set(MUSE_MODULE_AUDIO_EXPORT ON)
-    set(MUSE_MODULE_DIAGNOSTICS_CRASHPAD_CLIENT ON)
     include("${_self_dir}/DependencyManifest.cmake")
     include("${_root}/muse/buildscripts/cmake/ExtDepsManifest.cmake")
 endmacro()
