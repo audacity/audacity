@@ -9,12 +9,12 @@
  **********************************************************************/
 
 #include "QualitySettings.h"
-#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-audio-devices/DeviceManager.h"
 #include "au3-strings/Internat.h"
 
 IntSetting QualitySettings::DefaultSampleRate{
     L"/SamplingRate/DefaultProjectSampleRate",
-    AudioIOBase::GetOptimalSupportedSampleRate
+    DeviceManager::GetOptimalSupportedSampleRate
 };
 
 EnumSetting< sampleFormat > QualitySettings::SampleFormatSetting{
