@@ -18,16 +18,11 @@
 #include "audio/iaudiostreamsuspender.h"
 #include "context/iglobalcontext.h"
 
-#include "au3wrap/au3types.h"
-#include "au3wrap/internal/wxtypes_convert.h"
-
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
 
 using namespace muse;
 using namespace au::audio;
-using namespace au::au3;
-using namespace au::au3audio;
 
 namespace {
 // Shared by all backends

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace au::au3audio {
+namespace au::audio {
 //! The device enumeration of an audio backend, for AudioDriverController.
 //! Devices are identified by their display name within an API.
 class IAudioDevices

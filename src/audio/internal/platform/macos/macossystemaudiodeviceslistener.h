@@ -6,9 +6,9 @@
 #include <QObject>
 #include <QTimer>
 
-#include "au3audio/isystemaudiodeviceslistener.h"
+#include "audio/isystemaudiodeviceslistener.h"
 
-namespace au::au3audio {
+namespace au::audio {
 class MacosSystemAudioDevicesListener : public QObject, public ISystemAudioDevicesListener
 {
 public:

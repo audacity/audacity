@@ -9,7 +9,7 @@
 
 #include "log.h"
 
-using namespace au::au3audio;
+using namespace au::audio;
 
 namespace {
 constexpr int DEBOUNCE_INTERVAL_MS = 500;

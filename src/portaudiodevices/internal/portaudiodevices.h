@@ -3,11 +3,11 @@
 */
 #pragma once
 
-#include "iaudiodevices.h"
+#include "audio/driver/iaudiodevices.h"
 
-namespace au::au3audio {
+namespace au::portaudiodevices {
 //! The PortAudio devices, as seen by au3's DeviceManager.
-class PortAudioDevices final : public IAudioDevices
+class PortAudioDevices final : public audio::IAudioDevices
 {
 public:
     std::vector<std::string> apis() const override;

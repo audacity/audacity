@@ -60,6 +60,7 @@ if (MUSE_MODULE_EXTENSIONS)
 endif()
 
 if (AU_BUILD_PLAYBACK_MODULE)
+    add_subdirectory(portaudiodevices)
     add_subdirectory(au3audio)
     add_subdirectory(playback)
 endif()

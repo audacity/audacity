@@ -14,6 +14,7 @@ set(MODULE_TEST_SRC
 
 set(MODULE_TEST_LINK
     au3audio
+    portaudiodevices
     au3wrap
     au3-audio-io
     portaudio::portaudio
