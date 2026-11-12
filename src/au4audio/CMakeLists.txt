@@ -11,8 +11,12 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au4audioengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au4audioengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/blockcontext.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/blockcontext.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscratch.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscratch.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectslatency.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectslatency.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsnode.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsnode.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/endoftracknode.cpp
@@ -32,6 +36,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/stereo.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/track.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/track.h
 )
 # Their `using namespace au::au4audio` would leak into other unity-combined sources
 set_source_files_properties(${MODULE_SRC} PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
