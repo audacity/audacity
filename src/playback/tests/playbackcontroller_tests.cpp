@@ -329,30 +329,34 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_PassesPlayheadToPlayer)
 }
 
 /**
- * @brief Toggle play when stopped on the end of project
- * @details User clicked play after the previous playback reached the end of project
- *          Playback should be started from start of project (0.0 time)
+ * @brief Toggle play when stopped with the cursor on the end of project
+ * @details The cursor itself sits on the project end (e.g. after "rewind to end"), so
+ *          there is nothing to play from it: playback restarts from the project start
  */
-TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnTheEndOfProject)
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_WithCursorOnTheEndOfProject_RestartsFromStart)
 {
     //! [GIVEN] Playback is stopped
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
 
-    //! [GIVEN] Was stoped on the end of project
+    //! [GIVEN] The cursor and the playhead are on the end of project
+    m_controller->setLastPlaybackSeekTime(100.0);
     EXPECT_CALL(*m_player, playbackPosition())
-    .WillOnce(Return(secs_t(100.0)));
+    .WillRepeatedly(Return(secs_t(100.0)));
 
     //! [THEN] Seek position to start
     EXPECT_CALL(*m_player, seek(secs_t(0.0), false))
     .Times(1);
 
-    //! [THEN] Player should start playing
-    EXPECT_CALL(*m_player, play(_))
+    //! [THEN] Player should start playing from the start
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(secs_t(0.0))))
     .Times(1);
 
     //! [WHEN] Toggle play
     togglePlayStop();
+
+    //! [THEN] The cursor follows
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(0.0));
 }
 
 /**
@@ -1287,6 +1291,8 @@ TEST_F(PlaybackControllerTests, PlaybackPosition_InsideRegion_DoesNotStop)
 
 /**
  * @brief Playback stops at the end of the playback region / project
+ * @details The region {5, 100} ends on the project end, so the playhead also returns
+ *          to the cursor (the region start) when it is reached
  */
 TEST_F(PlaybackControllerTests, PlaybackPosition_OnRegionEnd_Stops)
 {
@@ -1307,8 +1313,10 @@ TEST_F(PlaybackControllerTests, PlaybackPosition_OnRegionEnd_Stops)
     ON_CALL(*m_player, playbackPosition())
     .WillByDefault(Return(secs_t(100.0)));
 
-    //! [THEN] Player is stopped
+    //! [THEN] Player is stopped and the playhead returns to the cursor
     EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(5.0), false))
     .Times(1);
 
     //! [WHEN] Playback position changed

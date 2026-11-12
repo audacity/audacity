@@ -174,8 +174,10 @@ private:
     void updateAuxMuteStates();
 
     bool isEqualToPlaybackPosition(muse::secs_t position) const;
-    bool isPlaybackPositionOnTheEndOfProject() const;
-    bool isPlaybackPositionAtOrAfterPlaybackRegionEnd() const;
+    bool isPlaybackPositionAtOrAfter(muse::secs_t time) const;
+    muse::secs_t playbackEndTime() const;
+    muse::secs_t playableEndTime() const;
+    bool hasReachedPlaybackEnd() const;
     bool isPlaybackStartPositionValid() const;
     bool isSeekPositionValid(const muse::secs_t& seekTime) const;
     muse::secs_t playbackPosition() const;
