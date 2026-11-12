@@ -263,6 +263,12 @@ struct EffectMeta {
 
 using EffectMetaList = std::vector<EffectMeta>;
 
+struct EffectDisplayInfo {
+    muse::String title;
+    muse::String family;
+    muse::String vendor;
+};
+
 const std::string DESTRUCTIVE_EFFECT_VIEWER_URI = "audacity://effects/destructive_viewer?instanceId=%1&effectFamily=%2";
 
 using PresetId = wxString;

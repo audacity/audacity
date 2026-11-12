@@ -8,6 +8,8 @@ qt_add_qml_module(macromanager_qml
         availablecommandsmodel.h
         commandparamsmodel.cpp
         commandparamsmodel.h
+        commanddisplay.cpp
+        commanddisplay.h
         macroactions.cpp
         macroactions.h
         macrocommandsmodel.cpp

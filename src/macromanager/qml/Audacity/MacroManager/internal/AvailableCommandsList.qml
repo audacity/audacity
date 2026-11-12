@@ -21,6 +21,8 @@ StyledListView {
         id: prv
 
         readonly property int rowHeight: 32
+        readonly property int rowWithSubtitleHeight: 44
+        readonly property real subtitleOpacity: 0.7
         readonly property int sideMargin: 8
         readonly property int addIconSize: 24
         readonly property int titleButtonSpacing: 10
@@ -61,19 +63,20 @@ StyledListView {
         required property int index
         required property string code
         required property string title
+        required property string subtitle
         required property bool isMacro
 
         property bool wasSelectedOnPress: false
         property bool addedOnClick: false
 
         width: ListView.view.width
-        height: prv.rowHeight
+        height: item.subtitle.length > 0 ? prv.rowWithSubtitleHeight : prv.rowHeight
 
         isSelected: item.index === prv.selectedIndex
 
         navigation.panel: root.navigation
         navigation.row: item.index
-        navigation.accessible.name: item.title
+        navigation.accessible.name: item.subtitle.length > 0 ? item.title + ", " + item.subtitle : item.title
 
         navigation.onActiveChanged: {
             if (item.navigation.active) {
@@ -137,13 +140,29 @@ StyledListView {
                 iconCode: IconCode.ACCOUNT
             }
 
-            StyledTextLabel {
+            ColumnLayout {
                 Layout.fillWidth: true
-                Layout.fillHeight: true
+                Layout.alignment: Qt.AlignVCenter
 
-                text: item.title
-                horizontalAlignment: Qt.AlignLeft
-                elide: Text.ElideRight
+                spacing: 0
+
+                StyledTextLabel {
+                    Layout.fillWidth: true
+
+                    text: item.title
+                    horizontalAlignment: Qt.AlignLeft
+                    elide: Text.ElideRight
+                }
+
+                StyledTextLabel {
+                    Layout.fillWidth: true
+
+                    visible: item.subtitle.length > 0
+                    text: item.subtitle
+                    opacity: prv.subtitleOpacity
+                    horizontalAlignment: Qt.AlignLeft
+                    elide: Text.ElideRight
+                }
             }
 
             StyledIconLabel {
