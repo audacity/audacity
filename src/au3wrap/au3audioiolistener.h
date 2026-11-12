@@ -12,9 +12,9 @@
 
 #include "au3-recording/AudioIOListener.h"
 
-#include "au3wrap/au3types.h"
+#include "au3types.h"
 
-namespace au::au3audio {
+namespace au::au3 {
 class Au3AudioIOListener : public AudioIOListener, public muse::async::Asyncable
 {
 public:
@@ -50,7 +50,7 @@ public:
     muse::async::Notification recordingCommitRequested() const { return m_recordingCommitRequested; }
     muse::async::Notification recordingFinished() const { return m_recordingFinished; }
 
-    muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const { return m_recordingClipChanged; }
+    muse::async::Channel<Au3TrackId, Au3ClipId> recordingClipChanged() const { return m_recordingClipChanged; }
 
 private:
     muse::async::Notification m_recordingUpdateRequested;
@@ -58,7 +58,7 @@ private:
     muse::async::Notification m_recordingCommitRequested;
     muse::async::Notification m_recordingFinished;
 
-    muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> m_recordingClipChanged;
+    muse::async::Channel<Au3TrackId, Au3ClipId> m_recordingClipChanged;
 
     muse::Timer m_recordingUpdateTimer;
     std::atomic<bool> m_newBlocks = false;

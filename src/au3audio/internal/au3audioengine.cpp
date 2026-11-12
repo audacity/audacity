@@ -13,11 +13,11 @@
 
 #include "au3audiometer.h"
 #include "defaultplaybackpolicy.h"
-#include "au3audioiolistener.h"
+#include "au3wrap/au3audioiolistener.h"
 
 using namespace au::au3audio;
 
-std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
+std::shared_ptr<au::au3::Au3AudioIOListener> s_audioIOListener;
 
 static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
     [](au::au3::Au3Project& project, const bool newDefault) -> AudioIOStartTransportOptions {
@@ -49,7 +49,7 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
 Au3AudioEngine::Au3AudioEngine()
 {
     // Notifications are subscribed to before init()
-    s_audioIOListener = std::make_shared<Au3AudioIOListener>();
+    s_audioIOListener = std::make_shared<au::au3::Au3AudioIOListener>();
 }
 
 void Au3AudioEngine::init()

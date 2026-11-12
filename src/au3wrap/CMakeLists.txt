@@ -24,6 +24,7 @@ declare_module(au3wrap)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3wrapmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/au3audioiolistener.h
     ${CMAKE_CURRENT_LIST_DIR}/au3types.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3project.h
     ${CMAKE_CURRENT_LIST_DIR}/au3projectcontext.h
@@ -111,6 +112,7 @@ set(MODULE_LINK_PUBLIC
         au3-basic-ui
         au3-label-track
         au3-project
+        au3-recording # au3audioiolistener.h
         au3-registries
         au3-track
         au3-utility
