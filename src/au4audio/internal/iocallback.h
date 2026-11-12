@@ -21,16 +21,20 @@
 #include "playedrange.h"
 #include "playheadmapper.h"
 #include "stereo.h"
+#include "track.h"
 
 class AudacityProject;
 class ISequenceProcessingNode;
 
 namespace au::au4audio {
+class BlockContext;
 
 //! A stream on a device: what it plays
 /*!
- * It plays as the playhead says, applies the playback volume, and reports what plays. For now, it plays silence: the
- * tracks are to come.
+ * It builds the tracks' chains and the master's, plays them as the playhead says, applies the playback volume, and
+ * reports what plays.
+ *
+ * For now, the tracks' chains and the master's render in the device callback.
  */
 class IoCallback final : public audio::IDeviceCallback
 {
@@ -43,7 +47,7 @@ public:
 
     double sampleRate() const { return m_sampleRate; }
 
-    //! What plays `sequences`
+    //! The tracks and the master's chain, for `sequences`
     void build(const TransportSequences& sequences);
     //! Plays from `startTime` to `endTime`, or loops `loopRange` if given, rolling into it if `startTime` is left of it
     void setPlayRange(double startTime, double endTime, std::optional<std::pair<double, double> > loopRange);
@@ -99,7 +103,11 @@ private:
 
     const std::shared_ptr<PlayheadMapper> m_mapper = std::make_shared<PlayheadMapper>();
     std::atomic<int64_t> m_endPosition { 0 };
-    bool m_built = false;
+    std::optional<RealtimeEffects::InitializationScope> m_effectsInitialization;
+    std::unique_ptr<BlockContext> m_blockContext;
+    std::vector<Track> m_tracks;
+    //! What plays: the master's chain
+    std::shared_ptr<ISequenceProcessingNode> m_top;
 
     std::atomic<bool> m_paused { false };
     std::atomic<bool> m_finished { false };

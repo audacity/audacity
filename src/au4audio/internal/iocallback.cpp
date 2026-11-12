@@ -6,10 +6,14 @@
 #include <algorithm>
 #include <cmath>
 
+#include "framework/global/containers.h"
 #include "framework/global/log.h"
 
 #include "au3-project/Project.h"
 
+#include "blockcontext.h"
+#include "effectsnode.h"
+#include "sequentialmixnode.h"
 
 using namespace au::au4audio;
 
@@ -27,10 +31,36 @@ IoCallback::~IoCallback()
     stop();
 }
 
-void IoCallback::build(const TransportSequences&)
+void IoCallback::build(const TransportSequences& sequences)
 {
+    const auto& playbackSequences = sequences.playbackSequences;
     const auto maxFrames = static_cast<size_t>(m_blockSize);
-    m_built = true;
+    // At the rate of the stream, not of the sequences
+    m_effectsInitialization.emplace(m_wProject, m_sampleRate, numChannels, m_blockSize);
+    for (const auto& sequence : playbackSequences) {
+        if (const auto group = sequence->FindChannelGroup()) {
+            m_effectsInitialization->AddGroup(*group, numChannels, m_sampleRate, m_blockSize);
+        }
+    }
+    m_blockContext = std::make_unique<BlockContext>(m_wProject, *m_effectsInitialization, playbackSequences, *m_mapper,
+                                                    m_endPosition, m_sampleRate);
+    TrackSettings settings;
+    settings.mapper = m_mapper;
+    settings.effects = m_blockContext.get();
+    settings.muteSolo = m_blockContext.get();
+    settings.endOfTrack = m_blockContext.get();
+    settings.sampleRate = m_sampleRate;
+    settings.maxFrames = maxFrames;
+    std::vector<std::shared_ptr<ISequenceProcessingNode> > outputs;
+    for (const auto& sequence : playbackSequences) {
+        m_tracks.push_back(buildTrack(sequence, settings));
+        outputs.push_back(m_tracks.back().output);
+    }
+
+    std::shared_ptr<ISequenceProcessingNode> master = std::make_shared<SequentialMixNode>(std::move(outputs), maxFrames);
+    master = std::make_shared<EffectsNode>(std::move(master), numChannels, RealtimeEffectManager::MasterGroup, *m_blockContext,
+                                           maxFrames);
+    m_top = std::make_shared<BlockContextNode>(std::move(master), *m_blockContext);
 
     for (int ch = 0; ch < numChannels; ++ch) {
         m_buffer[ch].assign(maxFrames, 0.f);
@@ -81,13 +111,16 @@ void IoCallback::stop()
         m_device->stop();
         m_device.reset();
     }
-    m_built = false;
+    m_top.reset();
+    m_tracks.clear();
+    m_blockContext.reset();
+    // After the device stopped, so that nothing renders with them
+    m_effectsInitialization.reset();
 }
 
 RealtimeEffects::InitializationScope* IoCallback::effectsInitialization()
 {
-    // No effects yet
-    return nullptr;
+    return m_effectsInitialization ? &*m_effectsInitialization : nullptr;
 }
 
 void IoCallback::process(const float* const*, int, float* const* outputChannelData, int numOutputChannels, int numSamples)
@@ -97,7 +130,7 @@ void IoCallback::process(const float* const*, int, float* const* outputChannelDa
             std::fill_n(outputChannelData[ch], numSamples, 0.f);
         }
     }
-    if (m_finished || !m_built || m_paused) {
+    if (m_finished || !m_top || m_paused) {
         return;
     }
 
@@ -117,12 +150,10 @@ void IoCallback::process(const float* const*, int, float* const* outputChannelDa
     }
 }
 
-size_t IoCallback::render(float* const* stereo, int64_t, size_t frames)
+size_t IoCallback::render(float* const* stereo, int64_t index, size_t frames)
 {
-    // Nothing renders yet: silence
-    for (int ch = 0; ch < numChannels; ++ch) {
-        std::fill_n(stereo[ch], frames, 0.f);
-    }
+    // For now, in the device callback: all of it
+    m_top->GetSamples(stereo, index, frames);
     return frames;
 }
 
