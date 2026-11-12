@@ -90,9 +90,9 @@ protected:
             return false;
         }
         const PaHostApiInfo* host = Pa_GetHostApiInfo(chosen->hostApi);
-        AudioIOHost.Write(host->name);
-        AudioIORecordingDevice.Write(chosen->name);
-        AudioIORecordChannels.Write(std::min(2, chosen->maxInputChannels));
+        AudioDeviceSettings::Host.Write(host->name);
+        AudioDeviceSettings::RecordingDevice.Write(chosen->name);
+        AudioDeviceSettings::RecordChannels.Write(std::min(2, chosen->maxInputChannels));
         return true;
     }
 

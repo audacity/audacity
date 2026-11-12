@@ -13,6 +13,8 @@ Does not contain an audio engine.
 set( TARGET au3-audio-devices )
 
 set( SOURCES
+   AudioDeviceSettings.cpp
+   AudioDeviceSettings.h
    AudioIOBase.cpp
    AudioIOBase.h
    DeviceChange.cpp

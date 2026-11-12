@@ -22,6 +22,7 @@ Paul Licameli split from AudioIO.h
 #include <wx/string.h>
 #include "au3-utility/MemoryX.h"
 #include "IMeterSender.h"
+#include "AudioDeviceSettings.h"
 
 struct PaDeviceInfo;
 typedef void PaStream;
@@ -408,19 +409,5 @@ protected:
      */
     std::vector<std::unique_ptr<AudioIOExtBase> > mAudioIOExt;
 };
-
-#include "au3-preferences/Prefs.h"
-
-extern AUDIO_DEVICES_API StringSetting AudioIOHost;
-extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCompensation;
-extern AUDIO_DEVICES_API BoolSetting AudioIOAutomaticLatencyCompensation;
-extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyDuration;
-extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackDevice;
-extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackSource;
-extern AUDIO_DEVICES_API DoubleSetting AudioIOPlaybackVolume;
-extern AUDIO_DEVICES_API IntSetting AudioIORecordChannels;
-extern AUDIO_DEVICES_API StringSetting AudioIORecordingDevice;
-extern AUDIO_DEVICES_API StringSetting AudioIORecordingSource;
-extern AUDIO_DEVICES_API IntSetting AudioIORecordingSourceIndex;
 
 #endif
