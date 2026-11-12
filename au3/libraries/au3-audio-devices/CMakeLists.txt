@@ -21,6 +21,8 @@ set( SOURCES
    DeviceChange.h
    DeviceManager.cpp
    DeviceManager.h
+   DeviceMixer.cpp
+   DeviceMixer.h
    IMeterSender.h
 )
 set( LIBRARIES
