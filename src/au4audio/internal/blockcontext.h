@@ -7,6 +7,7 @@
 #include <cstdint>
 #include <memory>
 #include <optional>
+#include <vector>
 
 #include "au3-mixer/AudioIOSequences.h"
 #include "au3-clip-processing/sequence-graph/ISequenceProcessingNode.h"
@@ -27,9 +28,11 @@ class BlockContext final : public IEffectsContext, public IMuteSoloContext, publ
 public:
     //! @param effects where the effects of the sequences and of the master are initialized; must outlive this
     //! @param playEnd where the play range ends, in samples; must outlive this
+    //! @param groups if given, the only groups whose effects it processes, the master's for a null group: those of the
+    //! others may be processed in other threads meanwhile
     BlockContext(std::weak_ptr<AudacityProject> project, RealtimeEffects::InitializationScope& effects,
                  ConstPlayableSequences sequences, const PlayheadMapper& mapper, const std::atomic<int64_t>& playEnd,
-                 double sampleRate);
+                 double sampleRate, std::optional<std::vector<const ChannelGroup*> > groups = std::nullopt);
 
     //! The rendering thread, before and after a block
     void begin();
@@ -52,6 +55,7 @@ private:
     const PlayheadMapper& m_mapper;
     const std::atomic<int64_t>& m_playEndPosition;
     const double m_sampleRate;
+    const std::optional<std::vector<const ChannelGroup*> > m_groups;
 
     // Set by begin(), for the block
     std::optional<RealtimeEffects::ProcessingScope> m_scope;

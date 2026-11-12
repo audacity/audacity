@@ -75,6 +75,7 @@ private:
         const muse::Settings::Key inputChannels;
         const muse::Settings::Key automaticLatencyCompensation;
         const muse::Settings::Key latencyDuration;
+        const muse::Settings::Key softwareBufferLength;
         const muse::Settings::Key latencyCompensation;
         const muse::Settings::Key asioUseDeviceSampleRate;
     };

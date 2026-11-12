@@ -16,15 +16,19 @@ using namespace au::au4audio;
 
 BlockContext::BlockContext(std::weak_ptr<AudacityProject> project, RealtimeEffects::InitializationScope& effects,
                            ConstPlayableSequences sequences, const PlayheadMapper& mapper, const std::atomic<int64_t>& playEnd,
-                           double sampleRate)
+                           double sampleRate, std::optional<std::vector<const ChannelGroup*> > groups)
     : m_project{std::move(project)}, m_effects{effects}, m_sequences{std::move(sequences)}, m_mapper{mapper},
-    m_playEndPosition{playEnd}, m_sampleRate{sampleRate}
+    m_playEndPosition{playEnd}, m_sampleRate{sampleRate}, m_groups{std::move(groups)}
 {
 }
 
 void BlockContext::begin()
 {
-    m_scope.emplace(m_effects, m_project);
+    if (m_groups) {
+        m_scope.emplace(m_effects, m_project, *m_groups);
+    } else {
+        m_scope.emplace(m_effects, m_project);
+    }
     m_anySoloing = std::any_of(m_sequences.begin(), m_sequences.end(), [](const auto& sequence) { return sequence->GetSolo(); });
     // Unless looping, the tracks go silent at the end
     if (m_mapper.loop()) {

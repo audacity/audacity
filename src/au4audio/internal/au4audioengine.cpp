@@ -101,8 +101,10 @@ int Au4AudioEngine::startTransport(const TransportSequences& sequences, double s
     }
     const double playStartTime = streamStartTime.value_or(startTime);
 
+    // In ms in the settings
+    const double softwareBufferLength = m_driverController->configuration().softwareBufferLength / 1000.0;
     auto stream = std::make_unique<IoCallback>(project, m_nextStreamToken, std::move(device), options.isDefaultPolicy,
-                                               m_callbackInfoQueue, m_playedRanges, m_playbackVolume);
+                                               m_callbackInfoQueue, m_playedRanges, m_playbackVolume, softwareBufferLength);
     stream->trackEndTime = TrackList::Get(project).GetEndTime();
     stream->build(sequences);
 
