@@ -27,8 +27,9 @@ std::string textAttribute(const XmlNode& node, std::string_view name)
     const XmlValue* value = node.attribute(name);
     return value && value->type == FieldType::String ? value->text : std::string();
 }
+}
 
-Sequence readSequence(const XmlNode& node)
+Sequence au::projectrecovery::readSequence(const XmlNode& node)
 {
     Sequence sequence;
     sequence.maxSamples = integerAttribute(node, "maxsamples");
@@ -36,7 +37,7 @@ Sequence readSequence(const XmlNode& node)
     sequence.numSamples = integerAttribute(node, "numsamples");
     for (const XmlNode& child : node.children) {
         if (child.tag == "waveblock") {
-            sequence.blocks.push_back({ integerAttribute(child, "start"), integerAttribute(child, "blockid"), 0 });
+            sequence.blocks.push_back({ integerAttribute(child, "start"), integerAttribute(child, "blockid") });
         }
     }
     for (size_t i = 0; i < sequence.blocks.size(); ++i) {
@@ -46,6 +47,7 @@ Sequence readSequence(const XmlNode& node)
     return sequence;
 }
 
+namespace {
 WaveClip readClip(const XmlNode& node)
 {
     WaveClip clip;

@@ -9,10 +9,14 @@ target_sources(projectrecovery PRIVATE
     internal/binaryxml.h
     internal/database.cpp
     internal/database.h
+    internal/documentedit.cpp
+    internal/documentedit.h
     internal/projectdocument.cpp
     internal/projectdocument.h
     internal/projectinspector.cpp
     internal/projectinspector.h
+    internal/projectrepairer.cpp
+    internal/projectrepairer.h
     internal/workingcopy.cpp
     internal/workingcopy.h
 )

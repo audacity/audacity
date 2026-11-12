@@ -4,6 +4,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -11,6 +12,8 @@
 #include "framework/global/io/path.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/types/retval.h"
+
+#include "binaryxml.h"
 
 namespace au::projectrecovery {
 //! 'AUDY', the application_id of every Audacity project file
@@ -90,6 +93,21 @@ struct Inspection {
     bool has(Problem problem) const;
 };
 
+//! The decoded document that Audacity loads, which the repair steps edit
+struct ProjectState {
+    //! "autosave" or "project"
+    std::string table;
+    XmlDocument document;
+    //! The document becomes the last save, and the autosave goes
+    bool promoted = false;
+};
+
+struct InspectedProject {
+    Inspection inspection;
+    //! None when Audacity loads no readable document
+    std::optional<ProjectState> state;
+};
+
 struct InspectionOptions {
     muse::io::path_t workDir;
     bool checkIntegrity = true;
@@ -102,5 +120,7 @@ class ProjectInspector
 
 public:
     muse::RetVal<Inspection> inspect(const muse::io::path_t& path, const InspectionOptions& options = {}) const;
+    //! The inspection, and the document it decoded for the repair to edit
+    muse::RetVal<InspectedProject> inspectProject(const muse::io::path_t& path, const InspectionOptions& options = {}) const;
 };
 }

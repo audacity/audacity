@@ -26,6 +26,7 @@ struct StoredDocument {
     BinaryXml binary;
     std::optional<ProjectDocument> project;
     std::string error;
+    std::optional<XmlDocument> xml = std::nullopt;
 };
 
 struct BlockReference {
@@ -122,9 +123,10 @@ DocumentInfo summarize(StoredDocument& document, const std::set<int64_t>& blockI
         summary.error = document.error;
         return summary;
     }
-    const muse::RetVal<XmlDocument> decoded = decodeBinaryXml(document.binary);
+    muse::RetVal<XmlDocument> decoded = decodeBinaryXml(document.binary);
     if (decoded.ret) {
         document.project = readProjectDocument(decoded.val);
+        document.xml = std::move(decoded.val);
         if (!document.project) {
             summary.error = "the document has no project element";
         } else if (!hasVersions(*document.project)) {
@@ -170,13 +172,20 @@ bool Inspection::has(Problem problem) const
 
 muse::RetVal<Inspection> ProjectInspector::inspect(const muse::io::path_t& path, const InspectionOptions& options) const
 {
+    const muse::RetVal<InspectedProject> inspected = inspectProject(path, options);
+    return inspected.ret ? muse::RetVal<Inspection>::make_ok(inspected.val.inspection) : muse::RetVal<Inspection>::make_ret(inspected.ret);
+}
+
+muse::RetVal<InspectedProject> ProjectInspector::inspectProject(const muse::io::path_t& path, const InspectionOptions& options) const
+{
     WorkingCopy copy;
     const muse::Ret prepared = copy.prepare(path, options.workDir);
     if (!prepared) {
-        return muse::RetVal<Inspection>::make_ret(prepared);
+        return muse::RetVal<InspectedProject>::make_ret(prepared);
     }
 
-    Inspection inspection;
+    InspectedProject result;
+    Inspection& inspection = result.inspection;
     DatabaseInfo& info = inspection.database;
     info.path = path;
     info.fileSize = fileSystem()->fileSize(path).val;
@@ -188,11 +197,12 @@ muse::RetVal<Inspection> ProjectInspector::inspect(const muse::io::path_t& path,
     }
 
     // If file is being changed by another app, refuse to continue
-    const auto finish = [&copy, &inspection]() {
+    const auto finish = [&copy, &result]() {
         if (copy.originalChanged()) {
-            return muse::RetVal<Inspection>::make_ret(muse::make_ret(muse::Ret::Code::Busy, "the project was changed by another program"));
+            return muse::RetVal<InspectedProject>::make_ret(muse::make_ret(muse::Ret::Code::Busy,
+                                                                           "the project was changed by another program"));
         }
-        return muse::RetVal<Inspection>::make_ok(inspection);
+        return muse::RetVal<InspectedProject>::make_ok(result);
     };
 
     // Nothing writes either file now: the copy has its -wal frames applied, and the original has none
@@ -251,6 +261,7 @@ muse::RetVal<Inspection> ProjectInspector::inspect(const muse::io::path_t& path,
         inspection.problems.push_back(Problem::DocumentNotReadable);
     } else {
         inspection.activeDocument = loaded->source;
+        result.state = ProjectState { loaded->source, std::move(*loaded->xml) };
         for (const BlockReference& reference : references[loaded->source]) {
             const int64_t id = reference.block.blockId;
             if (id <= 0 || blockIds.count(id)) {

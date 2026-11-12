@@ -62,6 +62,9 @@ struct ProjectDocument {
 //! The parts of the document that recovery needs; other elements are ignored
 std::optional<ProjectDocument> readProjectDocument(const XmlDocument& document);
 
+//! The blocks of a sequence element, with their lengths
+Sequence readSequence(const XmlNode& node);
+
 //! The stretch that WaveClip applies after it reads the clip
 double effectiveStretchRatio(const WaveClip& clip, const ProjectDocument& project);
 }
