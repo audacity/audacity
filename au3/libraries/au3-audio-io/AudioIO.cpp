@@ -297,7 +297,7 @@ AudioIO::AudioIO()
     mInputMixerWorks = false;
 #endif
 
-    SetMixerOutputVol(AudioIOPlaybackVolume.Read());
+    SetMixerOutputVol(AudioDeviceSettings::PlaybackVolume.Read());
 
     mLastPlaybackTimeMillis = 0;
 }
@@ -385,7 +385,7 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
                        float playbackVolume)
 {
     SetMixerOutputVol(playbackVolume);
-    AudioIOPlaybackVolume.Write(playbackVolume);
+    AudioDeviceSettings::PlaybackVolume.Write(playbackVolume);
     SetSoftwareRecordGain(recordVolume);
 
 #if defined(USE_PORTMIXER)
@@ -547,7 +547,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
     PaWasapiStreamInfo wasapiStreamInfo{};
    #endif
 
-    auto latencyDuration = AudioIOLatencyDuration.Read();
+    auto latencyDuration = AudioDeviceSettings::LatencyDuration.Read();
 
     if (numPlaybackChannels > 0) {
         usePlayback = true;
@@ -706,7 +706,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
                   : // Otherwise, use the (likely incorrect) latency reported by PA
                   stream->outputLatency;
 
-            if (AudioIOAutomaticLatencyCompensation.Read()) {
+            if (AudioDeviceSettings::AutomaticLatencyCompensation.Read()) {
                 mCaptureSink.Schedule().mLatencyCompensation = -stream->inputLatency - outputLatency;
             }
 
@@ -841,7 +841,7 @@ void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
     }
 
     const auto captureFormat = QualitySettings::SampleFormatChoice();
-    const auto captureChannels = AudioIORecordChannels.Read();
+    const auto captureChannels = AudioDeviceSettings::RecordChannels.Read();
     mSoftwarePlaythrough = options.inputMonitoring;
     int playbackChannels = 0;
 
@@ -966,7 +966,7 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     auto& recordingSchedule = mCaptureSink.Schedule();
     recordingSchedule = {};
     recordingSchedule.mLeadInTime = leadInTime;
-    recordingSchedule.mLatencyCompensation = AudioIOLatencyCompensation.Read() / 1000.0;
+    recordingSchedule.mLatencyCompensation = AudioDeviceSettings::LatencyCompensation.Read() / 1000.0;
     recordingSchedule.mDuration = t1 - t0;
     if (options.pCrossfadeData) {
         recordingSchedule.mCrossfadeData.swap(*options.pCrossfadeData);
@@ -1031,7 +1031,7 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     }
 
     if (captureSequences.size() > 0) {
-        size_t requestedInputChannels = AudioIORecordChannels.Read();
+        size_t requestedInputChannels = AudioDeviceSettings::RecordChannels.Read();
         if (requestedInputChannels == 0) {
             requestedInputChannels = 1;
         }
@@ -1537,7 +1537,7 @@ void AudioIO::StopTransport()
         // PortAudio callback can use the information that we are stopping to fade
         // out the audio.  Give PortAudio callback a chance to do so.
         mForceFadeOut.store(true, std::memory_order_relaxed);
-        auto latency = static_cast<long>(AudioIOLatencyDuration.Read());
+        auto latency = static_cast<long>(AudioDeviceSettings::LatencyDuration.Read());
         // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through
         // the sound card, then do so.  If we can't, don't wait around.  Just stop quickly and accept
         // there will be a click.
