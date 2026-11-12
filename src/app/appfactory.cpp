@@ -47,6 +47,9 @@
 #include "au3audio/au3audiomodule.h"
 #include "au4audio/au4audiomodule.h"
 #include "portaudiodevices/portaudiodevicesmodule.h"
+#ifdef AU_USE_JUCE
+#include "jucedevices/jucedevicesmodule.h"
+#endif
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
 #include "macromanager/macromanagermodule.h"
@@ -184,8 +187,11 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::audio::AudioModule());
     app->addModule(new au::au3audio::Au3AudioModule());
     app->addModule(new au::au4audio::Au4AudioModule());
-    // After the audio engines, which its driver controller subscribes to on init
+    // After the audio engines, which their driver controllers subscribe to on init
     app->addModule(new au::portaudiodevices::PortAudioDevicesModule());
+#ifdef AU_USE_JUCE
+    app->addModule(new au::jucedevices::JuceDevicesModule());
+#endif
     app->addModule(new au::projectscene::ProjectSceneModule());
     app->addModule(new au::playback::PlaybackModule());
     app->addModule(new au::record::RecordModule());

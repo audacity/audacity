@@ -18,5 +18,8 @@ public:
 
 private:
     std::shared_ptr<Au4AudioEngine> m_portAudioEngine;
+#ifdef AU_USE_JUCE
+    std::shared_ptr<Au4AudioEngine> m_juceEngine;
+#endif
 };
 }
