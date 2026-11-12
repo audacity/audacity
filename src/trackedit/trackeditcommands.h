@@ -3,7 +3,12 @@
 */
 #pragma once
 
+#include <limits>
+#include <tuple>
+
 #include "framework/rcommand/commandtypes.h"
+#include "framework/rcommand/enumcontract.h"
+#include "framework/rcommand/typedcommand.h"
 
 namespace au::trackedit {
 inline static const muse::rcommand::Command TRACKEDIT_UNDO_COMMAND("command://trackedit/undo");
@@ -156,4 +161,171 @@ inline static const muse::rcommand::Command TRACK_NAVIGATION_ITEM_CONTEXT_MENU_C
     "command://track-navigation/item-context-menu");
 inline static const muse::rcommand::Command TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND(
     "command://track-navigation/ruler-context-menu");
+
+enum class SelectTimeRelativeTo {
+    ProjectStart,
+    Project,
+    ProjectEnd,
+    SelectionStart,
+    Selection,
+    SelectionEnd
+};
+
+struct SelectTimeRelativeToContract {
+    static constexpr std::string_view key = "relativeTo";
+    static constexpr SelectTimeRelativeTo def = SelectTimeRelativeTo::ProjectStart;
+    static constexpr muse::rcommand::EnumTable<SelectTimeRelativeTo, 6> table = { {
+        { "ProjectStart", SelectTimeRelativeTo::ProjectStart, "Project start" },
+        { "Project", SelectTimeRelativeTo::Project, "Project start and project end" },
+        { "ProjectEnd", SelectTimeRelativeTo::ProjectEnd, "Project end" },
+        { "SelectionStart", SelectTimeRelativeTo::SelectionStart, "Selection start" },
+        { "Selection", SelectTimeRelativeTo::Selection, "Selection start and selection end" },
+        { "SelectionEnd", SelectTimeRelativeTo::SelectionEnd, "Selection end" },
+    } };
+};
+
+enum class SelectTracksMode {
+    Set,
+    Add,
+    Remove
+};
+
+struct SelectTracksModeContract {
+    static constexpr std::string_view key = "mode";
+    static constexpr SelectTracksMode def = SelectTracksMode::Set;
+    static constexpr muse::rcommand::EnumTable<SelectTracksMode, 3> table = { {
+        { "Set", SelectTracksMode::Set, "Set" },
+        { "Add", SelectTracksMode::Add, "Add" },
+        { "Remove", SelectTracksMode::Remove, "Remove" },
+    } };
+};
+}
+
+namespace muse::rcommand {
+DECLARE_ENUM_CONTRACT(au::trackedit::SelectTimeRelativeTo, au::trackedit::SelectTimeRelativeToContract)
+DECLARE_ENUM_CONTRACT(au::trackedit::SelectTracksMode, au::trackedit::SelectTracksModeContract)
+}
+
+namespace au::trackedit {
+struct SelectTimeCommand {
+    cprop_decl id = muse::rcommand::Command("command://trackedit/select-time");
+    //: Command title: shown as a menu item or a button label; keep it short
+    cprop_decl title = muse::MnemonicString(muse::TranslatableString("command", "Select time"));
+    //: Command description: shown as a tooltip; can be a full sentence
+    cprop_decl description = muse::TranslatableString("command_description",
+                                                      "Select a time range relative to the project or to the current selection");
+    cprop_decl availabilities = muse::rcommand::Availability::Internal | muse::rcommand::Availability::API;
+
+    double start = 0.0;
+    double end = 0.0;
+    SelectTimeRelativeTo relativeTo = SelectTimeRelativeToContract::def;
+
+    cprop_decl input = std::tuple {
+        muse::rcommand::Field{ TRACKEDIT_START_PARAM, &SelectTimeCommand::start,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Start (seconds)"),
+                               muse::TranslatableString::untranslatable("Start offset in seconds"), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ TRACKEDIT_END_PARAM, &SelectTimeCommand::end,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "End (seconds)"),
+                               muse::TranslatableString::untranslatable("End offset in seconds"), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ SelectTimeRelativeToContract::key, &SelectTimeCommand::relativeTo,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Relative to"),
+                               muse::TranslatableString::untranslatable("Reference point of the start and end offsets") },
+    };
+};
+
+struct SelectTracksCommand {
+    cprop_decl id = muse::rcommand::Command("command://trackedit/select-tracks");
+    //: Command title: shown as a menu item or a button label; keep it short
+    cprop_decl title = muse::MnemonicString(muse::TranslatableString("command", "Select tracks"));
+    //: Command description: shown as a tooltip; can be a full sentence
+    cprop_decl description = muse::TranslatableString("command_description", "Set, extend or reduce the track selection by track index");
+    cprop_decl availabilities = muse::rcommand::Availability::Internal | muse::rcommand::Availability::API;
+
+    int trackIndex = 0;
+    int trackCount = 1;
+    SelectTracksMode mode = SelectTracksModeContract::def;
+
+    cprop_decl input = std::tuple {
+        muse::rcommand::Field{ TRACKEDIT_TRACK_INDEX_PARAM, &SelectTracksCommand::trackIndex,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "First track"),
+                               muse::TranslatableString::untranslatable("Index of the first track, from 0"),
+                               0, std::numeric_limits<int>::max(), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ "trackCount", &SelectTracksCommand::trackCount,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Track count"),
+                               muse::TranslatableString::untranslatable("Number of tracks from the first track"),
+                               0, std::numeric_limits<int>::max(), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ SelectTracksModeContract::key, &SelectTracksCommand::mode,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Mode"),
+                               muse::TranslatableString::untranslatable("Replace, extend or reduce the track selection") },
+    };
+};
+
+struct SelectCommand {
+    cprop_decl id = muse::rcommand::Command("command://trackedit/select");
+    //: Command title: shown as a menu item or a button label; keep it short
+    cprop_decl title = muse::MnemonicString(muse::TranslatableString("command", "Select"));
+    //: Command description: shown as a tooltip; can be a full sentence
+    cprop_decl description = muse::TranslatableString("command_description", "Select a time range and tracks in one step");
+    cprop_decl availabilities = muse::rcommand::Availability::Internal | muse::rcommand::Availability::API;
+
+    double start = 0.0;
+    double end = 0.0;
+    SelectTimeRelativeTo relativeTo = SelectTimeRelativeToContract::def;
+    int trackIndex = 0;
+    int trackCount = 1;
+    SelectTracksMode mode = SelectTracksModeContract::def;
+
+    cprop_decl input = std::tuple {
+        muse::rcommand::Field{ TRACKEDIT_START_PARAM, &SelectCommand::start,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Start (seconds)"),
+                               muse::TranslatableString::untranslatable("Start offset in seconds"), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ TRACKEDIT_END_PARAM, &SelectCommand::end,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "End (seconds)"),
+                               muse::TranslatableString::untranslatable("End offset in seconds"), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ SelectTimeRelativeToContract::key, &SelectCommand::relativeTo,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Relative to"),
+                               muse::TranslatableString::untranslatable("Reference point of the start and end offsets") },
+        muse::rcommand::Field{ TRACKEDIT_TRACK_INDEX_PARAM, &SelectCommand::trackIndex,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "First track"),
+                               muse::TranslatableString::untranslatable("Index of the first track, from 0"),
+                               0, std::numeric_limits<int>::max(), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ "trackCount", &SelectCommand::trackCount,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Track count"),
+                               muse::TranslatableString::untranslatable("Number of tracks from the first track"),
+                               0, std::numeric_limits<int>::max(), muse::rcommand::Presence::Optional },
+        muse::rcommand::Field{ SelectTracksModeContract::key, &SelectCommand::mode,
+                               //: Command param label: shown next to the field in the command params dialog
+                               muse::TranslatableString("command_param", "Mode"),
+                               muse::TranslatableString::untranslatable("Replace, extend or reduce the track selection") },
+    };
+};
+
+struct SelectNextClipCommand {
+    cprop_decl id = muse::rcommand::Command("command://trackedit/select-next-clip");
+    //: Command title: shown as a menu item or a button label; keep it short
+    cprop_decl title = muse::MnemonicString(muse::TranslatableString("command", "Select next clip"));
+    //: Command description: shown as a tooltip; can be a full sentence
+    cprop_decl description = muse::TranslatableString("command_description", "Select the clip after the selected clip, in track order");
+    cprop_decl availabilities = muse::rcommand::Availability::Internal | muse::rcommand::Availability::API;
+};
+
+struct SelectPreviousClipCommand {
+    cprop_decl id = muse::rcommand::Command("command://trackedit/select-previous-clip");
+    //: Command title: shown as a menu item or a button label; keep it short
+    cprop_decl title = muse::MnemonicString(muse::TranslatableString("command", "Select previous clip"));
+    //: Command description: shown as a tooltip; can be a full sentence
+    cprop_decl description = muse::TranslatableString("command_description", "Select the clip before the selected clip, in track order");
+    cprop_decl availabilities = muse::rcommand::Availability::Internal | muse::rcommand::Availability::API;
+};
 }

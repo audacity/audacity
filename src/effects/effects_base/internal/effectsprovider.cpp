@@ -23,6 +23,20 @@
 using namespace muse;
 using namespace au::effects;
 
+namespace {
+std::map<EffectId, EffectDisplayInfo> makeDisplayInfos(EffectMetaList effects)
+{
+    utils::replaceIdenticalTitlesWithPaths(effects);
+
+    std::map<EffectId, EffectDisplayInfo> displayInfos;
+    for (const EffectMeta& meta : effects) {
+        displayInfos.emplace(meta.id, EffectDisplayInfo { utils::effectDisplayTitle(meta), utils::effectFamilyLabel(meta.family),
+                                                          meta.vendor });
+    }
+    return displayInfos;
+}
+}
+
 void EffectsProvider::initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
                                muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
                                StartupPluginValidationPolicy validationPolicy)
@@ -173,6 +187,8 @@ void EffectsProvider::reloadEffects()
         return utils::museToAuEffectMeta(info.path, info.meta, info.state);
     });
 
+    m_displayInfos = makeDisplayInfos(m_effects);
+
     m_effectsChanged.notify();
 }
 
@@ -197,6 +213,16 @@ EffectMeta EffectsProvider::meta(const EffectId& effectId) const
     // Here we don't log an error but an info, because metas may be queried for non-existent effects.
     LOGI() << "not found meta: " << effectId;
     return EffectMeta();
+}
+
+std::optional<EffectDisplayInfo> EffectsProvider::effectDisplayInfo(const EffectId& effectId) const
+{
+    const auto it = m_displayInfos.find(effectId);
+    if (it == m_displayInfos.end()) {
+        return std::nullopt;
+    }
+
+    return it->second;
 }
 
 IEffectLoaderPtr EffectsProvider::loader(const EffectId& effectId) const

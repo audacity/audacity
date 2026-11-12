@@ -13,15 +13,14 @@ using namespace muse::rcommand;
 
 namespace {
 const std::vector<CommandInfo> s_commandInfos = {
-    CommandInfo{
-        EXPORT_MP3_COMMAND,
-        //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Export as MP3"),
-        //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Export the project audio as an MP3 file into the macro-output folder"),
-        InputSchema(),
-        Decoration()
-    },
+    makeCommandInfo<ExportAudioCommand>(),
+    makeCommandInfo<ExportWavCommand>(),
+    makeCommandInfo<ExportMp3PresetCommand>(),
+    makeCommandInfo<ExportMp3VbrCommand>(),
+    makeCommandInfo<ExportMp3AbrCommand>(),
+    makeCommandInfo<ExportMp3CbrCommand>(),
+    makeCommandInfo<ExportFlacCommand>(),
+    makeCommandInfo<ExportOggCommand>(),
 };
 
 std::vector<Command> makeCommandList(const std::vector<CommandInfo>& infos)

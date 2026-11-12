@@ -47,7 +47,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { PROJECT_SNAPSHOT_ID_PARAM, Arg(DataType::String, u"Cloud project snapshot id") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         PROJECT_CLEAR_RECENT_COMMAND,
@@ -80,7 +80,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { PROJECT_REMOVE_AFTER_IMPORT_PARAM, Arg(DataType::Bool, u"Remove the files after importing them") },
             }),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         PROJECT_SAVE_COMMAND,
@@ -139,7 +139,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { PROJECT_AUDIO_ID_PARAM, Arg(DataType::String, u"Cloud audio file id") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_COMMAND,
@@ -160,7 +160,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { PROJECT_ID_PARAM, Arg(DataType::String, u"Cloud project id") },
             }),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         PROJECT_EXPORT_AUDIO_COMMAND,
@@ -169,7 +169,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Export audio…"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_EXPORT_LABELS_COMMAND,
@@ -209,7 +210,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Open the custom FFmpeg export options"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         PROJECT_OPEN_CUSTOM_MAPPING_COMMAND,
@@ -219,7 +220,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Open the custom export channel mapping"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
 };
 }

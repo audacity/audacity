@@ -130,6 +130,7 @@ private:
     void doPlay();
     muse::Ret stopAction();
     muse::Ret playTracksAction(const muse::rcommand::Params& params);
+    muse::Ret playFromStartAction();
     muse::Ret rewindToStartAction();
     muse::Ret rewindToEndAction();
     muse::Ret onSeekAction(const muse::rcommand::Params& params);

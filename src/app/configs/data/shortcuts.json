@@ -164,6 +164,7 @@
             { "command": "command://playback/toggle-solo-focused-track", "sequences": ["Shift+S"] },
             { "command": "command://playback/toggle-play-stop-and-set-cursor", "sequences": ["X"] },
             { "command": "command://playback/play-selection", "sequences": ["Shift+Space"] },
+            { "command": "command://playback/play-from-start", "sequences": ["Ctrl+Shift+Space"] },
             { "command": "command://playback/pause", "sequences": [] },
             { "command": "command://playback/toggle-play-pause", "sequences": ["P"] },
             { "command": "command://playback/toggle-loop-region", "sequences": ["L"] },

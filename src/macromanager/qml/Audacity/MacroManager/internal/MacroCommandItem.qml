@@ -15,6 +15,7 @@ Rectangle {
     required property int step
     required property string code
     required property string title
+    required property string subtitle
     required property bool hasParams
     required property bool isMacro
 
@@ -102,6 +103,7 @@ Rectangle {
         id: prv
 
         readonly property int height: 44
+        readonly property real subtitleOpacity: 0.7
         readonly property int buttonSize: 28
         readonly property int buttonsSpacing: 4
         readonly property int iconTitleSpacing: 6
@@ -274,7 +276,7 @@ Rectangle {
                 enabled: root.enabled && root.visible
 
                 accessible.role: MUAccessible.Cell
-                accessible.name: root.title
+                accessible.name: root.subtitle.length > 0 ? root.title + ", " + root.subtitle : root.title
 
                 onTriggered: {
                     if (root.hasParams) {
@@ -306,13 +308,29 @@ Rectangle {
                     iconCode: IconCode.ACCOUNT
                 }
 
-                StyledTextLabel {
+                ColumnLayout {
                     Layout.fillWidth: true
-                    Layout.fillHeight: true
+                    Layout.alignment: Qt.AlignVCenter
 
-                    text: root.title
-                    horizontalAlignment: Qt.AlignLeft
-                    elide: Text.ElideRight
+                    spacing: 0
+
+                    StyledTextLabel {
+                        Layout.fillWidth: true
+
+                        text: root.title
+                        horizontalAlignment: Qt.AlignLeft
+                        elide: Text.ElideRight
+                    }
+
+                    StyledTextLabel {
+                        Layout.fillWidth: true
+
+                        visible: root.subtitle.length > 0
+                        text: root.subtitle
+                        opacity: prv.subtitleOpacity
+                        horizontalAlignment: Qt.AlignLeft
+                        elide: Text.ElideRight
+                    }
                 }
             }
         }

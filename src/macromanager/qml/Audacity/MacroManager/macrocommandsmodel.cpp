@@ -7,6 +7,8 @@
 
 #include "framework/global/stringutils.h"
 
+#include "effects/effects_base/effectscommands.h"
+
 using namespace au::macromanager;
 using namespace muse;
 using namespace muse::rcommand;
@@ -46,7 +48,8 @@ QVariant MacroCommandsModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case StepRole: return index.row() + 1;
     case CodeRole: return step ? QString::fromStdString(step->command.toString()) : macroName;
-    case TitleRole: return step ? titleOf(step->command) : macroName;
+    case TitleRole: return step ? displayOf(step->command).title : macroName;
+    case SubtitleRole: return step ? displayOf(step->command).subtitle : QString();
     case HasParamsRole: return step && hasParams(step->command);
     case IsMacroRole: return !step;
     default: return QVariant();
@@ -64,6 +67,7 @@ QHash<int, QByteArray> MacroCommandsModel::roleNames() const
         { StepRole, "step" },
         { CodeRole, "code" },
         { TitleRole, "title" },
+        { SubtitleRole, "subtitle" },
         { HasParamsRole, "hasParams" },
         { IsMacroRole, "isMacro" }
     };
@@ -243,20 +247,20 @@ bool MacroCommandsModel::isRowValid(int row) const
     return row >= 0 && row < rowCount();
 }
 
-QString MacroCommandsModel::titleOf(const Command& command) const
+CommandDisplay MacroCommandsModel::displayOf(const Command& command) const
 {
     const CommandInfo& info = commandsRegister()->commandInfo(command);
     if (!info.isValid()) {
-        return QString::fromStdString(command.toString());
+        return { QString::fromStdString(command.toString()), QString() };
     }
 
-    return info.title.qTranslatedWithoutMnemonic();
+    return commandDisplay(info, *effectsProvider());
 }
 
 bool MacroCommandsModel::hasParams(const Command& command) const
 {
     if (isEffectApplyCommand(command)) {
-        return true;
+        return effectsProvider()->meta(effects::effectIdFromCommand(command)).isInteractive.value_or(true);
     }
 
     return !commandsRegister()->commandInfo(command).inputSchema.args.empty();

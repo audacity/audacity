@@ -6,6 +6,8 @@
 #include "global/containers.h"
 
 #include <algorithm>
+#include <functional>
+#include <iterator>
 #include <limits>
 #include <type_traits>
 
@@ -224,6 +226,13 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_SELECT_TRACK_START_TO_END_COMMAND, [this]() { return selectTrackStartToEnd(); });
     cd->onRequest(this, TRACKEDIT_SET_SELECTION_COMMAND, [this](const Params& params) { return setSelection(params); });
     cd->onRequest(this, TRACKEDIT_SELECT_TRACK_COMMAND, [this](const Params& params) { return selectTrackByIndex(params); });
+    cd->onRequest<SelectTimeCommand>(this, [this](const SelectTimeCommand& command) { return selectTime(command); });
+    cd->onRequest<SelectTracksCommand>(this, [this](const SelectTracksCommand& command) { return selectTracks(command); });
+    cd->onRequest<SelectCommand>(this, [this](const SelectCommand& command) { return select(command); });
+    cd->onRequest<SelectNextClipCommand>(this, [this](const SelectNextClipCommand&) { return selectAdjacentClip(ClipStep::Next); });
+    cd->onRequest<SelectPreviousClipCommand>(this, [this](const SelectPreviousClipCommand&) {
+        return selectAdjacentClip(ClipStep::Previous);
+    });
     cd->onRequest(this, TRACKEDIT_ZERO_CROSS_COMMAND, [this]() { return moveCursorToClosestZeroCrossing(); });
 
     cd->onRequest(this, TRACKEDIT_CLIP_CHANGE_COLOR_AUTO_COMMAND, [this](const Params& params) {
@@ -1604,6 +1613,170 @@ muse::Ret TrackeditActionsController::selectTrackByIndex(const Params& params)
     }
 
     selectionController()->setSelectedTracks({ ids[trackIndex] }, true);
+    return make_ok();
+}
+
+muse::RetVal<TrackeditActionsController::TimeRange> TrackeditActionsController::resolveTimeSelection(double start, double end,
+                                                                                                     SelectTimeRelativeTo relativeTo) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return RetVal<TimeRange>::make_ret(Ret::Code::NotSupported);
+    }
+
+    const double projectEnd = prj->totalTime().to_double();
+    const bool hasTimeSelection = !selectionController()->timeSelectionIsEmpty();
+    const double cursor = hasTimeSelection ? 0.0 : playbackState()->playbackPosition().to_double();
+    const double selectionStart = hasTimeSelection ? selectionController()->dataSelectedStartTime().to_double() : cursor;
+    const double selectionEnd = hasTimeSelection ? selectionController()->dataSelectedEndTime().to_double() : cursor;
+
+    double first = start;
+    double second = end;
+    switch (relativeTo) {
+    case SelectTimeRelativeTo::ProjectStart:
+        break;
+    case SelectTimeRelativeTo::Project:
+        second = projectEnd + end;
+        break;
+    case SelectTimeRelativeTo::ProjectEnd:
+        first = projectEnd - start;
+        second = projectEnd - end;
+        break;
+    case SelectTimeRelativeTo::SelectionStart:
+        first = selectionStart + start;
+        second = selectionStart + end;
+        break;
+    case SelectTimeRelativeTo::Selection:
+        first = selectionStart + start;
+        second = selectionEnd + end;
+        break;
+    case SelectTimeRelativeTo::SelectionEnd:
+        first = selectionEnd - start;
+        second = selectionEnd - end;
+        break;
+    }
+
+    const auto [startTime, endTime] = std::minmax({ std::max(first, 0.0), std::max(second, 0.0) });
+    return RetVal<TimeRange>::make_ok({ startTime, endTime });
+}
+
+muse::RetVal<TrackIdList> TrackeditActionsController::resolveTrackSelection(int first, int count, SelectTracksMode mode) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return RetVal<TrackIdList>::make_ret(Ret::Code::NotSupported);
+    }
+
+    const TrackIdList ids = prj->trackIdList();
+    if (first < 0 || count < 0 || first >= static_cast<int>(ids.size())) {
+        LOGE() << "invalid track range, first: " << first << ", count: " << count << ", tracks: " << ids.size();
+        return RetVal<TrackIdList>::make_ret(Ret::Code::BadArgs);
+    }
+
+    const TrackIdList inRange(ids.begin() + first, ids.begin() + std::min<size_t>(first + count, ids.size()));
+    const TrackIdList current = selectionController()->selectedTracks();
+    const auto isInRange = [&inRange](const TrackId& id) { return muse::contains(inRange, id); };
+    const auto isCurrent = [&current](const TrackId& id) { return muse::contains(current, id); };
+
+    TrackIdList selected;
+    switch (mode) {
+    case SelectTracksMode::Set:
+        selected = inRange;
+        break;
+    case SelectTracksMode::Add:
+        std::ranges::copy_if(ids, std::back_inserter(selected), [&](const TrackId& id) { return isInRange(id) || isCurrent(id); });
+        break;
+    case SelectTracksMode::Remove:
+        std::ranges::copy_if(current, std::back_inserter(selected), std::not_fn(isInRange));
+        break;
+    }
+
+    return RetVal<TrackIdList>::make_ok(selected);
+}
+
+void TrackeditActionsController::applyTimeSelection(const TimeRange& range)
+{
+    selectionController()->setDataSelectedStartTime(range.first, true);
+    selectionController()->setDataSelectedEndTime(range.second, true);
+}
+
+muse::Ret TrackeditActionsController::selectTime(const SelectTimeCommand& command)
+{
+    const RetVal<TimeRange> range = resolveTimeSelection(command.start, command.end, command.relativeTo);
+    if (!range.ret) {
+        return range.ret;
+    }
+
+    applyTimeSelection(range.val);
+    return make_ok();
+}
+
+muse::Ret TrackeditActionsController::selectTracks(const SelectTracksCommand& command)
+{
+    const RetVal<TrackIdList> tracks = resolveTrackSelection(command.trackIndex, command.trackCount, command.mode);
+    if (!tracks.ret) {
+        return tracks.ret;
+    }
+
+    selectionController()->setSelectedTracks(tracks.val, true);
+    return make_ok();
+}
+
+muse::Ret TrackeditActionsController::select(const SelectCommand& command)
+{
+    const RetVal<TrackIdList> tracks = resolveTrackSelection(command.trackIndex, command.trackCount, command.mode);
+    if (!tracks.ret) {
+        return tracks.ret;
+    }
+
+    const RetVal<TimeRange> range = resolveTimeSelection(command.start, command.end, command.relativeTo);
+    if (!range.ret) {
+        return range.ret;
+    }
+
+    selectionController()->setSelectedTracks(tracks.val, true);
+    applyTimeSelection(range.val);
+    return make_ok();
+}
+
+muse::Ret TrackeditActionsController::selectAdjacentClip(ClipStep step)
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    ClipKeyList ordered;
+    for (const TrackId& trackId : prj->trackIdList()) {
+        const muse::async::NotifyList<Clip> clips = prj->clipList(trackId);
+        Clips sorted(clips.begin(), clips.end());
+        std::ranges::stable_sort(sorted, {}, &Clip::startTime);
+        std::ranges::transform(sorted, std::back_inserter(ordered), &Clip::key);
+    }
+
+    const ClipKeyList selected = selectionController()->selectedClips();
+    const auto isSelected = [&selected](const ClipKey& key) { return muse::contains(selected, key); };
+
+    std::optional<ClipKey> target;
+    if (step == ClipStep::Next) {
+        const auto after = std::find_if(ordered.rbegin(), ordered.rend(), isSelected).base();
+        if (after != ordered.end()) {
+            target = *after;
+        }
+    } else {
+        const auto first = std::ranges::find_if(ordered, isSelected);
+        if (first != ordered.begin()) {
+            target = *std::prev(first);
+        }
+    }
+
+    if (!target) {
+        LOGE() << "no " << (step == ClipStep::Next ? "next" : "previous") << " clip to select";
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    selectionController()->resetSelectedLabels();
+    selectionController()->setSelectedClips({ *target }, true);
     return make_ok();
 }
 

@@ -8,6 +8,8 @@ qt_add_qml_module(macromanager_qml
         availablecommandsmodel.h
         commandparamsmodel.cpp
         commandparamsmodel.h
+        commanddisplay.cpp
+        commanddisplay.h
         macroactions.cpp
         macroactions.h
         macrocommandsmodel.cpp
@@ -39,3 +41,7 @@ qt_add_qml_module(macromanager_qml
 )
 
 fixup_qml_module_dependencies(macromanager_qml)
+
+if (AU_BUILD_MACROMANAGER_TESTS)
+    add_subdirectory(tests)
+endif()

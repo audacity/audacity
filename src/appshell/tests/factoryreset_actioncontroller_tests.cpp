@@ -44,8 +44,8 @@ public:
             m_registeredCommands[command] = cb;
         });
 
-        ON_CALL(*m_commandDispatcher, dispatch(_))
-        .WillByDefault([this](const muse::rcommand::Request& request) {
+        ON_CALL(*m_commandDispatcher, dispatch(_, _))
+        .WillByDefault([this](const muse::rcommand::Request& request, bool) {
             auto it = m_registeredCommands.find(request.command);
             const muse::rcommand::Response response = it != m_registeredCommands.end()
                                                       ? it->second(request)

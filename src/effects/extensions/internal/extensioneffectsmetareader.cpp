@@ -27,6 +27,7 @@ muse::audioplugins::PluginMeta makeMeta(
     meta.attributes.emplace(EFFECT_CATEGORY_ATTRIBUTE, utils::effectCategoryToString(EffectCategory::Unspecified));
     meta.attributes.emplace(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, u"false");
     meta.attributes.emplace(EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, u"true");
+    meta.attributes.emplace(EFFECT_IS_INTERACTIVE_ATTRIBUTE, u"true");
     meta.attributes.emplace(EFFECT_VERSION_ATTRIBUTE, muse::String::fromStdString(descriptor.version));
     meta.attributes.emplace(EFFECT_MODULE_ATTRIBUTE, muse::String::fromStdString(descriptor.extensionId));
     meta.attributes.emplace(EFFECT_ACTIVATED_ATTRIBUTE, u"true");

@@ -10,10 +10,12 @@
 #include "framework/global/io/path.h"
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/progress.h"
+#include "framework/global/types/retval.h"
 #include "framework/global/types/val.h"
 
 #include "project/iaudacityproject.h"
 
+#include "types/exportformatsettings.h"
 #include "types/exporttypes.h"
 #include "types/ret.h"
 
@@ -55,6 +57,7 @@ public:
     virtual std::vector<std::string> formatExtensions(const std::string& format) const = 0;
     virtual std::vector<std::string> cloudPreferredAudioFormats(bool preferLossless = true) const = 0;
     virtual ExportParameters cloudExportParameters(const std::string& format) const = 0;
+    virtual muse::RetVal<ExportParameters> exportParameters(const ExportFormatSettings& settings, int sampleRate) const = 0;
     virtual bool isCustomFFmpegExportFormat() const = 0;
     virtual bool hasMetadata() const = 0;
 

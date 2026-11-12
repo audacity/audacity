@@ -4,6 +4,7 @@
 #pragma once
 
 #include "framework/rcommand/commandtypes.h"
+#include "framework/rcommand/typedcommand.h"
 
 namespace au::playback {
 inline static const muse::rcommand::Command PLAYBACK_TOGGLE_PLAY_PAUSE_COMMAND("command://playback/toggle-play-pause");
@@ -59,4 +60,12 @@ inline static const muse::rcommand::Command PLAYBACK_METRONOME_COMMAND("command:
 inline static const muse::rcommand::Command PLAYBACK_TIME_COMMAND("command://playback/time");
 inline static const muse::rcommand::Command PLAYBACK_BPM_COMMAND("command://playback/bpm");
 inline static const muse::rcommand::Command PLAYBACK_TIME_SIGNATURE_COMMAND("command://playback/time-signature");
+
+struct PlayFromStartCommand {
+    cprop_decl id = muse::rcommand::Command("command://playback/play-from-start");
+    //: Command title: shown as a menu item or a button label; keep it short
+    cprop_decl title = muse::MnemonicString(muse::TranslatableString("command", "Play from start"));
+    //: Command description: shown as a tooltip; can be a full sentence
+    cprop_decl description = muse::TranslatableString("command_description", "Play the project from the start");
+};
 }

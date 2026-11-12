@@ -45,7 +45,7 @@ protected:
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
 
-        ON_CALL(*m_commandDispatcher, dispatch(_))
+        ON_CALL(*m_commandDispatcher, dispatch(_, _))
         .WillByDefault(Invoke(&PlayCursorControllerTests::okResponse));
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_project));
@@ -80,7 +80,7 @@ protected:
         delete m_context;
     }
 
-    static muse::async::Promise<muse::rcommand::Response> okResponse(const muse::rcommand::Request& request)
+    static muse::async::Promise<muse::rcommand::Response> okResponse(const muse::rcommand::Request& request, bool)
     {
         return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
             return resolve(muse::rcommand::make_response(request, muse::make_ok()));
@@ -132,7 +132,7 @@ TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOff_SnapsToBoundary)
     useGridSnapOff({ 10.0 });
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double time = m_context->positionToTime(10.5, true); // within the 4px(=4s at zoom 1) clip-snap tolerance
@@ -150,7 +150,7 @@ TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOff_FarFromBoundary_UsesRaw
     useGridSnapOff({ 10.0 });
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double time = m_context->positionToTime(20.0, true); // 10s away from the only boundary
@@ -165,7 +165,7 @@ TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOn_SnapsToGrid)
     useGridSnapOn(SnapType::Seconds);
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double time = m_context->positionToTime(7.4, true);
@@ -182,7 +182,7 @@ TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_ClampsToZero_WhenNotAt
     .WillByDefault(Return(muse::secs_t(5.0)));
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->seekToTime(-3.0);
@@ -197,7 +197,7 @@ TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_AlreadyAtStart_DoesNot
     ON_CALL(*m_playbackState, playbackPosition())
     .WillByDefault(Return(muse::secs_t(0.0)));
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->seekToTime(-3.0);
@@ -222,7 +222,7 @@ TEST_F(PlayCursorControllerTests, SeekToTimeKeepingView_TargetOutsideFrame_Leave
     const double frameStart = m_context->frameStartTime();
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->seekToTimeKeepingView(30.0);
@@ -252,7 +252,7 @@ TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
     useGridSnapOff({ 10.0 });
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double t1 = m_context->positionToTime(-3.0, true); // negative — clamped to 0 by setPlaybackRegionByTime
@@ -312,7 +312,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_Press_DoesNotDispatchSeek)
     //! CASE Mousedown alone must not move the playhead.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -324,7 +324,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_PlainClick_SeeksOnRelease)
     useGridSnapOff({});
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -340,7 +340,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWithinDragThreshold_StillSeek
     useGridSnapOff({});
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -356,7 +356,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickAppliesSnap)
     useGridSnapOff({ 10.0 });
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(10.5, 10.5, 50.0); // within the 4px(=4s at zoom 1) clip-snap tolerance
@@ -373,7 +373,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_HorizontalDrag_DoesNotSeek)
     //! the playback-region update too.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(_))
     .Times(0);
@@ -388,7 +388,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_VerticalDrag_DoesNotSeek)
     //! CASE A vertical drag (multi-track selection) is a drag too.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -402,7 +402,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_DragReturningToOrigin_StillNoSeek)
     //! if the pointer returns to the press position before release.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -417,7 +417,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_Cancel_DoesNotSeek)
     //! double-click took over) never seeks.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -431,7 +431,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_EndWithoutBegin_IsNoop)
     //! gesture) do nothing.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     EXPECT_FALSE(m_controller->endSeekGesture());
@@ -446,7 +446,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSeekTime_
     ON_CALL(*m_playbackState, isPlaying())
     .WillByDefault(Return(true));
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(muse::secs_t(20.0)));
 
@@ -489,7 +489,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_DragWhilePlaying_DoesNotTouchPlayb
     ON_CALL(*m_playbackState, isPlaying())
     .WillByDefault(Return(true));
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(_))
     .Times(0);

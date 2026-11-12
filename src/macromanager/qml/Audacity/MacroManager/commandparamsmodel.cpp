@@ -3,6 +3,10 @@
 */
 #include "commandparamsmodel.h"
 
+#include <algorithm>
+#include <ranges>
+#include <vector>
+
 using namespace au::macromanager;
 using namespace muse;
 using namespace muse::rcommand;
@@ -17,8 +21,32 @@ CommandParamsModel::ParamType toParamType(DataType type)
     case DataType::Double: return CommandParamsModel::ParamType::Float;
     case DataType::Bool: return CommandParamsModel::ParamType::Boolean;
     case DataType::List: return CommandParamsModel::ParamType::Array;
+    case DataType::Enum: return CommandParamsModel::ParamType::Enum;
     default: return CommandParamsModel::ParamType::String;
     }
+}
+
+QVariantList toOptions(const std::optional<ValList>& allowedValues)
+{
+    QVariantList options;
+    for (const Val& allowedValue : allowedValues.value_or(ValList())) {
+        const QString value = QString::fromStdString(allowedValue.toString());
+        options << QVariantMap { { "text", value }, { "value", value } };
+    }
+    return options;
+}
+
+QVariant enumValue(const QVariantList& options, const QVariant& stored)
+{
+    const bool storedIsAllowed = std::ranges::any_of(options, [&stored](const QVariant& option) {
+        return option.toMap().value("value") == stored;
+    });
+
+    if (storedIsAllowed) {
+        return stored;
+    }
+
+    return options.isEmpty() ? QVariant(QString()) : options.first().toMap().value("value");
 }
 
 QVariant defaultValue(CommandParamsModel::ParamType type, const QVariant& min)
@@ -74,6 +102,9 @@ QVariant CommandParamsModel::data(const QModelIndex& index, int role) const
     case MinRole: return item.min;
     case MaxRole: return item.max;
     case ValueRole: return item.value;
+    case OptionsRole: return item.options;
+    case OptionalRole: return item.optional;
+    case IncludedRole: return item.included;
     default: return QVariant();
     }
 }
@@ -91,7 +122,10 @@ QHash<int, QByteArray> CommandParamsModel::roleNames() const
         { TypeRole, "type" },
         { MinRole, "min" },
         { MaxRole, "max" },
-        { ValueRole, "value" }
+        { ValueRole, "value" },
+        { OptionsRole, "options" },
+        { OptionalRole, "optional" },
+        { IncludedRole, "included" }
     };
 
     return roles;
@@ -106,20 +140,30 @@ void CommandParamsModel::load(const QString& command, const QVariantMap& params)
 {
     const CommandInfo& info = commandsRegister()->commandInfo(Command(command.toStdString()));
 
+    std::vector<std::pair<std::string, Arg> > args(info.inputSchema.args.begin(), info.inputSchema.args.end());
+    std::ranges::stable_sort(args, {}, [](const std::pair<std::string, Arg>& entry) {
+        return entry.second.uiHints.order;
+    });
+
     beginResetModel();
 
     m_items.clear();
-    for (const auto& [key, arg] : info.inputSchema.args) {
+    for (const auto& [key, arg] : args) {
         Item item;
         item.key = QString::fromStdString(key);
-        item.description = QString::fromStdString(arg.description);
+        item.description = arg.label.isEmpty() ? arg.description.qTranslated() : arg.label.qTranslated();
         item.type = toParamType(arg.dataType);
         item.min = boundValue(arg.min);
         item.max = boundValue(arg.max);
+        item.options = toOptions(arg.allowedValues);
+        item.optional = arg.presence == Presence::Optional;
+        item.included = !item.optional || params.contains(item.key);
 
         const QVariant stored = params.value(item.key);
         if (item.type == ParamType::Array) {
             item.value = stored.toStringList().join(", ");
+        } else if (item.type == ParamType::Enum) {
+            item.value = enumValue(item.options, stored);
         } else {
             item.value = stored.isValid() ? stored : defaultValue(item.type, item.min);
         }
@@ -145,10 +189,22 @@ void CommandParamsModel::setValue(int row, const QVariant& value)
     emit dataChanged(idx, idx, { ValueRole });
 }
 
+void CommandParamsModel::setIncluded(int row, bool included)
+{
+    if (row < 0 || row >= m_items.size() || !m_items.at(row).optional) {
+        return;
+    }
+
+    m_items[row].included = included;
+
+    const QModelIndex idx = index(row);
+    emit dataChanged(idx, idx, { IncludedRole });
+}
+
 QVariantMap CommandParamsModel::params() const
 {
     QVariantMap params;
-    for (const Item& item : m_items) {
+    for (const Item& item : m_items | std::views::filter(&Item::included)) {
         params[item.key] = toParamValue(item.type, item.value);
     }
 

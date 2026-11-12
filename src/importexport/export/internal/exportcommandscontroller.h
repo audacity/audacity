@@ -14,6 +14,7 @@
 #include "context/iglobalcontext.h"
 #include "../iexportconfiguration.h"
 #include "../iexporter.h"
+#include "exportcommandoptions.h"
 
 namespace au::importexport {
 class ExportCommandsController : public muse::rcommand::Commandable, public muse::Contextable
@@ -32,7 +33,8 @@ public:
     void init();
 
 private:
-    muse::Ret exportToMacroOutput(const std::string& extension, const muse::rcommand::Params& params);
+    muse::Ret exportAudio(const ExportFormatSettings& settings, const std::string& path, int sampleRate, ExportChannelLayout channels,
+                          const std::string& name);
 
     std::optional<std::string> formatForExtension(const std::string& extension) const;
     std::string outputBaseName() const;

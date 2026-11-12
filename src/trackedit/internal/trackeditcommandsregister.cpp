@@ -81,7 +81,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::CUT),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_COPY_COMMAND,
@@ -94,7 +94,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::COPY),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_DELETE_COMMAND,
@@ -107,7 +107,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::DELETE_TANK),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_SPLIT_CUT_COMMAND,
@@ -120,7 +120,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::CUT),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_SPLIT_DELETE_COMMAND,
@@ -133,7 +133,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(IconCode::Code::DELETE_TANK),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_PITCH_SPEED_OPEN_COMMAND,
@@ -156,7 +156,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_RESET_PITCH_SPEED_COMMAND,
@@ -169,7 +169,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND,
@@ -182,7 +182,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
             }),
         Decoration(Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_SPLIT_AT_COMMAND,
@@ -195,7 +195,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_PIVOTS_PARAM, Arg(DataType::List, u"Split positions in seconds") },
             }),
         Decoration(IconCode::Code::SPLIT_TOOL),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_NEW_MONO_TRACK_COMMAND,
@@ -456,7 +456,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Selection end in seconds") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_SELECT_TRACK_COMMAND,
@@ -468,8 +468,13 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_INDEX_PARAM, Arg(DataType::Int, u"Track index") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
+    makeCommandInfo<SelectTimeCommand>(),
+    makeCommandInfo<SelectTracksCommand>(),
+    makeCommandInfo<SelectCommand>(),
+    makeCommandInfo<SelectNextClipCommand>(),
+    makeCommandInfo<SelectPreviousClipCommand>(),
     CommandInfo{
         TRACKEDIT_ZERO_CROSS_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
@@ -498,7 +503,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Int, u"Color index") },
             }),
         Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_COLOR_COMMAND,
@@ -510,7 +515,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_COLOR_INDEX_PARAM, Arg(DataType::Int, u"Color index") },
             }),
         Decoration(IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED, Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_FORMAT_COMMAND,
@@ -522,7 +527,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_FORMAT_PARAM, Arg(DataType::Int, u"Track format") },
             }),
         Decoration(Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_RATE_COMMAND,
@@ -534,7 +539,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_RATE_PARAM, Arg(DataType::Int, u"Sample rate in Hz") },
             }),
         Decoration(Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND,
@@ -555,7 +560,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::WAVEFORM, Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_SPECTROGRAM_COMMAND,
@@ -567,7 +572,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::SPECTROGRAM, Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_MULTI_COMMAND,
@@ -579,7 +584,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::WAVEFORM_MULTIVIEW, Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_LABEL_ADD_COMMAND,
@@ -692,7 +697,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_DUPLICATE_SELECTED_COMMAND,
@@ -706,7 +711,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_END_PARAM, Arg(DataType::Float, u"Range end in seconds") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_TRACK_DELETE_COMMAND,
@@ -808,7 +813,7 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
             }),
         Decoration(IconCode::Code::SPLIT_TOOL),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CUT_LEAVE_GAP_COMMAND,
@@ -1001,7 +1006,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Open the context menu of the focused track item"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND,
@@ -1011,7 +1016,7 @@ const std::vector<CommandInfo> commandInfos = {
         TranslatableString("command_description", "Open the context menu of the focused ruler"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
 };
 }

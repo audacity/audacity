@@ -44,8 +44,8 @@ public:
 
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
         m_controller->commandDispatcher.set(m_commandDispatcher);
-        ON_CALL(*m_commandDispatcher, dispatch(_))
-        .WillByDefault([](const muse::rcommand::Request& request) {
+        ON_CALL(*m_commandDispatcher, dispatch(_, _))
+        .WillByDefault([](const muse::rcommand::Request& request, bool) {
             return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
                 return resolve(muse::rcommand::make_response(request, muse::make_ok()));
             });
@@ -136,6 +136,11 @@ public:
     void playSelection()
     {
         m_controller->playSelectionAction();
+    }
+
+    void playFromStart()
+    {
+        m_controller->playFromStartAction();
     }
 
     void stop()
@@ -1432,6 +1437,50 @@ TEST_F(PlaybackControllerTests, PlaySelection_WhilePlaying_Restarts)
     EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(10.0));
 }
 
+TEST_F(PlaybackControllerTests, PlayFromStart_WhenStopped_PlaysFromZero)
+{
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    seek(30.0);
+
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(secs_t(0.0))))
+    .Times(1);
+
+    playFromStart();
+
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(0.0));
+}
+
+TEST_F(PlaybackControllerTests, PlayFromStart_WhilePlaying_Restarts)
+{
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(1);
+
+    playFromStart();
+}
+
+TEST_F(PlaybackControllerTests, PlayFromStart_WhileRecording_DoesNothing)
+{
+    EXPECT_CALL(*m_recordController, isRecording())
+    .WillRepeatedly(Return(true));
+
+    EXPECT_CALL(*m_player, seek(_, _))
+    .Times(0);
+    EXPECT_CALL(*m_player, play(_))
+    .Times(0);
+
+    playFromStart();
+}
+
 TEST_F(PlaybackControllerTests, SuspendPlayback_RestoresAtInterruptedPosition)
 {
     PlaybackStatus status = PlaybackStatus::Running;
@@ -1618,7 +1667,7 @@ TEST_F(PlaybackControllerTests, Stop_WhenRecording_StopsTheRecorder)
     setRecording(true);
 
     //! [THEN] The recorder is stopped, not the player
-    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_STOP_COMMAND)))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_STOP_COMMAND), _))
     .Times(1);
 
     EXPECT_CALL(*m_player, stop())
@@ -1634,7 +1683,7 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_WhenRecording_PausesTheRecorder)
     setRecording(true, false /* isLeadIn */);
 
     //! [THEN] The recorder is paused, not the player
-    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND)))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND), _))
     .Times(1);
 
     EXPECT_CALL(*m_player, pause())
@@ -1657,7 +1706,7 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadIn_PausesThePlayback)
     EXPECT_CALL(*m_player, pause())
     .Times(1);
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND)))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND), _))
     .Times(0);
 
     //! [WHEN] User presses the Play/Pause button during lead-in
@@ -1677,7 +1726,7 @@ TEST_F(PlaybackControllerTests, TogglePlayPause_DuringLeadInWhenPaused_ResumesTh
     EXPECT_CALL(*m_player, resume())
     .Times(1);
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND)))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(::testing::Field(&muse::rcommand::Request::command, record::RECORD_PAUSE_COMMAND), _))
     .Times(0);
 
     //! [WHEN] User presses the Play/Pause button to resume the lead-in

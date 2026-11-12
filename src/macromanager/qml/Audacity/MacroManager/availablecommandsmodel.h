@@ -12,6 +12,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/rcommand/icommandsregister.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "macromanager/imacrosrepository.h"
 
 namespace au::macromanager {
@@ -24,6 +25,7 @@ class AvailableCommandsModel : public QAbstractListModel, public muse::async::As
 
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
     muse::GlobalInject<IMacrosRepository> repository;
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
 
 public:
     explicit AvailableCommandsModel(QObject* parent = nullptr);
@@ -45,12 +47,14 @@ private:
     enum Roles {
         CodeRole = Qt::UserRole + 1,
         TitleRole,
+        SubtitleRole,
         IsMacroRole
     };
 
     struct Item {
         QString code;
         QString title;
+        QString subtitle;
         bool isMacro = false;
 
         bool operator==(const Item&) const = default;
