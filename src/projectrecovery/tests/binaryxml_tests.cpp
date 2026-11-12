@@ -80,6 +80,8 @@ TEST(BinaryXmlTests, DecodesTheTokensOfProjectSerializer)
     EXPECT_EQ(project.attribute("name")->text, "abc");
     EXPECT_EQ(project.attribute("blockid")->type, FieldType::LongLong);
     EXPECT_EQ(project.attribute("blockid")->integer, -2);
+    // Start tag, then the string token, its length and "abc", then the type and name id of blockid
+    EXPECT_EQ(project.attribute("blockid")->offset, binary.dict.size() + 3 + 3 + 4 + 3 + 3);
     EXPECT_EQ(project.attribute("rate")->real, 48000);
     EXPECT_EQ(project.attribute("rate")->digits, 19);
     EXPECT_EQ(project.attribute("selected")->toBool(), true);

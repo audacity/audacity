@@ -17,6 +17,8 @@ struct WaveBlock {
     int64_t blockId = 0;
     //! The start of the next block, or the sample count of the sequence, minus the start
     int64_t length = 0;
+    //! Where the blockid value starts in the dict and the doc, read as one stream
+    size_t blockIdOffset = 0;
 };
 
 struct Sequence {

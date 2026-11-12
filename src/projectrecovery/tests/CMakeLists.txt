@@ -8,8 +8,10 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/testprojectbuilder.cpp
     ${CMAKE_CURRENT_LIST_DIR}/testprojectbuilder.h
     ${CMAKE_CURRENT_LIST_DIR}/binaryxml_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/documentedit_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectdocument_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectinspector_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/projectrepairer_tests.cpp
     )
 
 set(MODULE_TEST_LINK

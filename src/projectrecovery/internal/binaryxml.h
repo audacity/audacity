@@ -44,6 +44,8 @@ struct XmlValue {
     //! String, as UTF-8
     std::string text;
     muse::ByteArray blob;
+    //! Where the value starts in the dict and the doc, read as one stream; 0 for a value that was not decoded
+    size_t offset = 0;
 
     std::optional<int64_t> toInteger() const;
     std::optional<double> toDouble() const;

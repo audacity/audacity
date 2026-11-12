@@ -469,6 +469,7 @@ muse::RetVal<XmlDocument> au::projectrecovery::decodeBinaryXml(const BinaryXml& 
             if (open.size() < 2) {
                 return fail("an attribute is outside of all elements");
             }
+            const size_t offset = in.position();
             if (type == FieldType::String || type == FieldType::Blob) {
                 if (!in.has(4)) {
                     return fail("a value is cut off");
@@ -490,6 +491,7 @@ muse::RetVal<XmlDocument> au::projectrecovery::decodeBinaryXml(const BinaryXml& 
                 }
                 attribute.value = readFixedValue(in, type);
             }
+            attribute.value.offset = offset;
             open.back()->attributes.push_back(std::move(attribute));
             break;
         }

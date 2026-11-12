@@ -36,7 +36,9 @@ Sequence readSequence(const XmlNode& node)
     sequence.numSamples = integerAttribute(node, "numsamples");
     for (const XmlNode& child : node.children) {
         if (child.tag == "waveblock") {
-            sequence.blocks.push_back({ integerAttribute(child, "start"), integerAttribute(child, "blockid"), 0 });
+            const XmlValue* blockId = child.attribute("blockid");
+            sequence.blocks.push_back({ integerAttribute(child, "start"), integerAttribute(child, "blockid"), 0,
+                                        blockId ? blockId->offset : 0 });
         }
     }
     for (size_t i = 0; i < sequence.blocks.size(); ++i) {
