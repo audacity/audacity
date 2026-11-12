@@ -128,6 +128,30 @@ struct RenderCallback : AURenderCallbackStruct {
     }
 };
 
+//! The set of callbacks a host installs with kAudioUnitProperty_HostCallbacks
+/*!
+ This is the only channel through which an AudioUnit can learn the host's
+ transport state: rendering alone tells the plug-in nothing about whether the
+ host is playing or where in the timeline a block belongs.  Any field may be
+ left null, and the plug-in may pass null for any out parameter, so
+ implementations must check before writing.
+ */
+struct HostCallbacks : HostCallbackInfo {
+    HostCallbacks(void* inHostUserData,
+                  HostCallback_GetBeatAndTempo inBeatAndTempo,
+                  HostCallback_GetMusicalTimeLocation inMusicalTimeLocation,
+                  HostCallback_GetTransportState inTransportState,
+                  HostCallback_GetTransportState2 inTransportState2)
+        : HostCallbackInfo{}
+    {
+        hostUserData = inHostUserData;
+        beatAndTempoProc = inBeatAndTempo;
+        musicalTimeLocationProc = inMusicalTimeLocation;
+        transportStateProc = inTransportState;
+        transportStateProc2 = inTransportState2;
+    }
+};
+
 struct Parameter : AudioUnitParameter {
     //! This constructor leaves the parameter ID and element fields as 0
     Parameter(AudioUnit audioUnit, AudioUnitScope scope)
