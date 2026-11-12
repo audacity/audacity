@@ -95,6 +95,7 @@ public:
     bool hasUnsavedChanges() override;
 
     muse::Ret save(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
+    muse::Ret autoSave() override;
 
     const au::trackedit::ITrackeditProjectPtr trackeditProject() const override;
 

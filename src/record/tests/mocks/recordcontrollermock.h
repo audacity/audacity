@@ -14,6 +14,7 @@ public:
     MOCK_METHOD(bool, isRecordAllowed, (), (const, override));
     MOCK_METHOD(muse::async::Notification, isRecordAllowedChanged, (), (const, override));
 
+    MOCK_METHOD(muse::Ret, stopRecording, (), (override));
     MOCK_METHOD(bool, isRecording, (), (const, override));
     MOCK_METHOD(muse::async::Notification, isRecordingChanged, (), (const, override));
 

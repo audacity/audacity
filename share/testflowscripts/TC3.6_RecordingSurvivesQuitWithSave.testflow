@@ -1,0 +1,6 @@
+# TC3.6: A recording survives quitting with Save, in a saved project
+#
+# Each script runs in a new app process, all sharing one profile, in this order.
+TC3.6_RecordingSurvivesQuitWithSave/1_CreateAndSave.js
+TC3.6_RecordingSurvivesQuitWithSave/2_RecordAndQuitSaving.js
+TC3.6_RecordingSurvivesQuitWithSave/3_Reopen.js

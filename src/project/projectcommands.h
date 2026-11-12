@@ -17,6 +17,7 @@ inline static const muse::rcommand::Command PROJECT_IMPORT_STARTUP_MEDIA_COMMAND
 
 inline static const muse::rcommand::Command PROJECT_SAVE_COMMAND("command://project/save");
 inline static const muse::rcommand::Command PROJECT_SAVE_AS_COMMAND("command://project/save-as");
+inline static const muse::rcommand::Command PROJECT_SAVE_AT_COMMAND("command://project/save-at");
 inline static const muse::rcommand::Command PROJECT_SAVE_TO_CLOUD_COMMAND("command://project/save-to-cloud");
 inline static const muse::rcommand::Command PROJECT_CLOSE_COMMAND("command://project/close");
 
@@ -36,6 +37,7 @@ inline static const muse::rcommand::Command PROJECT_OPEN_CUSTOM_MAPPING_COMMAND(
 
 inline static const std::string PROJECT_URL_PARAM("url");
 inline static const std::string PROJECT_DISPLAY_NAME_PARAM("displayName");
+inline static const std::string PROJECT_PATH_PARAM("path");
 inline static const std::string PROJECT_ID_PARAM("projectId");
 inline static const std::string PROJECT_SNAPSHOT_ID_PARAM("snapshotId");
 inline static const std::string PROJECT_FILES_PARAM("files");

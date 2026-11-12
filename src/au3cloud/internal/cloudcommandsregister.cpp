@@ -32,7 +32,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { CLOUD_OPEN_PROJECT_PAGE_ID_PARAM, Arg(DataType::String, u"Id of the cloud project") },
             }),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         CLOUD_OPEN_AUDIO_PAGE_COMMAND,
@@ -44,7 +44,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { CLOUD_OPEN_AUDIO_PAGE_SLUG_PARAM, Arg(DataType::String, u"Slug of the audio") },
             }),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         CLOUD_OPEN_PROFILE_PAGE_COMMAND,
@@ -66,7 +66,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { CLOUD_OPEN_URL_URL_PARAM, Arg(DataType::String, u"The URL to handle") },
             }),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
 };
 }

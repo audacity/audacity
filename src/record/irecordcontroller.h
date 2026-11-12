@@ -9,6 +9,7 @@
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
+#include "framework/global/types/ret.h"
 #include "framework/global/types/secs.h"
 #include "trackedit/trackedittypes.h"
 
@@ -23,6 +24,7 @@ public:
     virtual bool isRecordAllowed() const = 0;
     virtual muse::async::Notification isRecordAllowedChanged() const = 0;
 
+    virtual muse::Ret stopRecording() = 0;
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;
 

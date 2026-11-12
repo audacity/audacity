@@ -9,6 +9,7 @@
 #include "context/tests/mocks/globalcontextmock.h"
 #include "context/tests/mocks/playbackstatemock.h"
 #include "playback/tests/mocks/playbackcontrollermock.h"
+#include "trackedit/tests/mocks/projecthistorymock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "interactive/tests/mocks/interactivemock.h"
 
@@ -31,12 +32,14 @@ public:
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
         m_playbackController = std::make_shared<NiceMock<playback::PlaybackControllerMock> >();
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
+        m_projectHistory = std::make_shared<NiceMock<trackedit::ProjectHistoryMock> >();
         m_interactive = std::make_shared<NiceMock<muse::InteractiveMock> >();
         m_record = std::make_shared<NiceMock<RecordMock> >();
 
         m_controller->globalContext.set(m_globalContext);
         m_controller->playbackController.set(m_playbackController);
         m_controller->selectionController.set(m_selectionController);
+        m_controller->projectHistory.set(m_projectHistory);
         m_controller->interactive.set(m_interactive);
         m_controller->record.set(m_record);
 
@@ -77,6 +80,7 @@ public:
     std::shared_ptr<context::PlaybackStateMock> m_playbackState;
     std::shared_ptr<playback::PlaybackControllerMock> m_playbackController;
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
+    std::shared_ptr<trackedit::ProjectHistoryMock> m_projectHistory;
     std::shared_ptr<muse::InteractiveMock> m_interactive;
     std::shared_ptr<RecordMock> m_record;
 };
@@ -144,6 +148,16 @@ TEST_F(RecordControllerTests, RecordFromStoppedPlaybackDoesNotStopPlayback)
     .WillOnce(Return(muse::make_ok()));
 
     //! [WHEN] Recording is initiated
+    toggleRecord();
+}
+
+TEST_F(RecordControllerTests, StartingRecordingMarksProjectUnsaved)
+{
+    //! [THEN] The project is marked unsaved, so closing it asks about saving the recording
+    EXPECT_CALL(*m_projectHistory, markUnsaved())
+    .Times(1);
+
+    //! [WHEN] Recording starts
     toggleRecord();
 }
 

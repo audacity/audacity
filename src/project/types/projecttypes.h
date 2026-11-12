@@ -56,7 +56,6 @@ enum class SaveMode
     SaveAs,
     SaveCopy,
     SaveSelection,
-    AutoSave
 };
 
 enum class CloudSaveMode

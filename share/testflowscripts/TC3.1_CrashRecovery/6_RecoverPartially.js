@@ -27,7 +27,7 @@ var testCase = {
         }),
         u.step("It is open, with its track", function () {
             r.expectClosed();
-            r.waitFor(function () {
+            u.waitFor(function () {
                 return u.trackCount() === 1;
             }, 3000);
             u.eq(u.trackCount(), 1, "track count");

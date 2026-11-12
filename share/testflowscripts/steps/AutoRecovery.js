@@ -14,17 +14,6 @@ var BUTTONS = "AutoRecoveryButtons";
 var QUESTION = "DialogView";
 var QUESTION_BUTTONS = "StandardDialog";
 
-// Polls, as dialogs open and close on later event loop iterations
-function waitFor(condition, timeoutMs) {
-    for (var waited = 0; waited < timeoutMs; waited += 100) {
-        if (condition()) {
-            return true;
-        }
-        u.sleep(100);
-    }
-    return condition();
-}
-
 function hasOpenSection(name) {
     var sections = api.navigation.sections();
     for (var i = 0; i < sections.length; ++i) {
@@ -50,7 +39,7 @@ function expectOpen() {
 
 function expectClosed() {
     if (
-        !waitFor(function () {
+        !u.waitFor(function () {
             return !isOpen();
         }, 3000)
     ) {
@@ -136,7 +125,7 @@ function isQuestionOpen() {
 }
 
 function answer(button) {
-    if (!waitFor(isQuestionOpen, 3000)) {
+    if (!u.waitFor(isQuestionOpen, 3000)) {
         u.fail("no question is open");
     }
     // Its buttons only take navigation a little after it shows
@@ -147,7 +136,6 @@ function answer(button) {
 }
 
 module.exports = {
-    waitFor: waitFor,
     isOpen: isOpen,
     expectOpen: expectOpen,
     expectClosed: expectClosed,

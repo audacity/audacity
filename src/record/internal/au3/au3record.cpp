@@ -212,8 +212,10 @@ void Au3Record::init()
         if (m_recordData.empty()) {
             return;
         }
-        // Autosave project during recording to keep the document synchronized with the recorded data
-        ProjectFileIO::Get(projectRef()).AutoSave();
+        if (const auto prj = globalContext()->currentProject()) {
+            // Autosave project during recording to keep the document synchronized with the recorded data
+            prj->autoSave();
+        }
     });
 
     audioEngine()->recordingClipChanged().onReceive(this, [this](const au3::Au3TrackId& trackId, const au3::Au3ClipId& clipId) {

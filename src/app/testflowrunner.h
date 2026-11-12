@@ -14,6 +14,8 @@ namespace au::app {
 //!
 //! A script can set how the app starts with `@testflow <directive>` tags in the comment it starts with:
 //!  - `allow-recovery`: offer to recover the projects left open by a previous run, as a normal startup would
+//!  - `expect-quit <step>`: the test case passes by quitting the app, which interrupts it, once step <step>
+//!    (counting from 1) has started. Quitting earlier fails: it skipped what those steps check.
 class TestflowRunner : public muse::async::Asyncable
 {
     muse::GlobalInject<muse::testflow::ITestflowConfiguration> configuration;
@@ -26,6 +28,7 @@ public:
 private:
     struct ScriptDirectives {
         bool allowRecovery = false;
+        int expectQuitFromStep = 0; // 0: quitting is not expected
     };
 
     TestflowRunner(const muse::modularity::ContextPtr& ctx, const AudacityCmdOptions::Testflow& options,
@@ -40,6 +43,7 @@ private:
     muse::modularity::ContextPtr m_ctx;
     AudacityCmdOptions::Testflow m_options;
     muse::io::path_t m_scriptPath;
+    ScriptDirectives m_directives;
     int m_startedSteps = 0;
 };
 }

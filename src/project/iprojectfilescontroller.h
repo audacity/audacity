@@ -43,7 +43,8 @@ public:
     virtual bool isUrlSupported(const QUrl& url) const = 0;
     virtual bool isFileSupported(const muse::io::path_t& path) const = 0;
     virtual muse::Ret openProject(const ProjectFile& file) = 0;
-    virtual bool closeOpenedProject(bool quitApp = false) = 0;
+    //! NOTE: `onClosedLater` is in case there are unsaved changes: the save-changes dialog is asynchronous.
+    virtual bool closeOpenedProject(bool quitApp = false, std::function<void()> onClosedLater = nullptr) = 0;
     virtual bool quitDiscardingUnsavedChanges() = 0;
     virtual bool saveProject(const muse::io::path_t& path = muse::io::path_t()) = 0;
     virtual bool saveProjectLocally(const muse::io::path_t& path = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) = 0;

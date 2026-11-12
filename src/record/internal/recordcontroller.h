@@ -13,6 +13,7 @@
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
+#include "trackedit/iprojecthistory.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itracksinteraction.h"
 #include "trackedit/itrackeditinteraction.h"
@@ -31,6 +32,7 @@ class RecordController : public IRecordController, public muse::rcommand::Comman
     muse::GlobalInject<record::IRecordConfiguration> configuration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
@@ -54,6 +56,7 @@ public:
     bool isRecordAllowed() const override;
     muse::async::Notification isRecordAllowedChanged() const override;
 
+    muse::Ret stopRecording() override;
     bool isRecording() const override;
     muse::async::Notification isRecordingChanged() const override;
 
@@ -86,7 +89,6 @@ private:
     muse::Ret startWithNewTrack();
     muse::Ret pause();
     muse::Ret resume();
-    muse::Ret stop();
     muse::Ret leadInRecording();
     void stopPlaybackIfPaused();
     muse::Ret toggleMicMetering();

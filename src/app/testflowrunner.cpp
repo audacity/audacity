@@ -65,7 +65,7 @@ void TestflowRunner::runIfRequested(const muse::modularity::ContextPtr& ctx, con
 
 TestflowRunner::TestflowRunner(const muse::modularity::ContextPtr& ctx, const AudacityCmdOptions::Testflow& options,
                                const muse::io::path_t& scriptPath)
-    : m_ctx(ctx), m_options(options), m_scriptPath(scriptPath)
+    : m_ctx(ctx), m_options(options), m_scriptPath(scriptPath), m_directives(readDirectives(scriptPath))
 {
 }
 
@@ -86,12 +86,23 @@ TestflowRunner::ScriptDirectives TestflowRunner::readDirectives(const muse::io::
         return directives;
     }
 
-    static const QRegularExpression tag(R"(@testflow\s+(\S+))");
+    //! NOTE A directive, and its argument if any, on the same line
+    static const QRegularExpression tag(R"(@testflow[ \t]+(\S+)(?:[ \t]+(\S+))?)");
     QRegularExpressionMatchIterator it = tag.globalMatch(header.captured());
     while (it.hasNext()) {
-        const QString directive = it.next().captured(1);
-        if (directive == "allow-recovery") {
+        const QRegularExpressionMatch match = it.next();
+        const QString directive = match.captured(1);
+        const QString argument = match.captured(2);
+        if (directive == "allow-recovery" && argument.isEmpty()) {
             directives.allowRecovery = true;
+        } else if (directive == "expect-quit") {
+            bool isNumber = false;
+            directives.expectQuitFromStep = argument.toInt(&isNumber);
+            if (!isNumber || directives.expectQuitFromStep < 1) {
+                std::cout << "[testflow] FAILED: @testflow expect-quit needs the step, counting from 1, from which"
+                          << " quitting is expected, in script: " << scriptPath.toStdString() << std::endl;
+                exitWithoutTeardown(2);
+            }
         } else {
             //! NOTE Rather than letting a typo make the test case fail for another reason
             std::cout << "[testflow] FAILED: unknown directive @testflow " << directive.toStdString()
@@ -147,7 +158,7 @@ void TestflowRunner::execAndReport()
         testflow->setSpeedMode(muse::testflow::speedModeFromString(m_options.testCaseSpeed));
     }
 
-    muse::testflow::ITestflow::Options opt;
+    muse::testflow::ExecOptions opt;
     opt.context = muse::io::path_t(m_options.testCaseContextNameOrFile);
     opt.contextVal = m_options.testCaseContextValue.toStdString();
     opt.func = m_options.testCaseFunc.toStdString();
@@ -164,13 +175,21 @@ void TestflowRunner::execAndReport()
     testflow->execScript(m_scriptPath, opt);
 
     const muse::testflow::ITestflow::Status status = testflow->status();
-    const bool ok = status == muse::testflow::ITestflow::Status::Finished && m_startedSteps > 0;
+    //! NOTE Quitting the app aborts the test case
+    const bool abortedAsExpected = status == muse::testflow::ITestflow::Status::Aborted && m_directives.expectQuitFromStep > 0;
+    const bool quitTooEarly = abortedAsExpected && m_startedSteps < m_directives.expectQuitFromStep;
+    const bool expectedEnd = status == muse::testflow::ITestflow::Status::Finished || (abortedAsExpected && !quitTooEarly);
+    const bool ok = expectedEnd && m_startedSteps > 0;
 
     std::cout << "[testflow] " << (ok ? "PASSED" : "FAILED")
               << " status=" << muse::testflow::ITestflow::statusToString(status).toStdString()
               << " steps=" << m_startedSteps
               << " script=" << m_scriptPath.toStdString()
               << " reports=" << configuration()->reportsPath().toStdString() << std::endl;
+    if (quitTooEarly) {
+        std::cout << "[testflow] the app quit during step " << m_startedSteps
+                  << ", before step " << m_directives.expectQuitFromStep << " from which it was expected" << std::endl;
+    }
     if (m_startedSteps == 0) {
         std::cout << "[testflow] no steps were executed"
                   << " - does the script define main() and run a test case?" << std::endl;

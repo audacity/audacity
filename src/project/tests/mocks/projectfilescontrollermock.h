@@ -14,7 +14,7 @@ public:
     MOCK_METHOD(bool, isUrlSupported, (const QUrl&), (const, override));
     MOCK_METHOD(bool, isFileSupported, (const muse::io::path_t&), (const, override));
     MOCK_METHOD(muse::Ret, openProject, (const ProjectFile&), (override));
-    MOCK_METHOD(bool, closeOpenedProject, (bool), (override));
+    MOCK_METHOD(bool, closeOpenedProject, (bool, std::function<void()>), (override));
     MOCK_METHOD(bool, quitDiscardingUnsavedChanges, (), (override));
     MOCK_METHOD(bool, saveProject, (const muse::io::path_t&), (override));
     MOCK_METHOD(bool, saveProjectLocally, (const muse::io::path_t&, SaveMode), (override));

@@ -24,6 +24,17 @@ function undo()        { run("command://trackedit/undo") }
 function sleep(ms)     { api.testflow.sleep(ms) }
 function fail(msg)     { api.testflow.error(msg) }
 
+// Polls, as dialogs open and close on later event loop iterations
+function waitFor(condition, timeoutMs) {
+    for (var waited = 0; waited < timeoutMs; waited += 100) {
+        if (condition()) {
+            return true
+        }
+        sleep(100)
+    }
+    return condition()
+}
+
 function effect(pluginId, params) {
     var q = "command://effects/apply/" + encodeURIComponent(pluginId)
     var separator = "?"
@@ -73,6 +84,7 @@ module.exports = {
     undo: undo,
     sleep: sleep,
     fail: fail,
+    waitFor: waitFor,
     effect: effect,
     clips: clips,
     clipCount: clipCount,
