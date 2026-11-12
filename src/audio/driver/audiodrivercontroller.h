@@ -30,7 +30,7 @@ class AudioDriverController final : public IAudioDriverController, public muse::
 
 public:
     //! @param settingsGroup prefix of this backend's settings keys
-    AudioDriverController(std::unique_ptr<IAudioDevices> devices, const std::string& settingsGroup);
+    AudioDriverController(std::shared_ptr<IAudioDevices> devices, const std::string& settingsGroup);
 
     //! May change, where backends share the devices: then the active one's
     void setAudioEngine(const std::shared_ptr<IAudioEngine>& engine);
@@ -108,7 +108,7 @@ private:
                             bool refreshDeviceState, bool writeStarted, const AudioStreamRestorer& restoreStream) noexcept;
     void publish(const AudioConfigurationDelta& delta, bool deviceListChanged = false) noexcept;
     void subscribeToAudioEngine();
-    const std::unique_ptr<IAudioDevices> m_devices;
+    const std::shared_ptr<IAudioDevices> m_devices;
     const SettingsKeys m_keys;
 
     AudioConfiguration m_configuration;

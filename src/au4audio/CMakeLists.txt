@@ -69,6 +69,11 @@ set(MODULE_LINK
     au3-recording
 )
 
+if (AU_USE_JUCE)
+    set(MODULE_LINK ${MODULE_LINK} jucedevices)
+    set(MODULE_DEF ${MODULE_DEF} AU_USE_JUCE)
+endif()
+
 setup_module()
 
 if (AU_BUILD_AU4AUDIO_TESTS)
