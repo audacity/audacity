@@ -9,10 +9,12 @@ Item {
     clip: true
 
     required property int trackId
+    required property real trackSampleRate
 
     SpectrogramChannelRulerModel {
         id: rulerModel
         trackId: root.trackId
+        trackSampleRate: root.trackSampleRate
         labelHeight: fontMetrics.height
         channelHeight: root.height
     }
