@@ -39,6 +39,7 @@ static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg")
 static const muse::Uri METADATA_DIALOG_URI("audacity://project/export/metadata");
 static const muse::Uri EXPORT_LABELS_URI("audacity://project/export/labels");
 static const muse::Uri CUSTOM_MAPPING("audacity://project/export/mapping");
+static const muse::Uri PROJECT_RECOVERY_URI("audacity://project/recovery");
 
 static const QString AUDACITY_URL_SCHEME("audacity");
 static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
@@ -1228,7 +1229,27 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
     const std::string body
         = ret.data<std::string>("body", !ret.text().empty() ? ret.text() : muse::trc("project",
                                                                                      "An error occurred while reading this file."));
-    interactive()->error(title, body);
+
+    // AudacityExceptionError during loading, usually means the project is corrupted, suggest running the recovery tool instead
+    if (static_cast<Err>(ret.code()) != Err::AudacityExceptionError) {
+        interactive()->error(title, body);
+        return;
+    }
+
+    const int recoverBtn = static_cast<int>(IInteractive::Button::CustomButton);
+    const IInteractive::ButtonDatas buttons {
+        IInteractive::ButtonData(IInteractive::Button::Close, muse::trc("global", "Close")),
+        IInteractive::ButtonData(recoverBtn, muse::trc("project", "Recover…"), true, false, IInteractive::ButtonRole::ApplyRole),
+    };
+    const std::string text = body + "\n\n"
+                             + muse::trc("project",
+                                         "Open the project recovery tool");
+    const IInteractive::Result result = interactive()->errorSync(title, text, buttons, recoverBtn);
+    if (result.isButton(recoverBtn)) {
+        UriQuery query(PROJECT_RECOVERY_URI);
+        query.addParam("projectPath", Val(filepath.toStdString()));
+        interactive()->open(query);
+    }
 }
 
 muse::Ret ProjectActionsController::shareAudio()

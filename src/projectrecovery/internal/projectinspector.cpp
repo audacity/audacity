@@ -119,6 +119,7 @@ DocumentInfo summarize(StoredDocument& document, const std::set<int64_t>& blockI
 
     const ProjectDocument& project = *document.project;
     summary.audacityVersion = project.audacityVersion;
+    summary.rate = project.rate;
     summary.waveTracks = project.waveTracks.size();
     for (const WaveTrack& track : project.waveTracks) {
         summary.clips += track.clips.size();
@@ -207,6 +208,15 @@ muse::RetVal<Inspection> ProjectInspector::inspect(const muse::io::path_t& path,
     std::map<std::string, std::vector<BlockReference> > references;
     for (StoredDocument& document : documents) {
         inspection.documents.push_back(summarize(document, blockIds, references[document.source]));
+    }
+    std::set<int64_t> referenced;
+    for (const auto& [source, documentReferences] : references) {
+        for (const BlockReference& reference : documentReferences) {
+            referenced.insert(reference.block.blockId);
+        }
+    }
+    for (const int64_t id : blockIds) {
+        info.orphanBlocks += referenced.count(id) ? 0 : 1;
     }
 
     // As ProjectFileIO::LoadProject: the autosave row when there is one, else the project row

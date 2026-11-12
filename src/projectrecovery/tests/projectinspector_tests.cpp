@@ -73,6 +73,7 @@ TEST_F(ProjectInspectorTests, HealthyProject)
     EXPECT_TRUE(result.database.opens);
     EXPECT_EQ(result.database.applicationId, 1096107097);
     EXPECT_EQ(result.database.blockRows, 3);
+    EXPECT_EQ(result.database.orphanBlocks, 0);
     EXPECT_TRUE(result.database.integrityChecked);
     EXPECT_TRUE(result.database.integrityMessages.empty());
     EXPECT_EQ(result.activeDocument, "project");
@@ -80,6 +81,7 @@ TEST_F(ProjectInspectorTests, HealthyProject)
     const DocumentInfo& document = result.documents.front();
     EXPECT_TRUE(document.readable);
     EXPECT_EQ(document.audacityVersion, "4.0.2");
+    EXPECT_EQ(document.rate, 44100);
     EXPECT_EQ(document.waveTracks, 1u);
     EXPECT_EQ(document.clips, 2u);
     EXPECT_EQ(document.blockReferences, 3u);
@@ -136,6 +138,30 @@ TEST_F(ProjectInspectorTests, AMissingBlockThatTwoClipsShareIsReportedForEachCli
     EXPECT_EQ(result.missingBlocks[0].clip, "Take 1");
     EXPECT_EQ(result.missingBlocks[1].clip, "Take 1 copy");
     EXPECT_EQ(result.documents.front().missingBlocks, 1u);
+}
+
+TEST_F(ProjectInspectorTests, RowsThatNoDocumentReferencesAreOrphans)
+{
+    //! [GIVEN] A healthy project with two more rows: one only the autosave references, one no document references
+    const auto path = file("orphans.aup4");
+    writeProjectFile(path, twoClipProject(true, true));
+    TestProject autosave = twoClipProject(true, true);
+    autosave.tracks.front().clips.push_back({ "Take 3", 30.0, { { 8, 4096 } } });
+    writeAutosave(path, autosave);
+    {
+        Database db;
+        ASSERT_TRUE(db.open(muse::io::path_t(path.string()), Database::Mode::ReadWrite));
+        ASSERT_TRUE(db.exec("INSERT INTO sampleblocks(blockid, sampleformat, summin, summax, sumrms, summary256, summary64k, samples)"
+                            " VALUES(8, 262159, 0, 0, 0, x'', x'', x''), (9, 262159, 0, 0, 0, x'', x'', x'');"));
+    }
+
+    //! [WHEN] It is inspected
+    const muse::RetVal<Inspection> inspection = inspect(path);
+
+    //! [THEN] Only the row that no document references is an orphan
+    ASSERT_TRUE(inspection.ret) << inspection.ret.toString();
+    EXPECT_EQ(inspection.val.database.blockRows, 5);
+    EXPECT_EQ(inspection.val.database.orphanBlocks, 1);
 }
 
 TEST_F(ProjectInspectorTests, AutosaveIsTheDocumentThatAudacityLoads)

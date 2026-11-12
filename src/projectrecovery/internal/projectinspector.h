@@ -50,6 +50,7 @@ struct DatabaseInfo {
     int64_t applicationId = 0;
     int64_t userVersion = 0;
     int64_t blockRows = 0;
+    int64_t orphanBlocks = 0;
     bool integrityChecked = false;
     std::vector<std::string> integrityMessages;
 };
@@ -60,6 +61,7 @@ struct DocumentInfo {
     bool readable = false;
     std::string error;
     std::string audacityVersion;
+    double rate = 0;
     size_t waveTracks = 0;
     size_t clips = 0;
     size_t blockReferences = 0;
