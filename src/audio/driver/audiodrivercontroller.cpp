@@ -84,6 +84,7 @@ AudioDriverController::SettingsKeys::SettingsKeys(const std::string& group)
     , inputChannels("au3audio", group + "/RecordChannels")
     , automaticLatencyCompensation("au3audio", group + "/AutomaticLatencyCompensation")
     , latencyDuration("au3audio", group + "/LatencyDuration")
+    , softwareBufferLength("au3audio", group + "/SoftwareBufferLength")
     , latencyCompensation("au3audio", group + "/LatencyCompensation")
     , asioUseDeviceSampleRate("au3audio", group + "/ASIO/UseDeviceSampleRate")
 {
@@ -205,6 +206,7 @@ void AudioDriverController::initDefaults()
     settings()->setDefaultValue(m_keys.recordingDevice, muse::Val(std::string()));
     settings()->setDefaultValue(m_keys.inputChannels, muse::Val(1));
     settings()->setDefaultValue(m_keys.latencyDuration, muse::Val(100.0));
+    settings()->setDefaultValue(m_keys.softwareBufferLength, muse::Val(50.0));
     settings()->setDefaultValue(m_keys.automaticLatencyCompensation, muse::Val(false));
     settings()->setDefaultValue(m_keys.latencyCompensation, muse::Val(-130.0));
     settings()->setDefaultValue(m_keys.asioUseDeviceSampleRate, muse::Val(true));
@@ -218,6 +220,7 @@ AudioConfiguration AudioDriverController::configurationFromSettings() const
     result.inputDevice = selectionFromSetting(settings()->value(m_keys.recordingDevice).toString());
     result.inputChannels = settings()->value(m_keys.inputChannels).toInt();
     result.bufferLength = settings()->value(m_keys.latencyDuration).toDouble();
+    result.softwareBufferLength = settings()->value(m_keys.softwareBufferLength).toDouble();
     result.automaticLatencyCompensation = settings()->value(m_keys.automaticLatencyCompensation).toBool();
     result.latencyCompensation = settings()->value(m_keys.latencyCompensation).toDouble();
     result.defaultSampleRate = settings()->value(DEFAULT_PROJECT_SAMPLE_RATE).toInt();
@@ -322,6 +325,10 @@ std::optional<AudioConfiguration> AudioDriverController::normalizedConfiguration
         result.bufferLength = muse::RealIsEqualOrMore(*change.bufferLength, 0.0)
                               ? *change.bufferLength : settings()->defaultValue(m_keys.latencyDuration).toDouble();
     }
+    if (change.softwareBufferLength) {
+        result.softwareBufferLength = *change.softwareBufferLength > 0.0
+                                      ? *change.softwareBufferLength : settings()->defaultValue(m_keys.softwareBufferLength).toDouble();
+    }
     if (change.automaticLatencyCompensation) {
         result.automaticLatencyCompensation = *change.automaticLatencyCompensation;
     }
@@ -368,6 +375,9 @@ AudioConfigurationDelta AudioDriverController::makeDelta(const AudioConfiguratio
     if (!muse::RealIsEqual(before.bufferLength, after.bufferLength)) {
         add(AudioConfigurationField::BufferLength);
     }
+    if (!muse::RealIsEqual(before.softwareBufferLength, after.softwareBufferLength)) {
+        add(AudioConfigurationField::SoftwareBufferLength);
+    }
     if (before.automaticLatencyCompensation != after.automaticLatencyCompensation) {
         add(AudioConfigurationField::AutomaticLatencyCompensation);
     }
@@ -398,9 +408,10 @@ bool AudioDriverController::streamNeedsSuspension(
     // Routing and the ASIO flag invalidate the process-wide PortAudio state, so
     // any stream must reopen. A buffer-length change would only take effect on
     // the next stream; reopening even another window's stream is a deliberate
-    // policy so the new value is audible immediately.
+    // policy so the new value is audible immediately. So for the software buffer.
     const bool routing = changesRouting(delta);
     const bool reopenAll = routing || delta.contains(AudioConfigurationField::BufferLength)
+                           || delta.contains(AudioConfigurationField::SoftwareBufferLength)
                            || delta.contains(AudioConfigurationField::AsioUseDeviceSampleRate);
     if (reopenAll) {
         return true;
@@ -506,6 +517,9 @@ void AudioDriverController::writeConfiguration(const AudioConfiguration& value,
     }
     if (delta.contains(AudioConfigurationField::BufferLength)) {
         settings()->setLocalValue(m_keys.latencyDuration, muse::Val(value.bufferLength));
+    }
+    if (delta.contains(AudioConfigurationField::SoftwareBufferLength)) {
+        settings()->setLocalValue(m_keys.softwareBufferLength, muse::Val(value.softwareBufferLength));
     }
     if (delta.contains(AudioConfigurationField::AutomaticLatencyCompensation)) {
         settings()->setLocalValue(m_keys.automaticLatencyCompensation, muse::Val(value.automaticLatencyCompensation));
@@ -728,6 +742,7 @@ ApplyResult AudioDriverController::reload(const muse::modularity::ContextPtr& re
     change.inputDevice = fromSettings.inputDevice;
     change.inputChannels = fromSettings.inputChannels;
     change.bufferLength = fromSettings.bufferLength;
+    change.softwareBufferLength = fromSettings.softwareBufferLength;
     change.automaticLatencyCompensation = fromSettings.automaticLatencyCompensation;
     change.latencyCompensation = fromSettings.latencyCompensation;
     change.defaultSampleRate = fromSettings.defaultSampleRate;

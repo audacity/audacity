@@ -3,14 +3,19 @@
 */
 #include "track.h"
 
+#include "au3-clip-processing/sequence-graph/LockFreeQueueNode.h"
 #include "au3-clip-processing/sequence-graph/PlayheadMappingNode.h"
 #include "au3-clip-processing/sequence-graph/ResamplingNode.h"
 #include "au3-mixer/AudioIOSequences.h"
 
+#include "blockcontext.h"
 #include "effectsnode.h"
 #include "endoftracknode.h"
 #include "gainpannode.h"
+#include "ieffectscontext.h"
 #include "mutesolonode.h"
+#include "sequentialmixnode.h"
+#include "stereo.h"
 
 using namespace au::au4audio;
 
@@ -46,5 +51,17 @@ Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSequence> sequence,
         node = std::make_shared<EffectsNode>(std::move(node), numSequenceChannels, group, *settings.effects, settings.maxFrames);
     }
     node = std::make_shared<MuteSoloNode>(std::move(node), sequence, *settings.muteSolo);
-    return { std::make_shared<GainPanNode>(std::move(node), sequence) };
+    node = std::make_shared<GainPanNode>(std::move(node), sequence);
+    std::shared_ptr<LockFreeQueueNode> queue;
+    if (const auto& readAhead = settings.readAhead) {
+        // Stereo, as volume/pan outputs. The device waits for the workers: after a seek, they resume where the device is.
+        node = std::make_shared<BlockContextNode>(std::move(node), *settings.chainContext);
+        constexpr size_t resyncLead = 0;
+        queue = std::make_shared<LockFreeQueueNode>(std::move(node), numChannels, readAhead->chunkSize, readAhead->numChunks,
+                                                    resyncLead);
+        node = queue;
+    }
+    // The master's effects read the tracks ahead by their latency
+    const int64_t queueLead = queue ? settings.masterLatency : 0;
+    return { std::move(node), std::move(queue), queueLead };
 }
