@@ -27,6 +27,9 @@ const muse::Settings::Key CUSTOM_TRACK_NAME_KEY("record", "GUI/TrackNames/Recodi
 const muse::Settings::Key TRACK_NUMBER_KEY("record", "GUI/TrackNames/TrackNumber");
 const muse::Settings::Key DATE_STAMP_KEY("record", "GUI/TrackNames/DateStamp");
 const muse::Settings::Key TIME_STAMP_KEY("record", "GUI/TrackNames/TimeStamp");
+const muse::Settings::Key OVERDUB_KEY("record", "AudioIO/Duplex");
+const muse::Settings::Key RECORD_ON_NEW_TRACK_KEY("record", "GUI/PreferNewTrackRecord");
+const muse::Settings::Key DETECT_DROPOUTS_KEY("record", "Warnings/DropoutDetected");
 }
 
 void RecordConfiguration::init()
@@ -39,6 +42,21 @@ void RecordConfiguration::init()
     muse::settings()->setDefaultValue(INPUT_MONITORING_KEY, muse::Val(false));
     muse::settings()->valueChanged(INPUT_MONITORING_KEY).onReceive(nullptr, [this](const muse::Val&) {
         m_isInputMonitoringOnChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(OVERDUB_KEY, muse::Val(true));
+    muse::settings()->valueChanged(OVERDUB_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_isOverdubOnChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(RECORD_ON_NEW_TRACK_KEY, muse::Val(false));
+    muse::settings()->valueChanged(RECORD_ON_NEW_TRACK_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_recordOnNewTrackChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(DETECT_DROPOUTS_KEY, muse::Val(true));
+    muse::settings()->valueChanged(DETECT_DROPOUTS_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_detectDropoutsChanged.notify();
     });
 
     muse::settings()->setDefaultValue(LEAD_IN_TIME_DURATION_KEY, muse::Val(2.0));
@@ -86,6 +104,51 @@ void RecordConfiguration::setIsInputMonitoringOn(bool enable)
 muse::async::Notification RecordConfiguration::isInputMonitoringOnChanged() const
 {
     return m_isInputMonitoringOnChanged;
+}
+
+bool RecordConfiguration::isOverdubOn() const
+{
+    return muse::settings()->value(OVERDUB_KEY).toBool();
+}
+
+void RecordConfiguration::setIsOverdubOn(bool enable)
+{
+    muse::settings()->setSharedValue(OVERDUB_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::isOverdubOnChanged() const
+{
+    return m_isOverdubOnChanged;
+}
+
+bool RecordConfiguration::recordOnNewTrack() const
+{
+    return muse::settings()->value(RECORD_ON_NEW_TRACK_KEY).toBool();
+}
+
+void RecordConfiguration::setRecordOnNewTrack(bool enable)
+{
+    muse::settings()->setSharedValue(RECORD_ON_NEW_TRACK_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::recordOnNewTrackChanged() const
+{
+    return m_recordOnNewTrackChanged;
+}
+
+bool RecordConfiguration::detectDropouts() const
+{
+    return muse::settings()->value(DETECT_DROPOUTS_KEY).toBool();
+}
+
+void RecordConfiguration::setDetectDropouts(bool enable)
+{
+    muse::settings()->setSharedValue(DETECT_DROPOUTS_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::detectDropoutsChanged() const
+{
+    return m_detectDropoutsChanged;
 }
 
 double RecordConfiguration::leadInTimeDuration() const

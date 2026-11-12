@@ -177,7 +177,7 @@
         "scope": "RECORD",
         "shortcuts": [
             { "command": "command://record/start", "sequences": ["R"] },
-            { "command": "command://record/on-new-track", "sequences": ["Shift+R"] },
+            { "command": "command://record/second-choice", "sequences": ["Shift+R"] },
             { "command": "command://record/timed-recording", "sequences": ["Shift+T"] },
             { "command": "command://record/stop", "sequences": ["Space"] }
         ]

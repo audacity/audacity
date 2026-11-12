@@ -15,6 +15,15 @@ RecordingPreferencesModel::RecordingPreferencesModel(QObject* parent)
     recordConfiguration()->isInputMonitoringOnChanged().onNotify(this, [this]() {
         emit isInputMonitoringOnChanged();
     });
+    recordConfiguration()->isOverdubOnChanged().onNotify(this, [this]() {
+        emit isOverdubOnChanged();
+    });
+    recordConfiguration()->recordOnNewTrackChanged().onNotify(this, [this]() {
+        emit recordOnNewTrackChanged();
+    });
+    recordConfiguration()->detectDropoutsChanged().onNotify(this, [this]() {
+        emit detectDropoutsChanged();
+    });
     recordConfiguration()->leadInTimeDurationChanged().onNotify(this, [this]() {
         emit leadInTimeDurationChanged();
     });
@@ -31,6 +40,36 @@ bool RecordingPreferencesModel::isInputMonitoringOn() const
 void RecordingPreferencesModel::setIsInputMonitoringOn(bool enabled)
 {
     recordConfiguration()->setIsInputMonitoringOn(enabled);
+}
+
+bool RecordingPreferencesModel::isOverdubOn() const
+{
+    return recordConfiguration()->isOverdubOn();
+}
+
+void RecordingPreferencesModel::setIsOverdubOn(bool enabled)
+{
+    recordConfiguration()->setIsOverdubOn(enabled);
+}
+
+bool RecordingPreferencesModel::recordOnNewTrack() const
+{
+    return recordConfiguration()->recordOnNewTrack();
+}
+
+void RecordingPreferencesModel::setRecordOnNewTrack(bool enabled)
+{
+    recordConfiguration()->setRecordOnNewTrack(enabled);
+}
+
+bool RecordingPreferencesModel::detectDropouts() const
+{
+    return recordConfiguration()->detectDropouts();
+}
+
+void RecordingPreferencesModel::setDetectDropouts(bool enabled)
+{
+    recordConfiguration()->setDetectDropouts(enabled);
 }
 
 bool RecordingPreferencesModel::isMicMeteringOn() const

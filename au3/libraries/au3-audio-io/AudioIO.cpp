@@ -982,6 +982,7 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     t1 = std::min(t1, mixerLimit);
 
     mLostSamples = 0;
+    mCapturedFrames = 0;
     mLostCaptureIntervals.clear();
     mDetectDropouts
         =gPrefs->Read(WarningDialogKey(wxT("DropoutDetected")), true) != 0;
@@ -1138,7 +1139,7 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     mPlaybackSchedule.GetPolicy().Initialize(mPlaybackSchedule, mRate);
 
     mCaptureClockDiscardFrames = static_cast<unsigned long long>(
-        std::max(0.0, -mRecordingSchedule.TotalCorrection()) * mRate);
+        std::max(0.0, -mRecordingSchedule.mLatencyCompensation) * mRate);
 
     auto range = Extensions();
     successAudio = successAudio
@@ -1461,7 +1462,7 @@ bool AudioIO::AllocateBuffers(
                     assert(pSequence->FindChannelGroup());
                     // use sequence time for the end time, not real time!
                     double startTime, endTime;
-                    if (!sequences.leadInTimeSequences.empty()) {
+                    if (mRecordingSchedule.mLeadInTime > 0.0) {
                         startTime = mPlaybackSchedule.mT0;
                     } else {
                         startTime = t0;
@@ -3036,19 +3037,23 @@ unsigned long AudioIoCallback::DrainInputBuffers(
             || len < framesPerBuffer)) {
         // Assume that any good partial buffer should be written leftmost
         // and zeroes will be padded after; label the zeroes.
-        auto start = mPlaybackSchedule.GetSequenceTime()
-                     + len / mRate + mRecordingSchedule.mLatencyCompensation;
-        auto duration = (framesPerBuffer - len) / mRate;
+        const auto recordingStart = mPlaybackSchedule.mT0 + mRecordingSchedule.mLeadInTime;
+        const auto start = std::max(recordingStart,
+                                    mPlaybackSchedule.mT0 + (mCapturedFrames + len) / mRate
+                                    + mRecordingSchedule.mLatencyCompensation);
+        const auto duration = (framesPerBuffer - len) / mRate;
         auto pLast = mLostCaptureIntervals.empty()
                      ? nullptr : &mLostCaptureIntervals.back();
         if (pLast
-            && fabs(pLast->first + pLast->second - start) < 0.5 / mRate) {
+            && start <= pLast->first + pLast->second + 0.5 / mRate) {
             // Make one bigger interval, not two butting intervals
-            pLast->second = start + duration - pLast->first;
+            pLast->second += duration;
         } else {
             mLostCaptureIntervals.emplace_back(start, duration);
         }
     }
+
+    mCapturedFrames += framesPerBuffer;
 
     if (len < framesPerBuffer) {
         mLostSamples += (framesPerBuffer - len);

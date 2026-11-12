@@ -17,6 +17,7 @@ void RecordController::init()
     auto cd = commandDispatcher();
     cd->onRequest(this, RECORD_START_COMMAND, [this]() { return toggleRecord(); });
     cd->onRequest(this, RECORD_ON_NEW_TRACK_COMMAND, [this]() { return recordOnNewTrack(); });
+    cd->onRequest(this, RECORD_SECOND_CHOICE_COMMAND, [this]() { return toggleRecordSecondChoice(); });
     cd->onRequest(this, RECORD_PAUSE_COMMAND, [this]() { return pause(); });
     cd->onRequest(this, RECORD_STOP_COMMAND, [this]() { return stop(); });
     cd->onRequest(this, RECORD_TOGGLE_MIC_METERING_COMMAND, [this]() { return toggleMicMetering(); });
@@ -78,6 +79,16 @@ Notification RecordController::isRecordingChanged() const
 
 Ret RecordController::toggleRecord()
 {
+    return toggleRecord(configuration()->recordOnNewTrack());
+}
+
+Ret RecordController::toggleRecordSecondChoice()
+{
+    return toggleRecord(!configuration()->recordOnNewTrack());
+}
+
+Ret RecordController::toggleRecord(bool onNewTrack)
+{
     if (m_currentRecordStatus == RecordStatus::Paused) {
         return resume();
     }
@@ -86,7 +97,7 @@ Ret RecordController::toggleRecord()
         return stop();
     }
 
-    return start();
+    return onNewTrack ? startWithNewTrack() : start();
 }
 
 Ret RecordController::recordOnNewTrack()
