@@ -16,8 +16,8 @@
 #include "au3-audio-devices/AudioIOBase.h" // to inherit
 #include "au3-mixer/AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
-#include "RingBuffer.h"
-#include "CaptureRouting.h" // member variable
+#include "au3-recording/RingBuffer.h"
+#include "au3-recording/CaptureRouting.h" // member variable
 #include "au3-utility/LockFreeQueue.h"
 
 #include <functional>

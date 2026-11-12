@@ -15,7 +15,7 @@
 #include <memory>
 #include <vector>
 
-class AUDIO_IO_API AudioIOListener /* not final */
+class AudioIOListener /* not final */
 {
 public:
     AudioIOListener() {}
