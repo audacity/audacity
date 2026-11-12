@@ -23,6 +23,7 @@
 #include "../iselectioncontroller.h"
 #include "../itrackeditconfiguration.h"
 #include "../itrackeditinteraction.h"
+#include "../trackeditcommands.h"
 #include "itracknavigationcontroller.h"
 
 #include "deletebehavioronboardingscenario.h"
@@ -154,6 +155,20 @@ private:
     muse::Ret selectTrackStartToEnd();
     muse::Ret setSelection(const muse::rcommand::Params& params);
     muse::Ret selectTrackByIndex(const muse::rcommand::Params& params);
+    muse::Ret selectTime(const SelectTimeCommand& command);
+    muse::Ret selectTracks(const SelectTracksCommand& command);
+    muse::Ret select(const SelectCommand& command);
+
+    enum class ClipStep {
+        Next,
+        Previous
+    };
+    muse::Ret selectAdjacentClip(ClipStep step);
+
+    using TimeRange = std::pair<secs_t, secs_t>;
+    muse::RetVal<TimeRange> resolveTimeSelection(double start, double end, SelectTimeRelativeTo relativeTo) const;
+    muse::RetVal<TrackIdList> resolveTrackSelection(int first, int count, SelectTracksMode mode) const;
+    void applyTimeSelection(const TimeRange& range);
     muse::Ret moveCursorToClosestZeroCrossing();
 
     muse::Ret setClipColor(const muse::rcommand::Params& params);

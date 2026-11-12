@@ -6,6 +6,7 @@
 #include "global/async/asyncable.h"
 #include "trackedit/internal/trackeditactionscontroller.h"
 #include "trackedit/internal/tracksviewrequestsservice.h"
+#include "trackedit/trackeditcommands.h"
 
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/tracknavigationcontrollermock.h"
@@ -101,6 +102,70 @@ public:
     muse::Ret mixAndRender(bool toNewTrack)
     {
         return m_controller->mixAndRender(toNewTrack);
+    }
+
+    muse::Ret selectTime(const muse::rcommand::Params& params)
+    {
+        return m_controller->selectTime(params);
+    }
+
+    muse::Ret selectTracks(const muse::rcommand::Params& params)
+    {
+        return m_controller->selectTracks(params);
+    }
+
+    muse::Ret select(const muse::rcommand::Params& params)
+    {
+        return m_controller->select(params);
+    }
+
+    muse::Ret selectNextClip()
+    {
+        return m_controller->selectAdjacentClip(TrackeditActionsController::ClipStep::Next);
+    }
+
+    muse::Ret selectPreviousClip()
+    {
+        return m_controller->selectAdjacentClip(TrackeditActionsController::ClipStep::Previous);
+    }
+
+    void setClips(TrackId trackId, const std::vector<std::tuple<ClipId, double, double> >& clips)
+    {
+        muse::async::NotifyList<Clip> list;
+        for (const auto& [clipId, start, end] : clips) {
+            Clip clip;
+            clip.key = ClipKey { trackId, clipId };
+            clip.startTime = start;
+            clip.endTime = end;
+            list.push_back(clip);
+        }
+        ON_CALL(*m_trackeditProject, clipList(trackId)).WillByDefault(Return(list));
+    }
+
+    void openClipsProject()
+    {
+        openProject({ 1, 2, 3 });
+        setClips(1, { { 11, 0.0, 5.0 }, { 12, 10.0, 15.0 } });
+        setClips(2, {});
+        setClips(3, { { 31, 2.0, 4.0 } });
+    }
+
+    void setSelectedClips(const ClipKeyList& clips)
+    {
+        ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(clips));
+    }
+
+    void setTimeSelection(secs_t start, secs_t end)
+    {
+        ON_CALL(*m_selectionController, timeSelectionIsEmpty()).WillByDefault(Return(false));
+        ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(start));
+        ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(end));
+    }
+
+    void expectTimeSelection(secs_t start, secs_t end)
+    {
+        EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(start, true));
+        EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(end, true));
     }
 
     void openProject(const TrackIdList& tracks)
@@ -602,5 +667,313 @@ TEST_F(TrackeditActionsControllerTests, MixAndRenderSkipsEmptyTracks)
 
     //! [WHEN] Mix and render is triggered
     EXPECT_TRUE(mixAndRender(false));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeCountsFromTheProjectStart)
+{
+    setTimeSelection(4.0, 6.0);
+
+    expectTimeSelection(1.0, 2.5);
+
+    EXPECT_TRUE(selectTime({
+            { TRACKEDIT_START_PARAM, muse::Val(1.0) },
+            { TRACKEDIT_END_PARAM, muse::Val(2.5) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeCountsBackFromTheProjectEnd)
+{
+    setTimeSelection(4.0, 6.0);
+    ON_CALL(*m_trackeditProject, totalTime()).WillByDefault(Return(secs_t(10.0)));
+
+    expectTimeSelection(7.0, 9.0);
+
+    EXPECT_TRUE(selectTime({
+            { TRACKEDIT_START_PARAM, muse::Val(1.0) },
+            { TRACKEDIT_END_PARAM, muse::Val(3.0) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectEnd") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeOffsetsBothEdgesOfTheSelection)
+{
+    setTimeSelection(2.0, 5.0);
+
+    expectTimeSelection(1.0, 6.0);
+
+    EXPECT_TRUE(selectTime({
+            { TRACKEDIT_START_PARAM, muse::Val(-1.0) },
+            { TRACKEDIT_END_PARAM, muse::Val(1.0) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("Selection") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeClampsTimesBeforeTheProjectStart)
+{
+    setTimeSelection(4.0, 6.0);
+
+    expectTimeSelection(0.0, 1.0);
+
+    EXPECT_TRUE(selectTime({
+            { TRACKEDIT_START_PARAM, muse::Val(-2.0) },
+            { TRACKEDIT_END_PARAM, muse::Val(1.0) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeRejectsAnUnknownRelativeTo)
+{
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(::testing::_, ::testing::_)).Times(0);
+
+    const muse::Ret ret = selectTime({
+            { TRACKEDIT_START_PARAM, muse::Val(1.0) },
+            { TRACKEDIT_END_PARAM, muse::Val(2.0) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("Unknown") },
+        });
+
+    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeRejectsAMissingRelativeTo)
+{
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(::testing::_, ::testing::_)).Times(0);
+
+    const muse::Ret ret = selectTime({ { TRACKEDIT_START_PARAM, muse::Val(1.0) }, { TRACKEDIT_END_PARAM, muse::Val(2.0) } });
+
+    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeRejectsMissingStartAndEnd)
+{
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(::testing::_, ::testing::_)).Times(0);
+
+    const muse::Ret ret = selectTime({ { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") } });
+
+    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTimeCountsAMissingEndAsZero)
+{
+    setTimeSelection(4.0, 6.0);
+    ON_CALL(*m_trackeditProject, totalTime()).WillByDefault(Return(secs_t(60.0)));
+
+    expectTimeSelection(50.0, 60.0);
+
+    EXPECT_TRUE(selectTime({
+            { TRACKEDIT_START_PARAM, muse::Val(10.0) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectEnd") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTracksSetReplacesTheSelection)
+{
+    openProject({ 10, 11, 12, 13 });
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { 10 }));
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(TrackIdList { 11, 12 }, true));
+
+    EXPECT_TRUE(selectTracks({
+            { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(1) },
+            { TRACKEDIT_TRACK_COUNT_PARAM, muse::Val(2) },
+            { std::string(SelectTracksModeContract::key), muse::Val("Set") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTracksAddExtendsTheSelection)
+{
+    openProject({ 10, 11, 12, 13 });
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { 10 }));
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(TrackIdList { 10, 12 }, true));
+
+    EXPECT_TRUE(selectTracks({
+            { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(2) },
+            { std::string(SelectTracksModeContract::key), muse::Val("Add") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTracksRemoveReducesTheSelection)
+{
+    openProject({ 10, 11, 12, 13 });
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { 10, 11, 12 }));
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(TrackIdList { 10, 12 }, true));
+
+    EXPECT_TRUE(selectTracks({
+            { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(1) },
+            { std::string(SelectTracksModeContract::key), muse::Val("Remove") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTracksSelectsTheFirstTrackByDefault)
+{
+    openProject({ 10, 11, 12, 13 });
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(TrackIdList { 10 }, true));
+
+    EXPECT_TRUE(selectTracks({ { std::string(SelectTracksModeContract::key), muse::Val("Set") } }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTracksStopsAtTheLastTrack)
+{
+    openProject({ 10, 11, 12, 13 });
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(TrackIdList { 12, 13 }, true));
+
+    EXPECT_TRUE(selectTracks({
+            { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(2) },
+            { TRACKEDIT_TRACK_COUNT_PARAM, muse::Val(10) },
+            { std::string(SelectTracksModeContract::key), muse::Val("Set") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTracksRejectsAnIndexOutOfRange)
+{
+    openProject({ 10, 11, 12, 13 });
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(::testing::_, ::testing::_)).Times(0);
+
+    const muse::Ret ret = selectTracks({
+            { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(4) },
+            { std::string(SelectTracksModeContract::key), muse::Val("Set") },
+        });
+
+    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectTracksRejectsAMissingMode)
+{
+    openProject({ 10, 11, 12, 13 });
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(::testing::_, ::testing::_)).Times(0);
+
+    const muse::Ret ret = selectTracks({ { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(1) } });
+
+    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectSetsTracksAndTime)
+{
+    openProject({ 10, 11, 12, 13 });
+    setTimeSelection(4.0, 6.0);
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(TrackIdList { 11, 12 }, true));
+    expectTimeSelection(0.0, 5.0);
+
+    EXPECT_TRUE(select({
+            { TRACKEDIT_START_PARAM, muse::Val(0.0) },
+            { TRACKEDIT_END_PARAM, muse::Val(5.0) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") },
+            { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(1) },
+            { TRACKEDIT_TRACK_COUNT_PARAM, muse::Val(2) },
+            { std::string(SelectTracksModeContract::key), muse::Val("Set") },
+        }));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectChangesNothingWhenTheTimePartIsInvalid)
+{
+    openProject({ 10, 11, 12, 13 });
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(::testing::_, ::testing::_)).Times(0);
+
+    const muse::Ret ret = select({
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") },
+            { std::string(SelectTracksModeContract::key), muse::Val("Set") },
+        });
+
+    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectChangesNothingWhenTheTracksPartIsInvalid)
+{
+    openProject({ 10, 11, 12, 13 });
+
+    EXPECT_CALL(*m_selectionController, setSelectedTracks(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(::testing::_, ::testing::_)).Times(0);
+    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(::testing::_, ::testing::_)).Times(0);
+
+    const muse::Ret ret = select({
+            { TRACKEDIT_START_PARAM, muse::Val(1.0) },
+            { TRACKEDIT_END_PARAM, muse::Val(2.0) },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") },
+            { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(9) },
+            { std::string(SelectTracksModeContract::key), muse::Val("Set") },
+        });
+
+    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectNextClipSelectsTheFirstClipWhenNothingIsSelected)
+{
+    openClipsProject();
+
+    EXPECT_CALL(*m_selectionController, setSelectedClips(ClipKeyList { ClipKey { 1, 11 } }, true));
+
+    EXPECT_TRUE(selectNextClip());
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectNextClipMovesToTheNextClipOnTheTrack)
+{
+    openClipsProject();
+    setSelectedClips({ ClipKey { 1, 11 } });
+
+    EXPECT_CALL(*m_selectionController, setSelectedClips(ClipKeyList { ClipKey { 1, 12 } }, true));
+
+    EXPECT_TRUE(selectNextClip());
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectNextClipSkipsTracksWithoutClips)
+{
+    openClipsProject();
+    setSelectedClips({ ClipKey { 1, 12 } });
+
+    EXPECT_CALL(*m_selectionController, setSelectedClips(ClipKeyList { ClipKey { 3, 31 } }, true));
+
+    EXPECT_TRUE(selectNextClip());
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectNextClipFailsAfterTheLastClip)
+{
+    openClipsProject();
+    setSelectedClips({ ClipKey { 1, 11 }, ClipKey { 3, 31 } });
+
+    EXPECT_CALL(*m_selectionController, setSelectedClips(::testing::_, ::testing::_)).Times(0);
+
+    EXPECT_FALSE(selectNextClip());
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectPreviousClipMovesToThePreviousTrack)
+{
+    openClipsProject();
+    setSelectedClips({ ClipKey { 3, 31 } });
+
+    EXPECT_CALL(*m_selectionController, setSelectedClips(ClipKeyList { ClipKey { 1, 12 } }, true));
+
+    EXPECT_TRUE(selectPreviousClip());
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectPreviousClipSelectsTheLastClipWhenNothingIsSelected)
+{
+    openClipsProject();
+
+    EXPECT_CALL(*m_selectionController, setSelectedClips(ClipKeyList { ClipKey { 3, 31 } }, true));
+
+    EXPECT_TRUE(selectPreviousClip());
+}
+
+TEST_F(TrackeditActionsControllerTests, SelectPreviousClipFailsBeforeTheFirstClip)
+{
+    openClipsProject();
+    setSelectedClips({ ClipKey { 1, 11 } });
+
+    EXPECT_CALL(*m_selectionController, setSelectedClips(::testing::_, ::testing::_)).Times(0);
+
+    EXPECT_FALSE(selectPreviousClip());
 }
 }

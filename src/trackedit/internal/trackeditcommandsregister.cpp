@@ -470,6 +470,11 @@ const std::vector<CommandInfo> commandInfos = {
         Decoration(),
         Availability::Internal | Availability::API
     },
+    makeCommandInfo<SelectTimeCommand>(),
+    makeCommandInfo<SelectTracksCommand>(),
+    makeCommandInfo<SelectCommand>(),
+    makeCommandInfo<SelectNextClipCommand>(),
+    makeCommandInfo<SelectPreviousClipCommand>(),
     CommandInfo{
         TRACKEDIT_ZERO_CROSS_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
