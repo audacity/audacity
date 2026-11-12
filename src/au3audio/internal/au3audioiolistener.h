@@ -10,7 +10,7 @@
 #include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
 
-#include "au3-audio-io/AudioIOListener.h"
+#include "au3-recording/AudioIOListener.h"
 
 #include "au3wrap/au3types.h"
 

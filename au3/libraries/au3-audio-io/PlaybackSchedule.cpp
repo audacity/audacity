@@ -257,21 +257,6 @@ void PlaybackSchedule::RealTimeRestart()
     mWarpedTime = 0;
 }
 
-double RecordingSchedule::ToConsume() const
-{
-    return mDuration - Consumed();
-}
-
-double RecordingSchedule::Consumed() const
-{
-    return std::max(0.0, mPosition + TotalCorrection());
-}
-
-double RecordingSchedule::ToDiscard() const
-{
-    return std::max(0.0, -(mPosition + TotalCorrection()));
-}
-
 PlaybackSchedule::TimeQueue::TimeQueue() = default;
 
 void PlaybackSchedule::TimeQueue::Clear()
