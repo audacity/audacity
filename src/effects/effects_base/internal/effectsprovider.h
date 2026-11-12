@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <map>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
@@ -43,6 +45,7 @@ public:
     muse::async::Notification effectMetaListChanged() const override;
 
     EffectMeta meta(const EffectId& effectId) const override;
+    std::optional<EffectDisplayInfo> effectDisplayInfo(const EffectId& effectId) const override;
     bool loadEffect(const EffectId& effectId) const override;
     std::string effectPath(const std::string& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
@@ -74,6 +77,7 @@ private:
     void doSave(EffectFilter removeFromConfig = nullptr);
 
     EffectMetaList m_effects;
+    std::map<EffectId, EffectDisplayInfo> m_displayInfos;
     muse::async::Notification m_effectsChanged;
 };
 }

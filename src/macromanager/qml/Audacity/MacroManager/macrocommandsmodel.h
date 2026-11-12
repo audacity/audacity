@@ -15,10 +15,12 @@
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/rcommand/icommandsregister.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
 
 #include "macromanager/macromanagertypes.h"
+#include "commanddisplay.h"
 #include "macroactions.h"
 #include "runonfileslauncher.h"
 
@@ -34,6 +36,7 @@ class MacroCommandsModel : public QAbstractListModel, public muse::Contextable, 
 
     muse::GlobalInject<IMacrosRepository> repository;
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
 
     muse::ContextInject<IMacroRunner> runner = { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher = { this };
@@ -76,6 +79,7 @@ private:
         StepRole = Qt::UserRole + 1,
         CodeRole,
         TitleRole,
+        SubtitleRole,
         HasParamsRole,
         IsMacroRole
     };
@@ -83,7 +87,7 @@ private:
     using OnParams = std::function<void (const muse::rcommand::Params&)>;
 
     bool isRowValid(int row) const;
-    QString titleOf(const muse::rcommand::Command& command) const;
+    CommandDisplay displayOf(const muse::rcommand::Command& command) const;
     bool hasParams(const muse::rcommand::Command& command) const;
     void notifyStepsChanged(int fromRow, int toRow);
     void syncFromRepository();

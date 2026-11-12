@@ -5,6 +5,8 @@
 
 #include <algorithm>
 
+#include "commanddisplay.h"
+
 using namespace au::macromanager;
 using namespace muse;
 
@@ -45,6 +47,7 @@ QVariant AvailableCommandsModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case CodeRole: return item.code;
     case TitleRole: return item.title;
+    case SubtitleRole: return item.subtitle;
     case IsMacroRole: return item.isMacro;
     default: return QVariant();
     }
@@ -60,6 +63,7 @@ QHash<int, QByteArray> AvailableCommandsModel::roleNames() const
     static const QHash<int, QByteArray> roles {
         { CodeRole, "code" },
         { TitleRole, "title" },
+        { SubtitleRole, "subtitle" },
         { IsMacroRole, "isMacro" }
     };
 
@@ -147,7 +151,8 @@ void AvailableCommandsModel::appendCommands()
             continue;
         }
 
-        m_allItems.append({ QString::fromStdString(info.command.toString()), info.title.qTranslatedWithoutMnemonic(), false });
+        const CommandDisplay display = commandDisplay(info, *effectsProvider());
+        m_allItems.append({ QString::fromStdString(info.command.toString()), display.title, display.subtitle, false });
     }
 }
 
@@ -163,11 +168,14 @@ void AvailableCommandsModel::appendMacros()
         }
 
         const QString name = QString::fromStdString(macro.name);
-        m_allItems.append({ name, name, true });
+        m_allItems.append({ name, name, QString(), true });
     }
 }
 
 bool AvailableCommandsModel::matchesSearch(const Item& item) const
 {
-    return m_searchText.isEmpty() || item.title.contains(m_searchText, Qt::CaseInsensitive);
+    const QStringList words = m_searchText.simplified().split(u' ', Qt::SkipEmptyParts);
+    return std::ranges::all_of(words, [&item](const QString& word) {
+        return item.title.contains(word, Qt::CaseInsensitive) || item.subtitle.contains(word, Qt::CaseInsensitive);
+    });
 }
