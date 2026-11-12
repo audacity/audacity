@@ -298,6 +298,7 @@ public:
     sampleFormat mCaptureFormat;
     double mCaptureRate{};
     unsigned long long mLostSamples{ 0 };
+    unsigned long long mCapturedFrames{ 0 };
     std::atomic<bool> mAudioThreadShouldCallSequenceBufferExchangeOnce;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopRunning;
     std::atomic<bool> mAudioThreadSequenceBufferExchangeLoopActive;
