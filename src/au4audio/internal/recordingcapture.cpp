@@ -6,6 +6,9 @@
 #include <chrono>
 #include <new>
 
+#include "framework/global/log.h"
+#include "framework/global/types/string.h"
+
 #include "au3-recording/AudioIOListener.h"
 
 using namespace au::au4audio;
@@ -87,6 +90,9 @@ void RecordingCapture::finish()
     }
     m_stopping = true;
     m_worker.join();
+    if (m_unplayedFrames > 0) {
+        LOGI() << "Not recorded, as playback was late: " << muse::String::number(1000.0 * m_unplayedFrames / m_deviceRate, 0) << " ms";
+    }
     // As AudioIO::StopStream: what the device captured last, then the end of the recording
     drain(true, false);
     m_sink.Finish(&m_project, m_listener.get());
@@ -104,7 +110,7 @@ void RecordingCapture::drain(bool force, bool streamActive)
 }
 
 void RecordingCapture::process(const float* const* input, float* const* output, int numOutputChannels, int offset, int frames,
-                               double sequenceTime, audio::TimePoint time, bool paused)
+                               int unplayed, double sequenceTime, audio::TimePoint time, bool paused)
 {
     for (int ch = 0; ch < m_input.numChannels(); ++ch) {
         m_inputPointers[ch] = input[ch] ? input[ch] + offset : nullptr;
@@ -120,8 +126,15 @@ void RecordingCapture::process(const float* const* input, float* const* output, 
     if (paused) {
         return;
     }
+    // Unlike AudioIO, what was captured while playback was late, played as silence, isn't recorded: what was recorded
+    // after it would be ahead of what was heard with it
+    m_unplayedFrames += unplayed;
+    const int recorded = frames - unplayed;
+    if (recorded <= 0) {
+        return;
+    }
     constexpr auto inputError = false;
     constexpr auto simulateError = false;
-    m_sink.Push(reinterpret_cast<constSamplePtr>(samples), static_cast<size_t>(m_input.numChannels()), static_cast<size_t>(frames),
+    m_sink.Push(reinterpret_cast<constSamplePtr>(samples), static_cast<size_t>(m_input.numChannels()), static_cast<size_t>(recorded),
                 sequenceTime, inputError, simulateError, m_scratch.data());
 }

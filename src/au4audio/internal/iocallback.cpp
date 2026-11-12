@@ -304,11 +304,11 @@ void IoCallback::process(const float* const* inputChannelData, int numInputChann
         const int frames = std::min(numSamples - done, m_blockSize);
         const auto chunkDacTime = dacTime + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
             std::chrono::duration<double>(done / m_sampleRate));
-        if (!paused) {
-            unplayed += renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
-        }
+        const int chunkUnplayed = paused ? 0 : renderChunk(outputChannelData, numOutputChannels, done, frames, chunkDacTime);
+        unplayed += chunkUnplayed;
         if (input) {
-            m_capture->process(input, outputChannelData, numOutputChannels, done, frames, position(), chunkDacTime, paused);
+            m_capture->process(input, outputChannelData, numOutputChannels, done, frames, chunkUnplayed, position(), chunkDacTime,
+                               paused);
         }
         done += frames;
     }

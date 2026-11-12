@@ -55,10 +55,11 @@ public:
     bool isCapturing(double time) const { return time >= m_startTime; }
     int numInputChannels() const { return m_input.numChannels(); }
 
-    //! Device thread: `frames` frames of input, one buffer per channel, captured unless `paused`. The input is metered
-    //! and, if monitored, played through to `output` from `offset` on.
-    void process(const float* const* input, float* const* output, int numOutputChannels, int offset, int frames, double sequenceTime,
-                 audio::TimePoint time, bool paused);
+    //! Device thread: `frames` frames of input, one buffer per channel, captured unless `paused`, but for the last
+    //! `unplayed`: the transport didn't advance by them, so that the recording stays in step with what played. The input
+    //! is metered and, if monitored, played through to `output` from `offset` on.
+    void process(const float* const* input, float* const* output, int numOutputChannels, int offset, int frames, int unplayed,
+                 double sequenceTime, audio::TimePoint time, bool paused);
 
 private:
     void drain(bool force, bool streamActive);
@@ -80,5 +81,7 @@ private:
     std::thread m_worker;
     std::atomic<bool> m_stopping { false };
     bool m_finished = false;
+    //! Device thread, then read once the device stopped: what wasn't recorded as playback was late
+    int64_t m_unplayedFrames = 0;
 };
 }
