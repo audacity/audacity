@@ -26,7 +26,7 @@
 #include "au3-preferences/Prefs.h"
 #include "au3-utility/IteratorX.h"
 
-#include "AudioIOBase.h"
+#include "AudioDeviceSettings.h"
 
 #include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
 
@@ -436,11 +436,7 @@ void DeviceManager::Rescan()
 
     // if we are doing a second scan then restart portaudio to get NEW devices
     if (m_inited) {
-        // check to see if there is a stream open - can happen if monitoring,
-        // but otherwise Rescan() should not be available to the user.
-        auto gAudioIO = AudioIOBase::Get();
-        gAudioIO->StopMonitoring(); // TODO Inject and use IAudioEngine instead
-
+        // No stream must be open: the caller stops any first, monitoring included
         // restart portaudio - this updates the device list
         // FIXME: TRAP_ERR restarting PortAudio
         Pa_Terminate();
