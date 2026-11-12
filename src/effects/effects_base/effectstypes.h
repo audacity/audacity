@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <optional>
 #include <vector>
 #include <string>
 
@@ -53,6 +54,7 @@ static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
 static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
 static const muse::String EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE(u"isRealtimeCapable");
 static const muse::String EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE(u"paramsAreInputAgnostic");
+static const muse::String EFFECT_IS_INTERACTIVE_ATTRIBUTE(u"isInteractive");
 static const muse::String EFFECT_VERSION_ATTRIBUTE(u"version");
 static const muse::String EFFECT_MODULE_ATTRIBUTE(u"module");
 static const muse::String EFFECT_ACTIVATED_ATTRIBUTE(u"activated"); // `AudioPluginInfo`'s `enabled` field actually has semantic "valid".
@@ -251,6 +253,7 @@ struct EffectMeta {
 
     bool isRealtimeCapable = false;
     bool paramsAreInputAgnostic = true;
+    std::optional<bool> isInteractive;
     bool isActivated = true;
 
     // Carried verbatim so save() round-trips Discovered/Missing/Error.
