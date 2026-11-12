@@ -73,6 +73,7 @@ private:
 
     static QueueSample getSamplesMaxValue(const float* buffer, size_t frames, size_t step);
     static void decay(LevelState&);
+    static bool isSilent(const Levels&);
     static void maybeBumpUp(LevelState&, float newLinValue, int hangover);
 
     double m_sampleRate{ 44100.0 };

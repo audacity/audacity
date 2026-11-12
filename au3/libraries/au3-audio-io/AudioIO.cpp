@@ -3224,35 +3224,54 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
         return;
     }
 
-    // Update meter tracks
-    auto sptr = values;
-    for (const auto& sequence : mCaptureSequences) {
-        auto nChannels = sequence->NChannels();
-        const int64_t id = sequence->GetRecordableSequenceId();
-        for (size_t ch = 0; ch < nChannels; ch++) {
-            // Map track channel to input channel, wrapping if track has more channels than input
-            size_t inputCh = ch % mNumCaptureChannels;
-            sender->push(ch, { sptr + inputCh, frames, mNumCaptureChannels, dacTime }, IMeterSender::TrackId { id });
+    for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
+        sender->push(ch, { values + ch, frames, mNumCaptureChannels, dacTime },
+                     IMeterSender::TrackId { IMeterSender::InputChannelsTrackId });
+    }
+
+    // Update meter tracks: each track channel shows the input channels routed to it (see ConfigureCaptureRouting)
+    const size_t routedChannels = std::min(mCaptureChannelLayout.size(), mTrackChannelSourceMap.size());
+    for (size_t i = 0; i < routedChannels; ++i) {
+        const auto& info = mCaptureChannelLayout[i];
+        const auto& sources = mTrackChannelSourceMap[i];
+        if (sources.empty() || info.sequenceIndex >= mCaptureSequences.size()) {
+            continue;
         }
+
+        const IMeterSender::TrackId trackId { mCaptureSequences[info.sequenceIndex]->GetRecordableSequenceId() };
+        if (sources.size() == 1) {
+            sender->push(info.channelIndex, { values + sources.front(), frames, mNumCaptureChannels, dacTime }, trackId);
+            continue;
+        }
+
+        // Several input channels mixed into one track channel: show their average, as recorded
+        const auto mixed = stackAllocate(float, frames);
+        const float gain = 1.0f / static_cast<float>(sources.size());
+        for (size_t frame = 0; frame < frames; ++frame) {
+            float sum = 0.0f;
+            for (const auto source : sources) {
+                sum += values[frame * mNumCaptureChannels + source];
+            }
+            mixed[frame] = sum * gain;
+        }
+        sender->push(info.channelIndex, { mixed, frames, 1, dacTime }, trackId);
     }
 
     // Update main meter
-    // If the input source has more than 2 channels it will be splitted on multiple mono sequences
+    // With more than two input channels, odd and even input channels are folded into the two meter channels by their peak
     if (mNumCaptureChannels <= 2) {
         for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
-            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels, dacTime });
+            sender->push(ch, { values + ch, frames, mNumCaptureChannels, dacTime });
         }
     } else {
         constexpr size_t maxMainTrackChannels = 2;
         const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
         std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
 
-        for (size_t i = 0; i < frames; ++i) {
-            for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
-                const auto channel = seqNum % maxMainTrackChannels;
-                mainTrackInput[channel * frames + i] = std::max(
-                    mainTrackInput[channel * frames + i], *sptr);
-                sptr++;
+        for (size_t frame = 0; frame < frames; ++frame) {
+            for (size_t inputCh = 0; inputCh < mNumCaptureChannels; ++inputCh) {
+                float& folded = mainTrackInput[(inputCh % maxMainTrackChannels) * frames + frame];
+                folded = std::max(folded, std::fabs(values[frame * mNumCaptureChannels + inputCh]));
             }
         }
 
