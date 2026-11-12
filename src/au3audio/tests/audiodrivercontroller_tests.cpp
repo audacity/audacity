@@ -13,13 +13,13 @@
 #include "audio/iaudiostreamsuspender.h"
 #include "mocks/audioenginemock.h"
 
-#include "../internal/audiodrivercontroller.h"
-#include "../internal/portaudiodevices.h"
+#include "audio/driver/audiodrivercontroller.h"
+#include "portaudiodevices/internal/portaudiodevices.h"
 
 using ::testing::NiceMock;
 using ::testing::Return;
 
-namespace au::au3audio {
+namespace au::audio {
 namespace {
 struct SuspensionState {
     int suspendCalls = 0;
@@ -111,7 +111,7 @@ public:
         m_controller.m_applying = applying;
     }
 
-    AudioDriverController m_controller { std::make_unique<PortAudioDevices>(), "AudioIO" };
+    AudioDriverController m_controller { std::make_unique<portaudiodevices::PortAudioDevices>(), "AudioIO" };
     std::shared_ptr<NiceMock<audio::AudioEngineMock> > m_audioEngine;
     std::shared_ptr<NiceMock<muse::ApplicationMock> > m_application;
     muse::modularity::ContextPtr m_ownerContext;

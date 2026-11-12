@@ -14,7 +14,7 @@
 #include "au3-audio-devices/DeviceManager.h"
 
 using namespace au::au3;
-using namespace au::au3audio;
+using namespace au::portaudiodevices;
 
 namespace {
 const muse::Settings::Key RECORDING_SOURCE("au3audio", "AudioIO/RecordingSource");

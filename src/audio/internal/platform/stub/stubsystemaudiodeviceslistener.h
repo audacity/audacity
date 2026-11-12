@@ -3,9 +3,9 @@
 */
 #pragma once
 
-#include "au3audio/isystemaudiodeviceslistener.h"
+#include "audio/isystemaudiodeviceslistener.h"
 
-namespace au::au3audio {
+namespace au::audio {
 class StubSystemAudioDevicesListener : public ISystemAudioDevicesListener
 {
 public:
