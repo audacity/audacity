@@ -61,7 +61,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "AudioIO.h"
 
 #include "AudioIOExt.h"
-#include "AudioIOListener.h"
+#include "au3-recording/AudioIOListener.h"
 
 #include "au3-math/float_cast.h"
 #include "au3-math/Resample.h"
@@ -104,7 +104,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "au3-channel/Channel.h"
 #include "au3-mixer/Mix.h"
-#include "RingBuffer.h"
+#include "au3-recording/RingBuffer.h"
 #include "au3-project-rate/Decibels.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-project/Project.h"
