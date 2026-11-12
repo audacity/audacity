@@ -59,7 +59,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Set record level"),
         InputSchema(),
         Decoration(IconCode::Code::MICROPHONE),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         RECORD_TOGGLE_MIC_METERING_COMMAND,
