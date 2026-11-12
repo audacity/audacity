@@ -13,6 +13,7 @@
 #include "log.h"
 
 #include "framework/multiwindows/singleinstance.h"
+#include "framework/ui/interfacescale.h"
 
 #include "muse_framework_config.h"
 
@@ -113,6 +114,13 @@ int main(int argc, char** argv)
     QCoreApplication::setOrganizationName("Audacity");
     QCoreApplication::setOrganizationDomain("audacityteam.org");
     QCoreApplication::setApplicationVersion(MUSE_APP_VERSION);
+
+#ifndef WIN_PORTABLE
+    // Preferences > Appearance > Interface scale, through Qt's scale factor, which
+    // can only be set before the application object exists. Reads the settings
+    // file, so it comes after the organization and application names.
+    muse::ui::applyInterfaceScaleBeforeStart();
+#endif
 
 #if !defined(Q_OS_WIN) && !defined(Q_OS_DARWIN) && !defined(Q_OS_WASM)
 #ifndef MUSE_APP_INSTALL_SUFFIX
