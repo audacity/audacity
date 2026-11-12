@@ -169,7 +169,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Export audio…"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_EXPORT_LABELS_COMMAND,
