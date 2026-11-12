@@ -23,13 +23,10 @@ Paul Licameli split from AudioIO.h
 #include "au3-utility/MemoryX.h"
 #include "IMeterSender.h"
 #include "AudioDeviceSettings.h"
+#include "DeviceMixer.h"
 
 struct PaDeviceInfo;
 typedef void PaStream;
-
-#if USE_PORTMIXER
-typedef void PxMixer;
-#endif
 
 class AudioIOBase;
 
@@ -183,13 +180,6 @@ public:
     /** \brief Stop input monitoring */
     virtual void StopMonitoring() = 0;
 
-    /* Mixer services are always available.  If no stream is running, these
-     * methods use whatever device is specified by the preferences.  If a
-     * stream *is* running, naturally they manipulate the mixer associated
-     * with that stream.  If no mixer is available, output is emulated and
-     * input is stuck at 1.0f (a volume gain is applied to output samples).
-     */
-    void SetMixer(int inputSource);
 
     double GetPlaybackSampleRate() const { return mRate; }
 
@@ -215,19 +205,11 @@ protected:
     std::weak_ptr<IMeterSender> mInputMeter{};
     std::weak_ptr<IMeterSender> mOutputMeter{};
 
-   #if USE_PORTMIXER
-    PxMixer* mPortMixer;
-    float mPreviousHWPlaythrough;
-   #endif /* USE_PORTMIXER */
-
-    /** @brief Can we control the hardware input level?
-     *
-     * This flag is set to true if using portmixer to control the
-     * input volume seems to be working (and so we offer the user the control),
-     * and to false (locking the control out) otherwise. This avoids stupid
-     * scaled clipping problems when trying to do software emulated input volume
-     * control */
-    bool mInputMixerWorks;
+    /* Mixer services are always available.  If no stream is running, they
+     * use whatever device is specified by the preferences.  If a stream *is*
+     * running, naturally they manipulate the mixer associated with that stream.
+     * If no mixer is available, the input volume is applied to the samples. */
+    DeviceMixer mMixer;
 
     // The devices that HandleDeviceChange() last handled
     static int mCurrentPlaybackIndex;
@@ -235,13 +217,6 @@ protected:
     static double mCachedBestRateIn;
 
 protected:
-    /** \brief get the index of the device selected in the preferences.
-     *
-     * If the device isn't found, returns -1
-     */
-#if USE_PORTMIXER
-    static int getRecordSourceIndex(PxMixer* portMixer);
-#endif
 
     /*! This class needs to iterate this array for one limited purpose but does
      not populate it and does not give access to it except to subclasses

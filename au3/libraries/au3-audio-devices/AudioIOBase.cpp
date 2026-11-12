@@ -26,6 +26,7 @@ Paul Licameli split from AudioIO.cpp
 #include "portmixer.h"
 #endif
 
+
 int AudioIOBase::mCurrentPlaybackIndex { -1 };
 int AudioIOBase::mCurrentCaptureIndex { -1 };
 double AudioIOBase::mCachedBestRateIn { 0.0 };
@@ -57,16 +58,6 @@ AudioIOBase::AudioIOBase() = default;
 
 AudioIOBase::~AudioIOBase() = default;
 
-void AudioIOBase::SetMixer(int inputSource)
-{
-#if defined(USE_PORTMIXER)
-    int oldRecordSource = Px_GetCurrentInputSource(mPortMixer);
-    if (inputSource != oldRecordSource) {
-        Px_SetCurrentInputSource(mPortMixer, inputSource);
-    }
-#endif
-}
-
 void AudioIOBase::HandleDeviceChange()
 {
     // This should not happen, but it would screw things up if it did.
@@ -92,168 +83,7 @@ void AudioIOBase::HandleDeviceChange()
     mCurrentCaptureIndex = recDeviceNum;
     mCachedBestRateIn = 0.0;
 
-#if defined(USE_PORTMIXER)
-
-    // if we have a PortMixer object, close it down
-    if (mPortMixer) {
-      #if __WXMAC__
-        // on the Mac we must make sure that we restore the hardware playthrough
-        // state of the sound device to what it was before, because there isn't
-        // a UI for this (!)
-        if (Px_SupportsPlaythrough(mPortMixer) && mPreviousHWPlaythrough >= 0.0) {
-            Px_SetPlaythrough(mPortMixer, mPreviousHWPlaythrough);
-        }
-        mPreviousHWPlaythrough = -1.0;
-      #endif
-        Px_CloseMixer(mPortMixer);
-        mPortMixer = NULL;
-    }
-
-    // portmixer does not support asio
-    if (DeviceManager::IsAsioDevice(playDeviceNum)
-        || DeviceManager::IsAsioDevice(recDeviceNum)) {
-        mInputMixerWorks = false;
-        return;
-    }
-
-    // Looking for highest supported sample rate for a given
-    // play/rec device pair
-    long highestSampleRate = DeviceManager::GetClosestSupportedSampleRate(playDeviceNum, recDeviceNum, INT_MAX);
-    if (highestSampleRate == 0) {
-        // we don't actually have any rates that work for Rec and Play. Guess one
-        // to use for messing with the mixer, which doesn't actually do either
-        highestSampleRate = 44100;
-    }
-
-    mInputMixerWorks = false;
-
-    int error;
-    // This tries to open the device with the samplerate worked out above, which
-    // will be the highest available for play and record on the device, or
-    // 44.1kHz if the info cannot be fetched.
-
-    PaStream* stream;
-
-    PaStreamParameters playbackParameters;
-
-    playbackParameters.device = playDeviceNum;
-    playbackParameters.sampleFormat = paFloat32;
-    playbackParameters.hostApiSpecificStreamInfo = NULL;
-    playbackParameters.channelCount = 1;
-    if (Pa_GetDeviceInfo(playDeviceNum)) {
-        playbackParameters.suggestedLatency
-            =Pa_GetDeviceInfo(playDeviceNum)->defaultLowOutputLatency;
-    } else {
-        playbackParameters.suggestedLatency = AudioIOLatencyCompensation.GetDefault() / 1000.0;
-    }
-
-    PaStreamParameters captureParameters;
-
-    captureParameters.device = recDeviceNum;
-    captureParameters.sampleFormat = paFloat32;
-    captureParameters.hostApiSpecificStreamInfo = NULL;
-    captureParameters.channelCount = 1;
-    if (Pa_GetDeviceInfo(recDeviceNum)) {
-        captureParameters.suggestedLatency
-            =Pa_GetDeviceInfo(recDeviceNum)->defaultLowInputLatency;
-    } else {
-        captureParameters.suggestedLatency = AudioIOLatencyCompensation.GetDefault() / 1000.0;
-    }
-
-    // try opening for record and playback
-    // Not really doing I/O so pass nullptr for the callback function
-    error = Pa_OpenStream(&stream,
-                          &captureParameters, &playbackParameters,
-                          highestSampleRate, paFramesPerBufferUnspecified,
-                          paClipOff | paDitherOff,
-                          nullptr, NULL);
-
-    if (!error) {
-        // Try portmixer for this stream
-        mPortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
-        if (!mPortMixer) {
-            Pa_CloseStream(stream);
-            error = true;
-        }
-    }
-
-    // if that failed, try just for record
-    if (error) {
-        error = Pa_OpenStream(&stream,
-                              &captureParameters, NULL,
-                              highestSampleRate, paFramesPerBufferUnspecified,
-                              paClipOff | paDitherOff,
-                              nullptr, NULL);
-
-        if (!error) {
-            mPortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
-            if (!mPortMixer) {
-                Pa_CloseStream(stream);
-                error = true;
-            }
-        }
-    }
-
-    // finally, try just for playback
-    if (error) {
-        error = Pa_OpenStream(&stream,
-                              NULL, &playbackParameters,
-                              highestSampleRate, paFramesPerBufferUnspecified,
-                              paClipOff | paDitherOff,
-                              nullptr, NULL);
-
-        if (!error) {
-            mPortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
-            if (!mPortMixer) {
-                Pa_CloseStream(stream);
-                error = true;
-            }
-        }
-    }
-
-    // FIXME: TRAP_ERR errors in HandleDeviceChange not reported.
-    // if it's still not working, give up
-    if (error) {
-        return;
-    }
-
-    // Set input source
-#if USE_PORTMIXER
-    auto sourceIndex = AudioIORecordingSourceIndex.Read(); // defaults to -1
-    if (sourceIndex >= 0) {
-        //the current index of our source may be different because the stream
-        //is a combination of two devices, so update it.
-        sourceIndex = getRecordSourceIndex(mPortMixer);
-        if (sourceIndex >= 0) {
-            SetMixer(sourceIndex);
-        }
-    }
-#endif
-
-    // Determine mixer capabilities - if it doesn't support control of output
-    // signal level, we emulate it (by multiplying this value by all outgoing
-    // samples)
-
-    float inputVol = Px_GetInputVolume(mPortMixer);
-    mInputMixerWorks = true;  // assume it works unless proved wrong
-    Px_SetInputVolume(mPortMixer, 0.0);
-    if (Px_GetInputVolume(mPortMixer) > 0.1) {
-        mInputMixerWorks = false; // can't set to zero
-    }
-    Px_SetInputVolume(mPortMixer, 0.2f);
-    if (Px_GetInputVolume(mPortMixer) < 0.1
-        || Px_GetInputVolume(mPortMixer) > 0.3) {
-        mInputMixerWorks = false; // can't set level accurately
-    }
-    Px_SetInputVolume(mPortMixer, inputVol);
-
-    Pa_CloseStream(stream);
-
-   #if 0
-    wxPrintf("PortMixer: Recording: %s\n"
-             mInputMixerWorks ? "hardware" : "no control");
-   #endif
-#endif   // USE_PORTMIXER
+    mMixer.Open(playDeviceNum, recDeviceNum);
 }
 
 void AudioIOBase::StartMeters()
@@ -361,22 +191,6 @@ bool AudioIOBase::IsMonitoring() const
  * PaDeviceInfo::defaultSampleRate? In principal this should let us work out
  * which rates are "real" and which resampled in the drivers, and so prefer
  * the real rates. */
-#if USE_PORTMIXER
-int AudioIOBase::getRecordSourceIndex(PxMixer* portMixer)
-{
-    int i;
-    auto sourceName = AudioIORecordingSource.Read();
-    int numSources = Px_GetNumInputSources(portMixer);
-    for (i = 0; i < numSources; i++) {
-        if (sourceName == wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(portMixer, i)))) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-#endif
-
 wxString AudioIOBase::GetDeviceInfo() const
 {
     wxStringOutputStream o;

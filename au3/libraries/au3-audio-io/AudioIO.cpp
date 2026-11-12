@@ -89,10 +89,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include "pa_win_wasapi.h"
 #endif
 
-#if USE_PORTMIXER
-#include "portmixer.h"
-#endif
-
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
 #include <wx/time.h>
@@ -289,13 +285,7 @@ AudioIO::AudioIO()
         // but any attempt to play or record will simply fail.
     }
 
-#if defined(USE_PORTMIXER)
-    mPortMixer = NULL;
-    mPreviousHWPlaythrough = -1.0;
     HandleDeviceChange();
-#else
-    mInputMixerWorks = false;
-#endif
 
     SetMixerOutputVol(AudioIOPlaybackVolume.Read());
 
@@ -315,18 +305,7 @@ AudioIO::~AudioIO()
         ResetOwningProject();
     }
 
-#if defined(USE_PORTMIXER)
-    if (mPortMixer) {
-      #if __WXMAC__
-        if (Px_SupportsPlaythrough(mPortMixer) && mPreviousHWPlaythrough >= 0.0) {
-            Px_SetPlaythrough(mPortMixer, mPreviousHWPlaythrough);
-        }
-        mPreviousHWPlaythrough = -1.0;
-      #endif
-        Px_CloseMixer(mPortMixer);
-        mPortMixer = NULL;
-    }
-#endif
+    mMixer.Close();
 
     // FIXME: ? TRAP_ERR.  Pa_Terminate probably OK if err without reporting.
     Pa_Terminate();
@@ -388,19 +367,10 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
     AudioIOPlaybackVolume.Write(playbackVolume);
     SetSoftwareRecordGain(recordVolume);
 
-#if defined(USE_PORTMIXER)
-    if (PxMixer* mixer = mPortMixer) {
-        AudioIoCallback::SetMixer(inputSource);
-
-        if (mInputMixerWorks) {
-            float oldRecordVolume = Px_GetInputVolume(mixer);
-            if (oldRecordVolume != recordVolume) {
-                Px_SetInputVolume(mixer, recordVolume);
-            }
-            return;
-        }
+    mMixer.SetInputSource(inputSource);
+    if (mMixer.InputVolumeWorks() && mMixer.GetInputVolume() != recordVolume) {
+        mMixer.SetInputVolume(recordVolume);
     }
-#endif
 }
 
 void AudioIO::GetMixer(int* recordDevice, float* recordVolume,
@@ -408,58 +378,19 @@ void AudioIO::GetMixer(int* recordDevice, float* recordVolume,
 {
     *playbackVolume = GetMixerOutputVol();
 
-#if defined(USE_PORTMIXER)
-
-    PxMixer* mixer = mPortMixer;
-
-    if (mixer) {
-        *recordDevice = Px_GetCurrentInputSource(mixer);
-
-        if (mInputMixerWorks) {
-            *recordVolume = Px_GetInputVolume(mixer);
-        } else {
-            *recordVolume = GetSoftwareRecordGain();
-        }
-
-        return;
-    }
-
-#endif
-
-    // Recording level is emulated in software
-    *recordDevice = 0;
-    *recordVolume = GetSoftwareRecordGain();
+    *recordDevice = mMixer.IsOpen() ? mMixer.GetInputSource() : 0;
+    // Else the recording level is emulated in software
+    *recordVolume = mMixer.InputVolumeWorks() ? mMixer.GetInputVolume() : GetSoftwareRecordGain();
 }
 
 bool AudioIO::InputMixerWorks()
 {
-    return mInputMixerWorks;
+    return mMixer.InputVolumeWorks();
 }
 
 wxArrayString AudioIO::GetInputSourceNames()
 {
-#if defined(USE_PORTMIXER)
-
-    wxArrayString deviceNames;
-
-    if (mPortMixer) {
-        int numSources = Px_GetNumInputSources(mPortMixer);
-        for ( int source = 0; source < numSources; source++ ) {
-            deviceNames.push_back(wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(mPortMixer, source))));
-        }
-    } else {
-        wxLogDebug(wxT("AudioIO::GetInputSourceNames(): PortMixer not initialised!"));
-    }
-
-    return deviceNames;
-
-#else
-
-    wxArrayString blank;
-
-    return blank;
-
-#endif
+    return mMixer.GetInputSourceNames();
 }
 
 static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
@@ -663,7 +594,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
     //mchinen nov 30 2010.  For some reason Pa_OpenStream resets the input volume on windows.
     //so cache and restore after it.
     //The actual problem is likely in portaudio's pa_win_wmme.c OpenStream().
-    float oldRecordVolume = Px_GetInputVolume(mPortMixer);
+    float oldRecordVolume = mMixer.GetInputVolume();
 #endif
 #endif
 
@@ -736,28 +667,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
 
 #if USE_PORTMIXER
 #ifdef __WXMSW__
-    Px_SetInputVolume(mPortMixer, oldRecordVolume);
+    mMixer.SetInputVolume(oldRecordVolume);
+#endif
 #endif
     if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
-      #ifdef __WXMAC__
-        if (mPortMixer) {
-            if (Px_SupportsPlaythrough(mPortMixer)) {
-                bool playthrough = false;
-
-                mPreviousHWPlaythrough = Px_GetPlaythrough(mPortMixer);
-
-                // Bug 388.  Feature not supported.
-                //gPrefs->Read(wxT("/AudioIO/Playthrough"), &playthrough, false);
-                if (playthrough) {
-                    Px_SetPlaythrough(mPortMixer, 1.0);
-                } else {
-                    Px_SetPlaythrough(mPortMixer, 0.0);
-                }
-            }
-        }
-      #endif
+        mMixer.DisableHardwarePlaythrough();
     }
-#endif
 
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3, 1, 0)
     // Don't want the system to sleep while audio I/O is active
@@ -773,16 +688,7 @@ void AudioIO::StopPortAudioStream()
 {
     // Turn off HW playthrough if PortMixer is being used
 
-  #if defined(USE_PORTMIXER)
-    if (mPortMixer) {
-      #if __WXMAC__
-        if (Px_SupportsPlaythrough(mPortMixer) && mPreviousHWPlaythrough >= 0.0) {
-            Px_SetPlaythrough(mPortMixer, mPreviousHWPlaythrough);
-        }
-        mPreviousHWPlaythrough = -1.0;
-      #endif
-    }
-  #endif
+    mMixer.RestoreHardwarePlaythrough();
 
     if (mPortStreamV19) {
         // DV: Pa_CloseStream will close Pa_AbortStream internally,
@@ -2868,7 +2774,7 @@ int AudioIoCallback::AudioCallback(
     if (inputBuffer && numCaptureChannels) {
         float* inputSamples;
 
-        if (!mInputMixerWorks) {
+        if (!mMixer.InputVolumeWorks()) {
             const float gain = GetSoftwareRecordGain();
             if (gain != 1.0f) {
                 const size_t numSamples = framesPerBuffer * numCaptureChannels;

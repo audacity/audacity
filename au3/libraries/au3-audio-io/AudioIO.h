@@ -492,8 +492,7 @@ public:
     void GetMixer(int* inputSource, float* inputVolume, float* playbackVolume);
     /** @brief Find out if the input hardware level control is available
      *
-     * Checks the mInputMixerWorks variable, which is set up in
-     * AudioIOBase::HandleDeviceChange(). External people care, because we want to
+     * Asks the device mixer, which AudioIOBase::HandleDeviceChange() opens. External people care, because we want to
      * disable the UI if it doesn't work.
      */
     bool InputMixerWorks();
