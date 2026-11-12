@@ -5,6 +5,7 @@
 
 #include <algorithm>
 
+#include "au3-audio-devices/DeviceManager.h"
 #include "au3-audio-devices/PortAudioStream.h"
 
 using namespace au::portaudiodevices;
@@ -12,6 +13,11 @@ using namespace au::portaudiodevices;
 namespace {
 //! PortAudio calls back with as many frames as the host likes, which it doesn't tell: the callbacks process them by as many
 constexpr int processingBlockSize = 512;
+}
+
+PortAudioDevice::PortAudioDevice(DeviceMixer& mixer)
+    : m_mixer{mixer}
+{
 }
 
 PortAudioDevice::~PortAudioDevice()
@@ -48,8 +54,15 @@ bool PortAudioDevice::open(int numInputChannels, int numOutputChannels, double s
         parameters.playback.channelCount = std::min(parameters.playback.channelCount, info->maxOutputChannels);
     }
 
+#ifdef __WXMSW__
+    // As AudioIO: Pa_OpenStream resets the input volume on Windows
+    const auto inputVolume = m_mixer.GetInputVolume();
+#endif
     PortAudioStream::Opened opened;
     paError = PortAudioStream::Open(parameters, &PortAudioDevice::callback, this, opened);
+#ifdef __WXMSW__
+    m_mixer.SetInputVolume(inputVolume);
+#endif
     if (paError != paNoError) {
         error = Pa_GetErrorText(paError);
         return false;
@@ -76,6 +89,9 @@ void PortAudioDevice::start(audio::IDeviceCallback& callback)
 {
     m_callback = &callback;
     m_started = Pa_StartStream(m_stream) == paNoError;
+    if (m_started) {
+        m_mixer.DisableHardwarePlaythrough();
+    }
 }
 
 void PortAudioDevice::stop()
@@ -84,6 +100,7 @@ void PortAudioDevice::stop()
         // Returns once the callback returned
         Pa_StopStream(m_stream);
         m_started = false;
+        m_mixer.RestoreHardwarePlaythrough();
     }
 }
 
@@ -105,9 +122,48 @@ int PortAudioDevice::callback(const void* input, void* output, unsigned long fra
 std::unique_ptr<au::audio::IDevice> PortAudioDeviceOpener::open(const audio::AudioConfiguration&, int numInputChannels,
                                                                 int numOutputChannels, double sampleRate, std::string& error)
 {
-    auto device = std::make_unique<PortAudioDevice>();
+    auto device = std::make_unique<PortAudioDevice>(m_hardwareVolume.deviceMixer());
     if (!device->open(numInputChannels, numOutputChannels, sampleRate, error)) {
         return nullptr;
     }
     return device;
+}
+
+void PortAudioHardwareVolume::reopen()
+{
+    m_mixer.Open(DeviceManager::getPlayDevIndex(), DeviceManager::getRecordDevIndex());
+    m_opened = true;
+}
+
+bool PortAudioHardwareVolume::inputVolumeWorks() const
+{
+    openOnce();
+    return m_mixer.InputVolumeWorks();
+}
+
+float PortAudioHardwareVolume::inputVolume() const
+{
+    openOnce();
+    return m_mixer.GetInputVolume();
+}
+
+void PortAudioHardwareVolume::setInputVolume(float volume)
+{
+    openOnce();
+    m_mixer.SetInputVolume(volume);
+}
+
+DeviceMixer& PortAudioHardwareVolume::deviceMixer()
+{
+    openOnce();
+    return m_mixer;
+}
+
+void PortAudioHardwareVolume::openOnce() const
+{
+    // Not before the devices are known
+    if (!m_opened) {
+        m_mixer.Open(DeviceManager::getPlayDevIndex(), DeviceManager::getRecordDevIndex());
+        m_opened = true;
+    }
 }

@@ -99,6 +99,8 @@ private:
     void onPlayRegionChanged();
     //! Opened with as many of the requested channels as it has, or null, with `m_lastError` set
     std::unique_ptr<audio::IDevice> openDevice(int numInputChannels, int numOutputChannels, double sampleRate);
+    //! What the device's hardware volume can't set of the input volume, the callbacks apply
+    void updateInputGain();
     //! Where realtime effects added to `project` while streaming are initialized, if anywhere
     RealtimeEffects::InitializationScope* effectsInitialization(AudacityProject& project) const;
 
@@ -112,7 +114,10 @@ private:
     muse::String m_lastError;
 
     std::atomic<float> m_playbackVolume { 1.f };
-    std::atomic<float> m_inputVolume { 1.f };
+    //! As set, applied to the samples unless the device's hardware volume can set it
+    float m_inputVolume = 1.f;
+    //! What the callbacks apply to the input
+    std::atomic<float> m_inputGain { 1.f };
     std::map<const AudacityProject*, audio::IAudioMeterPtr> m_playbackMeters;
     std::map<const AudacityProject*, audio::IAudioMeterPtr> m_captureMeters;
 
