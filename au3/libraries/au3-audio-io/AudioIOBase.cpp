@@ -18,7 +18,7 @@ Paul Licameli split from AudioIO.cpp
 
 #include "au3-utility/IteratorX.h"
 #include "au3-preferences/Prefs.h"
-#include "DeviceManager.h"
+#include "au3-audio-devices/DeviceManager.h"
 
 #include "portaudio.h"
 

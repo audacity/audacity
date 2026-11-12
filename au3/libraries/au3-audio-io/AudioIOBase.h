@@ -21,9 +21,9 @@ Paul Licameli split from AudioIO.h
 #include <utility>
 #include <wx/string.h>
 #include "au3-utility/MemoryX.h"
-#include "IMeterSender.h"
-#include "AudioDeviceSettings.h"
-#include "DeviceMixer.h"
+#include "au3-audio-devices/IMeterSender.h"
+#include "au3-audio-devices/AudioDeviceSettings.h"
+#include "au3-audio-devices/DeviceMixer.h"
 
 struct PaDeviceInfo;
 typedef void PaStream;
@@ -85,7 +85,7 @@ struct AudioIODiagnostics {
 };
 
 //! Abstract interface to alternative, concurrent playback with the main audio (such as MIDI events)
-class AUDIO_DEVICES_API AudioIOExtBase
+class AUDIO_IO_API AudioIOExtBase
 {
 public:
     virtual ~AudioIOExtBase();
@@ -99,7 +99,7 @@ public:
 
 ///\brief A singleton object supporting queries of the state of any active
 /// audio streams, and audio device capabilities
-class AUDIO_DEVICES_API AudioIOBase /* not final */ : public NonInterferingBase
+class AUDIO_IO_API AudioIOBase /* not final */ : public NonInterferingBase
 {
 public:
     static AudioIOBase* Get();

@@ -10,7 +10,7 @@
 
 #include "PlaybackSchedule.h"
 
-#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-audio-io/AudioIOBase.h"
 #include "au3-mixer/Envelope.h"
 #include "au3-mixer/Mix.h"
 #include "au3-project/Project.h"

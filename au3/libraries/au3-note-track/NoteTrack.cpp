@@ -885,7 +885,7 @@ void NoteTrack::WriteXML(XMLWriter& xmlFile) const
 #include <wx/log.h>
 #include <wx/sstream.h>
 #include <wx/txtstrm.h>
-#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-audio-io/AudioIOBase.h"
 #include "portmidi.h"
 
 // FIXME: When EXPERIMENTAL_MIDI_IN is added (eventually) this should also be enabled -- Poke

@@ -16,7 +16,7 @@
 #include <memory>
 #include <vector>
 
-#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-audio-io/AudioIOBase.h"
 
 struct PaStreamCallbackTimeInfo;
 struct PaStreamInfo;

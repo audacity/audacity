@@ -10,7 +10,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "ProjectAudioIO.h"
 
-#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-audio-io/AudioIOBase.h"
 #include "au3-mixer/Mix.h"
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"

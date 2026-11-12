@@ -5,7 +5,7 @@ input/output devices and finding their preferred sample rates.
 Also a place to store global settings related to the preferred device.
 
 Also abstract class Meter for communicating buffers of samples for display
-purposes.
+purposes, and the hardware mixer of the selected devices.
 
 Does not contain an audio engine.
 ]]
@@ -15,8 +15,6 @@ set( TARGET au3-audio-devices )
 set( SOURCES
    AudioDeviceSettings.cpp
    AudioDeviceSettings.h
-   AudioIOBase.cpp
-   AudioIOBase.h
    DeviceChange.cpp
    DeviceChange.h
    DeviceManager.cpp
@@ -29,11 +27,8 @@ set( LIBRARIES
 PUBLIC
    au3-preferences
    au3-utility
-   # Keep public: AudioIOBase.h tests USE_PORTMIXER.
-   # Client libraries who include this header otherwise will get a different
-   # memory layout of the AudioIOBase class.
-   $<$<BOOL:${AU_USE_PORTMIXER}>:portmixer>
 PRIVATE
+   $<$<BOOL:${AU_USE_PORTMIXER}>:portmixer>
    au3-basic-ui
    au3-strings
    portaudio::portaudio
