@@ -53,22 +53,14 @@ int parameterValue(const ExportParameters& parameters, int id)
     return it == parameters.end() ? -1 : std::get<int>(std::get<1>(*it));
 }
 
-RetVal<ExportParameters> parametersFor(ExportCommandKind kind, const Params& params, int sampleRate = 44100)
-{
-    const RetVal<ExportFormatSettings> settings = exportFormatSettings(kind, params);
-    if (!settings.ret) {
-        return RetVal<ExportParameters>::make_ret(settings.ret);
-    }
-    return au3ExportParameters(settings.val, sampleRate);
-}
-
-template<typename E>
-void expectEveryValueAccepted(ExportCommandKind kind, const std::string& key, const std::string& formatName,
+template<typename E, typename MakeSettings>
+void expectEveryValueAccepted(const std::string& formatName, MakeSettings makeSettings,
                               const std::function<int(const std::string&)>& sampleRateFor = [] (const std::string&) { return 44100;
                               })
 {
     for (const std::string& value : EnumContract<E>::str_vals()) {
-        const RetVal<ExportParameters> parameters = parametersFor(kind, { { key, Val(value) } }, sampleRateFor(value));
+        const RetVal<ExportParameters> parameters = au3ExportParameters(makeSettings(*EnumContract<E>::enum_val(value)),
+                                                                        sampleRateFor(value));
         ASSERT_TRUE(parameters.ret) << formatName << " " << value;
         expectAcceptedByPlugin(formatName, parameters.val);
     }
@@ -83,35 +75,35 @@ int mp3BitRateSampleRate(const std::string& kbps)
 
 TEST(Au3ExportParametersTests, WavEncodingsAreAcceptedByThePlugin)
 {
-    expectEveryValueAccepted<WavEncoding>(ExportCommandKind::Wav, "encoding", "WAV (Microsoft)");
+    expectEveryValueAccepted<WavEncoding>("WAV (Microsoft)", [](WavEncoding e) { return WavSettings { e }; });
 }
 
 TEST(Au3ExportParametersTests, Mp3PresetsAreAcceptedByThePlugin)
 {
-    expectEveryValueAccepted<Mp3Preset>(ExportCommandKind::Mp3Preset, "quality", "MP3 Files");
+    expectEveryValueAccepted<Mp3Preset>("MP3 Files", [](Mp3Preset e) { return Mp3PresetSettings { e }; });
 }
 
 TEST(Au3ExportParametersTests, Mp3VbrQualitiesAreAcceptedByThePlugin)
 {
-    expectEveryValueAccepted<Mp3VbrQuality>(ExportCommandKind::Mp3Vbr, "quality", "MP3 Files");
+    expectEveryValueAccepted<Mp3VbrQuality>("MP3 Files", [](Mp3VbrQuality e) { return Mp3VbrSettings { e }; });
 }
 
 TEST(Au3ExportParametersTests, Mp3AbrBitRatesAreAcceptedByThePlugin)
 {
-    expectEveryValueAccepted<Mp3BitRate>(ExportCommandKind::Mp3Abr, "bitRate", "MP3 Files", mp3BitRateSampleRate);
+    expectEveryValueAccepted<Mp3BitRate>("MP3 Files", [](Mp3BitRate e) { return Mp3AbrSettings { e }; }, mp3BitRateSampleRate);
 }
 
 TEST(Au3ExportParametersTests, Mp3CbrBitRatesAreAcceptedByThePlugin)
 {
-    expectEveryValueAccepted<Mp3BitRate>(ExportCommandKind::Mp3Cbr, "bitRate", "MP3 Files", mp3BitRateSampleRate);
+    expectEveryValueAccepted<Mp3BitRate>("MP3 Files", [](Mp3BitRate e) { return Mp3CbrSettings { e }; }, mp3BitRateSampleRate);
 }
 
 TEST(Au3ExportParametersTests, FlacParametersAreAcceptedByThePlugin)
 {
     for (const std::string& bitDepth : EnumContract<FlacBitDepth>::str_vals()) {
         for (const std::string& level : EnumContract<FlacLevel>::str_vals()) {
-            const RetVal<ExportParameters> parameters
-                = parametersFor(ExportCommandKind::Flac, { { "bitDepth", Val(bitDepth) }, { "level", Val(level) } });
+            const FlacSettings settings { *EnumContract<FlacBitDepth>::enum_val(bitDepth), *EnumContract<FlacLevel>::enum_val(level) };
+            const RetVal<ExportParameters> parameters = au3ExportParameters(settings, 44100);
             ASSERT_TRUE(parameters.ret) << bitDepth << " " << level;
             expectAcceptedByPlugin("FLAC Files", parameters.val);
         }
@@ -120,59 +112,51 @@ TEST(Au3ExportParametersTests, FlacParametersAreAcceptedByThePlugin)
 
 TEST(Au3ExportParametersTests, OggQualitiesAreAcceptedByThePlugin)
 {
-    expectEveryValueAccepted<OggQuality>(ExportCommandKind::Ogg, "quality", "Ogg Vorbis Files");
+    expectEveryValueAccepted<OggQuality>("Ogg Vorbis Files", [](OggQuality e) { return OggSettings { e }; });
 }
 
 TEST(Au3ExportParametersTests, AudioDefaultsAreAcceptedByThePlugin)
 {
-    const std::vector<std::pair<std::string, std::string> > formats {
-        { "WAV", "WAV (Microsoft)" }, { "MP3", "MP3 Files" }, { "FLAC", "FLAC Files" }, { "OGG", "Ogg Vorbis Files" },
+    const std::vector<std::pair<ExportAudioFormat, std::string> > formats {
+        { ExportAudioFormat::Wav, "WAV (Microsoft)" },
+        { ExportAudioFormat::Mp3, "MP3 Files" },
+        { ExportAudioFormat::Flac, "FLAC Files" },
+        { ExportAudioFormat::Ogg, "Ogg Vorbis Files" },
     };
 
     for (const auto& [format, formatName] : formats) {
-        const RetVal<ExportParameters> parameters = parametersFor(ExportCommandKind::Audio, { { "format", Val(format) } });
-        ASSERT_TRUE(parameters.ret) << format;
+        const RetVal<ExportParameters> parameters = au3ExportParameters(defaultFormatSettings(format), 44100);
+        ASSERT_TRUE(parameters.ret) << formatName;
         expectAcceptedByPlugin(formatName, parameters.val);
     }
 }
 
 TEST(Au3ExportParametersTests, AudioMp3UsesTheStandardPreset)
 {
-    const RetVal<ExportFormatSettings> settings = exportFormatSettings(ExportCommandKind::Audio, { { "format", Val("MP3") } });
-    ASSERT_TRUE(settings.ret);
-    EXPECT_EQ(extensionOf(settings.val), "mp3");
+    const ExportFormatSettings settings = defaultFormatSettings(ExportAudioFormat::Mp3);
+    EXPECT_EQ(extensionOf(settings), "mp3");
 
-    const RetVal<ExportParameters> parameters = au3ExportParameters(settings.val, 44100);
+    const RetVal<ExportParameters> parameters = au3ExportParameters(settings, 44100);
     ASSERT_TRUE(parameters.ret);
     EXPECT_EQ(parameterValue(parameters.val, 1), static_cast<int>(Mp3Preset::Standard));
 }
 
 TEST(Au3ExportParametersTests, Mp3VbrUsesTheVbrQualityOption)
 {
-    const RetVal<ExportParameters> parameters = parametersFor(ExportCommandKind::Mp3Vbr, { { "quality", Val("V4") } });
+    const RetVal<ExportParameters> parameters = au3ExportParameters(Mp3VbrSettings { Mp3VbrQuality::V4 }, 44100);
     ASSERT_TRUE(parameters.ret);
     EXPECT_EQ(parameterValue(parameters.val, 2), 4);
     EXPECT_EQ(parameterValue(parameters.val, 4), -1);
 }
 
-TEST(Au3ExportParametersTests, Mp3RejectsAQualityThatIsNotInTheEnum)
-{
-    EXPECT_EQ(parametersFor(ExportCommandKind::Mp3Vbr, { { "quality", Val("V10") } }).ret.code(), static_cast<int>(Ret::Code::BadArgs));
-}
-
 TEST(Au3ExportParametersTests, Mp3RejectsAHighBitRateAtALowSampleRate)
 {
-    const RetVal<ExportParameters> parameters = parametersFor(ExportCommandKind::Mp3Cbr, { { "bitRate", Val("320") } }, 22050);
+    const RetVal<ExportParameters> parameters = au3ExportParameters(Mp3CbrSettings { Mp3BitRate::Kbps320 }, 22050);
     EXPECT_EQ(parameters.ret.code(), static_cast<int>(Ret::Code::BadArgs));
 }
 
 TEST(Au3ExportParametersTests, Mp3RejectsASampleRateItDoesNotSupport)
 {
-    const RetVal<ExportParameters> parameters = parametersFor(ExportCommandKind::Mp3Preset, { { "quality", Val("Standard") } }, 96000);
+    const RetVal<ExportParameters> parameters = au3ExportParameters(Mp3PresetSettings { Mp3Preset::Standard }, 96000);
     EXPECT_EQ(parameters.ret.code(), static_cast<int>(Ret::Code::BadArgs));
-}
-
-TEST(Au3ExportParametersTests, FlacRejectsAMissingLevel)
-{
-    EXPECT_EQ(parametersFor(ExportCommandKind::Flac, { { "bitDepth", Val("16") } }).ret.code(), static_cast<int>(Ret::Code::BadArgs));
 }

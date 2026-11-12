@@ -106,17 +106,23 @@ public:
 
     muse::Ret selectTime(const muse::rcommand::Params& params)
     {
-        return m_controller->selectTime(params);
+        SelectTimeCommand command;
+        const muse::rcommand::ConvertParamsResult res = muse::rcommand::fromInputParams(params, command);
+        return res ? m_controller->selectTime(command) : res.ret;
     }
 
     muse::Ret selectTracks(const muse::rcommand::Params& params)
     {
-        return m_controller->selectTracks(params);
+        SelectTracksCommand command;
+        const muse::rcommand::ConvertParamsResult res = muse::rcommand::fromInputParams(params, command);
+        return res ? m_controller->selectTracks(command) : res.ret;
     }
 
     muse::Ret select(const muse::rcommand::Params& params)
     {
-        return m_controller->select(params);
+        SelectCommand command;
+        const muse::rcommand::ConvertParamsResult res = muse::rcommand::fromInputParams(params, command);
+        return res ? m_controller->select(command) : res.ret;
     }
 
     muse::Ret selectNextClip()
@@ -746,14 +752,13 @@ TEST_F(TrackeditActionsControllerTests, SelectTimeRejectsAMissingRelativeTo)
     EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
 }
 
-TEST_F(TrackeditActionsControllerTests, SelectTimeRejectsMissingStartAndEnd)
+TEST_F(TrackeditActionsControllerTests, SelectTimeCountsMissingStartAndEndAsZero)
 {
-    EXPECT_CALL(*m_selectionController, setDataSelectedStartTime(::testing::_, ::testing::_)).Times(0);
-    EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(::testing::_, ::testing::_)).Times(0);
+    setTimeSelection(4.0, 6.0);
 
-    const muse::Ret ret = selectTime({ { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") } });
+    expectTimeSelection(0.0, 0.0);
 
-    EXPECT_EQ(ret.code(), static_cast<int>(muse::Ret::Code::BadArgs));
+    EXPECT_TRUE(selectTime({ { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") } }));
 }
 
 TEST_F(TrackeditActionsControllerTests, SelectTimeCountsAMissingEndAsZero)
@@ -778,7 +783,7 @@ TEST_F(TrackeditActionsControllerTests, SelectTracksSetReplacesTheSelection)
 
     EXPECT_TRUE(selectTracks({
             { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(1) },
-            { TRACKEDIT_TRACK_COUNT_PARAM, muse::Val(2) },
+            { "trackCount", muse::Val(2) },
             { std::string(SelectTracksModeContract::key), muse::Val("Set") },
         }));
 }
@@ -826,7 +831,7 @@ TEST_F(TrackeditActionsControllerTests, SelectTracksStopsAtTheLastTrack)
 
     EXPECT_TRUE(selectTracks({
             { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(2) },
-            { TRACKEDIT_TRACK_COUNT_PARAM, muse::Val(10) },
+            { "trackCount", muse::Val(10) },
             { std::string(SelectTracksModeContract::key), muse::Val("Set") },
         }));
 }
@@ -869,7 +874,7 @@ TEST_F(TrackeditActionsControllerTests, SelectSetsTracksAndTime)
             { TRACKEDIT_END_PARAM, muse::Val(5.0) },
             { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") },
             { TRACKEDIT_TRACK_INDEX_PARAM, muse::Val(1) },
-            { TRACKEDIT_TRACK_COUNT_PARAM, muse::Val(2) },
+            { "trackCount", muse::Val(2) },
             { std::string(SelectTracksModeContract::key), muse::Val("Set") },
         }));
 }
@@ -883,7 +888,7 @@ TEST_F(TrackeditActionsControllerTests, SelectChangesNothingWhenTheTimePartIsInv
     EXPECT_CALL(*m_selectionController, setDataSelectedEndTime(::testing::_, ::testing::_)).Times(0);
 
     const muse::Ret ret = select({
-            { std::string(SelectTimeRelativeToContract::key), muse::Val("ProjectStart") },
+            { std::string(SelectTimeRelativeToContract::key), muse::Val("Unknown") },
             { std::string(SelectTracksModeContract::key), muse::Val("Set") },
         });
 

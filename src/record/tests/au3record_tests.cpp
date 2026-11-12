@@ -51,8 +51,8 @@ public:
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
-        ON_CALL(*m_commandDispatcher, dispatch(_))
-        .WillByDefault([](const muse::rcommand::Request& request) {
+        ON_CALL(*m_commandDispatcher, dispatch(_, _))
+        .WillByDefault([](const muse::rcommand::Request& request, bool) {
             return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
                 return resolve(muse::rcommand::make_response(request, muse::make_ok()));
             });
@@ -195,7 +195,7 @@ TEST_F(Au3RecordTests, LeadInRecordingStartsAtPlayheadPosition)
                 dispatch(Truly([](const muse::rcommand::Request& request) {
         return request.command == playback::PLAYBACK_SEEK_COMMAND
                && request.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble() == 6.0;
-    })));
+    }), _));
 
     //! [WHEN] Lead-in recording is initiated
     muse::Ret ret = m_record->leadInRecording();
