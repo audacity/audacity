@@ -7,6 +7,8 @@
 
 #include "framework/global/stringutils.h"
 
+#include "effects/effects_base/effectscommands.h"
+
 using namespace au::macromanager;
 using namespace muse;
 using namespace muse::rcommand;
@@ -258,7 +260,7 @@ CommandDisplay MacroCommandsModel::displayOf(const Command& command) const
 bool MacroCommandsModel::hasParams(const Command& command) const
 {
     if (isEffectApplyCommand(command)) {
-        return true;
+        return effectsProvider()->meta(effects::effectIdFromCommand(command)).isInteractive.value_or(true);
     }
 
     return !commandsRegister()->commandInfo(command).inputSchema.args.empty();
