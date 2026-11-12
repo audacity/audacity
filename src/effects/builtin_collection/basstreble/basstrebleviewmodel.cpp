@@ -39,7 +39,18 @@ void BassTrebleViewModel::doReload()
                                     bs.mBass,
                                     BassTrebleEffect::Bass.min,
                                     BassTrebleEffect::Bass.max,
-                                    [](BassTrebleSettings& settings, double v) { settings.mBass = v; }
+                                    [this](BassTrebleSettings& settings, double v) {
+        // Changes ignored to avoid parameter set loop when values are linked.
+        if (m_ignores.value((QString)(char*)BassTrebleEffect::Bass.key, false)) {
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Bass.key, false);
+            return;
+        }
+        if (settings.mLink) {
+            settings.mGain = this->compensateGain(settings.mGain, settings.mBass, v);
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, true);
+        }
+        settings.mBass = v;
+    }
                                     );
 
     m_paramsList["Treble"] = makeItem("Treble",
@@ -48,7 +59,17 @@ void BassTrebleViewModel::doReload()
                                       bs.mTreble,
                                       BassTrebleEffect::Treble.min,
                                       BassTrebleEffect::Treble.max,
-                                      [](BassTrebleSettings& settings, double v) { settings.mTreble = v; }
+                                      [this](BassTrebleSettings& settings, double v) {
+        if (m_ignores.value((QString)(char*)BassTrebleEffect::Treble.key, false)) {
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Treble.key, false);
+            return;
+        }
+        if (settings.mLink) {
+            settings.mGain = this->compensateGain(settings.mGain, settings.mTreble, v);
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, true);
+        }
+        settings.mTreble = v;
+    }
                                       );
 
     m_paramsList["Gain"] = makeItem("Gain",
@@ -57,7 +78,27 @@ void BassTrebleViewModel::doReload()
                                     bs.mGain,
                                     BassTrebleEffect::Gain.min,
                                     BassTrebleEffect::Gain.max,
-                                    [](BassTrebleSettings& settings, double v) { settings.mGain = v; }
+                                    [this](BassTrebleSettings& settings, double v) {
+        if (m_ignores.value((QString)(char*)BassTrebleEffect::Gain.key, false)) {
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, false);
+            return;
+        }
+        if (settings.mLink) {
+            double delta = v - settings.mGain;
+            double treble = settings.mTreble - delta;
+            double clampedTreble = std::clamp(treble, BassTrebleEffect::Treble.min, BassTrebleEffect::Treble.max);
+            double bass = settings.mBass - delta;
+            double clampedBass = std::clamp(bass, BassTrebleEffect::Bass.min, BassTrebleEffect::Bass.max);
+            // If the delta cannot be split equally between treble and bass, apply the remaning delta to the other tone.
+            settings.mTreble
+                = std::clamp(settings.mTreble - delta + (bass - clampedBass), BassTrebleEffect::Treble.min, BassTrebleEffect::Treble.max);
+            settings.mBass
+                = std::clamp(settings.mBass - delta + (treble - clampedTreble), BassTrebleEffect::Bass.min, BassTrebleEffect::Bass.max);
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Treble.key, true);
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Bass.key, true);
+        }
+        settings.mGain = v;
+    }
                                     );
 
     emit paramsListChanged();
@@ -90,7 +131,16 @@ void BassTrebleViewModel::setLink(bool newLink)
 {
     modifySettings<BassTrebleSettings>([newLink](EffectSettings& settings)
     {
-        settings.cast<BassTrebleSettings>()->mLink = newLink;
+        BassTrebleSettings* s = settings.cast<BassTrebleSettings>();
+        s->mLink = newLink;
+        if (s->mLink) {
+            s->mGain = std::clamp(-(s->mBass + s->mTreble) / 2, BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
+        }
     });
     emit linkChanged();
+}
+
+double BassTrebleViewModel::compensateGain(const double currentGain, double currentValue, double newValue)
+{
+    return std::clamp(currentGain - (newValue - currentValue) / 2, BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
 }
