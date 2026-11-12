@@ -157,4 +157,19 @@ double AsioRate(bool playing)
     }
     return 0.0;
 }
+
+double BestRate(bool capturing, bool playing, double requested)
+{
+    if (const auto asioRate = AsioRate(playing); asioRate != 0.0) {
+        return asioRate;
+    }
+    const auto rate = static_cast<long>(requested);
+    if (capturing && !playing) {
+        return DeviceManager::GetClosestSupportedCaptureRate(-1, rate);
+    }
+    if (playing && !capturing) {
+        return DeviceManager::GetClosestSupportedPlaybackRate(-1, rate);
+    }
+    return DeviceManager::GetClosestSupportedSampleRate(-1, -1, rate);
+}
 }

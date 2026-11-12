@@ -144,8 +144,20 @@ void AudioDriverController::init()
         onSystemDevicesChanged();
     });
 
+    subscribeToAudioEngine();
+}
+
+void AudioDriverController::setAudioEngine(const std::shared_ptr<audio::IAudioEngine>& engine)
+{
+    audioEngine.set(engine);
+    subscribeToAudioEngine();
+}
+
+void AudioDriverController::subscribeToAudioEngine()
+{
+    m_engineSubscriptions = std::make_unique<muse::async::Asyncable>();
     if (audioEngine()) {
-        audioEngine()->streamStopped().onNotify(this, [this]() {
+        audioEngine()->streamStopped().onNotify(m_engineSubscriptions.get(), [this]() {
             if (m_pendingSystemDevicesChange) {
                 m_pendingSystemDevicesChange = false;
                 onSystemDevicesChanged();

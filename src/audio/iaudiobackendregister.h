@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -18,6 +19,8 @@ struct AudioBackend {
     std::string id;
     std::shared_ptr<IAudioEngine> engine;
     std::shared_ptr<IAudioDriverController> driverController;
+    //! Called when it becomes the active backend; may be empty. Lets backends share devices, or an engine.
+    std::function<void()> activated;
 };
 
 //! Where backend modules declare their audio backend.

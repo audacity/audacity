@@ -47,4 +47,7 @@ PaError Open(const Parameters& parameters, PaStreamCallback* callback, void* use
 
 //! The ASIO device's current rate, if the stream is on one and the settings say to open at it; else 0
 double AsioRate(bool playing);
+
+//! The rate to open at: AsioRate(), else the closest to `requested` the devices support, or 0 if none
+double BestRate(bool capturing, bool playing, double requested);
 }
