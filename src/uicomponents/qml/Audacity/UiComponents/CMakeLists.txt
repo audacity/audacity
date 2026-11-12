@@ -29,11 +29,14 @@ qt_add_qml_module(uicomponents_qml
         components/ArrowMenuButton.qml
         components/BPM.qml
         components/BaseSection.qml
+        components/Callout.qml
         components/DropdownWithTitle.qml
         components/Frequency.qml
         components/GridPlot.qml
+        components/IndeterminateProgressBar.qml
         components/MarqueeSelection.qml
         components/RadioOptionsGroup.qml
+        components/StepIndicator.qml
         components/TimeSignature.qml
         components/Timecode.qml
         components/TimecodeStartEnd.qml
