@@ -29,6 +29,6 @@ public:
     void launch(const Macro& macro);
 
 private:
-    muse::io::paths_t selectFiles() const;
+    muse::io::paths_t selectFiles();
 };
 }
