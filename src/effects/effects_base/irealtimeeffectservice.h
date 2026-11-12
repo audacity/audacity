@@ -10,7 +10,6 @@
 #include <optional>
 
 struct TransportSequences;
-struct AudioIOStartTransportOptions;
 
 namespace au::project {
 class IAudacityProject;
