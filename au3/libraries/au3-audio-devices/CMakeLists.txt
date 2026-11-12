@@ -1,6 +1,7 @@
 #[[
 A library linking PortAudio and sufficient for querying the existing audio
-input/output devices and finding their preferred sample rates.
+input/output devices and finding their preferred sample rates, and for opening
+streams on them as the audio settings say.
 
 Also a place to store global settings related to the preferred device.
 
@@ -22,16 +23,19 @@ set( SOURCES
    DeviceMixer.cpp
    DeviceMixer.h
    IMeterSender.h
+   PortAudioStream.cpp
+   PortAudioStream.h
 )
 set( LIBRARIES
 PUBLIC
    au3-preferences
    au3-utility
+   # PortAudioStream.h is PortAudio's API
+   portaudio::portaudio
 PRIVATE
    $<$<BOOL:${AU_USE_PORTMIXER}>:portmixer>
    au3-basic-ui
    au3-strings
-   portaudio::portaudio
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

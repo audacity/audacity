@@ -100,6 +100,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "au3-channel/Channel.h"
 #include "au3-mixer/Mix.h"
+#include "au3-audio-devices/PortAudioStream.h"
 #include "au3-recording/RingBuffer.h"
 #include "au3-project-rate/Decibels.h"
 #include "au3-preferences/Prefs.h"
@@ -421,29 +422,14 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
     // rate is suggested, but we may get something else if it isn't supported
     mRate = 0.0;
 
-    // Opening ASIO streams at the device's current rate allows simultaneous playback
-    // with drivers that support it
-    if (gPrefs->ReadBool(wxT("/AudioIO/ASIO/UseDeviceSampleRate"), true)) {
-        const int asioDevIndex
-            =numPlaybackChannels > 0 ? DeviceManager::getPlayDevIndex() : DeviceManager::getRecordDevIndex();
-        if (DeviceManager::IsAsioDevice(asioDevIndex)) {
-            mRate = DeviceManager::GetAsioDeviceCurrentSampleRate(asioDevIndex);
-        }
-    }
-
+    mRate = PortAudioStream::AsioRate(numPlaybackChannels > 0);
     if (mRate == 0.0) {
         mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
     }
 
     // GetBestRate() will return 0.0 for bidirectional streams when there is no
-    // common sample rate supported by both the input and output devices.
-    // Bidirectional streams are used when recording while overdub or
-    // software playthrough options are enabled.
-
-    // Pa_OpenStream() will return paInvalidSampleRate when trying to create the
-    // bidirectional stream with a sampleRate of 0.0
-    bool isStreamBidirectional = (numCaptureChannels > 0) && (numPlaybackChannels > 0);
-    bool isUnsupportedSampleRate = isStreamBidirectional && (mRate == 0.0);
+    // common sample rate supported by both the input and output devices:
+    // PortAudioStream::Prepare() then picks one where it can.
 
     // July 2016 (Carsten and Uwe)
     // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using
@@ -470,122 +456,28 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
     mNumPlaybackChannels = numPlaybackChannels;
     mNumCaptureChannels = numCaptureChannels;
 
-    bool usePlayback = false, useCapture = false;
-    PaStreamParameters playbackParameters{};
-    PaStreamParameters captureParameters{};
-
-   #ifdef __WXMSW__
-    PaWasapiStreamInfo wasapiStreamInfo{};
-   #endif
-
-    auto latencyDuration = AudioIOLatencyDuration.Read();
-
+    PortAudioStream::Request request;
+    request.numPlaybackChannels = numPlaybackChannels;
+    request.numCaptureChannels = numCaptureChannels;
+    // regardless of source formats, we always mix to float
+    request.playbackFormat = paFloat32;
+    request.captureFormat = AudacityToPortAudioSampleFormat(mCaptureFormat);
+    request.rate = mRate;
+    request.softwarePlaythrough = mSoftwarePlaythrough;
+    PortAudioStream::Parameters parameters;
+    mLastPaError = PortAudioStream::Prepare(request, parameters);
+    if (mLastPaError != paNoError) {
+        return false;
+    }
+    mRate = parameters.rate;
     if (numPlaybackChannels > 0) {
-        usePlayback = true;
-
-        // this sets the device index to whatever is "right" based on preferences,
-        // then defaults
-        playbackParameters.device = DeviceManager::getPlayDevIndex();
-
-        const PaDeviceInfo* playbackDeviceInfo;
-        playbackDeviceInfo = Pa_GetDeviceInfo(playbackParameters.device);
-
-        if (playbackDeviceInfo == NULL || playbackDeviceInfo->maxOutputChannels <= 0) {
-            mLastPaError = paInvalidDevice;
-            return false;
-        }
-
-        // regardless of source formats, we always mix to float
-        playbackParameters.sampleFormat = paFloat32;
-        playbackParameters.hostApiSpecificStreamInfo = NULL;
-        playbackParameters.channelCount = mNumPlaybackChannels;
-
-        const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
-        bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
-        bool isMME = (hostInfo && hostInfo->type == paMME);
-
-      #ifdef __WXMSW__
-        // If the host API is WASAPI, the stream is bidirectional and there is no
-        // supported sample rate enable the WASAPI Sample Rate Conversion
-        // for the playback device.
-        if (isWASAPI && isUnsupportedSampleRate) {
-            wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
-            wasapiStreamInfo.hostApiType = paWASAPI;
-            wasapiStreamInfo.version = 1;
-            wasapiStreamInfo.flags = paWinWasapiAutoConvert;
-
-            playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
-        }
-      #endif
-
-        if (mSoftwarePlaythrough && !isMME) {
-            playbackParameters.suggestedLatency
-                =playbackDeviceInfo->defaultLowOutputLatency;
-        } else {
-            // When using WASAPI, the suggested latency does not affect
-            // the latency of the playback, but the position of playback is given as if
-            // there was the suggested latency. This results in the last "suggested latency"
-            // of a selection not being played. So for WASAPI use 0.0 for the suggested
-            // latency regardless of user setting. See bug 1949.
-            playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration / 1000.0;
-        }
-
         mOutputMeter = options.playbackMeter;
     }
-
     if (numCaptureChannels > 0) {
-        useCapture = true;
-
-        const PaDeviceInfo* captureDeviceInfo;
-        // retrieve the index of the device set in the prefs, or a sensible
-        // default if it isn't set/valid
-        captureParameters.device = DeviceManager::getRecordDevIndex();
-
-        captureDeviceInfo = Pa_GetDeviceInfo(captureParameters.device);
-
-        if (captureDeviceInfo == NULL || captureDeviceInfo->maxInputChannels <= 0) {
-            mLastPaError = paInvalidDevice;
-            return false;
-        }
-
-        const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(captureDeviceInfo->hostApi);
-        bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
-        bool isMME = (hostInfo && hostInfo->type == paMME);
-
-        // If the stream is bidirectional and there is no supported sample rate
-        // set mRate to the value supported by the capture device.
-        if (isWASAPI && isUnsupportedSampleRate) {
-            mRate = captureDeviceInfo->defaultSampleRate;
-        }
-
-        captureParameters.sampleFormat
-            =AudacityToPortAudioSampleFormat(mCaptureFormat);
-
-        captureParameters.hostApiSpecificStreamInfo = NULL;
-        captureParameters.channelCount = mNumCaptureChannels;
-
-        if (mSoftwarePlaythrough && !isMME) {
-            captureParameters.suggestedLatency
-                =captureDeviceInfo->defaultHighInputLatency;
-        } else {
-            captureParameters.suggestedLatency = latencyDuration / 1000.0;
-        }
-
         SetCaptureMeter(mOwningProject.lock(), options.captureMeter);
     }
-
-    const auto deviceInfo = usePlayback
-                            ? Pa_GetDeviceInfo(playbackParameters.device)
-                            : Pa_GetDeviceInfo(captureParameters.device);
-
-    if (deviceInfo != nullptr) {
-        const auto hostApiInfo = Pa_GetHostApiInfo(deviceInfo->hostApi);
-
-        if (hostApiInfo) {
-            mUsingAlsa = hostApiInfo->type == paALSA;
-            mUsingJack = hostApiInfo->type == paJACK;
-        }
-    }
+    mUsingAlsa = parameters.usingAlsa;
+    mUsingJack = parameters.usingJack;
 
     StartMeters();
 
@@ -603,66 +495,36 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartTransportOptions& options,
     int userData = 24;
     int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
 
-    // (Linux, bug 1885) After scanning devices it takes a little time for the
-    // ALSA device to be available, so allow retries.
-    // On my test machine, no more than 3 attempts are required.
-    unsigned int maxTries = 1;
-#ifdef __WXGTK__
-    {
-        using namespace std::chrono;
-        if (DeviceManager::Instance()->GetTimeSinceRescan() < 10s) {
-            maxTries = 5;
+    PortAudioStream::Opened opened;
+    mLastPaError = PortAudioStream::Open(parameters, audacityAudioCallback, lpUserData, opened);
+    mPortStreamV19 = opened.stream;
+    if (mLastPaError == paNoError) {
+        const auto stream = Pa_GetStreamInfo(mPortStreamV19);
+        // Use the reported latency as a hint about the hardware buffer size
+        // required for uninterrupted playback.
+        const auto outputLatency = opened.outputLatency;
+
+        if (AudioIOAutomaticLatencyCompensation.Read()) {
+            mCaptureSink.Schedule().mLatencyCompensation = -opened.inputLatency - outputLatency;
         }
-    }
-#endif
 
-    for (unsigned int tries = 0; tries < maxTries; tries++) {
-        mLastPaError = Pa_OpenStream(&mPortStreamV19,
-                                     useCapture ? &captureParameters : NULL,
-                                     usePlayback ? &playbackParameters : NULL,
-                                     mRate, paFramesPerBufferUnspecified,
-                                     paNoFlag,
-                                     audacityAudioCallback, lpUserData);
-        if (mLastPaError == paNoError) {
-            const auto stream = Pa_GetStreamInfo(mPortStreamV19);
-            // Use the reported latency as a hint about the hardware buffer size
-            // required for uninterrupted playback.
-            const auto outputLatency
-                =mUsingJack
-                  ? // When using Jack as a host, PA calculates the wrong latency
-                    // if a non system port is used. Assume, that Jack provides a very
-                    // low latency, lower than user requested
-                    // (https://github.com/audacity/audacity/issues/4646)
-                  (latencyDuration / 1000.0)
-                  : // Otherwise, use the (likely incorrect) latency reported by PA
-                  stream->outputLatency;
-
-            if (AudioIOAutomaticLatencyCompensation.Read()) {
-                mCaptureSink.Schedule().mLatencyCompensation = -stream->inputLatency - outputLatency;
-            }
-
-            mHardwarePlaybackLatencyMs = outputLatency * 1000.0;
-            mHardwareCaptureLatencyMs = stream->inputLatency * 1000.0;
-            mHardwarePlaybackLatencyFrames = lrint(outputLatency * stream->sampleRate);
+        mHardwarePlaybackLatencyMs = outputLatency * 1000.0;
+        mHardwareCaptureLatencyMs = opened.inputLatency * 1000.0;
+        mHardwarePlaybackLatencyFrames = lrint(outputLatency * stream->sampleRate);
 #ifdef __WXGTK__
-            // DV: When using ALSA PortAudio does not report the buffer size.
-            // Instead, it reports periodSize * (periodsCount - 1). It is impossible
-            // to retrieve periodSize or periodsCount either. By default PA sets
-            // periodsCount to 4. However it was observed, that PA reports back ~100msec
-            // latency and expects a buffer of ~200msecs on Audacity default settings
-            // which suggests that ALSA changes the periodsCount to suit its needs.
-            //
-            // Why 3? 2 doesn't work for me, 3 does :-) So similar to PA - this
-            // is the value that works for author setup.
-            if (mUsingAlsa) {
-                mHardwarePlaybackLatencyFrames *= 3;
-            }
-#endif
-            break;
+        // DV: When using ALSA PortAudio does not report the buffer size.
+        // Instead, it reports periodSize * (periodsCount - 1). It is impossible
+        // to retrieve periodSize or periodsCount either. By default PA sets
+        // periodsCount to 4. However it was observed, that PA reports back ~100msec
+        // latency and expects a buffer of ~200msecs on Audacity default settings
+        // which suggests that ALSA changes the periodsCount to suit its needs.
+        //
+        // Why 3? 2 doesn't work for me, 3 does :-) So similar to PA - this
+        // is the value that works for author setup.
+        if (mUsingAlsa) {
+            mHardwarePlaybackLatencyFrames *= 3;
         }
-        wxLogDebug("Attempt %u to open capture stream failed with: %d", 1 + tries, mLastPaError);
-        using namespace std::chrono;
-        std::this_thread::sleep_for(1s);
+#endif
     }
 
 #if USE_PORTMIXER
