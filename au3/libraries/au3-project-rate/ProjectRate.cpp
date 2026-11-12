@@ -10,7 +10,6 @@ Paul Licameli split from ProjectSettings.cpp
 
 #include "ProjectRate.h"
 
-#include "au3-audio-devices/AudioIOBase.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-project/Project.h"
 #include "QualitySettings.h"

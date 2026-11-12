@@ -13,7 +13,7 @@
 #ifndef __AUDACITY_AUDIO_IO__
 #define __AUDACITY_AUDIO_IO__
 
-#include "au3-audio-devices/AudioIOBase.h" // to inherit
+#include "au3-audio-io/AudioIOBase.h" // to inherit
 #include "au3-mixer/AudioIOSequences.h"
 #include "au3-recording/CaptureSink.h" // member variable
 #include "PlaybackSchedule.h" // member variable
