@@ -31,7 +31,7 @@ Paul Licameli -- split from ProjectFileIO.cpp
 
 static const char* PageSizeConfig
     ="PRAGMA <schema>.page_size = " xstr(AUDACITY_PROJECT_PAGE_SIZE) ";"
-                                                                     "VACUUM;";
+                                                                     "VACUUM <schema>;";
 
 // Configuration to provide "safe" connections
 static const char* SafeConfig
@@ -365,8 +365,9 @@ int DBConnection::SetPageSize(const char* schema)
     // so if DB is empty we can assume that journal was not
     // set to WAL yet.
     sqlite3_stmt* stmt = nullptr;
-    int rc = sqlite3_prepare_v2(mDB, "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'project')", -1, &stmt,
-                                nullptr);
+    const wxString sql = wxString::Format(
+        "SELECT EXISTS(SELECT 1 FROM %s.sqlite_master WHERE type = 'table' AND name = 'project')", schema);
+    int rc = sqlite3_prepare_v2(mDB, sql.ToUTF8(), -1, &stmt, nullptr);
 
     if (rc == SQLITE_OK) {
         auto finalizer = finally([&stmt] { sqlite3_finalize(stmt); });

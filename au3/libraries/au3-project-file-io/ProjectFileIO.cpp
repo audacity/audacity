@@ -1118,6 +1118,10 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
         return false;
     }
 
+    if (pConn->SetPageSize("outbound") != SQLITE_OK) {
+        wxLogError(wxT("Failed to set the page size of %s"), destpath);
+    }
+
     // Install our schema into the new database
     if (!InstallSchema(db, "outbound")) {
         // Message already set
