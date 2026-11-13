@@ -79,6 +79,8 @@ private:
 
     muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
 
+    double playableEndTime() const;
+
     void updateStreamState();
     void updatePlaybackState();
 
