@@ -31,6 +31,7 @@
 #include "framework/interactive/iinteractive.h"
 
 #include "audio/driver/iaudiodrivercontroller.h"
+#include "audio/iaudiobackendselector.h"
 #include "ui/iuiconfiguration.h"
 
 namespace au::appshell {
@@ -41,6 +42,9 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     friend class CommonAudioApiConfigurationModelTests;
 
+    Q_PROPERTY(QStringList audioEngineList READ audioEngineList CONSTANT)
+    Q_PROPERTY(int currentAudioEngineIndex READ currentAudioEngineIndex NOTIFY currentAudioEngineIndexChanged)
+
     Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
 
     Q_PROPERTY(int currentOutputDeviceIndex READ currentOutputDeviceIndex NOTIFY currentOutputDeviceIndexChanged)
@@ -50,6 +54,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     Q_PROPERTY(QVariantList inputDeviceList READ inputDeviceList NOTIFY inputDeviceListChanged)
 
     Q_PROPERTY(double bufferLength READ bufferLength NOTIFY bufferLengthChanged)
+    Q_PROPERTY(double softwareBufferLength READ softwareBufferLength NOTIFY softwareBufferLengthChanged)
     Q_PROPERTY(bool automaticCompensationEnabled READ automaticCompensationEnabled NOTIFY automaticCompensationEnabledChanged)
     Q_PROPERTY(double latencyCompensation READ latencyCompensation NOTIFY latencyCompensationChanged)
 
@@ -71,6 +76,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+    muse::GlobalInject<audio::IAudioBackendSelector> audioBackendSelector;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
 
@@ -82,6 +88,12 @@ public:
     Q_INVOKABLE bool apply();
 
     int currentAudioApiIndex() const;
+    //! The audio backends, if there is a choice
+    QStringList audioEngineList() const;
+    int currentAudioEngineIndex() const;
+    //! Applies at once, other pending changes discarded: the other settings are the engine's
+    Q_INVOKABLE void audioEngineSelected(int index);
+
     Q_INVOKABLE QStringList audioApiList() const;
     Q_INVOKABLE void setCurrentAudioApiIndex(int index);
 
@@ -95,6 +107,8 @@ public:
 
     double bufferLength() const;
     Q_INVOKABLE void bufferLengthSelected(const QString& bufferLengthStr);
+    double softwareBufferLength() const;
+    Q_INVOKABLE void softwareBufferLengthSelected(const QString& softwareBufferLengthStr);
 
     bool automaticCompensationEnabled() const;
     Q_INVOKABLE void setAutomaticCompensationEnabled(bool enabled);
@@ -131,6 +145,7 @@ public:
     Q_INVOKABLE void showAsioControlPanel();
 
 signals:
+    void currentAudioEngineIndexChanged();
     void currentAudioApiIndexChanged();
 
     void currentOutputDeviceIndexChanged();
@@ -140,6 +155,7 @@ signals:
     void inputDeviceListChanged();
 
     void bufferLengthChanged();
+    void softwareBufferLengthChanged();
     void latencyCompensationChanged();
     void automaticCompensationEnabledChanged();
 

@@ -33,7 +33,7 @@ EffectBase::EffectBase()
 {
     // PRL:  I think this initialization of mProjectRate doesn't matter
     // because it is always reassigned in DoEffect before it is used
-    // STF: but can't call AudioIOBase::GetOptimalSupportedSampleRate() here.
+    // STF: but can't call DeviceManager::GetOptimalSupportedSampleRate() here.
     // (Which is called to compute the default-default value.)  (Bug 2280)
     mProjectRate = QualitySettings::DefaultSampleRate.ReadWithDefault(44100);
 }

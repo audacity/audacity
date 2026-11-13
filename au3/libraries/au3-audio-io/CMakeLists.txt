@@ -12,20 +12,19 @@ set( TARGET au3-audio-io )
 set( SOURCES
    AudioIO.cpp
    AudioIO.h
+   AudioIOBase.cpp
+   AudioIOBase.h
    AudioIOExt.cpp
    AudioIOExt.h
-   AudioIOListener.cpp
-   AudioIOListener.h
    PlaybackSchedule.cpp
    PlaybackSchedule.h
    ProjectAudioIO.cpp
    ProjectAudioIO.h
-   RingBuffer.cpp
-   RingBuffer.h
 )
 set( LIBRARIES
 PUBLIC
    au3-audio-devices
+   au3-recording
    au3-components
    au3-math
    au3-mixer

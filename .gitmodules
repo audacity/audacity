@@ -4,3 +4,6 @@
 [submodule "muse_deps"]
 	path = muse_deps
 	url = https://github.com/musescore/muse_deps.git
+[submodule "thirdparty/JUCE"]
+	path = thirdparty/JUCE
+	url = https://github.com/juce-framework/JUCE.git

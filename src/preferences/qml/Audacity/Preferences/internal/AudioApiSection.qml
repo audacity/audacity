@@ -46,6 +46,24 @@ BaseSection {
             spacing: root.spacing
 
             ComboBoxWithTitle {
+                title: qsTrc("preferences", "Audio engine")
+                columnWidth: root.columnWidth
+
+                visible: apiModel.audioEngineList.length > 1
+                currentIndex: apiModel.currentAudioEngineIndex
+                model: apiModel.audioEngineList
+
+                navigation.name: "AudioEngineBox"
+                navigation.panel: root.navigation
+                navigation.row: 0
+                navigation.column: 0
+
+                onValueEdited: function (newIndex, newValue) {
+                    apiModel.audioEngineSelected(newIndex)
+                }
+            }
+
+            ComboBoxWithTitle {
                 title: qsTrc("preferences", "Host")
                 columnWidth: root.columnWidth
 

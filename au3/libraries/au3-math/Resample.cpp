@@ -113,3 +113,8 @@ void Resample::SetMethod(const bool useBestMethod)
         mMethod = FastMethodSetting.ReadEnum();
     }
 }
+
+void Resample::Reset()
+{
+    soxr_clear(mHandle.get());
+}

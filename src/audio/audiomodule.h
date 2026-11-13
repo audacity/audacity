@@ -8,7 +8,9 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::audio {
+class AudioEngineSwitcher;
 class AudioThreadSecurer;
+class ISystemAudioDevicesListener;
 class AudioModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -18,7 +20,10 @@ private:
     std::string moduleName() const override;
     void registerExports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
+    void onDeinit() override;
 
     const std::shared_ptr<AudioThreadSecurer> m_audioThreadSecurer;
+    const std::shared_ptr<AudioEngineSwitcher> m_audioEngineSwitcher;
+    const std::shared_ptr<ISystemAudioDevicesListener> m_systemAudioDevicesListener;
 };
 }

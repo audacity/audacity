@@ -117,6 +117,15 @@ void RealtimeEffectManager::ProcessStart(bool suspended)
     });
 }
 
+void RealtimeEffectManager::ProcessStart(bool suspended, const std::vector<const ChannelGroup*>& groups)
+{
+    for (const auto group : groups) {
+        VisitGroup(group, [suspended](RealtimeEffectState& state, bool listIsActive){
+            state.ProcessStart(!suspended && listIsActive);
+        });
+    }
+}
+
 // This will be called in a thread other than the main GUI thread.
 //
 size_t RealtimeEffectManager::Process(bool suspended,
@@ -190,6 +199,15 @@ void RealtimeEffectManager::ProcessEnd(bool suspended) noexcept
     VisitAll([suspended](RealtimeEffectState& state, bool){
         state.ProcessEnd();
     });
+}
+
+void RealtimeEffectManager::ProcessEnd(bool suspended, const std::vector<const ChannelGroup*>& groups) noexcept
+{
+    for (const auto group : groups) {
+        VisitGroup(group, [](RealtimeEffectState& state, bool){
+            state.ProcessEnd();
+        });
+    }
 }
 
 std::shared_ptr<RealtimeEffectState>

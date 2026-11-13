@@ -15,6 +15,7 @@
 #include "au3-utility/MessageBuffer.h"
 #include "au3-mixer/Mix.h"
 #include "au3-utility/Observer.h"
+#include "au3-recording/RecordingSchedule.h"
 #include <atomic>
 #include <chrono>
 #include <vector>
@@ -22,28 +23,10 @@
 class AudacityProject;
 struct AudioIOStartTransportOptions;
 class BoundedEnvelope;
-using PRCrossfadeData = std::vector< std::vector < float > >;
 
 // This can become a bottleneck to the update rate of the playhead position.
 // Let's set this to 10ms at 48kHz. Even at 16kHz, that'd be a refresh rate of 33fps.
 constexpr size_t TimeQueueGrainSize = 480;
-
-struct RecordingSchedule {
-    double mLeadInTime{};
-    double mLatencyCompensation{}; // negative value usually
-    double mDuration{};
-    PRCrossfadeData mCrossfadeData;
-
-    // These are initialized by the main thread, then updated
-    // only by the thread calling SequenceBufferExchange:
-    double mPosition{};
-    bool mLatencyCorrected{};
-
-    double TotalCorrection() const { return mLatencyCompensation - mLeadInTime; }
-    double ToConsume() const;
-    double Consumed() const;
-    double ToDiscard() const;
-};
 
 class Mixer;
 struct PlaybackSchedule;

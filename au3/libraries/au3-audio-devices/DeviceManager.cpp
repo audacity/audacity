@@ -24,8 +24,9 @@
 #endif
 
 #include "au3-preferences/Prefs.h"
+#include "au3-utility/IteratorX.h"
 
-#include "AudioIOBase.h"
+#include "AudioDeviceSettings.h"
 
 #include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
 
@@ -435,11 +436,7 @@ void DeviceManager::Rescan()
 
     // if we are doing a second scan then restart portaudio to get NEW devices
     if (m_inited) {
-        // check to see if there is a stream open - can happen if monitoring,
-        // but otherwise Rescan() should not be available to the user.
-        auto gAudioIO = AudioIOBase::Get();
-        gAudioIO->StopMonitoring(); // TODO Inject and use IAudioEngine instead
-
+        // No stream must be open: the caller stops any first, monitoring included
         // restart portaudio - this updates the device list
         // FIXME: TRAP_ERR restarting PortAudio
         Pa_Terminate();
@@ -543,3 +540,436 @@ void DeviceManager::DeviceChangeNotification()
 
 #endif
 #endif
+
+std::map<int, std::vector<long> > DeviceManager::mCachedPlaybackRates;
+std::map<int, std::vector<long> > DeviceManager::mCachedCaptureRates;
+std::map<std::pair<int, int>, std::vector<long> > DeviceManager::mCachedSampleRates;
+
+const int DeviceManager::StandardRates[] = {
+    8000,
+    11025,
+    16000,
+    22050,
+    32000,
+    44100,
+    48000,
+    88200,
+    96000,
+    176400,
+    192000,
+    352800,
+    384000
+};
+
+const int DeviceManager::NumStandardRates = WXSIZEOF(DeviceManager::StandardRates);
+
+const int DeviceManager::RatesToTry[] = {
+    8000,
+    9600,
+    11025,
+    12000,
+    15000,
+    16000,
+    22050,
+    24000,
+    32000,
+    44100,
+    48000,
+    88200,
+    96000,
+    176400,
+    192000,
+    352800,
+    384000
+};
+const int DeviceManager::NumRatesToTry = WXSIZEOF(DeviceManager::RatesToTry);
+
+bool DeviceManager::IsPlaybackRateSupported(int devIndex, long rate)
+{
+    if (devIndex == -1) { // weren't given a device index, get the prefs / default one
+        devIndex = getPlayDevIndex();
+    }
+
+    // Check if we can use the cached rate
+    if (mCachedPlaybackRates.count(devIndex)
+        && (make_iterator_range(mCachedPlaybackRates.at(devIndex)).contains(rate))) {
+        return true;
+    }
+
+    auto devInfo = Pa_GetDeviceInfo(devIndex);
+
+    if (!devInfo) {
+        wxLogDebug(wxT("IsPlaybackRateSupported() Could not get device info!"));
+        return false;
+    }
+
+    // LLL: Remove when a proper method of determining actual supported
+    //      DirectSound rate is devised.
+    const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(devInfo->hostApi);
+    bool isDirectSound = (hostInfo && hostInfo->type == paDirectSound);
+
+    PaStreamParameters pars;
+
+    pars.device = devIndex;
+    pars.channelCount = 1;
+    pars.sampleFormat = paFloat32;
+    pars.suggestedLatency = devInfo->defaultHighOutputLatency;
+    pars.hostApiSpecificStreamInfo = NULL;
+
+    // JKC: PortAudio Errors handled OK here.  No need to report them
+
+    // LLL: Remove when a proper method of determining actual supported
+    //      DirectSound rate is devised.
+    if (!(isDirectSound && rate > 200000)) {
+        if (Pa_IsFormatSupported(NULL, &pars, rate) == 0) {
+            mCachedPlaybackRates[devIndex].push_back(rate);
+            return true;
+        }
+    }
+    return false;
+}
+
+bool DeviceManager::IsCaptureRateSupported(int devIndex, long rate)
+{
+    if (devIndex == -1) { // not given a device, look up in prefs / default
+        devIndex = getRecordDevIndex();
+    }
+
+    // Check if we can use the cached rate
+    if (mCachedCaptureRates.count(devIndex)
+        && (make_iterator_range(mCachedCaptureRates.at(devIndex)).contains(rate))) {
+        return true;
+    }
+
+    auto devInfo = Pa_GetDeviceInfo(devIndex);
+
+    if (!devInfo) {
+        wxLogDebug(wxT("IsCaptureRateSupported() Could not get device info!"));
+        return false;
+    }
+
+    auto latencyDuration = AudioIOLatencyDuration.Read();
+    // Why not defaulting to 2 as elsewhere?
+    auto recordChannels = AudioIORecordChannels.ReadWithDefault(1);
+
+    // LLL: Remove when a proper method of determining actual supported
+    //      DirectSound rate is devised.
+    const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(devInfo->hostApi);
+    bool isDirectSound = (hostInfo && hostInfo->type == paDirectSound);
+
+    PaStreamParameters pars;
+
+    pars.device = devIndex;
+    pars.channelCount = recordChannels;
+    pars.sampleFormat = paFloat32;
+    pars.suggestedLatency = latencyDuration / 1000.0;
+    pars.hostApiSpecificStreamInfo = NULL;
+
+    // LLL: Remove when a proper method of determining actual supported
+    //      DirectSound rate is devised.
+    if (!(isDirectSound && rate > 200000)) {
+        if (Pa_IsFormatSupported(&pars, NULL, rate) == 0) {
+            mCachedCaptureRates[devIndex].push_back(rate);
+            return true;
+        }
+    }
+    return false;
+}
+
+std::vector<long> DeviceManager::GetSupportedPlaybackRates(int devIndex)
+{
+    if (devIndex == -1) { // weren't given a device index, get the prefs / default one
+        devIndex = getPlayDevIndex();
+    }
+
+    std::vector<long> supportedRates;
+
+    for (const long rate : RatesToTry) {
+        if (IsPlaybackRateSupported(devIndex, rate)) {
+            supportedRates.push_back(rate);
+        }
+        Pa_Sleep(10);   // There are ALSA drivers that don't like being probed
+                        // too quickly.
+    }
+
+    return supportedRates;
+}
+
+std::vector<long> DeviceManager::GetSupportedCaptureRates(int devIndex)
+{
+    if (devIndex == -1) { // weren't given a device index, get the prefs / default one
+        devIndex = getRecordDevIndex();
+    }
+
+    std::vector<long> supportedRates;
+
+    for (const long rate : RatesToTry) {
+        if (IsCaptureRateSupported(devIndex, rate)) {
+            supportedRates.push_back(rate);
+        }
+        Pa_Sleep(10);   // There are ALSA drivers that don't like being probed
+                        // too quickly.
+    }
+
+    return supportedRates;
+}
+
+long DeviceManager::GetClosestSupportedPlaybackRate(int devIndex, long rate)
+{
+    long supportedRate = 0;
+    if (devIndex == -1) { // weren't given a device index, get the prefs / default one
+        devIndex = getPlayDevIndex();
+    }
+
+    if (rate == 0.0) { // not given a correct rate
+        return 0;
+    }
+
+    // First we will probe the requested state
+    std::vector<long> rates = { rate };
+    // Next default rates higher than requested
+    auto higherRatesIt = std::upper_bound(RatesToTry, RatesToTry + NumRatesToTry, rate);
+    std::copy(higherRatesIt, RatesToTry + NumRatesToTry, std::back_inserter(rates));
+    // Last default rates lower than requested in reverse order
+    auto lowerRatesIt = std::lower_bound(RatesToTry, RatesToTry + NumRatesToTry, rate);
+    std::copy(std::make_reverse_iterator(lowerRatesIt), std::make_reverse_iterator(RatesToTry),
+              std::back_inserter(rates));
+
+    for (const long rateToTry : rates) {
+        if (IsPlaybackRateSupported(devIndex, rateToTry)) {
+            supportedRate = rateToTry;
+            break;
+        }
+        Pa_Sleep(10);   // There are ALSA drivers that don't like being probed
+                        // too quickly.
+    }
+
+    return supportedRate;
+}
+
+long DeviceManager::GetClosestSupportedCaptureRate(int devIndex, long rate)
+{
+    long supportedRate = 0;
+    if (devIndex == -1) { // not given a device, look up in prefs / default
+        devIndex = getRecordDevIndex();
+    }
+
+    if (rate == 0) { // not given a correct rate
+        return supportedRate;
+    }
+
+    // Check if we can use the cached rate
+    if (mCachedCaptureRates.count(devIndex)
+        && (make_iterator_range(mCachedCaptureRates[devIndex]).contains(rate))) {
+        supportedRate = rate;
+        return supportedRate;
+    }
+
+    // First we will probe the requested state
+    std::vector<long> rates = { rate };
+
+    // Next default rates higher than requested
+    auto higherRatesIt = std::upper_bound(RatesToTry, RatesToTry + NumRatesToTry, rate);
+    std::copy(higherRatesIt, RatesToTry + NumRatesToTry, std::back_inserter(rates));
+
+    // Last default rates lower than requested in reverse order
+    auto lowerRatesIt = std::lower_bound(RatesToTry, RatesToTry + NumRatesToTry, rate);
+    std::copy(std::make_reverse_iterator(lowerRatesIt), std::make_reverse_iterator(RatesToTry),
+              std::back_inserter(rates));
+
+    for (const long rateToTry : rates) {
+        if (IsCaptureRateSupported(devIndex, rateToTry)) {
+            supportedRate = rateToTry;
+            break;
+        }
+        Pa_Sleep(10);   // There are ALSA drivers that don't like being probed
+                        // too quickly.
+    }
+
+    return supportedRate;
+}
+
+long DeviceManager::GetClosestSupportedSampleRate(
+    int playDevice, int recDevice, long rate)
+{
+    long supportedRate = 0;
+
+    // Not given device indices, look up prefs
+    if (playDevice == -1) {
+        playDevice = getPlayDevIndex();
+    }
+    if (recDevice == -1) {
+        recDevice = getRecordDevIndex();
+    }
+
+    // Check if we can use the cached rates
+    std::pair<int, int> devicePair { playDevice, recDevice };
+    if (mCachedSampleRates.count(devicePair)
+        && make_iterator_range(mCachedSampleRates.at(devicePair)).contains(rate)) {
+        return rate;
+    }
+
+    // First we will probe the requested state
+    std::vector<long> rates { rate };
+
+    // Next default rates higher than requested
+    auto higherRatesIt = std::upper_bound(RatesToTry, RatesToTry + NumRatesToTry, rate);
+    std::copy(higherRatesIt, RatesToTry + NumRatesToTry, std::back_inserter(rates));
+
+    // Last default rates lower than requested in reverse order
+    auto lowerRatesIt = std::lower_bound(RatesToTry, RatesToTry + NumRatesToTry, rate);
+    std::copy(std::make_reverse_iterator(lowerRatesIt), std::make_reverse_iterator(RatesToTry),
+              std::back_inserter(rates));
+
+    for (const long rateToTry : rates) {
+        if (IsPlaybackRateSupported(playDevice, rateToTry)
+            && IsCaptureRateSupported(recDevice, rateToTry)) {
+            supportedRate = rateToTry;
+            break;
+        }
+        Pa_Sleep(10);   // There are ALSA drivers that don't like being probed
+                        // too quickly.
+    }
+
+    mCachedSampleRates[devicePair].push_back(supportedRate);
+
+    return supportedRate;
+}
+
+std::vector<long> DeviceManager::GetSupportedSampleRates(int playDevice, int recDevice)
+{
+    // Not given device indices, look up prefs
+    if (playDevice == -1) {
+        playDevice = getPlayDevIndex();
+    }
+    if (recDevice == -1) {
+        recDevice = getRecordDevIndex();
+    }
+
+    auto playback = GetSupportedPlaybackRates(playDevice);
+    auto capture = GetSupportedCaptureRates(recDevice);
+
+    // Return only sample rates which are in both arrays
+    std::vector<long> result;
+
+    std::set_intersection(playback.begin(), playback.end(),
+                          capture.begin(), capture.end(),
+                          std::back_inserter(result));
+
+    return result;
+}
+
+int DeviceManager::GetOptimalSupportedSampleRate()
+{
+    // for ASIO use the last known device rate
+    const int playDevice = getPlayDevIndex();
+    if (DeviceManager::IsAsioDevice(playDevice)) {
+        const PaDeviceInfo* info = Pa_GetDeviceInfo(playDevice);
+        if (info && info->defaultSampleRate > 0) {
+            return static_cast<int>(info->defaultSampleRate);
+        }
+        return 44100;
+    }
+
+    auto rate = GetClosestSupportedSampleRate(-1, -1, 44100);
+
+    // if there are no supported rates, the next bit crashes. So check first,
+    // and give them a "sensible" value if there are no valid values. They
+    // will still get an error later, but with any luck may have changed
+    // something by then. It's no worse than having an invalid default rate
+    // stored in the preferences, which we don't check for
+    if (rate == 0) {
+        return 44100;
+    }
+
+    return rate;
+}
+
+int DeviceManager::getPlayDevIndex(const wxString& devNameArg)
+{
+    wxString devName(devNameArg);
+    // if we don't get given a device, look up the preferences
+    if (devName.empty()) {
+        devName = AudioIOPlaybackDevice.Read();
+    }
+
+    wxString hostName = AudioIOHost.Read();
+
+    if (!devName.empty()) {
+        int deviceIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(hostName.ToStdString(wxConvUTF8), devName.ToStdString(
+                                                                                wxConvUTF8));
+        if (deviceIndex >= 0) {
+            return deviceIndex;
+        }
+    }
+
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(hostName.ToStdString(wxConvUTF8));
+    if (const DeviceSourceMap* defaultDevice = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex)) {
+        return defaultDevice->deviceIndex;
+    }
+
+    // Use the default output device.
+    // FIXME: TRAP_ERR PaErrorCode not handled well (this code is similar to input code
+    // and the input side has more comments.)
+
+    PaDeviceIndex deviceNum = Pa_GetDefaultOutputDevice();
+
+    // Sometimes PortAudio returns -1 if it cannot find a suitable default
+    // device, so we just use the first one available
+    //
+    // LL:  At this point, preferences and active no longer match
+    //
+    //      And I can't imagine how far we'll get specifying an "invalid" index later
+    //      on...are we certain "0" even exists?
+    if (deviceNum < 0) {
+        deviceNum = 0;
+    }
+
+    return deviceNum;
+}
+
+int DeviceManager::getRecordDevIndex(const wxString& devNameArg)
+{
+    wxString devName(devNameArg);
+    // if we don't get given a device, look up the preferences
+    if (devName.empty()) {
+        devName = AudioIORecordingDevice.Read();
+    }
+
+    wxString hostName = AudioIOHost.Read();
+
+    if (!devName.empty()) {
+        int deviceIndex = DeviceManager::Instance()->GetInputDevicePaIndex(
+            hostName.ToStdString(wxConvUTF8), devName.ToStdString(wxConvUTF8));
+        if (deviceIndex >= 0) {
+            return deviceIndex;
+        }
+    }
+
+    const int hostIndex = DeviceManager::Instance()->GetHostIndex(hostName.ToStdString(wxConvUTF8));
+    if (const DeviceSourceMap* defaultDevice = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex)) {
+        return defaultDevice->deviceIndex;
+    }
+
+    // Use the default input device
+    // FIXME: TRAP_ERR PaErrorCode not handled well in getRecordDevIndex()
+    PaDeviceIndex deviceNum = Pa_GetDefaultInputDevice();
+
+    // Sometimes PortAudio returns -1 if it cannot find a suitable default
+    // device, so we just use the first one available
+    // PortAudio has an error reporting function.  We should log/report the error?
+    //
+    // LL:  At this point, preferences and active no longer match
+    //
+    //      And I can't imagine how far we'll get specifying an "invalid" index later
+    //      on...are we certain "0" even exists?
+    if (deviceNum < 0) {
+        // JKC: This will happen if you run with no config file
+        // This happens once.  Config file will exist on the next run.
+        // TODO: Look into this a bit more.  Could be relevant to blank Device Toolbar.
+        wxLogDebug("PortAudio returns -1, cannot find a suitable default device, so we just use the first one available");
+        deviceNum = 0;
+    }
+
+    return deviceNum;
+}

@@ -7,13 +7,16 @@ set(MODULE_TEST au3audio_tests)
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
 
-    ${CMAKE_CURRENT_LIST_DIR}/au3audiodrivercontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/audiodrivercontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/audioengineswitcher_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3audioio_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/audioenginemock.h
     )
 
 set(MODULE_TEST_LINK
+    audio
     au3audio
+    portaudiodevices
     au3wrap
     au3-audio-io
     portaudio::portaudio

@@ -134,7 +134,6 @@ set(MODULE_SRC
 
 set(MODULE_LINK
         au3wrap
-        au3-audio-io
         au3-basic-ui
         au3-command-parameters
         au3-components

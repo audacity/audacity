@@ -18,6 +18,8 @@ struct AudioConfiguration {
     AudioDeviceSelection inputDevice;
     int inputChannels = 1;
     double bufferLength = 0.0;
+    //! In ms: how far ahead of the device the new audio engine renders the tracks
+    double softwareBufferLength = 0.0;
     bool automaticLatencyCompensation = false;
     double latencyCompensation = 0.0;
     uint64_t defaultSampleRate = 0;
@@ -31,6 +33,7 @@ struct AudioConfigurationChange {
     std::optional<AudioDeviceSelection> inputDevice;
     std::optional<int> inputChannels;
     std::optional<double> bufferLength;
+    std::optional<double> softwareBufferLength;
     std::optional<bool> automaticLatencyCompensation;
     std::optional<double> latencyCompensation;
     std::optional<uint64_t> defaultSampleRate;
@@ -50,6 +53,7 @@ enum class AudioConfigurationField : uint32_t {
     DefaultSampleRate = 1 << 7,
     DefaultSampleFormat = 1 << 8,
     AsioUseDeviceSampleRate = 1 << 9,
+    SoftwareBufferLength = 1 << 10,
 };
 
 using AudioConfigurationFields = uint32_t;
