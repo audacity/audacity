@@ -518,6 +518,96 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_InsideActiveLoopPastProje
 }
 
 /**
+ * @brief SPEC (issue #11477): an inactive loop region past the last clip extends the play range
+ * @details The loop region {90, 120} exists but looping is off; the project ends at 100.
+ *          A disabled loop region still marks how far playback goes, so playing from
+ *          a cursor inside the clip (95) must run to the loop region end, not to the
+ *          clip end. Keep this behaviour: it is the expected one, not a side effect
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_WithInactiveLoopPastProjectEnd_PlaysToTheLoopEnd)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] An inactive loop region {90, 120} extends past the project end (totalTime = 100)
+    ON_CALL(*m_player, loopRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] The cursor and the playhead are at 95s, inside the clip and the loop region
+    const secs_t cursor = 95.0;
+    m_controller->setLastPlaybackSeekTime(cursor);
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(cursor));
+
+    //! [THEN] Playback region runs from the cursor to the loop region end, not the clip end
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { cursor, secs_t(120.0) }))
+    .Times(1);
+
+    //! [THEN] No seek: the playhead is already where playback starts
+    EXPECT_CALL(*m_player, seek(_, _))
+    .Times(0);
+
+    //! [THEN] Player starts playing from the cursor
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(cursor)))
+    .Times(1);
+
+    //! [WHEN] Toggle play
+    togglePlayStop();
+}
+
+/**
+ * @brief SPEC (issue #11477): play again after reaching an inactive loop region end restarts from the cursor
+ * @details Playback ran from the cursor (30) through the clip end to the end of the
+ *          inactive loop region {90, 120} and stopped there. The next play restarts
+ *          from the cursor, never from the project start
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnInactiveLoopRegionEnd_RestartsFromLastSeekPosition)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] An inactive loop region {90, 120} extends past the project end (totalTime = 100)
+    ON_CALL(*m_player, loopRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] The cursor is at 30s
+    const secs_t cursor = 30.0;
+    m_controller->setLastPlaybackSeekTime(cursor);
+
+    //! [GIVEN] The previous playback ran from the cursor and stopped on the loop region end
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { cursor, secs_t(120.0) }));
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(secs_t(120.0)));
+
+    //! [THEN] The playhead is moved back to the cursor, never to the project start
+    EXPECT_CALL(*m_player, seek(cursor, false))
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), _))
+    .Times(0);
+
+    //! [THEN] Playback region runs from the cursor to the loop region end
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { cursor, secs_t(120.0) }))
+    .Times(1);
+
+    //! [THEN] Player starts playing from the cursor
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(cursor)))
+    .Times(1);
+
+    //! [WHEN] Toggle play
+    togglePlayStop();
+
+    //! [THEN] The cursor is preserved
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), cursor);
+}
+
+/**
  * @brief Toggle play when there is selection
  * @details User made a selection, placed the playhead before it and clicked play
  *          A time selection must not constrain playback: it should start from
@@ -1405,6 +1495,122 @@ TEST_F(PlaybackControllerTests, PlaybackPosition_OnProjectEnd_WithActiveLoopPast
     ON_CALL(*m_player, playbackPosition())
     .WillByDefault(Return(secs_t(110.0)));
     m_playbackPositionChanged.send(secs_t(110.0));
+}
+
+/**
+ * @brief SPEC (issue #11477): playback is not stopped on the project end inside an inactive loop region
+ * @details The loop region {90, 120} exists but looping is off; the project ends at 100.
+ *          A disabled loop region still marks how far playback goes: neither a position
+ *          update on the clip end nor one beyond it (the player plays silence up to the
+ *          loop region end) may stop the player. Keep this behaviour: it is the expected
+ *          one, not a side effect
+ */
+TEST_F(PlaybackControllerTests, PlaybackPosition_OnProjectEnd_WithInactiveLoopPastProjectEnd_DoesNotStop)
+{
+    //! [GIVEN] An inactive loop region {90, 120} extends past the project end (totalTime = 100)
+    ON_CALL(*m_player, loopRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] Playback is running from the cursor (30) to the loop region end
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(30.0), secs_t(120.0) }));
+
+    //! [THEN] Player is never stopped and the playhead is not moved
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, seek(_, _))
+    .Times(0);
+
+    //! [WHEN] Playback position landed exactly on the project end
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(100.0)));
+    m_playbackPositionChanged.send(secs_t(100.0));
+
+    //! [WHEN] Playback position is past the project end, inside the loop region
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(110.0)));
+    m_playbackPositionChanged.send(secs_t(110.0));
+}
+
+/**
+ * @brief SPEC (issue #11477): reaching an inactive loop region end past the last clip ends playback at the cursor
+ * @details Playback ran from the cursor (30) through the clip end (100) to the end of
+ *          the inactive loop region {90, 120}. There is nothing more to play: the player
+ *          is stopped and the playhead returns to the cursor, as on the project end
+ */
+TEST_F(PlaybackControllerTests, PlaybackPosition_OnInactiveLoopRegionEnd_PastProjectEnd_StopsAndReturnsToLastSeekPosition)
+{
+    //! [GIVEN] An inactive loop region {90, 120} extends past the project end (totalTime = 100)
+    ON_CALL(*m_player, loopRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] The cursor is at 30s and the playback region runs to the loop region end
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+    const secs_t cursor = 30.0;
+    changePlaybackRegion(cursor, 120.0);
+
+    //! [GIVEN] Playback is running with that region
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { cursor, secs_t(120.0) }));
+
+    //! [GIVEN] Playback position reached the loop region end
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(120.0)));
+
+    //! [THEN] Player is stopped and the playhead returns to the cursor
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(cursor, false))
+    .Times(1);
+
+    //! [WHEN] Playback position changed
+    m_playbackPositionChanged.send(secs_t(120.0));
+
+    //! [THEN] The cursor is preserved
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), cursor);
+}
+
+/**
+ * @brief SPEC (issue #11477): an inactive loop region inside the project does not cut playback short
+ * @details The loop region {40, 60} exists but looping is off, and the project runs on
+ *          to 100. A disabled loop region only extends the play range when it lies past
+ *          the last clip; it never stops playback on its own end mid-project
+ */
+TEST_F(PlaybackControllerTests, PlaybackPosition_OnInactiveLoopRegionEnd_InsideProject_DoesNotStop)
+{
+    //! [GIVEN] An inactive loop region {40, 60} inside the project (totalTime = 100)
+    ON_CALL(*m_player, loopRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(40.0), secs_t(60.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(false));
+
+    //! [GIVEN] Playback is running from the cursor (30) to the project end
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(30.0), secs_t(100.0) }));
+
+    //! [GIVEN] Playback position reached the loop region end
+    ON_CALL(*m_player, playbackPosition())
+    .WillByDefault(Return(secs_t(60.0)));
+
+    //! [THEN] Player is not stopped and the playhead is not moved
+    EXPECT_CALL(*m_player, stop())
+    .Times(0);
+    EXPECT_CALL(*m_player, seek(_, _))
+    .Times(0);
+
+    //! [WHEN] Playback position changed
+    m_playbackPositionChanged.send(secs_t(60.0));
 }
 
 /**
