@@ -27,7 +27,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                     { TRACK_SPECTROGRAM_SETTINGS_TRACK_ID_PARAM, Arg(DataType::Int, u"Id of the track") },
                 }),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
 };
 }

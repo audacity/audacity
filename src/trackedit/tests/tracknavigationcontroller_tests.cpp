@@ -58,8 +58,8 @@ public:
         ON_CALL(*m_playbackController, lastPlaybackSeekTimeChanged())
         .WillByDefault(Return(muse::async::Notification()));
 
-        ON_CALL(*m_commandDispatcher, dispatch(_))
-        .WillByDefault([](const muse::rcommand::Request& request) {
+        ON_CALL(*m_commandDispatcher, dispatch(_, _))
+        .WillByDefault([](const muse::rcommand::Request& request, bool) {
             return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
                 return resolve(muse::rcommand::make_response(request, muse::make_ok()));
             });
@@ -213,7 +213,7 @@ TEST_F(TrackNavigationControllerTests, TabOnClipStepsToNextClip)
     m_controller->setFocus(TrackFocus::item({ 1, 100 }));
 
     //! [EXPECT] Framework panel navigation is NOT dispatched
-    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(0);
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND), _)).Times(0);
 
     //! [WHEN] Tab is pressed
     invokeCommand(TRACK_NAVIGATION_NEXT_PANEL_COMMAND);
@@ -235,7 +235,7 @@ TEST_F(TrackNavigationControllerTests, TabOnLastClipHandsOverToNextPanel)
     m_controller->setFocus(TrackFocus::item({ 1, 200 }));
 
     //! [EXPECT] Framework panel navigation is dispatched
-    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND), _)).Times(1);
 
     //! [WHEN] Tab is pressed
     invokeCommand(TRACK_NAVIGATION_NEXT_PANEL_COMMAND);
@@ -257,7 +257,7 @@ TEST_F(TrackNavigationControllerTests, TabNavigatesToNextPanelWhenNoItems)
     m_controller->setFocus(TrackFocus::track(1));
 
     //! [EXPECT] Framework panel navigation is dispatched
-    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND))).Times(1);
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::NEXT_PANEL_COMMAND), _)).Times(1);
 
     //! [WHEN] Tab is pressed
     invokeCommand(TRACK_NAVIGATION_NEXT_PANEL_COMMAND);
@@ -276,7 +276,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnClipStepsToPrevClip)
     m_controller->setFocus(TrackFocus::item({ 1, 200 }));
 
     //! [EXPECT] Framework panel navigation is NOT dispatched
-    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(0);
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND), _)).Times(0);
 
     //! [WHEN] Shift+Tab is pressed
     invokeCommand(TRACK_NAVIGATION_PREV_PANEL_COMMAND);
@@ -298,7 +298,7 @@ TEST_F(TrackNavigationControllerTests, ShiftTabOnFirstClipHandsOverToPrevPanel)
     m_controller->setFocus(TrackFocus::item({ 1, 100 }));
 
     //! [EXPECT] Framework panel navigation is dispatched
-    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND))).Times(1);
+    EXPECT_CALL(*m_commandDispatcher, dispatch(isPanelCommand(muse::ui::PREV_PANEL_COMMAND), _)).Times(1);
 
     //! [WHEN] Shift+Tab is pressed
     invokeCommand(TRACK_NAVIGATION_PREV_PANEL_COMMAND);

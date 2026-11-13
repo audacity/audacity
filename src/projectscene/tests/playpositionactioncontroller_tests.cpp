@@ -42,7 +42,7 @@ protected:
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
         m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
 
-        ON_CALL(*m_commandDispatcher, dispatch(_))
+        ON_CALL(*m_commandDispatcher, dispatch(_, _))
         .WillByDefault(Invoke(&PlayPositionActionControllerTests::okResponse));
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_project));
@@ -74,7 +74,7 @@ protected:
         delete m_context;
     }
 
-    static muse::async::Promise<muse::rcommand::Response> okResponse(const muse::rcommand::Request& request)
+    static muse::async::Promise<muse::rcommand::Response> okResponse(const muse::rcommand::Request& request, bool)
     {
         return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
             return resolve(muse::rcommand::make_response(request, muse::make_ok()));
@@ -117,7 +117,7 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelectionStart_SeeksToSelectio
     useTimeSelection(5.0, 12.0);
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayPositionActionControllerTests::okResponse)));
 
     m_controller->cursorToSelectionStart();
@@ -132,7 +132,7 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelectionEnd_SeeksToSelectionE
     useTimeSelection(5.0, 12.0);
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayPositionActionControllerTests::okResponse)));
 
     m_controller->cursorToSelectionEnd();
@@ -161,7 +161,7 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelection_NoSelection_DoesNoth
     //! CASE With no time selection there is no edge to move to.
     useEmptyTimeSelection();
 
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->cursorToSelectionStart();
@@ -177,7 +177,7 @@ TEST_F(PlayPositionActionControllerTests, CursorToSelection_WhilePlaying_StillMo
     .WillByDefault(Return(true));
 
     muse::rcommand::Request captured;
-    EXPECT_CALL(*m_commandDispatcher, dispatch(_))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayPositionActionControllerTests::okResponse)));
 
     m_controller->cursorToSelectionStart();

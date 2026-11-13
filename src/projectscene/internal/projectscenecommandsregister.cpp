@@ -97,7 +97,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, Arg(DataType::Int, u"Track identifier") },
             }),
         Decoration(IconCode::Code::WAVEFORM_HALFWAVE, rcommand::Checkable::Yes),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND,
@@ -119,7 +119,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                 { PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip identifier") },
             }),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND,
@@ -214,7 +214,7 @@ const std::vector<CommandInfo> s_commandInfos = {
                   Arg(DataType::Bool, u"Skip when the playhead is already visible") },
             }),
         Decoration(),
-        Availability::Dispatch | Availability::API
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         PROJECTSCENE_TIMELINE_CONTEXT_MENU_COMMAND,
@@ -224,7 +224,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Open the timeline context menu"),
         InputSchema(),
         Decoration(),
-        Availability::Dispatch
+        Availability::Internal
     },
     CommandInfo{
         PROJECTSCENE_PLAY_POSITION_DECREASE_COMMAND,
@@ -353,7 +353,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description", "Snapping"),
         InputSchema(),
         Decoration(IconCode::Code::MAGNET),
-        Availability::Dispatch
+        Availability::Internal
     },
 };
 }
