@@ -4,7 +4,11 @@ if(NOT(OS_IS_LIN OR OS_IS_FBSD))
     return()
 endif()
 
-set(DESKTOP_LAUNCHER_NAME "${MUSE_APP_NAME_VERSION} Portable")
+if (AU4_BUILD_CONFIGURATION STREQUAL "app-portable")
+    set(DESKTOP_LAUNCHER_NAME "${MUSE_APP_NAME_VERSION} Portable")
+else()
+    set(DESKTOP_LAUNCHER_NAME "${MUSE_APP_NAME_VERSION}")
+endif()
 
 # Identify App's main window so that it receives the correct name
 # and icon in the OS dock / taskbar. Run `xprop WM_CLASS` and click on
