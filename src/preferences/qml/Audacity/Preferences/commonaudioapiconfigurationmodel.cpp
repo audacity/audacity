@@ -113,6 +113,9 @@ void CommonAudioApiConfigurationModel::load()
         if (delta.contains(audio::AudioConfigurationField::BufferLength)) {
             emit bufferLengthChanged();
         }
+        if (delta.contains(audio::AudioConfigurationField::SoftwareBufferLength)) {
+            emit softwareBufferLengthChanged();
+        }
         if (delta.contains(audio::AudioConfigurationField::AutomaticLatencyCompensation)) {
             emit automaticCompensationEnabledChanged();
         }
@@ -142,6 +145,7 @@ void CommonAudioApiConfigurationModel::reset()
     setOtherSampleRate(!muse::contains(audioDriverController()->sampleRates(), defaultSampleRateValue()));
     notifyDeviceContextChanged();
     emit bufferLengthChanged();
+    emit softwareBufferLengthChanged();
     emit automaticCompensationEnabledChanged();
     emit latencyCompensationChanged();
     emit defaultSampleRateChanged();
@@ -437,6 +441,26 @@ void CommonAudioApiConfigurationModel::bufferLengthSelected(const QString& buffe
         m_pending.bufferLength = value;
     }
     emit bufferLengthChanged();
+}
+
+double CommonAudioApiConfigurationModel::softwareBufferLength() const
+{
+    return m_pending.softwareBufferLength.value_or(audioDriverController()->configuration().softwareBufferLength);
+}
+
+void CommonAudioApiConfigurationModel::softwareBufferLengthSelected(const QString& softwareBufferLengthStr)
+{
+    if (softwareBufferLengthStr == QString::number(softwareBufferLength())) {
+        return;
+    }
+
+    const double value = softwareBufferLengthStr.toDouble();
+    if (muse::RealIsEqual(value, audioDriverController()->configuration().softwareBufferLength)) {
+        m_pending.softwareBufferLength.reset();
+    } else {
+        m_pending.softwareBufferLength = value;
+    }
+    emit softwareBufferLengthChanged();
 }
 
 bool CommonAudioApiConfigurationModel::automaticCompensationEnabled() const
