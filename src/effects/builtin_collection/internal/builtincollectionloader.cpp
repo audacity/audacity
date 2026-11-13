@@ -68,6 +68,8 @@
 #include "filtercurveeq/filtercurveeqviewmodel.h"
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
+#include "repeat/repeateffect.h"
+#include "repeat/repeatviewmodel.h"
 #include "removedcoffset/removedcoffseteffect.h"
 #include "repair/repaireffect.h"
 #include "truncatesilence/truncatesilenceeffect.h"
@@ -86,6 +88,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< InvertEffect > regInvert;
     static BuiltinEffectsModule::Registration< Repair > regRepair;
     static BuiltinEffectsModule::Registration< ReverseEffect > regReverse;
+    static BuiltinEffectsModule::Registration< RepeatEffect > regRepeat;
     static BuiltinEffectsModule::Registration< TruncateSilenceEffect > regTruncateSilence;
 #if USE_SOUNDTOUCH
     static BuiltinEffectsModule::Registration< ChangePitchEffect > regChangePitch;
@@ -171,6 +174,9 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(RepeatViewModelFactory);
+    regView(RepeatEffect::Symbol, u"qrc:/repeat/RepeatView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NoiseViewModelFactory);
     regView(NoiseGenerator::Symbol, u"qrc:/noisegen/NoiseView.qml");
