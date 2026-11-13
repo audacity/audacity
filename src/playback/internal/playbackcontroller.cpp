@@ -307,7 +307,8 @@ void PlaybackController::onPlaybackPositionChanged()
     }
 
     if (isPlaybackPositionAtOrAfter(totalPlayTime())) {
-        //! NOTE: reached the project end: return the playhead to the cursor, as Stop does
+        //! NOTE: reached (or ran past) the project end: return the playhead to the cursor,
+        //! as Stop does
         stopAndSeekToLastSeekTime();
     } else {
         //! NOTE: reached the end of a played selection/region: stay there, the next play
@@ -418,7 +419,7 @@ void PlaybackController::doPlay()
     m_isPlayingSelection = false;
 
     //! NOTE: play from the cursor to the project end (or to the loop region end when
-    //! an active loop region extends past it)
+    //! the loop region, active or not, extends past it)
     const muse::secs_t end = playableEndTime();
     const muse::secs_t start = lastPlaybackSeekTime();
     if (end > start) {
@@ -1074,19 +1075,22 @@ bool PlaybackController::isPlaybackPositionAtOrAfter(const secs_t time) const
 }
 
 //! The end of the current play range: the play region end when one is set, bounded by
-//! the project end (the player clamps the end to the last clip unless a loop region is active)
+//! the end of the playable range (the player clamps the end to it)
 muse::secs_t PlaybackController::playbackEndTime() const
 {
-    const secs_t projectEnd = totalPlayTime();
+    const secs_t playableEnd = playableEndTime();
     const PlaybackRegion playbackRegion = player()->playbackRegion();
-    return playbackRegion.isValid() ? std::min(playbackRegion.end, projectEnd) : projectEnd;
+    return playbackRegion.isValid() ? std::min(playbackRegion.end, playableEnd) : playableEnd;
 }
 
-//! The furthest point playback can start from: an active loop region may extend past the last clip
+//! The furthest point playback can run to: the end of the last clip, or the end of the loop
+//! region when it lies past it. The loop region counts whether it is active or not: an
+//! inactive one still marks the play range (issue #11477)
 muse::secs_t PlaybackController::playableEndTime() const
 {
     const secs_t projectEnd = totalPlayTime();
-    return isLoopRegionActive() ? std::max(projectEnd, player()->playbackRegion().end) : projectEnd;
+    const PlaybackRegion loop = loopRegion();
+    return loop.isValid() ? std::max(projectEnd, loop.end) : projectEnd;
 }
 
 //! Non-looped playback has run to the end of its range.
@@ -1109,7 +1113,7 @@ bool PlaybackController::isPlaybackStartPositionValid() const
 bool PlaybackController::isSeekPositionValid(const muse::secs_t& seekTime) const
 {
     const auto playbackRegion = player()->playbackRegion();
-    return playbackRegion.isValid() ? (seekTime <= playbackRegion.end) : (seekTime <= totalPlayTime());
+    return playbackRegion.isValid() ? (seekTime <= playbackRegion.end) : (seekTime <= playableEndTime());
 }
 
 muse::secs_t PlaybackController::playbackPosition() const

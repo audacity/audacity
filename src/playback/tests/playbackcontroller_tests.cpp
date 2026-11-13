@@ -493,7 +493,10 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_InsideActiveLoopPastProje
     ON_CALL(*m_player, playbackStatus())
     .WillByDefault(Return(PlaybackStatus::Stopped));
 
-    //! [GIVEN] An active loop region {90, 120} extends past the project end
+    //! [GIVEN] An active loop region {90, 120} extends past the project end; the player's
+    //! play region is the loop region
+    ON_CALL(*m_player, loopRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
     ON_CALL(*m_player, playbackRegion())
     .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
     ON_CALL(*m_player, isLoopRegionActive())
