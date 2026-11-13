@@ -14,6 +14,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/dummyeffectinstancefactory.h
     ${CMAKE_CURRENT_LIST_DIR}/audacityproject_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/projectrecovery_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/damagedproject_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectspersistence_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/cliptempopersistence_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3metadata_tests.cpp

@@ -48,6 +48,9 @@ enum class Err {
 
     UnsupportedUrl,
     MalformedOpenProjectUrl,
+
+    NoDocument,
+    ProjectLoadError,
 };
 
 inline muse::Ret make_ret(Err e)

@@ -2554,6 +2554,19 @@ bool ProjectFileIO::IsRecovered() const
     return mRecovered;
 }
 
+bool ProjectFileIO::HasDocument()
+{
+    int64_t count = 0;
+    return (GetValue("SELECT COUNT(1) FROM main.autosave WHERE id = 1;", count, true) && count > 0)
+           || (GetValue("SELECT COUNT(1) FROM main.project;", count, true) && count > 0);
+}
+
+bool ProjectFileIO::HasSampleBlocks()
+{
+    int64_t exists = 0;
+    return GetValue("SELECT EXISTS(SELECT 1 FROM main.sampleblocks);", exists, true) && exists != 0;
+}
+
 void ProjectFileIO::MarkTemporary()
 {
     mTemporary = true;
