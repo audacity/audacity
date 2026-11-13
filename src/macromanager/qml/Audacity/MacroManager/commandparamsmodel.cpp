@@ -112,7 +112,7 @@ void CommandParamsModel::load(const QString& command, const QVariantMap& params)
     for (const auto& [key, arg] : info.inputSchema.args) {
         Item item;
         item.key = QString::fromStdString(key);
-        item.description = QString::fromStdString(arg.description);
+        item.description = arg.description.qTranslated();
         item.type = toParamType(arg.dataType);
         item.min = boundValue(arg.min);
         item.max = boundValue(arg.max);

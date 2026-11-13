@@ -147,7 +147,7 @@ void TestflowRunner::execAndReport()
         testflow->setSpeedMode(muse::testflow::speedModeFromString(m_options.testCaseSpeed));
     }
 
-    muse::testflow::ITestflow::Options opt;
+    muse::testflow::ExecOptions opt;
     opt.context = muse::io::path_t(m_options.testCaseContextNameOrFile);
     opt.contextVal = m_options.testCaseContextValue.toStdString();
     opt.func = m_options.testCaseFunc.toStdString();
