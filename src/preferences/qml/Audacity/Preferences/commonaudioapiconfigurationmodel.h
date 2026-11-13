@@ -50,6 +50,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
     Q_PROPERTY(QVariantList inputDeviceList READ inputDeviceList NOTIFY inputDeviceListChanged)
 
     Q_PROPERTY(double bufferLength READ bufferLength NOTIFY bufferLengthChanged)
+    Q_PROPERTY(double softwareBufferLength READ softwareBufferLength NOTIFY softwareBufferLengthChanged)
     Q_PROPERTY(bool automaticCompensationEnabled READ automaticCompensationEnabled NOTIFY automaticCompensationEnabledChanged)
     Q_PROPERTY(double latencyCompensation READ latencyCompensation NOTIFY latencyCompensationChanged)
 
@@ -95,6 +96,8 @@ public:
 
     double bufferLength() const;
     Q_INVOKABLE void bufferLengthSelected(const QString& bufferLengthStr);
+    double softwareBufferLength() const;
+    Q_INVOKABLE void softwareBufferLengthSelected(const QString& softwareBufferLengthStr);
 
     bool automaticCompensationEnabled() const;
     Q_INVOKABLE void setAutomaticCompensationEnabled(bool enabled);
@@ -140,6 +143,7 @@ signals:
     void inputDeviceListChanged();
 
     void bufferLengthChanged();
+    void softwareBufferLengthChanged();
     void latencyCompensationChanged();
     void automaticCompensationEnabledChanged();
 
