@@ -1,0 +1,9 @@
+[main]
+host = https://app.transifex.com
+
+[o:audacity:p:audacity:r:audacity4]
+file_filter = share/locale/audacity_<lang>.ts
+source_file = share/locale/audacity_en.ts
+source_lang = en
+type        = QT
+lang_map    = gl_ES: gl, sr_BA@latin: sr

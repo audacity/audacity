@@ -1,0 +1,289 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "au3cloudservice.h"
+
+#include <QTimer>
+
+#include <string>
+
+#include "framework/global/log.h"
+#include "framework/global/translation.h"
+#include "framework/global/types/uri.h"
+#include "framework/interactive/iinteractive.h"
+
+#include "au3-cloud-audiocom/OAuthService.h"
+#include "au3-cloud-audiocom/UserService.h"
+#include "au3-cloud-audiocom/ServiceConfig.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-preferences/Prefs.h"
+
+#include "au3cloud/cloudtypes.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+
+using namespace au::au3cloud;
+
+namespace {
+const muse::Uri SIGNIN_AUDIOCOM_URI("audacity://signin/audiocom");
+const std::string CREATE_ACCOUNT_MODE_PARAM("isCreateAccountMode");
+}
+
+void Au3CloudService::init()
+{
+    syncUsageInfoPrefs();
+    usageInfo()->usageInfoChanged().onNotify(this, [this]() {
+        syncUsageInfoPrefs();
+    });
+
+    auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+    if (oauthService.HasRefreshToken()) {
+        m_authState.set(AuthState(Authorizing()));
+    } else {
+        const auto NO_ACCESS_TOKEN = muse::qtrc("appshell/gettingstarted", "No access token");
+        m_authState.set(AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
+    }
+    m_authSubscription
+        = oauthService.Subscribe([this](const audacity::cloud::audiocom::AuthStateChangedMessage& message)
+    {
+        if (std::holds_alternative<Authorized>(m_authState.val) && message.authorised) {
+            return;
+        }
+
+        if (std::holds_alternative<NotAuthorized>(m_authState.val) && !message.authorised) {
+            return;
+        }
+
+        auto& service = audacity::cloud::audiocom::GetUserService();
+        if (message.authorised) {
+            m_silent = message.silent;
+            service.UpdateUserData();
+        } else {
+            service.ClearUserData();
+        }
+    });
+    auto& userService = audacity::cloud::audiocom::GetUserService();
+    usageInfo()->setUserId(userService.GetUserId().ToStdString());
+
+    m_userDataSubscription
+        = userService.Subscribe(
+              [this](const audacity::cloud::audiocom::UserDataChanged&) {
+        auto& authService = audacity::cloud::audiocom::GetOAuthService();
+        if (authService.HasAccessToken()) {
+            auto& userService = audacity::cloud::audiocom::GetUserService();
+            m_accountInfo.id = userService.GetUserId().ToStdString();
+            m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();
+            m_accountInfo.displayName = au::au3::wxToStdString(userService.GetDisplayName());
+            m_accountInfo.avatarPath = au::au3::wxToStdString(userService.GetAvatarPath());
+
+            if (!std::holds_alternative<Authorized>(m_authState.val)) {
+                //Only set to authorized if we have user data
+                m_authState.set(AuthState(Authorized()));
+
+                if (!m_silent) {
+                    openBrowserSession();
+                }
+            }
+        } else {
+            m_accountInfo = AccountInfo();
+
+            if (!std::holds_alternative<NotAuthorized>(m_authState.val)) {
+                const auto NOT_AUTHORIZED = muse::qtrc("appshell/gettingstarted", "Not authorized");
+                m_authState.set(AuthState(NotAuthorized(NOT_AUTHORIZED.toStdString())));
+            }
+        }
+        usageInfo()->setUserId(m_accountInfo.id);
+        m_accountInfoChanged.notify();
+    });
+}
+
+void Au3CloudService::onAllInited()
+{
+    audacity::cloud::audiocom::GetOAuthService().ValidateAuth(nullptr, AudiocomTrace::ignore, true);
+}
+
+bool Au3CloudService::initReplyHandlerIfNecessary()
+{
+    if (m_replyHandler) {
+        return m_replyHandler->isListening() || m_replyHandler->listen();
+    }
+
+    m_replyHandler = new OAuthHttpServerReplyHandler(this);
+    connect(m_replyHandler, &OAuthHttpServerReplyHandler::callbackReceived,
+            this, [this](const QVariantMap& data) {
+        // Extract authorization code from callback
+        std::string code = data.value("code").toString().toStdString();
+        std::string error = data.value("error").toString().toStdString();
+
+        if (code.empty() || !error.empty()) {
+            m_authState.set(NotAuthorized(error));
+            m_replyHandler->sendError();
+            m_replyHandler->close();
+            return;
+        }
+
+        auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+        oauthService.AuthorizeCode(
+            code,
+            m_replyHandler->callback().toStdString(),
+            AudiocomTrace::ignore,
+            [this](auto token)
+        {
+            const auto AUTHORIZATION_FAILED = muse::qtrc("appshell/gettingstarted", "Authorization failed");
+            if (token.empty()) {
+                m_authState.set(NotAuthorized(AUTHORIZATION_FAILED.toStdString()));
+                m_replyHandler->sendError();
+                m_replyHandler->close();
+                return;
+            }
+        });
+    });
+
+    return m_replyHandler->isListening();
+}
+
+void Au3CloudService::registerWithPassword(const std::string& email, const std::string& password)
+{
+    m_authState.set(Authorizing());
+    auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+    oauthService.Register(email, password,
+                          [this](auto token)
+    {
+        if (token.empty()) {
+            const auto REGISTRATION_FAILED = muse::qtrc("appshell/gettingstarted", "Registration failed. Please try again.");
+            m_authState.set(AuthState(NotAuthorized(REGISTRATION_FAILED.toStdString())));
+            return;
+        }
+    },
+                          [this](auto, auto)
+    {
+        const auto REGISTRATION_FAILED = muse::qtrc("appshell/gettingstarted", "Registration failed. Please try again.");
+        m_authState.set(AuthState(NotAuthorized(REGISTRATION_FAILED.toStdString())));
+    }, AudiocomTrace::ignore);
+}
+
+void Au3CloudService::signInWithPassword(const std::string& email, const std::string& password)
+{
+    m_authState.set(Authorizing());
+
+    auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+    oauthService.Authorize(email, password,
+                           [this](auto token)
+    {
+        if (token.empty()) {
+            const auto INCORRECT_EMAIL_OR_PASSWORD = muse::qtrc("appshell/gettingstarted",
+                                                                "Incorrect email or password. Please try again.");
+            m_authState.set(AuthState(NotAuthorized(INCORRECT_EMAIL_OR_PASSWORD.toStdString())));
+            return;
+        }
+    },
+                           [this](auto, auto)
+    {
+        const auto INCORRECT_EMAIL_OR_PASSWORD = muse::qtrc("appshell/gettingstarted", "Authentication failed. Please try again.");
+        m_authState.set(AuthState(NotAuthorized(INCORRECT_EMAIL_OR_PASSWORD.toStdString())));
+    }, AudiocomTrace::ignore);
+}
+
+void Au3CloudService::signInWithSocial(const std::string& provider)
+{
+    if (!initReplyHandlerIfNecessary()) {
+        const auto SIGN_IN_FAILED = muse::qtrc("appshell/gettingstarted", "Could not start the sign-in process. Please try again.");
+        m_authState.set(AuthState(NotAuthorized(SIGN_IN_FAILED.toStdString())));
+        return;
+    }
+
+    platformInteractive()->openUrl(buildOAuthRequestURL(provider));
+}
+
+void Au3CloudService::signOut()
+{
+    auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+    oauthService.UnlinkAccount(AudiocomTrace::ignore);
+}
+
+muse::ValCh<AuthState> Au3CloudService::authState() const
+{
+    return m_authState;
+}
+
+muse::Ret Au3CloudService::ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode)
+{
+    if (isAuthorized()) {
+        return muse::make_ok();
+    }
+
+    auto interactive = muse::modularity::ioc(ctx)->resolve<muse::IInteractive>("au3cloud");
+    IF_ASSERT_FAILED(interactive) {
+        return muse::make_ret(muse::Ret::Code::InternalError);
+    }
+
+    muse::UriQuery uri(SIGNIN_AUDIOCOM_URI);
+    if (createAccountMode) {
+        uri.addParam(CREATE_ACCOUNT_MODE_PARAM, muse::Val(true));
+    }
+
+    const muse::RetVal<muse::Val> rv = interactive->openSync(uri);
+    if (!rv.ret) {
+        return rv.ret;
+    }
+
+    return isAuthorized() ? muse::make_ok() : muse::make_ret(muse::Ret::Code::Cancel);
+}
+
+bool Au3CloudService::isAuthorized() const
+{
+    return std::holds_alternative<Authorized>(m_authState.val);
+}
+
+const AccountInfo& Au3CloudService::accountInfo() const
+{
+    return m_accountInfo;
+}
+
+muse::async::Notification Au3CloudService::accountInfoChanged() const
+{
+    return m_accountInfoChanged;
+}
+
+//! The AU3 cloud code reads these prefs to fill anonymous usage request headers
+void Au3CloudService::syncUsageInfoPrefs()
+{
+    SendAnonymousUsageInfo->Write(usageInfo()->getSendAnonymousUsageInfo());
+    InstanceId->Write(wxString::FromUTF8(usageInfo()->instanceId()));
+    gPrefs->Flush();
+}
+
+void Au3CloudService::openBrowserSession()
+{
+    auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
+    auto& authService = audacity::cloud::audiocom::GetOAuthService();
+    const auto url = authService.MakeAudioComAuthorizeURL(m_accountInfo.id, serviceConfig.GetTourPage());
+
+    if (m_replyHandler && m_replyHandler->hasPendingSocket()) {
+        m_replyHandler->sendRedirect(QString::fromStdString(url));
+        m_replyHandler->close();
+        return;
+    }
+
+    platformInteractive()->openUrl(url);
+}
+
+std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)
+{
+    auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
+    const std::map<std::string, std::string> params = {
+        { "authclient", provider },
+        { "response_type", "code" },
+        { "client_id", serviceConfig.GetOAuthClientID() },
+        { "redirect_uri", m_replyHandler->callback().toStdString() }
+    };
+
+    std::string url = serviceConfig.GetAPIUrl("/auth/authorize?");
+    for (const auto& [key, value] : params) {
+        url.append(key);
+        url.append("=");
+        url.append(value);
+        url.append("&");
+    }
+    url.pop_back(); // Remove last '&'
+    return url;
+}

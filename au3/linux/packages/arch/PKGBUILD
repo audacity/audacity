@@ -1,0 +1,84 @@
+pkgname=audacity
+pkgver=TMPL_AUDACITY_VERSION
+pkgrel=1
+pkgdesc="Audacity is an easy-to-use, multi-track audio editor and recorder"
+groups=(audio)
+url="https://audacityteam.org"
+license=(GPL)
+
+arch=(x86_64)
+
+depends=(zlib
+   alsa-lib
+   gtk2
+   expat
+   libid3tag
+   libogg
+   libvorbis
+   flac
+   lame
+   twolame
+   libsndfile
+   jack
+   lilv
+   lv2
+   portaudio
+   portsmf
+   portmidi
+   suil
+   vamp-plugin-sdk
+   libsoxr
+   soundtouch
+   libpng
+   libjpeg-turbo
+   libsm
+   harfbuzz
+   freetype2
+   fontconfig
+   mesa
+   mpg123
+   wavpack
+   wxwidgets-gtk3
+   vst3sdk
+)
+
+makedepends=(
+   git
+   cmake
+   python-pip
+)
+
+optdepends=('ffmpeg: additional import/export capabilities')
+
+provides=(audacity audacity-test)
+conflicts=(audacity audacity-test)
+
+source=(
+  "TMPL_AUDACITY_SOURCES"
+)
+
+md5sums=(
+  'SKIP'
+)
+
+build() {
+    cmake_args=(
+        -D CMAKE_BUILD_TYPE=Release
+        -D CMAKE_INSTALL_PREFIX=/usr
+        -D audacity_conan_enabled=Off
+        -D audacity_use_pch=no
+        -D audacity_use_sbsms=local # sbsms is only available in AUR
+        -D audacity_has_vst3=no
+        #-D audacity_use_vst3sdk=system
+    )
+
+    sourceDir=$(echo audacity-sources-*/)
+
+    cmake -S "${sourceDir}" -B build "${cmake_args[@]}"
+    cmake --build build -- -j`nproc`
+}
+
+package() {
+  cd build
+  make DESTDIR="$pkgdir/" install
+}

@@ -1,0 +1,334 @@
+name: '[AU4] Build: macOS'
+
+on:
+  pull_request:
+    branches:
+    - master
+
+  schedule:
+    - cron: '0 3 */1 */1 *' # At 03:00 on every day-of-month for master
+  #   - cron: '0 5 */1 */1 *' # At 05:00 on every day-of-month for current release branch
+  workflow_dispatch:
+    inputs:
+      build_mode:
+        description: 'Build mode: devel, nightly, testing, stable'
+        required: true
+        default: 'devel'
+
+      sentry_project:
+        description: 'Upload symbols and dumps to Sentry (choose a project): au4(default for stable build), au4-sandbox'
+        required: false
+        default: ''
+
+  workflow_call:
+    inputs:
+      build_mode:
+        description: 'Build mode (devel, nightly, testing, stable)'
+        type: string
+        required: false
+        default: 'devel'
+      app_repo:
+        description: 'owner/repo to source Audacity from (default: this repo)'
+        type: string
+        required: false
+        default: ''
+      app_ref:
+        description: 'Audacity ref to check out (default: ref of triggering event)'
+        type: string
+        required: false
+        default: ''
+      framework_repo:
+        description: 'owner/repo to source muse_framework from (default: pinned submodule)'
+        type: string
+        required: false
+        default: ''
+      framework_ref:
+        description: 'Ref to check out into the muse_framework submodule (default: pinned SHA)'
+        type: string
+        required: false
+        default: ''
+
+concurrency:
+  group: au4_build_macos-${{ github.ref }}-${{ github.event.issue.number }}
+  cancel-in-progress: true
+
+env:
+  CI_DIR: buildscripts/ci
+  DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
+
+jobs:
+  au4_build_macos:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: universal, osx_arch: 'x86_64;arm64' }
+          - { arch: arm64,     osx_arch: arm64 }
+          - { arch: x86_64,    osx_arch: x86_64 }
+    runs-on: macos-26
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v7
+      with:
+        repository: ${{ inputs.app_repo || github.repository }}
+        ref: ${{ inputs.app_ref || github.ref }}
+        submodules: recursive
+
+    - name: Override muse_framework
+      if: inputs.framework_ref != '' || github.event_name == 'schedule'
+      uses: actions/checkout@v7
+      with:
+        repository: ${{ inputs.framework_repo || 'musescore/muse_framework' }}
+        ref: ${{ inputs.framework_ref || 'main' }}
+        path: muse
+        submodules: recursive
+
+    - name: "Configure workflow"
+      env:
+        pull_request_title: ${{ github.event.pull_request.title }}
+        SENTRY_SERVER_AU4_KEY: ${{ secrets.SENTRY_SERVER_AU4_KEY }}
+        SENTRY_SERVER_AU4_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_KEY }}
+        SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY: ${{ secrets.SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY }}
+        SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY }}
+        SENTRY_PROJECT: ${{ github.event.inputs.sentry_project }}
+      run: |
+        ADD_INFO="_${GITHUB_REF#refs/heads/}"
+        if [ "${{ github.event_name }}" == "schedule" ] && [ "${{ github.event.schedule }}" == "0 5 */1 */1 *" ]; then ADD_INFO="_${{ env.CURRENT_RELEASE_BRANCH }}"; fi
+        if [ "${{ github.event_name }}" == "pull_request" ]; then ADD_INFO="_${{ github.event.pull_request.number }}_${pull_request_title}"; fi
+
+        BUILD_MODE=${{ inputs.build_mode || github.event.inputs.build_mode }}
+
+        DO_NOTARIZE='false'
+        if [ "$BUILD_MODE" != "devel" ]; then
+          DO_NOTARIZE='true'
+          if [ -z "${{ secrets.APPLE_USERNAME }}" ]; then
+            echo "::warning::APPLE_USERNAME is empty; notarization disabled"
+            DO_NOTARIZE='false'
+          elif [ -z "${{ secrets.APPLE_PASSWORD }}" ]; then
+            echo "::warning::APPLE_PASSWORD is empty, notarization disabled"
+            DO_NOTARIZE='false'
+          fi
+        fi
+
+        cmake -DEVENT=${{ github.event_name }} \
+              -DBUILD_MODE=${BUILD_MODE} \
+              -DARTIFACT_INFO="Mac_${{ matrix.arch }}${ADD_INFO}" \
+              -P ${CI_DIR}/common/ci_configure.cmake
+
+        # build_mode is only set when the workflow is run manually or called by another workflow.
+        # On schedule events, take the mode ci_configure.cmake derived from the event instead.
+        if [ -z "$BUILD_MODE" ]; then
+          BUILD_MODE=$(cat ./build.artifacts/env/build_mode.env)
+        fi
+        echo "BUILD_MODE: $BUILD_MODE"
+
+        DO_BUILD='true'
+        UPLOAD_ARTIFACT_NAME=$(cat ./build.artifacts/env/upload_artifact_name.env)
+
+        PROJECT_ID=""
+        APP_KEY=""
+        PLUGIN_KEY=""
+
+        case "${SENTRY_PROJECT:-$BUILD_MODE}" in
+          au4|stable)
+            SENTRY_PROJECT="au4"
+            PROJECT_ID=4
+            APP_KEY="$SENTRY_SERVER_AU4_KEY"
+            PLUGIN_KEY="$SENTRY_SERVER_AU4_PLUGIN_VALIDATION_KEY"
+            ;;
+          au4-sandbox|nightly)
+            SENTRY_PROJECT="au4-sandbox"
+            PROJECT_ID=5
+            APP_KEY="$SENTRY_SERVER_AU4_SANDBOX_KEY"
+            PLUGIN_KEY="$SENTRY_SERVER_AU4_SANDBOX_PLUGIN_VALIDATION_KEY"
+            ;;
+        esac
+
+        DO_UPLOAD_SYMBOLS=false
+        SENTRY_URL=""
+        SENTRY_PLUGIN_VALIDATION_URL=""
+
+        if [ -n "$PROJECT_ID" ]; then
+          BASE_URL="https://sentry.audacityteam.org/api/$PROJECT_ID/minidump/"
+
+          if [ -n "$APP_KEY" ]; then
+            SENTRY_URL="${BASE_URL}?sentry_key=$APP_KEY"
+            DO_UPLOAD_SYMBOLS=true
+          fi
+
+          if [ -n "$PLUGIN_KEY" ]; then
+            SENTRY_PLUGIN_VALIDATION_URL="${BASE_URL}?sentry_key=$PLUGIN_KEY"
+            DO_UPLOAD_SYMBOLS=true
+          fi
+        fi
+
+        # Sandbox builds are superseded daily; their symbols would only pile up on the server.
+        if [ "$SENTRY_PROJECT" == "au4-sandbox" ]; then
+          DO_UPLOAD_SYMBOLS=false
+        fi
+
+        echo "DO_BUILD=$DO_BUILD" >> $GITHUB_ENV
+        echo "DO_BUILD: $DO_BUILD"
+        echo "UPLOAD_ARTIFACT_NAME=$UPLOAD_ARTIFACT_NAME" >> $GITHUB_ENV
+        echo "UPLOAD_ARTIFACT_NAME: $UPLOAD_ARTIFACT_NAME"
+
+        echo "DO_NOTARIZE=$DO_NOTARIZE" | tee -a $GITHUB_ENV
+
+        echo "DO_UPLOAD_SYMBOLS=$DO_UPLOAD_SYMBOLS" >> $GITHUB_ENV
+        echo "DO_UPLOAD_SYMBOLS: $DO_UPLOAD_SYMBOLS"
+        echo "SENTRY_PROJECT=$SENTRY_PROJECT" >> $GITHUB_ENV
+        echo "SENTRY_PROJECT: $SENTRY_PROJECT"
+        echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
+        echo "SENTRY_URL: $SENTRY_URL"
+        echo "SENTRY_PLUGIN_VALIDATION_URL=$SENTRY_PLUGIN_VALIDATION_URL" >> $GITHUB_ENV
+        echo "SENTRY_PLUGIN_VALIDATION_URL: $SENTRY_PLUGIN_VALIDATION_URL"
+
+    - name: Restore ccache files
+      id: restore-ccache
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{runner.os}}-${{runner.arch}}-ccache-
+        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
+    - name: Setup ccache
+      run: |
+        brew install ccache
+        bash ./muse/buildscripts/ci/tools/setup_ccache_config.sh
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.11.2'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
+
+    - name: Setup environment
+      if: env.DO_BUILD == 'true'
+      run: |
+        bash ${CI_DIR}/macos/setup.sh
+
+    - name: Build
+      if: env.DO_BUILD == 'true'
+      env:
+        OSX_ARCHITECTURES: ${{ matrix.osx_arch }}
+      run: |
+        C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
+        C_URL_PV=${SENTRY_PLUGIN_VALIDATION_URL}; if [ -z "$C_URL_PV" ]; then C_URL_PV="''"; fi
+        source $HOME/build_tools/environment.sh
+        cmake -DCRASH_REPORT_URL=$C_URL -DAUDIOPLUGINS_CRASHREPORT_URL=$C_URL_PV -P ${CI_DIR}/macos/ci_build.cmake
+
+    - name: Show ccache stats
+      run: |
+        ccache -sv
+
+    - name: Upload build for self-test
+      if: env.DO_BUILD == 'true'
+      uses: actions/upload-artifact@v7
+      with:
+        name: selftest-build-macos-${{ matrix.arch }}
+        path: ./build.install/
+        retention-days: 1
+
+    # Use the binary in the build tree: macdeployqt strips the installed copy during install
+    - name: Generate dSYM
+      if: env.DO_UPLOAD_SYMBOLS == 'true'
+      run: |
+        cmake -DBIN=build.release/src/app/audacity.app/Contents/MacOS/audacity \
+              -DDSYM=build.release/audacity.dSYM \
+              -P muse/buildscripts/ci/macos/generate_dsym.cmake
+
+    - name: Upload debug files
+      if: env.DO_UPLOAD_SYMBOLS == 'true'
+      env:
+        SENTRY_URL: https://sentry.audacityteam.org
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: sentry
+      run: |
+        FILES="build.release/audacity.dSYM/Contents/Resources/DWARF/audacity;build.release/src/app/audacity.app/Contents/MacOS/audacity"
+        for LIB in build.install/audacity.app/Contents/Frameworks/*.dylib; do
+          FILES="${FILES};${LIB}"
+        done
+        cmake -DFILES="${FILES}" -P muse/buildscripts/ci/tools/sentry/upload_debug_files.cmake
+
+    - name: Package
+      env:
+        SIGN_CERTIFICATE_ENCRYPT_SECRET: ${{ secrets.MAC_SIGN_CERTIFICATE_ENCRYPT_SECRET }}
+        SIGN_CERTIFICATE_PASSWORD: ${{ secrets.MAC_SIGN_CERTIFICATE_PASSWORD }}
+      if: env.DO_BUILD == 'true'
+      run: |
+        source $HOME/build_tools/environment.sh
+        cmake -DPACKARCH=${{ matrix.arch }} -P ${CI_DIR}/macos/package.cmake
+
+    - name: Notarize
+      if: env.DO_NOTARIZE == 'true'
+      run: |
+        USER=${{ secrets.APPLE_USERNAME }}; if [ -z "$USER" ]; then USER=""; fi
+        PW=${{ secrets.APPLE_PASSWORD }}; if [ -z "$PW" ]; then PW=""; fi
+        bash ./muse/buildscripts/ci/macos/notarize.sh -u $USER -p $PW
+
+    - name: Checksum
+      if: env.DO_BUILD == 'true'
+      run: |
+        bash ./muse/buildscripts/ci/tools/checksum.sh
+
+    - name: Upload artifacts on GitHub
+      if: env.DO_BUILD == 'true'
+      uses: actions/upload-artifact@v7
+      with:
+        name: ${{ env.UPLOAD_ARTIFACT_NAME }}
+        path: ./build.artifacts/
+
+    - name: Prepare ccache files for saving
+      id: prepare-save-ccache
+      if: always()
+      run: |
+        ccache --recompress 10
+        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
+    - name: Save ccache files
+      if: always()
+      uses: actions/cache/save@v6
+      with:
+        key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
+        path: ${{ github.workspace }}/.ccache
+
+  plugin-registration-self-test:
+    needs: au4_build_macos
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { arch: universal }
+          - { arch: arm64 }
+          - { arch: x86_64 }
+    runs-on: macos-26
+    steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.11.2'
+        host: 'mac'
+        target: 'desktop'
+        arch: 'clang_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v8
+      with:
+        name: selftest-build-macos-${{ matrix.arch }}
+        path: ./build.install
+
+    - name: Run plugin registration app self-test
+      run: |
+        chmod +x ./build.install/audacity.app/Contents/MacOS/audacity
+        ./build.install/audacity.app/Contents/MacOS/audacity --plugin-registration-self-test
+
+    - name: Delete self-test artifact
+      if: always()
+      uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
+      with:
+        failOnError: false
+        name: selftest-build-macos-${{ matrix.arch }}

@@ -1,0 +1,31 @@
+#pragma once
+
+#include "../ieffectviewlauncher.h"
+
+#include "effects/effects_base/ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectsprovider.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
+namespace au::effects {
+class AbstractViewLauncher : public IEffectViewLauncher, public muse::Contextable
+{
+protected:
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
+
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+
+public:
+    AbstractViewLauncher(const muse::modularity::ContextPtr& ctx)
+        : muse::Contextable(ctx) {}
+
+protected:
+    muse::Ret doShowEffect(int instanceId, EffectFamily) const;
+    void doShowRealtimeEffect(const RealtimeEffectStatePtr& state) const;
+
+private:
+    void hideRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
+};
+}

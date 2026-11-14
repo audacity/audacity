@@ -1,0 +1,106 @@
+#
+# Audacity: A Digital Audio Editor
+#
+
+declare_module(playback)
+
+set(MODULE_QRC playback.qrc)
+set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
+
+set(MODULE_SRC
+    #public
+    ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/playbacktypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/playbackcommands.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplayback.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplayer.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudiooutput.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackmetercontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/itrackplaybackcontrol.h
+
+    #internals
+    ${CMAKE_CURRENT_LIST_DIR}/iplaybackuistate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsstate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3player.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3player.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiooutput.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackplaybackcontrol.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblinearmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblinearmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblogmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/dblogmeter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/linearmeter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/meters/linearmeter.h
+
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackstatemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/metermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/metermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/volumepressuremeteritembase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/volumepressuremeteritembase.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/horizontalvolumepressuremeteritem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/horizontalvolumepressuremeteritem.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarlevelitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarlevelitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcontrolitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarcontrolitem.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimeitem.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbartimesignatureitem.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarbpmitem.h
+
+    )
+
+set(MODULE_LINK
+        au3wrap
+        au3-audio-io
+        au3-project-rate
+        au3-clip-processing
+        au3-time-frequency-selection
+        au3-track
+        au3-utility
+        au3-wave-track
+        uicomponents
+        uicomponents_qml
+        Qt::Quick
+)
+
+set(MODULE_USE_UNITY OFF)
+
+setup_module()
+
+if (AU_BUILD_PLAYBACK_TESTS)
+    add_subdirectory(tests)
+endif()

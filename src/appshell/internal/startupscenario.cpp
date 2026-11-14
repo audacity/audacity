@@ -1,0 +1,371 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include "startupscenario.h"
+
+#include <QDate>
+
+#include "framework/global/log.h"
+#include "framework/global/settings.h"
+#include "framework/global/types/uri.h"
+
+#include "appshell/appshellcommands.h"
+#include "appshell/appshelltypes.h"
+#include "au3cloud/cloudcommands.h"
+#include "project/projectcommands.h"
+
+using namespace au::appshell;
+using namespace muse;
+using namespace au::project;
+
+static const muse::Settings::Key LAST_UPDATE_CHECK_DAY_KEY("appshell", "application/lastUpdateCheckRequestDay");
+
+static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("audacity://firstLaunchSetup?floating=true");
+static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
+static const muse::UriQuery WELCOME_DIALOG_URI("audacity://welcomedialog");
+static const muse::Uri HOME_URI("audacity://home");
+static const muse::Uri PROJECT_URI("audacity://project");
+static const muse::Uri AUTO_RECOVERY_URI("audacity://autorecovery");
+
+static StartupModeType modeTypeFromString(const std::string& str)
+{
+    if ("start-empty" == str) {
+        return StartupModeType::StartEmpty;
+    }
+
+    if ("continue-last" == str) {
+        return StartupModeType::ContinueLastSession;
+    }
+
+    if ("start-with-new" == str) {
+        return StartupModeType::StartWithNewProject;
+    }
+
+    if ("start-with-file" == str) {
+        return StartupModeType::StartWithProject;
+    }
+
+    return StartupModeType::StartEmpty;
+}
+
+void StartupScenario::setStartupType(const std::optional<std::string>& type)
+{
+    m_startupTypeStr = type ? type.value() : "";
+}
+
+bool StartupScenario::isStartWithNewFileAsSecondaryInstance() const
+{
+    if (m_startupProjectFile.isValid()) {
+        return false;
+    }
+
+    if (!m_startupTypeStr.empty()) {
+        return modeTypeFromString(m_startupTypeStr) == StartupModeType::StartWithNewProject;
+    }
+
+    return false;
+}
+
+const ProjectFile& StartupScenario::startupProjectFile() const
+{
+    return m_startupProjectFile;
+}
+
+void StartupScenario::setStartupProjectFile(const std::optional<ProjectFile>& file)
+{
+    m_startupProjectFile = file ? file.value() : ProjectFile();
+}
+
+const muse::io::paths_t& StartupScenario::startupMediaFiles() const
+{
+    return m_startupMediaFiles;
+}
+
+void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
+{
+    m_startupMediaFiles = files;
+}
+
+bool StartupScenario::removeMediaFilesAfterImport() const
+{
+    return m_removeMediaFilesAfterImport;
+}
+
+void StartupScenario::setRemoveMediaFilesAfterImport(bool remove)
+{
+    m_removeMediaFilesAfterImport = remove;
+}
+
+void StartupScenario::setStartupUrl(const QString& url)
+{
+    if (m_startupCompleted && !url.isEmpty()) {
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(url) } });
+        return;
+    }
+    m_startupUrl = url;
+}
+
+muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
+{
+    return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
+        if (multiwindowsProvider()->isFirstWindow()) {
+            tryCheckForUpdate();
+            startUpdateCheckTimer();
+        }
+
+        const muse::Ret ret = muse::make_ret(muse::Ret::Code::Ok);
+        return resolve(ret);
+    });
+}
+
+void StartupScenario::runAfterSplashScreen()
+{
+    TRACEFUNC;
+
+    if (m_startupCompleted) {
+        return;
+    }
+
+    m_startupCompleted = true;
+
+    StartupModeType modeType = resolveStartupModeType();
+
+    if (allowsFirstLaunchOverride() && !configuration()->hasCompletedFirstLaunchSetup()) {
+        modeType = StartupModeType::FirstLaunch;
+    } else if (allowsRecoveryOverride() && sessionsManager()->hasProjectsForRestore()) {
+        modeType = StartupModeType::Recovery;
+    }
+
+    const muse::Uri startupUri = startupPageUri(modeType);
+
+    auto promise = interactive()->open(startupUri);
+    promise.onResolve(this, [this, modeType](const muse::Val&) {
+        effectsProviderInitializer()->callAfterSplashScreen();
+
+        onStartupPageOpened(modeType);
+    });
+}
+
+bool StartupScenario::startupCompleted() const
+{
+    return m_startupCompleted;
+}
+
+bool StartupScenario::allowsFirstLaunchOverride() const
+{
+    return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
+}
+
+bool StartupScenario::allowsRecoveryOverride() const
+{
+    return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
+}
+
+bool StartupScenario::hasExplicitStartupTarget() const
+{
+    return m_startupProjectFile.isValid() || !m_startupMediaFiles.empty() || !m_startupUrl.isEmpty();
+}
+
+StartupModeType StartupScenario::resolveStartupModeType() const
+{
+    if (m_startupProjectFile.isValid()) {
+        return StartupModeType::StartWithProject;
+    }
+
+    if (!m_startupMediaFiles.empty()) {
+        return StartupModeType::StartEmpty;
+    }
+
+    if (!m_startupTypeStr.empty()) {
+        return modeTypeFromString(m_startupTypeStr);
+    }
+
+    return configuration()->startupModeType();
+}
+
+void StartupScenario::onStartupPageOpened(StartupModeType modeType)
+{
+    TRACEFUNC;
+
+    showStartupDialogsIfNeed(modeType);
+
+    if (!m_startupMediaFiles.empty()) {
+        ValList files;
+        for (const auto& file : m_startupMediaFiles) {
+            files.emplace_back(file.toQString());
+        }
+
+        commandDispatcher()->dispatch(PROJECT_IMPORT_STARTUP_MEDIA_COMMAND, {
+            { PROJECT_FILES_PARAM, Val(files) },
+            { PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(m_removeMediaFilesAfterImport) },
+        });
+        return;
+    }
+
+    if (!m_startupUrl.isEmpty()) {
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(m_startupUrl) } });
+        return;
+    }
+
+    switch (modeType) {
+    case StartupModeType::StartEmpty:
+    case StartupModeType::ContinueLastSession:
+        break;
+    case StartupModeType::StartWithNewProject:
+        commandDispatcher()->dispatch(PROJECT_NEW_COMMAND);
+        break;
+    case StartupModeType::Recovery:
+        restoreLastSession();
+        break;
+    case StartupModeType::StartWithProject: {
+        ProjectFile file = m_startupProjectFile.isValid()
+                           ? m_startupProjectFile
+                           : ProjectFile(configuration()->startupProjectPath());
+        openProject(file);
+    } break;
+    case StartupModeType::FirstLaunch: {
+        commandDispatcher()->dispatch(PROJECT_NEW_COMMAND);
+    } break;
+    }
+}
+
+void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
+{
+    if (!multiwindowsProvider()->isFirstWindow()) {
+        return;
+    }
+
+    const auto showWelcomeDialogIfNeed = [this]() {
+        const auto showWelcomePage = [this]() {
+            const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
+            const std::string currentAudacityVersion(configuration()->audacityVersion());
+
+            if (welcomeDialogLastShownVersion < currentAudacityVersion) {
+                configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
+                configuration()->setWelcomeDialogLastShownIndex(-1); // reset
+            }
+
+            if (!configuration()->welcomeDialogShowOnStartup()) {
+                return;
+            }
+
+            muse::UriQuery query(WELCOME_DIALOG_URI);
+            query.set("modal", false);
+            query.set("floating", true);
+            interactive()->open(query);
+
+            configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
+        };
+
+        if (!configuration()->hasCompletedFirstLaunchSetup()) {
+            interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [](const muse::Val&, auto resolve) {
+                return resolve();
+            });
+        } else {
+            showWelcomePage();
+        }
+    };
+
+    showWelcomeDialogIfNeed();
+}
+
+muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
+{
+    switch (modeType) {
+    case StartupModeType::StartEmpty:
+    case StartupModeType::StartWithNewProject:
+    case StartupModeType::Recovery:
+        return HOME_URI;
+    case StartupModeType::StartWithProject:
+    case StartupModeType::ContinueLastSession:
+    case StartupModeType::FirstLaunch:
+        return PROJECT_URI;
+    }
+
+    return HOME_URI;
+}
+
+void StartupScenario::openProject(const ProjectFile& file)
+{
+    commandDispatcher()->dispatch(PROJECT_OPEN_COMMAND, {
+        { PROJECT_URL_PARAM, Val(file.url.toString()) },
+        { PROJECT_DISPLAY_NAME_PARAM, Val(file.displayNameOverride) },
+    });
+}
+
+void StartupScenario::restoreLastSession()
+{
+    auto promise = interactive()->open(AUTO_RECOVERY_URI);
+    promise.onResolve(this, [this](const muse::Val& val) {
+        if (val.toQVariant().toMap().value("action").toString() == "quit") {
+            commandDispatcher()->dispatch(APP_QUIT_COMMAND);
+        }
+    });
+}
+
+void StartupScenario::tryCheckForUpdate()
+{
+    if (!appUpdateScenario() || !appUpdateScenario()->needCheckForUpdate()) {
+        return;
+    }
+
+    if (alreadyCheckedForUpdateToday()) {
+        return;
+    }
+
+    if (isAudioActive()) {
+        return;
+    }
+
+    muse::settings()->setSharedValue(LAST_UPDATE_CHECK_DAY_KEY, muse::Val(QDate::currentDate().toString(Qt::ISODate).toStdString()));
+
+    appUpdateScenario()->checkForUpdate(/*manual*/ false);
+}
+
+void StartupScenario::startUpdateCheckTimer()
+{
+    static constexpr int CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 hours
+    m_updateCheckTimer.setInterval(CHECK_INTERVAL_MS);
+    QObject::connect(&m_updateCheckTimer, &QTimer::timeout, [this]() {
+        tryCheckForUpdate();
+    });
+    m_updateCheckTimer.start();
+}
+
+bool StartupScenario::isAudioActive() const
+{
+    if (recordController() && recordController()->isRecording()) {
+        return true;
+    }
+
+    if (playbackController() && playbackController()->isPlaying()) {
+        return true;
+    }
+
+    return false;
+}
+
+bool StartupScenario::alreadyCheckedForUpdateToday() const
+{
+    const std::string lastCheckDay = muse::settings()->value(LAST_UPDATE_CHECK_DAY_KEY).toString();
+    return lastCheckDay == QDate::currentDate().toString(Qt::ISODate).toStdString();
+}

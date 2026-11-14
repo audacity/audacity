@@ -1,0 +1,134 @@
+muse_create_qml_module(preferences_qml FOR preferences)
+
+if (AU_BUILD_CLOUD_AUDIOCOM)
+    target_compile_definitions(preferences_qml PRIVATE AU_BUILD_CLOUD_AUDIOCOM)
+endif()
+
+qt_add_qml_module(preferences_qml
+    URI Audacity.Preferences
+    VERSION 1.0
+    SOURCES
+        advancedpreferencesmodel.cpp
+        advancedpreferencesmodel.h
+        appearancepreferencesmodel.cpp
+        appearancepreferencesmodel.h
+        commonaudioapiconfigurationmodel.cpp
+        commonaudioapiconfigurationmodel.h
+        editpreferencesmodel.cpp
+        editpreferencesmodel.h
+        exportpreferencespagemodel.cpp
+        exportpreferencespagemodel.h
+        foreign.h
+        generalpreferencesmodel.cpp
+        generalpreferencesmodel.h
+        musicpreferencesmodel.cpp
+        musicpreferencesmodel.h
+        playbackpreferencesmodel.cpp
+        playbackpreferencesmodel.h
+        pluginpreferencesmodel.cpp
+        pluginpreferencesmodel.h
+        preferencepageitem.cpp
+        preferencepageitem.h
+        preferencesmodel.cpp
+        preferencesmodel.h
+        recordingpreferencesmodel.cpp
+        recordingpreferencesmodel.h
+        trackspreferencesmodel.cpp
+        trackspreferencesmodel.h
+        updatepreferencesmodel.cpp
+        updatepreferencesmodel.h
+        usageinfopreferencesmodel.cpp
+        usageinfopreferencesmodel.h
+    QML_FILES
+        AdvancedPreferencesPage.qml
+        AppearancePreferencesPage.qml
+        AudioPreferencesPage.qml
+        EditPreferencesPage.qml
+        ExportPreferencesPage.qml
+        GeneralPreferencesPage.qml
+        internal/AccentColorsSection.qml
+        internal/AdvancedTopSection.qml
+        internal/AsioSection.qml
+        internal/AsymmetricStereoHeightsSection.qml
+        internal/AudioApiSection.qml
+        internal/AudioEngineSection.qml
+        internal/AutomaticUpdateSection.qml
+        internal/AutoSaveSection.qml
+        internal/BufferAndLatencySection.qml
+        internal/CharsetsSection.qml
+        internal/ClipStyleSection.qml
+        internal/ColorAndWallpaperSection.qml
+        internal/ComboBoxWithTitle.qml
+        internal/CrashReportsSection.qml
+        internal/CursorSection.qml
+        internal/DefaultFilesSection.qml
+        internal/DeleteBehaviorSection.qml
+        internal/EffectBehaviorSection.qml
+        internal/EffectOptionsSection.qml
+        internal/ExportBehaviorSection.qml
+        internal/ExtensionPreferencesSection.qml
+        internal/FFmpegLibrarySection.qml
+        internal/FoldersSection.qml
+        internal/FreeSpaceSection.qml
+        internal/IncrementalPropertyControlWithTitle.qml
+        internal/KeyboardLayoutsSection.qml
+        internal/LeadInRecordingSection.qml
+        internal/LanguagesSection.qml
+        internal/MeiSection.qml
+        internal/MeterDbRangeSection.qml
+        internal/MiscellaneousSection.qml
+        internal/MixerSection.qml
+        MusicPreferencesPage.qml
+        internal/MonoStereoConversionSection.qml
+        internal/NumberFormatSection.qml
+        internal/PasteBehaviorSection.qml
+        internal/PlaybackPerformanceSection.qml
+        internal/PluginLocationsSection.qml
+        internal/PreferencesButtonsPanel.qml
+        internal/PreferencesMenu.qml
+        internal/ProgramStartSection.qml
+        internal/RecordingBehaviorSection.qml
+        internal/RemoteControlSection.qml
+        internal/SampleRateSection.qml
+        internal/SaveBehaviorSection.qml
+        internal/SaveToCloudSection.qml
+        internal/ScrollPagesSection.qml
+        internal/SpectrogramAlgorithmSection.qml
+        internal/SpectrogramBaseSection.qml
+        internal/SpectrogramColorsSection.qml
+        internal/SpectrogramScaleSection.qml
+        internal/SpectrogramSelectionSection.qml
+        internal/TemporaryFilesSection.qml
+        internal/TrackDisplaySection.qml
+        internal/ThemeAdditionalOptionsSection.qml
+        internal/ThemesSection.qml
+        internal/UiColorsSection.qml
+        internal/UiFontSection.qml
+        internal/UsageInfoSection.qml
+        internal/WorkspacesAsymmetricChannelsSection.qml
+        internal/WorkspacesTempoDetectionSection.qml
+        internal/ZoomSection.qml
+        internal/ZoomToggleSection.qml
+        PlaybackPreferencesPage.qml
+        PluginPreferencesPage.qml
+        TracksPreferencesPage.qml
+        PreferencesDialog.qml
+        PreferencesPage.qml
+        ShortcutsPreferencesPage.qml
+        SpectrogramPreferencesPage.qml
+        UpdatePreferencesPage.qml
+    RESOURCES
+        resources/AsymmetricStereoHeights.svg
+        resources/StereoHeightsCursor.png
+    IMPORTS
+        TARGET muse_ui_qml
+        TARGET muse_uicomponents_qml
+        TARGET muse_shortcuts_qml
+)
+
+fixup_qml_module_dependencies(preferences_qml)
+
+target_link_libraries(preferences_qml PRIVATE
+    audacity_extensions
+    importer # TempoDetectionPref (foreign.h) lives there; the link makes its metatypes visible to qmltyperegistrar
+)

@@ -1,0 +1,176 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Audacity-CLA-applies
+ *
+ * Audacity
+ * A Digital Audio Editor
+ *
+ * Copyright (C) 2025 Audacity BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+#pragma once
+
+#include <optional>
+
+#include <QObject>
+#include <QtQml/qqmlregistration.h>
+
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
+#include "audio/driver/iaudiodrivercontroller.h"
+#include "ui/iuiconfiguration.h"
+
+namespace au::appshell {
+class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asyncable, public muse::Contextable
+{
+    Q_OBJECT
+    QML_ELEMENT
+
+    friend class CommonAudioApiConfigurationModelTests;
+
+    Q_PROPERTY(int currentAudioApiIndex READ currentAudioApiIndex WRITE setCurrentAudioApiIndex NOTIFY currentAudioApiIndexChanged)
+
+    Q_PROPERTY(int currentOutputDeviceIndex READ currentOutputDeviceIndex NOTIFY currentOutputDeviceIndexChanged)
+    Q_PROPERTY(QVariantList outputDeviceList READ outputDeviceList NOTIFY outputDeviceListChanged)
+
+    Q_PROPERTY(int currentInputDeviceIndex READ currentInputDeviceIndex NOTIFY currentInputDeviceIndexChanged)
+    Q_PROPERTY(QVariantList inputDeviceList READ inputDeviceList NOTIFY inputDeviceListChanged)
+
+    Q_PROPERTY(double bufferLength READ bufferLength NOTIFY bufferLengthChanged)
+    Q_PROPERTY(bool automaticCompensationEnabled READ automaticCompensationEnabled NOTIFY automaticCompensationEnabledChanged)
+    Q_PROPERTY(double latencyCompensation READ latencyCompensation NOTIFY latencyCompensationChanged)
+
+    Q_PROPERTY(QString currentInputChannelsSelected READ currentInputChannelsSelected NOTIFY currentInputChannelsSelectedChanged)
+    Q_PROPERTY(QVariantList inputChannelsList READ inputChannelsList NOTIFY inputChannelsListChanged)
+
+    Q_PROPERTY(QString defaultSampleRate READ defaultSampleRate NOTIFY defaultSampleRateChanged)
+    Q_PROPERTY(uint64_t defaultSampleRateValue READ defaultSampleRateValue NOTIFY defaultSampleRateValueChanged)
+    Q_PROPERTY(QVariantList defaultSampleRateList READ defaultSampleRateList NOTIFY defaultSampleRateListChanged)
+    Q_PROPERTY(bool otherSampleRate READ otherSampleRate NOTIFY otherSampleRateChanged)
+
+    Q_PROPERTY(QString defaultSampleFormat READ defaultSampleFormat NOTIFY defaultSampleFormatChanged)
+    Q_PROPERTY(QVariantList defaultSampleFormatList READ defaultSampleFormatList NOTIFY defaultSampleFormatListChanged)
+
+    Q_PROPERTY(double longestDeviceNameLength READ longestDeviceNameLength NOTIFY longestDeviceNameLengthChanged)
+
+    Q_PROPERTY(bool isAsio READ isAsio NOTIFY currentAudioApiIndexChanged)
+    Q_PROPERTY(bool asioUseDeviceSampleRate READ asioUseDeviceSampleRate NOTIFY asioUseDeviceSampleRateChanged)
+
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
+    muse::ContextInject<muse::IInteractive> interactive { this };
+
+public:
+    explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void load();
+    Q_INVOKABLE void reset();
+    Q_INVOKABLE bool apply();
+
+    int currentAudioApiIndex() const;
+    Q_INVOKABLE QStringList audioApiList() const;
+    Q_INVOKABLE void setCurrentAudioApiIndex(int index);
+
+    int currentOutputDeviceIndex() const;
+    QVariantList outputDeviceList() const;
+    Q_INVOKABLE void outputDeviceSelected(int index);
+
+    int currentInputDeviceIndex() const;
+    QVariantList inputDeviceList() const;
+    Q_INVOKABLE void inputDeviceSelected(int index);
+
+    double bufferLength() const;
+    Q_INVOKABLE void bufferLengthSelected(const QString& bufferLengthStr);
+
+    bool automaticCompensationEnabled() const;
+    Q_INVOKABLE void setAutomaticCompensationEnabled(bool enabled);
+
+    double latencyCompensation() const;
+    Q_INVOKABLE void latencyCompensationSelected(const QString& latencyCompensationStr);
+
+    QString currentInputChannelsSelected() const;
+    QVariantList inputChannelsList() const;
+    Q_INVOKABLE void inputChannelsSelected(const int index);
+
+    // used for dropdown
+    QString defaultSampleRate() const;
+    QVariantList defaultSampleRateList();
+    Q_INVOKABLE void defaultSampleRateSelected(const QString& rate);
+
+    // used for incremental control
+    uint64_t defaultSampleRateValue() const;
+    Q_INVOKABLE void defaultSampleRateValueSelected(uint64_t rateValue);
+
+    // control incremental control visibility
+    bool otherSampleRate() const;
+    void setOtherSampleRate(bool other);
+
+    QString defaultSampleFormat() const;
+    QVariantList defaultSampleFormatList() const;
+    Q_INVOKABLE void defaultSampleFormatSelected(const QString& format);
+
+    double longestDeviceNameLength() const;
+
+    bool isAsio() const;
+    bool asioUseDeviceSampleRate() const;
+    Q_INVOKABLE void setAsioUseDeviceSampleRate(bool use);
+    Q_INVOKABLE void showAsioControlPanel();
+
+signals:
+    void currentAudioApiIndexChanged();
+
+    void currentOutputDeviceIndexChanged();
+    void outputDeviceListChanged();
+
+    void currentInputDeviceIndexChanged();
+    void inputDeviceListChanged();
+
+    void bufferLengthChanged();
+    void latencyCompensationChanged();
+    void automaticCompensationEnabledChanged();
+
+    void currentInputChannelsSelectedChanged();
+    void inputChannelsListChanged();
+
+    void defaultSampleRateChanged();
+    void defaultSampleRateValueChanged();
+    void defaultSampleRateListChanged();
+    void otherSampleRateChanged();
+
+    void defaultSampleFormatChanged();
+    void defaultSampleFormatListChanged();
+
+    void longestDeviceNameLengthChanged();
+
+    void asioUseDeviceSampleRateChanged();
+
+private:
+    std::string effectiveApi() const;
+    audio::AudioDeviceSelection effectiveOutputDevice() const;
+    audio::AudioDeviceSelection effectiveInputDevice() const;
+    int effectiveInputChannelsAvailable() const;
+    int effectiveInputChannels() const;
+    void setPendingSampleRate(uint64_t rateValue);
+    void clearPendingValues();
+    void notifyDeviceContextChanged();
+
+    std::vector<std::pair<uint64_t, QString> > m_sampleRateMapping;
+    bool m_otherSampleRate = false;
+
+    audio::AudioConfigurationChange m_pending;
+};
+}

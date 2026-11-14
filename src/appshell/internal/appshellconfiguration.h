@@ -1,0 +1,123 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+#ifndef AU_APPSHELL_APPSHELLCONFIGURATION_H
+#define AU_APPSHELL_APPSHELLCONFIGURATION_H
+
+#include "async/asyncable.h"
+
+#include "modularity/ioc.h"
+#include "iglobalconfiguration.h"
+#include "io/ifilesystem.h"
+#include "projectscene/iprojectsceneconfiguration.h"
+#include "iapplication.h"
+
+// #include "ui/iuiconfiguration.h"
+// #include "project/iprojectconfiguration.h"
+// #include "playback/iplaybackconfiguration.h"
+// #include "languages/ilanguagesconfiguration.h"
+
+#include "iappshellconfiguration.h"
+
+namespace au::appshell {
+class AppShellConfiguration : public IAppShellConfiguration, public muse::Contextable, public muse::async::Asyncable
+{
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<muse::IApplication> application;
+
+public:
+    AppShellConfiguration(const muse::modularity::ContextPtr& iocCtx)
+        : muse::Contextable(iocCtx) {}
+
+    void init();
+
+    bool hasCompletedFirstLaunchSetup() const override;
+    void setHasCompletedFirstLaunchSetup(bool has) override;
+
+    bool welcomeDialogShowOnStartup() const override;
+    void setWelcomeDialogShowOnStartup(bool show) override;
+    muse::async::Notification welcomeDialogShowOnStartupChanged() const override;
+
+    std::string welcomeDialogLastShownVersion() const override;
+    void setWelcomeDialogLastShownVersion(const std::string& version) override;
+
+    int welcomeDialogLastShownIndex() const override;
+    void setWelcomeDialogLastShownIndex(int index) override;
+
+    StartupModeType startupModeType() const override;
+    void setStartupModeType(StartupModeType type) override;
+
+    muse::io::path_t startupProjectPath() const override;
+    void setStartupProjectPath(const muse::io::path_t& scorePath) override;
+
+    muse::io::path_t userDataPath() const override;
+
+    std::string handbookUrl() const override;
+    std::string askForHelpUrl() const override;
+    std::string appUrl() const override;
+    std::string forumUrl() const override;
+    std::string contributionUrl() const override;
+
+    std::string audacityVersion() const override;
+    std::string appRevision() const override;
+
+    bool needShowSplashScreen() const override;
+    void setNeedShowSplashScreen(bool show) override;
+
+    const QString& preferencesDialogLastOpenedPageId() const override;
+    void setPreferencesDialogLastOpenedPageId(const QString& lastOpenedPageId) override;
+
+    void startEditSettings() override;
+    void applySettings() override;
+    void rollbackSettings() override;
+    muse::async::Notification settingsApplied() const override;
+
+    void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
+                                 bool notifyOtherInstances = true) override;
+    muse::async::Notification aboutToRevertToFactorySettings() const override;
+
+    muse::io::paths_t sessionProjectsPaths() const override;
+    muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
+
+    bool isEffectsPanelVisible() const override;
+    void setIsEffectsPanelVisible(bool visible) override;
+    muse::async::Notification isEffectsPanelVisibleChanged() const override;
+
+private:
+    muse::io::path_t sessionDataPath() const;
+    muse::io::path_t sessionFilePath() const;
+
+    muse::RetVal<muse::ByteArray> readSessionState() const;
+    muse::Ret writeSessionState(const QByteArray& data);
+
+    muse::io::paths_t parseSessionProjectsPaths(const QByteArray& json) const;
+
+    QString m_preferencesDialogCurrentPageId;
+    muse::async::Notification m_settingsApplied;
+    muse::async::Notification m_aboutToRevertToFactorySettings;
+
+    muse::async::Notification m_welcomeDialogShowOnStartupChanged;
+};
+}
+
+#endif // AU_APPSHELL_APPSHELLCONFIGURATION_H

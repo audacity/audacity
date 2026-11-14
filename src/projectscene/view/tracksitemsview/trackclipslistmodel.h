@@ -1,0 +1,106 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <functional>
+#include <optional>
+
+#include "framework/global/modularity/ioc.h"
+
+#include "ui/iuiconfiguration.h"
+#include "workspace/iworkspacemanager.h"
+#include "iprojectsceneconfiguration.h"
+#include "context/iglobalcontext.h"
+#include "record/irecordcontroller.h"
+#include "trackedit/itracksviewrequestsservice.h"
+
+#include "trackitemslistmodel.h"
+#include "trackclipitem.h"
+
+namespace au::projectscene {
+class TrackClipsListModel : public TrackItemsListModel
+{
+    Q_OBJECT
+
+    Q_PROPERTY(bool isStereo READ isStereo NOTIFY isStereoChanged FINAL)
+    Q_PROPERTY(ClipStyles::Style clipStyle READ clipStyle NOTIFY clipStyleChanged FINAL)
+    Q_PROPERTY(
+        bool asymmetricStereoHeightsPossible READ asymmetricStereoHeightsPossible NOTIFY asymmetricStereoHeightsPossibleChanged)
+    Q_PROPERTY(bool isContrastFocusBorderEnabled READ isContrastFocusBorderEnabled NOTIFY isContrastFocusBorderEnabledChanged FINAL)
+
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au::record::IRecordController> recordController { this };
+    muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
+
+public:
+    explicit TrackClipsListModel(QObject* parent = nullptr);
+
+    bool isStereo() const;
+    ClipStyles::Style clipStyle() const;
+
+    void endEditItem(const TrackItemKey& key) override;
+    Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+    Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+    Q_INVOKABLE bool stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+    Q_INVOKABLE bool stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
+
+    Q_INVOKABLE void selectClip(const ClipKey& key);
+    Q_INVOKABLE void handleClipRelease(const ClipKey& key);
+    Q_INVOKABLE void resetSelectedClips();
+    Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
+    Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
+
+    Q_INVOKABLE void startClipFadeEdit(const ClipKey& key);
+    Q_INVOKABLE bool changeClipFadeIn(const ClipKey& key, double duration, bool completed);
+    Q_INVOKABLE bool changeClipFadeOut(const ClipKey& key, double duration, bool completed);
+    Q_INVOKABLE void cancelClipFadeEdit();
+
+    Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
+    Q_INVOKABLE void resetClipPitch(const ClipKey& key);
+
+    Q_INVOKABLE void openClipSpeedEdit(const ClipKey& key);
+    Q_INVOKABLE void resetClipSpeed(const ClipKey& key);
+
+    bool asymmetricStereoHeightsPossible() const;
+    bool isContrastFocusBorderEnabled() const;
+
+signals:
+    void selectedClipIdxChanged();
+    void isStereoChanged();
+    void clipStyleChanged();
+    void asymmetricStereoHeightsPossibleChanged();
+    void isContrastFocusBorderEnabledChanged();
+
+    void requestClipTitleEdit(int index);
+
+    void contentXChanged();
+
+private:
+    void onInit() override;
+    void onReload() override;
+
+    void update();
+    void updatePendingTitleEdit();
+    void updateItemMetrics(ViewTrackItem* item) override;
+    ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
+    trackedit::TrackItemKeyList getSelectedItemKeys() const override;
+    trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
+
+    TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
+
+    bool isKeyboardTriggered() const;
+
+    bool changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change);
+
+    muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
+    ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
+    bool m_isStereo = false;
+    //! As it was before the fade edit
+    std::optional<trackedit::Clip> m_fadeEditedClip;
+};
+}

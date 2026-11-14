@@ -1,0 +1,38 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "effects/effects_base/internal/au3effectloader.h"
+#include "effects/effects_base/ieffectsprovider.h"
+#include "spectrogram/ispectraleffectsregister.h"
+
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "au3-nyquist-effects/LoadNyquist.h"
+
+namespace au::effects {
+class NyquistEffectsRepository : public muse::async::Asyncable
+{
+    muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
+    muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
+
+public:
+    NyquistEffectsRepository();
+
+    void init();
+
+private:
+    void registerSpectralEffects();
+    EffectMetaList effectMetaList() const;
+
+    // This member forces the linker to include LoadNyquist.cpp,
+    // which contains DECLARE_BUILTIN_PROVIDER for the Nyquist module
+    ::NyquistEffectsModule m_module;
+    Au3EffectLoader m_loader;
+
+    bool m_spectralEffectsRegistered = false;
+};
+}

@@ -1,0 +1,43 @@
+$nyquist plug-in
+$version 5
+$type analyze nogroup
+$name (_ "Beat finder")
+$debugbutton false
+$author (_ "Audacity")
+$release 4.0.0
+$copyright (_ "GNU General Public License v2.0")
+
+;; License: GPL v2
+;; http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+;;
+;; For information about writing and modifying Nyquist plug-ins:
+;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
+
+
+$control THRESVAL (_ "Threshold Percentage") int "" 65 5 100
+
+(setf threshold (/ THRESVAL 100.0))
+
+(defun mix-to-mono (sig)
+  (if (arrayp sig)
+      (sum (aref sig 0) (aref sig 1))
+      sig))
+
+(defun bass-tracker (sig)
+  (let* ((bass (lp sig 50))
+         ;(snd-follow sound floor risetime falltime lookahead)
+         (follower (snd-follow bass 0.001 0.01 0.1 512)))
+    (force-srate 1000 (lp follower 10))))
+
+
+(let ((beats (bass-tracker (mix-to-mono *track*))))
+  (setf peak-sig (peak beats ny:all))
+  (setf threshold (* threshold peak-sig))
+  (do ((time 0.0 (+ time 0.001))
+       (val (snd-fetch beats) (snd-fetch beats))
+       (flag T)
+       labels)
+      ((not val) labels)
+    (when (and flag (> val threshold))
+      (push (list time "B") labels))
+    (setf flag (< val threshold))))

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Include>
+    <!-- Supported audio formats -->
+    <?define AudacityMediaExts=wav;wavex;aiff;aif;aifc;au;caf;w64;rf64;voc;paf;sd2;iff;svx;raw;mp3;mp2;mpa;ogg;flac;flc;opus;wv;aac;ac3;m4a;mp4;m4r;3gp;3g2;wma;asf;wmv;mkv;mov;avi;flv;ts;ape;tta;amr;dts;ra;rm;mpc;shn?>
+
+    <!-- Supported label formats -->
+    <?define AudacityLabelExts=srt;vtt?>
+
+    <!-- Secondary formats allow us to add Audacity to the "Open with" app list, without explicitly setting the app as default -->
+    <?define AudacitySecondaryExts=aup3;$(var.AudacityMediaExts);$(var.AudacityLabelExts)?>
+</Include>

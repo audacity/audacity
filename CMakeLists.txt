@@ -1,0 +1,230 @@
+# **********************************************************************
+#
+#  Audacity: A Digital Audio Editor
+#
+# **********************************************************************
+
+cmake_minimum_required(VERSION 3.24)
+
+cmake_policy(SET CMP0091 OLD) # not set MSVC default args
+
+project(audacity LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+###########################################
+# Muse Framework
+###########################################
+set(FETCHCONTENT_QUIET OFF)
+set(FETCHCONTENT_BASE_DIR ${PROJECT_BINARY_DIR}/_deps)
+
+set(MUSE_FRAMEWORK_PATH ${CMAKE_SOURCE_DIR}/muse)
+set(MUSE_FRAMEWORK_SRC_PATH ${MUSE_FRAMEWORK_PATH}/framework)
+
+set(CMAKE_MODULE_PATH
+    ${CMAKE_CURRENT_LIST_DIR}
+    ${CMAKE_CURRENT_LIST_DIR}/buildscripts/cmake
+    ${MUSE_FRAMEWORK_PATH}/buildscripts/cmake
+    ${MUSE_FRAMEWORK_PATH}/framework/cmake
+    ${CMAKE_MODULE_PATH}
+    )
+
+option(MUSE_MODULE_DOCKWINDOW_KDDOCKWIDGETS_V2 "Use KDDockWidgets v2" ON)
+
+include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
+include(DeclareModuleSetup)
+
+###########################################
+# AudacityDependencies
+###########################################
+set(AUDACITY_ROOT ${CMAKE_CURRENT_LIST_DIR}/au3)
+add_definitions(-DINSTALL_PREFIX="${CMAKE_INSTALL_PREFIX}")
+
+include(GetPlatformInfo)
+
+###########################################
+# Setup option and build settings
+###########################################
+include(GetPaths)
+
+set(AU4_BUILD_CONFIGURATION "app" CACHE STRING "Build configuration")
+# Possible values:
+# - app             - for desktop app
+# - app-portable    - for desktop portable app (Windows build for PortableApps.com)
+# - utest           - for unit tests (for CI)
+
+set(AU4_BUILD_MODE "dev" CACHE STRING "Build mode")
+# Possible values:
+# - dev     - for development/nightly builds
+# - testing - for testing versions (alpha, beta, RC)
+# - release - for stable release builds
+
+set(AU4_REVISION "" CACHE STRING "Build revision")
+
+# Modules (alphabetical order please)
+option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
+option(AU_BUILD_APPSHELL_TESTS "Build appshell tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_AU3AUDIO_TESTS "Build au3audio tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_AUTOMATION_TESTS "Build automation tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_CLOUD_AUDIOCOM "Build cloud audiocom module" ON)
+option(AU_BUILD_CONTEXT_TESTS "Build context tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
+option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_IMPORT_TESTS "Build import tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_EXPORT_TESTS "Build export tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_MUSEHUB_MODULE "Build Muse Hub module" ON)
+option(AU_BUILD_MACROMANAGER_TESTS "Build macromanager tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
+option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PREFERENCES_TESTS "Build preferences tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PROJECT_TESTS "Build project tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
+option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_RECORD_MODULE "Build record module" ON)
+option(AU_BUILD_RECORD_TESTS "Build record tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_SHARED_TESTS "Build shared tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_TRACKEDIT_TESTS "Build trackedit tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_UICOMPONENTS_TESTS "Build uicomponents tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_USAGEINFO_MODULE "Build usage info module" ON)
+
+option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
+option(AU_MODULE_EFFECTS_NYQUIST "Build audacity nyquist module" ON)
+
+if (OS_IS_LIN)
+    set(AU_BUILD_MUSEHUB_MODULE OFF CACHE BOOL "Build Muse Hub module" FORCE)
+    option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON)
+endif(OS_IS_LIN)
+
+if( CMAKE_SYSTEM_NAME MATCHES "Darwin" )
+    option(AU_MODULE_EFFECTS_AUDIO_UNIT "Build Audacity Audio Unit module" ON)
+endif()
+
+# Time-stretching and pitch-shifting libraries
+option(AU_USE_SBSMS "Build with SBSMS support for time-stretching effects" ON)
+option(AU_USE_SOUNDTOUCH "Build with SoundTouch support for pitch/tempo effects" ON)
+
+# Networking
+option(AU_USE_LIBCURL "Use libcurl for HTTP requests" OFF)
+
+# Time track
+option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
+
+# Port mixer
+option(AU_USE_PORTMIXER "Use PortMixer for audio device management" ON)
+
+set(MUSE_MODULE_ACCESSIBILITY ON)
+set(MUSE_MODULE_ACTIONS ON)
+set(MUSE_MODULE_AUDIO OFF)
+set(MUSE_MODULE_AUDIOPLUGINS ON)
+set(MUSE_MODULE_CLOUD ${AU_BUILD_CLOUD_AUDIOCOM})
+set(MUSE_MODULE_CLOUD_MUSESCORECOM OFF CACHE BOOL "Enable MuseScore.com account" FORCE)
+set(MUSE_MODULE_DIAGNOSTICS ON)
+set(MUSE_MODULE_DRAW ON)
+set(MUSE_MODULE_DRAW_TESTS OFF)
+set(MUSE_MODULE_EXTENSIONS ON)
+set(MUSE_MODULE_GLOBAL ON)
+set(MUSE_MODULE_GLOBAL_TESTS OFF)
+set(MUSE_MODULE_LANGUAGES ON)
+set(MUSE_MODULE_LEARN OFF)
+set(MUSE_MODULE_MIDI OFF)
+set(MUSE_MODULE_MPE OFF)
+set(MUSE_MODULE_MULTIWINDOWS ON)
+set(MUSE_MODULE_MULTIWINDOWS_SINGLEPROC_MODE ON)
+set(MUSE_MODULE_MUSESAMPLER OFF)
+set(MUSE_MODULE_NETWORK ON)
+set(MUSE_MODULE_SHORTCUTS ON)
+set(MUSE_MODULE_SHORTCUTS_V2 ON)
+set(MUSE_MODULE_TESTFLOW ON)
+set(MUSE_MODULE_TOAST ON)
+set(MUSE_MODULE_UI ON)
+set(MUSE_MODULE_UI_TESTS OFF)
+set(MUSE_MODULE_WORKSPACE ON)
+set(MUSE_MODULE_VST ON)
+set(MUSE_MODULE_VST_QML ON)
+
+# Skip TestFlow in release builds
+if (AU4_BUILD_MODE STREQUAL "release")
+    set(MUSE_MODULE_TESTFLOW OFF)
+endif()
+
+# === Setup ===
+
+# === Pack ===
+option(AU_RUN_LRELEASE "Generate .qm files" ON)
+
+# === Tests ===
+set(APP_WORKSPACE_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/src/app/configs/workspaces.cfg")
+set(APP_BUILTIN_WORKSPACES_DIR "${CMAKE_CURRENT_LIST_DIR}/share/workspaces")
+
+# === Compile ===
+option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
+option(MUSE_COMPILE_USE_UNITY "Use unity build." ON) # many AU4 modules still disable unity per-module; re-enabling is tracked in https://github.com/audacity/audacity/issues/11805
+option(MUSE_COMPILE_USE_CCACHE "Try use ccache" ON)
+
+###########################################
+# Setup Configure
+###########################################
+
+# default
+set(QT_ADD_LINGUISTTOOLS ON)
+set(QT_ADD_CONCURRENT ON)
+set(QT_QPROCESS_SUPPORTED ON)
+
+if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
+    include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
+else()
+    include(SetupConfigure)
+endif()
+
+###########################################
+# Setup compiler and build environment
+###########################################
+
+include(SetupBuildEnvironment)
+include(GetPlatformInfo)
+include(SetupDevEnvironment)
+
+if (MUSE_COMPILE_USE_CCACHE)
+    include(SetupCompilerCache)
+endif(MUSE_COMPILE_USE_CCACHE)
+
+
+###########################################
+# Setup external dependencies
+###########################################
+set(QT_MIN_VERSION "6.2.4")
+include(SetupQt6)
+
+# This should be called after all options() are resolved
+include(SetupDependencies)
+
+###########################################
+# Add source tree
+###########################################
+if (MUSE_ENABLE_UNIT_TESTS)
+    enable_testing()
+    message(STATUS "Enabled testing")
+endif()
+
+add_subdirectory(${MUSE_FRAMEWORK_SRC_PATH})
+add_subdirectory(src)
+add_subdirectory(share)
+
+if (MSVC)
+    # Now that the `audacity` target is defined, we can set it as the startup project in Visual Studio.
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT audacity)
+endif()
+
+###########################################
+# Setup Packaging
+###########################################
+if (OS_IS_LIN)
+    include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Linux+BSD/SetupAppImagePackaging.cmake)
+endif(OS_IS_LIN)
+
+if (OS_IS_WIN)
+    include(${CMAKE_CURRENT_LIST_DIR}/buildscripts/packaging/Windows/SetupWindowsPackaging.cmake)
+endif(OS_IS_WIN)

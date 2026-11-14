@@ -1,0 +1,77 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "abstractitemmodel.h"
+
+#include "framework/global/async/asyncable.h"
+
+#include "modularity/ioc.h"
+#include "iprojectconfiguration.h"
+#include "au3cloud/iau3audiocomservice.h"
+#include "framework/global/io/ifilesystem.h"
+#include "framework/interactive/iinteractive.h"
+#include <qtmetamacros.h>
+
+namespace au::project {
+class CloudAudioFilesModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Contextable
+{
+    Q_OBJECT
+
+    muse::GlobalInject<au::project::IProjectConfiguration> configuration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+
+    muse::ContextInject<au::au3cloud::IAu3AudioComService> audioComService { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+
+    Q_PROPERTY(State state READ state NOTIFY stateChanged)
+    Q_PROPERTY(bool hasMore READ hasMore NOTIFY hasMoreChanged)
+
+    Q_PROPERTY(int desiredRowCount READ desiredRowCount WRITE setDesiredRowCount NOTIFY desiredRowCountChanged)
+
+public:
+    CloudAudioFilesModel(QObject* parent = nullptr);
+
+    enum class State {
+        Fine,
+        Loading,
+        Error
+    };
+    Q_ENUM(State)
+
+    void load() override;
+    Q_INVOKABLE void reload();
+    Q_INVOKABLE void clear();
+
+    State state() const;
+    bool hasMore() const;
+
+    // Used by the view to request more items
+    int desiredRowCount() const;
+    void setDesiredRowCount(int count);
+
+signals:
+    void stateChanged();
+    void hasMoreChanged();
+
+    void desiredRowCountChanged();
+
+private:
+    void doClear();
+    void setState(State state);
+
+    void loadItemsIfNecessary();
+    bool needsLoading();
+    void clearContextMenuModels();
+
+    State m_state = State::Fine;
+    bool m_isWaitingForPromise = false;
+
+    size_t m_totalItems = muse::nidx;
+
+    int m_desiredRowCount = 0;
+
+    uint64_t m_reloadGeneration = 0;
+};
+}

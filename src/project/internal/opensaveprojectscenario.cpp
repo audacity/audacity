@@ -1,0 +1,858 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Audacity-CLA-applies
+ *
+ * Audacity
+ * A Digital Audio Editor
+ *
+ * Copyright (C) 2024 Audacity Limited
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#include "opensaveprojectscenario.h"
+
+#include "cloud/clouderrors.h"
+#include "interactive/iinteractive.h"
+#include "projecterrors.h"
+#include "translation.h"
+#include "types/uri.h"
+#include "au3cloud/au3clouderrors.h"
+
+using namespace muse;
+using namespace au::project;
+
+static constexpr int RET_CODE_CHANGE_SAVE_LOCATION_TYPE = 1234;
+
+namespace {
+const char* OPEN_SYNC_ERROR_TITLE = "Cloud sync failed";
+const char* OPEN_SYNC_ERROR_MESSAGE = "Opened from local copy. Your project may not be up to date.";
+const char* OPEN_SYNC_ERROR_NO_LOCAL_FILE_MESSAGE = "No local copy is available. Could not open the project.";
+
+const char* OPEN_DEFAULT_ERROR_TITLE = "Cannot open cloud project";
+const char* OPEN_DEFAULT_ERROR_MESSAGE = "An error occurred while opening the cloud project.";
+
+const char* OPEN_CONFLICT_TITLE = "Project version conflict";
+const char* OPEN_CONFLICT_MESSAGE
+    = "There is a newer version of this project on audio.com. You can open your local version or discard it and download the latest.";
+const char* OPEN_CONFLICT_LOCAL_BTN = "Open local version";
+const char* OPEN_CONFLICT_REMOTE_BTN = "Discard and open latest";
+
+const char* OPEN_FORBIDDEN_TITLE = "Access denied";
+const char* OPEN_FORBIDDEN_MESSAGE
+    = "You don't have permission to sync this project. It may belong to a different account. Opened from local copy.";
+const char* OPEN_FORBIDDEN_NO_LOCAL_FILE_MESSAGE
+    = "You don't have access to this cloud project. It may belong to a different account.";
+
+const char* OPEN_NOT_FOUND_ERROR_TITLE = "Cloud project unavailable";
+const char* OPEN_NOT_FOUND_ERROR_MESSAGE
+    = "Your project is no longer linked to its previous cloud save. This may happen if the cloud version was deleted.\n\n"
+      "Save to audio.com to re-upload this project to the cloud.";
+const char* OPEN_NOT_FOUND_ERROR_NO_LOCAL_FILE_MESSAGE
+    =
+        "Your project is no longer linked to its previous cloud save and no local copy is available. This may happen if the cloud version was deleted.";
+
+const char* SAVE_CONFLICT_TITLE = "Project version conflict";
+const char* SAVE_CONFLICT_MESSAGE
+    =
+        "A newer version of this project exists on audio.com. You can overwrite it with your local version or discard your changes and open the latest version.";
+const char* SAVE_CONFLICT_LOCAL_BTN = "Overwrite cloud version";
+const char* SAVE_CONFLICT_REMOTE_BTN = "Discard and open latest";
+
+const char* SAVE_FORBIDDEN_TITLE = "Access denied";
+const char* SAVE_FORBIDDEN_MESSAGE
+    = "You don't have permission to save this project to the cloud. It may belong to a different account.";
+
+const char* PRJ_STORAGE_LIMIT_TITLE = "Your project storage limit has been reached";
+const char* PRJ_STORAGE_LIMIT_TEXT
+    =
+        "You may need to remove your older projects to make space available. For more options, visit audio.com.\n\nYou can also save this project locally to avoid losing changes.";
+
+const char* PRJ_LIMIT_REACHED_TITLE = "Your project limit has been reached";
+const char* PRJ_LIMIT_REACHED_TEXT
+    =
+        "You have used up all of your available projects. Visit the project page on audio.com to make room for new creations.\n\nYou can also save this project on your computer to avoid losing changes.";
+
+const char* CLOUD_SAVE_UNAVAILABLE_TITLE = "Cloud save unavailable";
+const char* CLOUD_SAVE_UNAVAILABLE_TEXT
+    =
+        "Your project is no longer linked to its previous cloud save. This may happen if the cloud version was deleted.\n\nSave to audio.com to re-upload this project to the cloud.";
+
+const char* DEFAULT_SYNC_ERROR_TITLE = "We encountered an issue syncing your file";
+const char* DEFAULT_SYNC_ERROR_TEXT
+    =
+        "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.";
+
+const char* DEFAULT_CLOUD_ERROR_TITLE = "Cloud error";
+const char* DEFAULT_CLOUD_ERROR_TEXT = "An error occurred while syncing with the cloud. Please try again later.";
+
+const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TITLE = "Couldn't download audio";
+const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT
+    = "Something went wrong while downloading your audio from audio.com. Please try again, or visit audio.com for help.";
+
+const char* PROJECT_INCOMPLETE_TITLE = "Cloud project incomplete";
+const char* PROJECT_INCOMPLETE_TEXT
+    = "No version of this project has been fully uploaded to audio.com. It cannot be loaded.";
+const char* PROJECT_NOT_FULLY_SYNCED_TEXT
+    = "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead.";
+}
+
+RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
+                                                              SaveLocationType preselectedType) const
+{
+    SaveLocationType type = preselectedType;
+
+    const bool shouldUpdateLastUsed = configuration()->shouldAskSaveLocationType();
+
+    if (type == SaveLocationType::Undefined) {
+        RetVal<SaveLocationType> askedType = saveLocationType();
+        if (!askedType.ret) {
+            return askedType.ret;
+        }
+
+        type = askedType.val;
+    }
+
+    IF_ASSERT_FAILED(type != SaveLocationType::Undefined) {
+        return make_ret(Ret::Code::UnknownError);
+    }
+
+    // The user may switch between Local and Cloud as often as they want
+    for (;;) {
+        if (shouldUpdateLastUsed) {
+            configuration()->setLastUsedSaveLocationType(type);
+        }
+
+        switch (type) {
+        case SaveLocationType::Undefined:
+            return make_ret(Ret::Code::UnknownError);
+
+        case SaveLocationType::Local: {
+            RetVal<muse::io::path_t> path = askLocalPath(project, mode);
+            switch (path.ret.code()) {
+            case int(Ret::Code::Ok): {
+                return RetVal<SaveLocation>::make_ok(SaveLocation(path.val));
+            }
+            case RET_CODE_CHANGE_SAVE_LOCATION_TYPE:
+                type = SaveLocationType::Cloud;
+                continue;
+            default:
+                return path.ret;
+            }
+        }
+
+        case SaveLocationType::Cloud: {
+            RetVal<CloudProjectInfo> info = askCloudLocation(project, mode);
+            switch (info.ret.code()) {
+            case int(Ret::Code::Ok):
+                return RetVal<SaveLocation>::make_ok(SaveLocation(info.val));
+            case RET_CODE_CHANGE_SAVE_LOCATION_TYPE:
+                type = SaveLocationType::Local;
+                continue;
+            default:
+                return info.ret;
+            }
+        }
+        }
+    }
+}
+
+RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectPtr project, SaveMode saveMode) const
+{
+    std::string dialogTitle = muse::trc("project/save", "Save project");
+    std::string filenameAddition;
+
+    if (saveMode == SaveMode::SaveCopy) {
+        //: used to form a filename suggestion, like "originalFile - copy"
+        filenameAddition = " - " + muse::trc("project/save", "copy", "a copy of a file");
+    } else if (saveMode == SaveMode::SaveSelection) {
+        //: used to form a filename suggestion, like "originalFile - selection"
+        filenameAddition = " - " + muse::trc("project/save", "selection");
+    }
+
+    muse::io::path_t defaultPath = configuration()->defaultSavingFilePath(project, filenameAddition);
+
+    std::vector<std::string> filter {
+        muse::trc("project", "Audacity 4 files") + " (*.aup4)"
+    };
+
+    muse::io::path_t selectedPath = interactive()->selectSavingFileSync(dialogTitle, defaultPath, filter);
+
+    if (selectedPath.empty()) {
+        return make_ret(Ret::Code::Cancel);
+    }
+
+    // force save to aup4 format
+    std::string suffix = muse::io::suffix(selectedPath);
+    std::string correctedPath = selectedPath.toStdString();
+    if (!suffix.empty()) {
+        correctedPath = correctedPath.substr(0, correctedPath.size() - (suffix.size() + 1));
+    }
+
+    // check if there's a dot at the end; add one if not
+    if (!correctedPath.empty() && correctedPath.back() != '.') {
+        correctedPath += ".";
+    }
+    correctedPath += "aup4";
+
+    const bool suffixCorrected = correctedPath != selectedPath.toStdString();
+    selectedPath = correctedPath;
+
+    // Another spelling of this project's own file is a plain save
+    if (isSameProjectFile(project->path(), selectedPath)) {
+        selectedPath = project->path();
+    }
+
+    if (selectedPath != project->path() && multiwindowsProvider()->isProjectAlreadyOpened(selectedPath)) {
+        interactive()->errorSync(muse::trc("project-file-io", "Error Saving Project"),
+                                 muse::trc("project/save",
+                                           "The project was not saved because the selected project is open in another window.\n"
+                                           "Please try again and select an original name."));
+        return askLocalPath(project, saveMode);
+    }
+
+    // The file dialog asked about the name before the suffix was corrected
+    if (suffixCorrected && selectedPath != project->path() && fileSystem()->exists(selectedPath)) {
+        const int overwriteBtn = int(IInteractive::Button::CustomButton) + 1;
+        const IInteractive::ButtonData overwriteBtnData(overwriteBtn, muse::trc("export", "Overwrite"));
+        IInteractive::Result result = interactive()->questionSync(io::filename(selectedPath).toStdString(),
+                                                                  muse::trc("export", "Do you want to overwrite?"),
+                                                                  { overwriteBtnData,
+                                                                    interactive()->buttonData(IInteractive::Button::Cancel) });
+        if (result.button() != overwriteBtn) {
+            return askLocalPath(project, saveMode);
+        }
+    }
+
+    configuration()->setLastSavedProjectsPath(io::dirpath(selectedPath));
+
+    return RetVal<muse::io::path_t>::make_ok(selectedPath);
+}
+
+RetVal<SaveLocationType> OpenSaveProjectScenario::saveLocationType() const
+{
+    bool shouldAsk = configuration()->shouldAskSaveLocationType();
+    SaveLocationType lastUsed = configuration()->lastUsedSaveLocationType();
+    if (!shouldAsk && lastUsed != SaveLocationType::Undefined) {
+        return RetVal<SaveLocationType>::make_ok(lastUsed);
+    }
+
+    return askSaveLocationType();
+}
+
+RetVal<SaveLocationType> OpenSaveProjectScenario::askSaveLocationType() const
+{
+    UriQuery query("audacity://project/asklocationtype");
+    query.addParam("purpose", Val(std::string("save")));
+    bool shouldAsk = configuration()->shouldAskSaveLocationType();
+    query.addParam("askAgain", Val(shouldAsk));
+
+    RetVal<Val> rv = interactive()->openSync(query);
+    if (!rv.ret) {
+        return rv.ret;
+    }
+
+    QVariantMap vals = rv.val.toQVariant().toMap();
+
+    bool askAgain = vals["askAgain"].toBool();
+    configuration()->setShouldAskSaveLocationType(askAgain);
+
+    SaveLocationType type = static_cast<SaveLocationType>(vals["locationType"].toInt());
+    return RetVal<SaveLocationType>::make_ok(type);
+}
+
+RetVal<CloudProjectInfo> OpenSaveProjectScenario::askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const
+{
+    return doAskCloudLocation(project, mode, false);
+}
+
+RetVal<CloudProjectInfo> OpenSaveProjectScenario::askPublishLocation(IAudacityProjectPtr project) const
+{
+    return doAskCloudLocation(project, SaveMode::Save, true);
+}
+
+//! TODO AU4
+RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityProjectPtr project, SaveMode mode, bool isPublishShare) const
+{
+    RetVal<Val> rv = interactive()->openSync(UriQuery("audacity://project/savetocloud"));
+    if (!rv.ret) {
+        return rv.ret;
+    }
+
+    cloud::Visibility defaultVisibility = isPublishShare ? cloud::Visibility::Public : cloud::Visibility::Private;
+
+    CloudProjectInfo result;
+    result.name = rv.val.toQString();
+    result.visibility = defaultVisibility;
+
+    if (result.name.trimmed().isEmpty()) {
+        return make_ret(Ret::Code::BadData);
+    }
+
+    return RetVal<CloudProjectInfo>::make_ok(result);
+
+    // bool isCloudAvailable = museScoreComService()->authorization()->checkCloudIsAvailable();
+    // if (!isCloudAvailable) {
+    //     return warnCloudNotAvailableForUploading(isPublishShare);
+    // }
+
+    // std::string dialogText = isPublishShare
+    //                          ? muse::trc("project/save", "Log in to musescore.com to save this score to the cloud.")
+    //                          : muse::trc("project/save", "Log in to musescore.com to publish this score.");
+    // RetVal<Val> retVal = museScoreComService()->authorization()->ensureAuthorization(true, dialogText);
+    // if (!retVal.ret) {
+    //     return retVal.ret;
+    // }
+
+    // using Response = cloud::QMLSaveToCloudResponse::SaveToCloudResponse;
+    // if (static_cast<Response>(retVal.val.toInt()) == Response::SaveLocallyInstead) {
+    //     RetVal<muse::io::path_t> rv = askLocalPath(project, mode);
+    //     if (!rv.ret) {
+    //         LOGE() << rv.ret.toString();
+    //         return rv.ret;
+    //     }
+
+    //     projectFilesController()->saveProjectLocally(rv.val, mode);
+    //     configuration()->setLastUsedSaveLocationType(SaveLocationType::Local);
+
+    //     return make_ret(Ret::Code::Cancel);
+    // }
+
+    // QString defaultName = project->displayName();
+    // cloud::Visibility defaultVisibility = isPublishShare ? cloud::Visibility::Public : cloud::Visibility::Private;
+    // const CloudProjectInfo existingProjectInfo = project->cloudInfo();
+
+    // if (!existingProjectInfo.sourceUrl.isEmpty()) {
+    //     RetVal<cloud::ScoreInfo> scoreInfo = museScoreComService()->downloadScoreInfo(existingProjectInfo.sourceUrl);
+
+    //     switch (scoreInfo.ret.code()) {
+    //     case int(Ret::Code::Ok):
+    //         defaultName = scoreInfo.val.title;
+    //         if (!isPublishShare) {
+    //             defaultVisibility = scoreInfo.val.visibility;
+    //         }
+    //         break;
+
+    //     case int(cloud::Err::Status400_InvalidRequest):
+    //     case int(cloud::Err::Status403_AccountNotActivated):
+    //     case int(cloud::Err::Status422_ValidationFailed):
+    //     case int(cloud::Err::Status429_RateLimitExceeded):
+    //     case int(cloud::Err::Status500_InternalServerError):
+    //     case int(cloud::Err::UnknownStatusCode):
+    //     case int(cloud::Err::NetworkError):
+    //         return showCloudSaveError(scoreInfo.ret, project->cloudInfo(), isPublishShare, false);
+
+    //     // It's possible the source URL is invalid or points to a score on a different user's account.
+    //     // In this situation we shouldn't show an error.
+    //     default: break;
+    //     }
+    // }
+
+    // UriQuery query("musescore://project/savetocloud");
+    // query.addParam("isPublishShare", Val(isPublishShare));
+    // query.addParam("name", Val(defaultName));
+    // query.addParam("visibility", Val(defaultVisibility));
+    // query.addParam("existingScoreOrAudioUrl", Val(existingProjectInfo.sourceUrl.toString()));
+    // query.addParam("cloudCode", Val(cloud::MUSESCORE_COM_CLOUD_CODE));
+
+    // RetVal<Val> rv = interactive()->open(query);
+    // if (!rv.ret) {
+    //     return rv.ret;
+    // }
+
+    // QVariantMap vals = rv.val.toQVariant().toMap();
+    // using Response = cloud::QMLSaveToCloudResponse::SaveToCloudResponse;
+    // auto response = static_cast<Response>(vals["response"].toInt());
+    // switch (response) {
+    // case Response::Cancel:
+    //     return make_ret(Ret::Code::Cancel);
+    // case Response::SaveLocallyInstead:
+    //     return Ret(RET_CODE_CHANGE_SAVE_LOCATION_TYPE);
+    // case Response::Ok:
+    //     break;
+    // }
+
+    // CloudProjectInfo result;
+
+    // if ((mode == SaveMode::Save || isPublishShare) && vals["replaceExisting"].toBool()) {
+    //     result = existingProjectInfo;
+    // }
+
+    // result.name = vals["name"].toString();
+    // result.visibility = static_cast<cloud::Visibility>(vals["visibility"].toInt());
+
+    // if (!warnBeforePublishing(isPublishShare, result.visibility)) {
+    //     return make_ret(Ret::Code::Cancel);
+    // }
+
+    // return RetVal<CloudProjectInfo>::make_ok(result);
+}
+
+//! TODO AU4
+bool OpenSaveProjectScenario::warnBeforePublishing(bool isPublishShare, cloud::Visibility visibility) const
+{
+    return false;
+
+    // if (isPublishShare) {
+    //     if (!configuration()->shouldWarnBeforePublish()) {
+    //         return true;
+    //     }
+    // } else {
+    //     if (!configuration()->shouldWarnBeforeSavingPubliclyToCloud()) {
+    //         return true;
+    //     }
+    // }
+
+    // std::string title, message;
+
+    // IInteractive::ButtonDatas buttons = {
+    //     IInteractive::ButtonData(IInteractive::Button::Cancel, muse::trc("global", "Cancel")),
+    //     IInteractive::ButtonData(IInteractive::Button::Ok, muse::trc("project/save", "Publish"), true)
+    // };
+
+    // IInteractive::Options options = IInteractive::Option::WithIcon | IInteractive::Option::WithDontShowAgainCheckBox;
+
+    // if (isPublishShare) {
+    //     title = muse::trc("project/save", "Publish changes online?");
+    //     message = muse::trc("project/save", "We will need to generate a new MP3 for web playback.");
+    // } else if (visibility == cloud::Visibility::Public) {
+    //     title = muse::trc("project/save", "Publish this score online?"),
+    //     message = muse::trc("project/save", "All saved changes will be publicly visible on MuseScore.com. "
+    //                                         "If you want to make frequent changes, we recommend saving this "
+    //                                         "score privately until you’re ready to share it to the world.");
+    // } else {
+    //     return true;
+    // }
+
+    // IInteractive::Result result = interactive()->warning(title, message, buttons, int(IInteractive::Button::Ok), options);
+
+    // bool ok = result.standardButton() == IInteractive::Button::Ok;
+    // if (ok && !result.showAgain()) {
+    //     if (isPublishShare) {
+    //         configuration()->setShouldWarnBeforePublish(false);
+    //     } else {
+    //         configuration()->setShouldWarnBeforeSavingPubliclyToCloud(false);
+    //     }
+    // }
+
+    // return ok;
+}
+
+muse::RetVal<muse::io::path_t> OpenSaveProjectScenario::resolveLegacyProjectFormat(const muse::io::path_t& path) const
+{
+    auto ret = interactive()->warningSync(muse::trc("project/open", "Audacity 3 project"),
+                                          muse::trc(
+                                              "project/open",
+                                              "You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4."),
+    {
+        muse::IInteractive::ButtonData(
+            muse::IInteractive::Button::Cancel, muse::trc("project/open", "Cancel"),
+            false),
+        muse::IInteractive::ButtonData(
+            muse::IInteractive::Button::Apply, muse::trc("project/open", "Save as new project"), true)
+    },
+                                          int(muse::IInteractive::Button::NoButton), { muse::IInteractive::Option::WithIcon },
+                                          muse::trc("project/open", "Legacy project"));
+
+    if (ret.standardButton() != muse::IInteractive::Button::Apply) {
+        return muse::make_ret(Ret::Code::Cancel);
+    }
+
+    std::string s = path.toStdString();
+    auto pos = s.rfind(au::project::AUP3);
+    if (pos != std::string::npos) {
+        s.replace(pos, 4, au::project::AUP4);
+    }
+
+    muse::io::path_t newFilename = s;
+
+    int counter = 1;
+    while (fileSystem()->exists(newFilename)) {
+        std::string base = s.substr(0, s.size() - 5);
+        std::string numbered = base + "-" + std::to_string(counter) + "." + au::project::AUP4;
+        newFilename = numbered;
+        ++counter;
+    }
+
+    fileSystem()->copy(path, newFilename);
+
+    interactive()->infoSync(muse::trc("project/open", ""),
+                            muse::mtrc("project/open", "The project was saved as “%1”").arg(newFilename.toString()).toStdString(),
+    {
+        muse::IInteractive::ButtonData(
+            muse::IInteractive::Button::Ok, muse::trc("project/open", "Continue"), false)
+    },
+                            int(muse::IInteractive::Button::NoButton), { muse::IInteractive::Option::WithIcon },
+                            muse::trc("project/open", "Project saved"));
+    return RetVal<muse::io::path_t>::make_ok(newFilename);
+}
+
+bool OpenSaveProjectScenario::warnBeforeSavingToExistingPubliclyVisibleCloudProject() const
+{
+    IInteractive::ButtonDatas buttons = {
+        IInteractive::ButtonData(IInteractive::Button::Cancel, muse::trc("global", "Cancel")),
+        IInteractive::ButtonData(IInteractive::Button::Ok, muse::trc("project/save", "Publish"), true)
+    };
+
+    IInteractive::Result result = interactive()->warningSync(
+        muse::trc("project/save", "Publish changes online?"),
+        muse::trc("project/save", "Your saved changes will be publicly visible. We will also "
+                                  "need to generate a new MP3 for public playback."),
+        buttons, int(IInteractive::Button::Ok));
+
+    return result.standardButton() == IInteractive::Button::Ok;
+}
+
+Ret OpenSaveProjectScenario::warnCloudNotAvailableForUploading(bool isPublishShare) const
+{
+    if (isPublishShare) {
+        interactive()->warning(muse::trc("project/save", "Unable to connect to the cloud"),
+                               muse::trc("project/save", "Please check your internet connection or try again later."));
+        return make_ret(Ret::Code::Cancel);
+    }
+
+    IInteractive::ButtonDatas buttons = {
+        IInteractive::ButtonData(IInteractive::Button::Cancel, muse::trc("global", "Cancel")),
+        IInteractive::ButtonData(IInteractive::Button::Ok, muse::trc("project/save", "Save to computer"), true)
+    };
+
+    IInteractive::Result result = interactive()->warningSync(muse::trc("project/save", "Unable to connect to the cloud"),
+                                                             muse::trc("project/save",
+                                                                       "Please check your internet connection or try again later."),
+                                                             buttons, int(IInteractive::Button::Ok));
+
+    if (result.standardButton() == IInteractive::Button::Ok) {
+        return Ret(RET_CODE_CHANGE_SAVE_LOCATION_TYPE);
+    }
+
+    return make_ret(Ret::Code::Cancel);
+}
+
+Ret OpenSaveProjectScenario::warnCloudNotAvailableForSharingAudio() const
+{
+    interactive()->warning(muse::trc("project/save", "Unable to connect to Audio.com"),
+                           muse::trc("project/save", "Please check your internet connection or try again later."));
+    return make_ret(Ret::Code::Cancel);
+}
+
+Ret OpenSaveProjectScenario::showCloudOpenError(const Ret& error, const muse::io::path_t& localPath) const
+{
+    using Err = au::au3cloud::Err;
+    const auto err = static_cast<Err>(error.code());
+
+    switch (err) {
+    case Err::SyncResultConnectionFailed:
+    case Err::SyncResultUnexpectedResponse:
+    case Err::SyncResultInternalClientError:
+    case Err::SyncResultInternalServerError:
+    case Err::SyncResultSyncImpossible:
+    case Err::SyncResultCancelled: {
+        if (fileSystem()->exists(localPath)) {
+            interactive()->errorSync(trc("project", OPEN_SYNC_ERROR_TITLE), trc("project", OPEN_SYNC_ERROR_MESSAGE),
+                                     {}, int(IInteractive::Button::NoButton),
+                                     { IInteractive::Option::WithIcon },
+                                     muse::trc("project", "Cloud sync failed"));
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_LOCAL);
+        }
+        interactive()->errorSync(trc("project", OPEN_SYNC_ERROR_TITLE), trc("project", OPEN_SYNC_ERROR_NO_LOCAL_FILE_MESSAGE),
+                                 {}, int(IInteractive::Button::NoButton),
+                                 { IInteractive::Option::WithIcon },
+                                 muse::trc("project", "Cloud sync failed"));
+        break;
+    }
+    case Err::SyncResultNotFound: {
+        if (fileSystem()->exists(localPath)) {
+            const int saveLocallyBtn = static_cast<int>(IInteractive::Button::CustomButton);
+            const int saveToCloudBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
+            IInteractive::ButtonDatas buttons {
+                interactive()->buttonData(IInteractive::Button::Cancel),
+                //: Label of a dialog button
+                IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), false, false,
+                                         IInteractive::ButtonRole::ApplyRole),
+                IInteractive::ButtonData(saveToCloudBtn, trc("cloud", "Save to audio.com"), /*accent=*/ true, false,
+                                         IInteractive::ButtonRole::ApplyRole),
+            };
+            IInteractive::Result result = interactive()->infoSync(OPEN_NOT_FOUND_ERROR_TITLE, OPEN_NOT_FOUND_ERROR_MESSAGE,
+                                                                  buttons, saveToCloudBtn, {},
+                                                                  trc("cloud", "Save"));
+            if (result.isButton(saveLocallyBtn)) {
+                return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY_AND_REMOVE_CACHE);
+            } else if (result.isButton(saveToCloudBtn)) {
+                return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD);
+            }
+        } else {
+            interactive()->errorSync(trc("project", OPEN_NOT_FOUND_ERROR_TITLE),
+                                     trc("project", OPEN_NOT_FOUND_ERROR_NO_LOCAL_FILE_MESSAGE),
+                                     {}, int(IInteractive::Button::NoButton),
+                                     { IInteractive::Option::WithIcon },
+                                     muse::trc("project", "Project unavailable"));
+        }
+        break;
+    }
+    case Err::SyncResultForbidden: {
+        if (fileSystem()->exists(localPath)) {
+            interactive()->warningSync(trc("project", OPEN_FORBIDDEN_TITLE), trc("project", OPEN_FORBIDDEN_MESSAGE),
+                                       {}, int(IInteractive::Button::NoButton),
+                                       { IInteractive::Option::WithIcon },
+                                       muse::trc("project", "Access denied"));
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_LOCAL);
+        }
+        interactive()->warningSync(trc("project", OPEN_FORBIDDEN_TITLE), trc("project", OPEN_FORBIDDEN_NO_LOCAL_FILE_MESSAGE),
+                                   {}, int(IInteractive::Button::NoButton),
+                                   { IInteractive::Option::WithIcon },
+                                   muse::trc("project", "Access denied"));
+        break;
+    }
+    case Err::SyncResultConflict: {
+        const int useLocalBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        const int useRemoteBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
+        IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            IInteractive::ButtonData(useLocalBtn, trc("project", OPEN_CONFLICT_LOCAL_BTN), false, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+            IInteractive::ButtonData(useRemoteBtn, trc("project", OPEN_CONFLICT_REMOTE_BTN), true, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+        };
+        IInteractive::Result conflictResult = interactive()->infoSync(trc("project", OPEN_CONFLICT_TITLE),
+                                                                      trc("project", OPEN_CONFLICT_MESSAGE),
+                                                                      buttons, useRemoteBtn, {},
+                                                                      muse::trc("project", "Version conflict"));
+        if (conflictResult.isButton(useLocalBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_LOCAL);
+        } else if (conflictResult.isButton(useRemoteBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE);
+        }
+        break;
+    }
+    case Err::CloudProjectNotFullySynced: {
+        const int visitAudioComBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        const int loadLatestBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
+        IInteractive::ButtonDatas buttons {
+            IInteractive::ButtonData(IInteractive::Button::Cancel, muse::trc("global", "Cancel"), true),
+            IInteractive::ButtonData(visitAudioComBtn, trc("project", "Visit audio.com"), false, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+            IInteractive::ButtonData(loadLatestBtn, trc("project", "Load latest"), false, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+        };
+        IInteractive::Result result
+            = interactive()->errorSync(PROJECT_INCOMPLETE_TITLE, PROJECT_NOT_FULLY_SYNCED_TEXT, buttons,
+                                       static_cast<int>(IInteractive::Button::Cancel),
+                                       { IInteractive::Option::WithIcon },
+                                       muse::trc("project", "Project incomplete"));
+        if (result.isButton(visitAudioComBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM);
+        } else if (result.isButton(loadLatestBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED);
+        }
+        break;
+    }
+    case Err::CloudProjectNeverSynced: {
+        const int visitAudioComBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        IInteractive::ButtonDatas buttons {
+            IInteractive::ButtonData(visitAudioComBtn, trc("project", "Visit audio.com"), false, false,
+                                     IInteractive::ButtonRole::RejectRole),
+            interactive()->buttonData(IInteractive::Button::Ok),
+        };
+        IInteractive::Result result
+            = interactive()->errorSync(PROJECT_INCOMPLETE_TITLE, PROJECT_INCOMPLETE_TEXT, buttons,
+                                       static_cast<int>(IInteractive::Button::Ok),
+                                       { IInteractive::Option::WithIcon },
+                                       muse::trc("project", "Project incomplete"));
+        if (result.isButton(visitAudioComBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM);
+        }
+        break;
+    }
+    case Err::OpenProjectCancelled:
+    case Err::Cancelled:
+        break;
+    default:
+        interactive()->infoSync(trc("project", OPEN_DEFAULT_ERROR_TITLE), trc("project", OPEN_DEFAULT_ERROR_MESSAGE));
+        break;
+    }
+
+    return muse::make_ok();
+}
+
+Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& ret) const
+{
+    using Err = au::au3cloud::Err;
+    const auto err = static_cast<Err>(ret.code());
+
+    switch (err) {
+    case Err::ProjectLimitReached:
+    case Err::ProjectStorageLimitReached: {
+        const int saveLocallyBtn = static_cast<int>(IInteractive::Button::Save);
+        IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), /*accent=*/ true),
+        };
+        const char* title = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TITLE : PRJ_STORAGE_LIMIT_TITLE;
+        const char* text = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TEXT : PRJ_STORAGE_LIMIT_TEXT;
+        IInteractive::Result result = interactive()->infoSync(title, text, buttons, saveLocallyBtn, {},
+                                                              trc("cloud", "Save to audio.com"));
+        if (result.isButton(IInteractive::Button::Save)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY);
+        }
+        break;
+    }
+    case Err::ProjectNotFound: {
+        const int saveLocallyBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        const int saveToCloudBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
+        IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), false, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+            IInteractive::ButtonData(saveToCloudBtn, trc("cloud", "Save to audio.com"), /*accent=*/ true, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+        };
+        IInteractive::Result result = interactive()->infoSync(CLOUD_SAVE_UNAVAILABLE_TITLE, CLOUD_SAVE_UNAVAILABLE_TEXT,
+                                                              buttons, saveToCloudBtn, {},
+                                                              trc("cloud", "Save"));
+        if (result.isButton(saveLocallyBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY_AND_REMOVE_CACHE);
+        } else if (result.isButton(saveToCloudBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD);
+        }
+        break;
+    }
+    case Err::ProjectVersionConflict: {
+        const int useLocalBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        const int useRemoteBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
+        IInteractive::ButtonDatas buttons {
+            IInteractive::ButtonData(useLocalBtn, trc("project", SAVE_CONFLICT_LOCAL_BTN), /*accent=*/ true, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+            IInteractive::ButtonData(useRemoteBtn, trc("project", SAVE_CONFLICT_REMOTE_BTN), false, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+        };
+        IInteractive::Result conflictResult = interactive()->infoSync(trc("project", SAVE_CONFLICT_TITLE),
+                                                                      trc("project", SAVE_CONFLICT_MESSAGE),
+                                                                      buttons, useLocalBtn, {},
+                                                                      muse::trc("project", "Version conflict"));
+        if (conflictResult.isButton(useLocalBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE);
+        } else if (conflictResult.isButton(useRemoteBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE);
+        }
+        break;
+    }
+    case Err::ProjectForbidden:
+    case Err::SyncResultForbidden: {
+        const int saveLocallyBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), /*accent=*/ true, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+        };
+        IInteractive::Result result = interactive()->warningSync(trc("project", SAVE_FORBIDDEN_TITLE),
+                                                                 trc("project", SAVE_FORBIDDEN_MESSAGE),
+                                                                 buttons, saveLocallyBtn,
+                                                                 { IInteractive::Option::WithIcon },
+                                                                 muse::trc("project", "Access denied"));
+        if (result.isButton(saveLocallyBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY);
+        }
+        break;
+    }
+    case Err::NetworkError:
+    case Err::DataUploadFailed:
+    case Err::ServerError:
+    case Err::ClientFailure:
+    case Err::UploadFailed:
+    {
+        if (cloudConfiguration()->shouldWarnOnSyncError()) {
+            const IInteractive::ButtonData okBtn = interactive()->buttonData(IInteractive::Button::Ok);
+            const auto result = interactive()->infoSync(DEFAULT_SYNC_ERROR_TITLE, DEFAULT_SYNC_ERROR_TEXT, { okBtn },
+                                                        static_cast<int>(IInteractive::Button::Ok),
+                                                        IInteractive::Option::WithIcon | IInteractive::Option::WithDontShowAgainCheckBox,
+                                                        muse::trc("project", "Network error"));
+
+            if (!result.showAgain()) {
+                cloudConfiguration()->setWarnOnSyncError(false);
+            }
+        }
+        break;
+    }
+    case Err::SyncCancelled:
+    case Err::Cancelled:
+        break;
+    default:
+        interactive()->infoSync(DEFAULT_CLOUD_ERROR_TITLE, DEFAULT_CLOUD_ERROR_TEXT);
+        break;
+    }
+
+    return muse::make_ok();
+}
+
+Ret OpenSaveProjectScenario::showCloudAudioOpenError(const Ret& error) const
+{
+    using Err = au::au3cloud::Err;
+    const auto err = static_cast<Err>(error.code());
+
+    switch (err) {
+    case Err::DownloadAudioResultFailed:
+        interactive()->errorSync(trc("cloud", DOWNLOAD_CLOUD_AUDIO_ERROR_TITLE),
+                                 trc("cloud", DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT),
+                                 {}, int(IInteractive::Button::NoButton),
+                                 { IInteractive::Option::WithIcon },
+                                 muse::trc("cloud", "Audio download failed"));
+        break;
+    case Err::DownloadAudioResultCancelled:
+    case Err::DownloadAudioResultBlocked:
+        break;
+    case Err::Cancelled:
+        break;
+    default:
+        interactive()->infoSync(trc("cloud", "Open audio from cloud"), error.toString());
+        break;
+    }
+
+    return muse::make_ok();
+}
+
+Ret OpenSaveProjectScenario::showAudioCloudShareError(const Ret& ret) const
+{
+    std::string title= muse::trc("project/share", "Your audio could not be shared");
+    std::string msg;
+
+    IInteractive::ButtonData okBtn = interactive()->buttonData(IInteractive::Button::Ok);
+    IInteractive::ButtonDatas buttons = IInteractive::ButtonDatas { okBtn };
+
+    switch (ret.code()) {
+    case int(cloud::Err::Status403_AccountNotActivated):
+        msg = muse::trc("project/share", "Your audio.com account needs to be verified first. "
+                                         "Please activate your account via the link in the activation email.");
+        break;
+    case int(cloud::Err::UnknownStatusCode): {
+        if (const auto status = ret.data<int>("status", -1); status != -1) {
+            //: %1 will be replaced with the error code that audio.com returned, which is a number.
+            msg = muse::qtrc("project/share", "Audio.com returned an unknown error code: %1.")
+                  .arg(status).toStdString();
+        } else {
+            msg = muse::trc("project/share", "Audio.com returned an unknown error code.");
+        }
+        msg += "\n\n" + muse::trc("project/share", "Please try again later, or get help for this problem on audio.com.");
+    } break;
+    case int(cloud::Err::NetworkError):
+        msg = muse::trc("project/share", "Could not connect to audio.com. "
+                                         "Please check your internet connection or try again later.");
+        break;
+    default:
+        msg = muse::trc("project/share", "Please try again later, or get help for this problem on audio.com.");
+        break;
+    }
+
+    interactive()->warning(title, msg, buttons);
+
+    return muse::make_ok();
+}

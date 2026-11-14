@@ -1,0 +1,54 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#ifndef AU_PLAYBACK_PLAYBACKMODULE_H
+#define AU_PLAYBACK_PLAYBACKMODULE_H
+
+#include <memory>
+
+#include "modularity/imodulesetup.h"
+
+namespace au::playback {
+class PlaybackConfiguration;
+class PlaybackController;
+class PlaybackUiState;
+class PlaybackMeterController;
+class Au3Playback;
+
+class PlaybackModule : public muse::modularity::IModuleSetup
+{
+public:
+
+    std::string moduleName() const override;
+    void registerExports() override;
+    void registerResources() override;
+    void registerUiTypes() override;
+    void resolveImports() override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
+
+    muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
+
+private:
+    std::shared_ptr<PlaybackConfiguration> m_configuration;
+    std::shared_ptr<PlaybackMeterController> m_playbackMeterController;
+};
+
+class PlaybackContext : public muse::modularity::IContextSetup
+{
+public:
+    PlaybackContext(const muse::modularity::ContextPtr& ctx)
+        : muse::modularity::IContextSetup(ctx) {}
+
+    void registerExports() override;
+    void resolveImports() override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
+    void onDeinit() override;
+
+private:
+    std::shared_ptr<PlaybackController> m_controller;
+    std::shared_ptr<Au3Playback> m_playback;
+    std::shared_ptr<PlaybackUiState> m_uiState;
+};
+}
+
+#endif // AU_PLAYBACK_PLAYBACKMODULE_H

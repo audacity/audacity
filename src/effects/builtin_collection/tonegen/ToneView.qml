@@ -1,0 +1,152 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+import Muse.UiComponents
+
+import Audacity.Effects
+import Audacity.BuiltinEffects
+import Audacity.BuiltinEffectsCollection
+import Audacity.UiComponents
+
+// TODO: move to common controls
+import Audacity.Preferences
+
+BuiltinEffectBase {
+    id: root
+
+    property string title: qsTrc("effects/tone", "Tone")
+    property bool isApplyAllowed: tone.isApplyAllowed
+
+    width: 360
+    implicitHeight: column.height
+
+    builtinEffectModel: ToneViewModelFactory.createModel(root, root.instanceId)
+    property alias tone: root.builtinEffectModel
+
+    numNavigationPanels: 2
+    property NavigationPanel controlsNavigationPanel: NavigationPanel {
+        name: "ToneControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+
+    QtObject {
+        id: prv
+
+        readonly property int spacing: 16
+        readonly property int interpolationLinear: 0
+        readonly property int interpolationLogarithmic: 1
+    }
+
+    Column {
+        id: column
+
+        width: parent.width
+
+        spacing: prv.spacing
+
+        ComboBoxWithTitle {
+            id: waveformDropdown
+
+            title: qsTrc("effects/tone", "Waveform")
+            columnWidth: parent.width
+
+            control.background.color: ui.theme.backgroundPrimaryColor
+            control.background.border.width: 1
+            control.itemColor: "transparent"
+
+            currentIndex: tone.waveform
+            model: tone.waveforms
+
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: 0
+
+            onValueEdited: function (newIndex, newValue) {
+                tone.waveform = newIndex
+            }
+        }
+
+        IncrementalPropertyControlWithTitle {
+            id: frequencyControl
+
+            columnWidth: (parent.width - parent.spacing) / 2
+            controlWidth: (parent.width - parent.spacing) / 2
+
+            title: qsTrc("effects/tone", "Frequency")
+            currentValue: tone.frequencyStart
+
+            minValue: 1
+            maxValue: 1000000
+
+            measureUnitsSymbol: qsTrc("global", "Hz")
+
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: waveformDropdown.navigation.order + 1
+
+            onValueEdited: function (newValue) {
+                if (tone.frequencyStart !== newValue) {
+                    tone.frequencyStart = newValue
+                }
+            }
+        }
+
+        IncrementalPropertyControlWithTitle {
+            id: amplitudeControl
+
+            columnWidth: (parent.width - parent.spacing) / 2
+            controlWidth: parent.width * .25
+
+            title: qsTrc("effects/tone", "Amplitude (0-1)")
+            currentValue: tone.amplitudeStart
+
+            minValue: 0
+            maxValue: 1
+            decimals: 4
+            step: 0.01
+
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: frequencyControl.navigation.order + 1
+
+            onValueEdited: function (newValue) {
+                if (tone.amplitudeStart !== newValue) {
+                    tone.amplitudeStart = newValue
+                }
+            }
+        }
+
+        Column {
+
+            spacing: 8
+
+            StyledTextLabel {
+                text: qsTrc("effects/tone", "Duration")
+            }
+
+            Timecode {
+                id: timecode
+
+                Layout.fillHeight: false
+                Layout.columnSpan: 2
+
+                value: tone.duration
+                mode: TimecodeModeSelector.Duration
+                currentFormatStr: tone.durationFormat
+                sampleRate: tone.sampleRate
+                tempo: tone.tempo
+                upperTimeSignature: tone.upperTimeSignature
+                lowerTimeSignature: tone.lowerTimeSignature
+                enabled: true
+
+                navigation.panel: root.controlsNavigationPanel
+                navigation.order: amplitudeControl.navigation.order + 1
+
+                onValueChanged: {
+                    tone.duration = timecode.value
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,110 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/iuiconfiguration.h"
+#include "../iprojectsceneconfiguration.h"
+
+namespace au::projectscene {
+class ProjectSceneConfiguration : public IProjectSceneConfiguration
+{
+public:
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
+public:
+    void init();
+
+    bool isVerticalRulersVisible() const override;
+    void setVerticalRulersVisible(bool visible) override;
+    muse::async::Channel<bool> isVerticalRulersVisibleChanged() const override;
+
+    bool isRMSInWaveformVisible() const override;
+    void setRMSInWaveformVisible(bool visible) override;
+    muse::async::Channel<bool> isRMSInWaveformVisibleChanged() const override;
+
+    bool isClippingInWaveformVisible() const override;
+    void setClippingInWaveformVisible(bool visible) override;
+    muse::async::Channel<bool> isClippingInWaveformVisibleChanged() const override;
+
+    double zoom(const muse::modularity::ContextPtr& ctx) const override;
+
+    int mouseZoomPrecision() const override;
+    void setMouseZoomPrecision(int precision) override;
+
+    bool isEffectsPanelVisible() const override;
+    void setIsEffectsPanelVisible(bool visible) override;
+    muse::async::Notification isEffectsPanelVisibleChanged() const override;
+
+    const std::vector<ClipColorInfo>& clipColorInfos() const override;
+    muse::Color clipColor(trackedit::ClipColorIndex index) const override;
+    muse::Color clipSelectedColor(trackedit::ClipColorIndex index) const override;
+
+    ClipStyles::Style clipStyle() const override;
+    void setClipStyle(ClipStyles::Style style) override;
+    muse::async::Channel<ClipStyles::Style> clipStyleChanged() const override;
+
+    StereoHeightsPref::AsymmetricStereoHeights stereoHeightsPref() const override;
+    void setStereoHeightsPref(StereoHeightsPref::AsymmetricStereoHeights pref) override;
+    muse::async::Notification stereoHeightsPrefChanged() const override;
+
+    std::vector<std::string> asymmetricStereoHeightsWorkspaces() const override;
+    void setAsymmetricStereoHeightsWorkspaces(std::vector<std::string>& workspaces) override;
+    muse::async::Notification asymmetricStereoHeightsWorkspacesChanged() const override;
+
+    int selectionTimecodeFormat() const override;
+    void setSelectionTimecodeFormat(int format) override;
+    muse::async::Notification selectionTimecodeFormatChanged() const override;
+
+    int durationTimecodeFormat() const override;
+    void setDurationTimecodeFormat(int format) override;
+    muse::async::Notification durationTimecodeFormatChanged() const override;
+
+    bool playbackOnRulerClickEnabled() const override;
+    void setPlaybackOnRulerClickEnabled(bool enabled) override;
+    muse::async::Notification playbackOnRulerClickEnabledChanged() const override;
+
+    bool updateDisplayWhilePlayingEnabled() const;
+    void setUpdateDisplayWhilePlayingEnabled(bool enabled);
+    muse::async::Notification updateDisplayWhilePlayingEnabledChanged() const;
+
+    bool pinnedPlayHeadEnabled() const;
+    void setPinnedPlayHeadEnabled(bool enabled);
+    muse::async::Notification pinnedPlayHeadEnabledChanged() const;
+
+    int labelEditorColumnFormat(const std::string& columnName) const override;
+    void setLabelEditorColumnFormat(const std::string& columnName, int format) const override;
+
+    trackedit::TrackViewType defaultTrackViewType() const override;
+    void setDefaultTrackViewType(trackedit::TrackViewType type) override;
+    muse::async::Notification defaultTrackViewTypeChanged() const override;
+
+    trackedit::TrackRulerType defaultRulerType() const override;
+    void setDefaultRulerType(trackedit::TrackRulerType scale) override;
+    muse::async::Notification defaultRulerTypeChanged() const override;
+
+    ZoomPresets::Preset zoomPreset1() const override;
+    void setZoomPreset1(ZoomPresets::Preset preset) override;
+    ZoomPresets::Preset zoomPreset2() const override;
+    void setZoomPreset2(ZoomPresets::Preset preset) override;
+
+private:
+    muse::ByteArray labelEditorColumnFormatJson() const;
+
+    muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
+    muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
+    muse::async::Channel<bool> m_isClippingInWaveformVisibleChanged;
+    muse::async::Notification m_effectsPanelVisible;
+    muse::async::Channel<ClipStyles::Style> m_clipStyleChanged;
+    muse::async::Notification m_asymmetricStereoHeightsChanged;
+    muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
+    muse::async::Notification m_selectionTimecodeFormatChanged;
+    muse::async::Notification m_durationTimecodeFormatChanged;
+    muse::async::Notification m_playbackOnRulerClickEnabledChanged;
+    muse::async::Notification m_updateDisplayWhilePlayingEnabledChanged;
+    muse::async::Notification m_pinnedPlayHeadEnabledChanged;
+    muse::async::Notification m_defaultTrackViewTypeChanged;
+    muse::async::Notification m_defaultRulerTypeChanged;
+};
+}

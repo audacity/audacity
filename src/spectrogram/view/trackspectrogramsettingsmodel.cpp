@@ -1,0 +1,298 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#include "trackspectrogramsettingsmodel.h"
+#include "internal/snapshotspectrogramconfiguration.h"
+
+#include "framework/global/log.h"
+
+namespace au::spectrogram {
+namespace {
+constexpr auto isPowerOfTwo(int x) -> bool
+{
+    return (x != 0) && ((x & (x - 1)) == 0);
+}
+
+static_assert(isPowerOfTwo(3) == false);
+static_assert(isPowerOfTwo(4) == true);
+
+constexpr auto logTwo(int x)
+{
+    assert(isPowerOfTwo(x));
+    auto result = 0;
+    while (x > 1) {
+        x >>= 1;
+        ++result;
+    }
+    return result;
+}
+
+static_assert(logTwo(1) == 0);
+static_assert(logTwo(2) == 1);
+static_assert(logTwo(4) == 2);
+static_assert(logTwo(8) == 3);
+}
+
+TrackSpectrogramSettingsModel::TrackSpectrogramSettingsModel(QObject* parent)
+    : AbstractSpectrogramSettingsModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+{}
+
+void TrackSpectrogramSettingsModel::aboutToDestroy()
+{
+    if (!m_initialTrackConfig) {
+        return;
+    }
+    const auto config = spectrogramService()->trackSpectrogramConfiguration(m_trackId);
+    if (!config) {
+        return;
+    }
+    spectrogramService()->copyConfiguration(*m_initialTrackConfig, *config);
+    config->setUseGlobalSettings(m_initialTrackConfig->useGlobalSettings());
+    spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
+}
+
+void TrackSpectrogramSettingsModel::componentComplete()
+{
+    m_trackConfig = spectrogramService()->trackSpectrogramConfiguration(m_trackId);
+    if (!m_trackConfig) {
+        return;
+    }
+
+    m_initialTrackConfig = std::make_unique<SnapshotSpectrogramConfiguration>(*m_trackConfig);
+
+    emit minFreqChanged();
+    emit maxFreqChanged();
+    emit colorGainDbChanged();
+    emit colorRangeDbChanged();
+    emit colorHighBoostDbPerDecChanged();
+    emit colorSchemeChanged();
+    emit scaleChanged();
+    emit algorithmChanged();
+    emit windowTypeChanged();
+    emit windowSizeChanged();
+    emit zeroPaddingFactorChanged();
+    emit useGlobalSettingsChanged();
+}
+
+void TrackSpectrogramSettingsModel::onSettingChanged()
+{
+    setUseGlobalSettings(false);
+    spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
+}
+
+void TrackSpectrogramSettingsModel::accept()
+{
+    m_initialTrackConfig.reset();
+}
+
+void TrackSpectrogramSettingsModel::setTrackId(int value)
+{
+    if (m_trackId == value) {
+        return;
+    }
+    m_trackId = value;
+    emit trackIdChanged();
+}
+
+bool TrackSpectrogramSettingsModel::useGlobalSettings() const
+{
+    return m_trackConfig ? m_trackConfig->useGlobalSettings() : false;
+}
+
+void TrackSpectrogramSettingsModel::setUseGlobalSettings(bool value)
+{
+    IF_ASSERT_FAILED(m_trackConfig) {
+        return;
+    }
+    if (m_trackConfig->useGlobalSettings() == value) {
+        return;
+    }
+    m_trackConfig->setUseGlobalSettings(value);
+    if (value) {
+        spectrogramService()->copyConfiguration(*globalSpectrogramConfiguration(), *m_trackConfig);
+        emit minFreqChanged();
+        emit maxFreqChanged();
+        emit colorGainDbChanged();
+        emit colorRangeDbChanged();
+        emit colorHighBoostDbPerDecChanged();
+        emit colorSchemeChanged();
+        emit scaleChanged();
+        emit algorithmChanged();
+        emit windowTypeChanged();
+        emit windowSizeChanged();
+        emit zeroPaddingFactorChanged();
+    }
+    emit useGlobalSettingsChanged();
+}
+
+int TrackSpectrogramSettingsModel::minFreq() const
+{
+    return m_trackConfig ? m_trackConfig->minFreq() : 0;
+}
+
+void TrackSpectrogramSettingsModel::doSetMinFreq(int value)
+{
+    if (m_trackConfig->minFreq() == value) {
+        return;
+    }
+    m_trackConfig->setMinFreq(value);
+    emit minFreqChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::maxFreq() const
+{
+    return m_trackConfig ? m_trackConfig->maxFreq() : 0;
+}
+
+void TrackSpectrogramSettingsModel::doSetMaxFreq(int value)
+{
+    if (m_trackConfig->maxFreq() == value) {
+        return;
+    }
+    m_trackConfig->setMaxFreq(value);
+    emit maxFreqChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::colorGainDb() const
+{
+    return m_trackConfig ? m_trackConfig->colorGainDb() : 0;
+}
+
+void TrackSpectrogramSettingsModel::setColorGainDb(int value)
+{
+    if (m_trackConfig->colorGainDb() == value) {
+        return;
+    }
+
+    m_trackConfig->setColorGainDb(value);
+    emit colorGainDbChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::colorRangeDb() const
+{
+    return m_trackConfig ? m_trackConfig->colorRangeDb() : 0;
+}
+
+void TrackSpectrogramSettingsModel::setColorRangeDb(int value)
+{
+    if (m_trackConfig->colorRangeDb() == value) {
+        return;
+    }
+    m_trackConfig->setColorRangeDb(value);
+    emit colorRangeDbChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::colorHighBoostDbPerDec() const
+{
+    return m_trackConfig ? m_trackConfig->colorHighBoostDbPerDec() : 0;
+}
+
+void TrackSpectrogramSettingsModel::setColorHighBoostDbPerDec(int value)
+{
+    if (m_trackConfig->colorHighBoostDbPerDec() == value) {
+        return;
+    }
+    m_trackConfig->setColorHighBoostDbPerDec(value);
+    emit colorHighBoostDbPerDecChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::colorScheme() const
+{
+    return m_trackConfig ? static_cast<int>(m_trackConfig->colorScheme()) : 0;
+}
+
+void TrackSpectrogramSettingsModel::setColorScheme(int value)
+{
+    const auto scheme = static_cast<SpectrogramColorScheme>(value);
+    if (m_trackConfig->colorScheme() == scheme) {
+        return;
+    }
+    m_trackConfig->setColorScheme(scheme);
+    emit colorSchemeChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::scale() const
+{
+    return m_trackConfig ? static_cast<int>(m_trackConfig->scale()) : 0;
+}
+
+void TrackSpectrogramSettingsModel::setScale(int value)
+{
+    const auto scale = static_cast<SpectrogramScale>(value);
+    if (m_trackConfig->scale() == scale) {
+        return;
+    }
+    m_trackConfig->setScale(scale);
+    emit scaleChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::algorithm() const
+{
+    return m_trackConfig ? static_cast<int>(m_trackConfig->algorithm()) : 0;
+}
+
+void TrackSpectrogramSettingsModel::setAlgorithm(int value)
+{
+    const auto algorithm = static_cast<SpectrogramAlgorithm>(value);
+    if (m_trackConfig->algorithm() == algorithm) {
+        return;
+    }
+    m_trackConfig->setAlgorithm(algorithm);
+    emit algorithmChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::windowType() const
+{
+    return m_trackConfig ? static_cast<int>(m_trackConfig->windowType()) : 0;
+}
+
+void TrackSpectrogramSettingsModel::setWindowType(int value)
+{
+    const auto windowType = static_cast<SpectrogramWindowType>(value);
+    if (m_trackConfig->windowType() == windowType) {
+        return;
+    }
+    m_trackConfig->setWindowType(windowType);
+    emit windowTypeChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::windowSize() const
+{
+    return m_trackConfig ? 1 << m_trackConfig->winSizeLog2() : 0;
+}
+
+void TrackSpectrogramSettingsModel::setWindowSize(int value)
+{
+    assert(isPowerOfTwo(value));
+    if (m_trackConfig->winSizeLog2() == logTwo(value)) {
+        return;
+    }
+    m_trackConfig->setWinSizeLog2(logTwo(value));
+    emit windowSizeChanged();
+    onSettingChanged();
+}
+
+int TrackSpectrogramSettingsModel::zeroPaddingFactor() const
+{
+    return m_trackConfig ? m_trackConfig->zeroPaddingFactor() : 0;
+}
+
+void TrackSpectrogramSettingsModel::setZeroPaddingFactor(int value)
+{
+    if (m_trackConfig->zeroPaddingFactor() == value) {
+        return;
+    }
+    m_trackConfig->setZeroPaddingFactor(value);
+    emit zeroPaddingFactorChanged();
+    onSettingChanged();
+}
+} // namespace au::spectrogram

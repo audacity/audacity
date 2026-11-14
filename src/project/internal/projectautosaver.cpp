@@ -1,0 +1,149 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Audacity-CLA-applies
+ *
+ * Audacity
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2024 Audacity Limited
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+#include "projectautosaver.h"
+
+// #include "engraving/infrastructure/mscio.h"
+
+#include "defer.h"
+#include "log.h"
+
+using namespace muse;
+using namespace au::project;
+
+void ProjectAutoSaver::init()
+{
+    m_timer.setSingleShot(true);
+    m_timer.setTimerType(Qt::VeryCoarseTimer);
+    m_timer.setInterval(configuration()->autoSaveIntervalMinutes() * 60000);
+
+    QObject::connect(&m_timer, &QTimer::timeout, [this]() { onTrySave(); });
+
+    if (configuration()->isAutoSaveEnabled()) {
+        m_timer.start();
+    }
+
+    configuration()->autoSaveEnabledChanged().onReceive(this, [this](bool enabled) {
+        if (enabled != m_timer.isActive()) {
+            if (enabled) {
+                m_timer.start();
+            } else {
+                m_timer.stop();
+            }
+        }
+    });
+
+    configuration()->autoSaveIntervalChanged().onReceive(this, [this](int minutes) {
+        m_timer.setInterval(minutes * 60000);
+    });
+
+    update();
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        if (const auto project = currentProject()) {
+            if (project->isNewlyCreated() && !project->isImported()) {
+                // Autosave newly created projects to enable session restoration
+                Ret ret = project->save(project->path(), SaveMode::AutoSave);
+                if (!ret) {
+                    LOGE() << "[autosave] failed to save project, err: " << ret.toString();
+                    return;
+                }
+                // Mark as needing autosave so future changes trigger saves
+                project->setNeedAutoSave(true);
+                return;
+            }
+
+            project->pathChanged().onNotify(this, [this]() {
+                update();
+            });
+
+            project->needSave().notification.onNotify(this, [this]() {
+                update();
+            });
+        }
+
+        update();
+    });
+}
+
+IAudacityProjectPtr ProjectAutoSaver::currentProject() const
+{
+    return globalContext()->currentProject();
+}
+
+void ProjectAutoSaver::update()
+{
+    TRACEFUNC;
+
+    muse::io::path_t newProjectPath;
+
+    auto project = currentProject();
+    if (project && project->needAutoSave()) {
+        newProjectPath = project->path();
+    }
+
+    if (!m_lastProjectPathNeedingAutosave.empty()
+        && m_lastProjectPathNeedingAutosave != newProjectPath) {
+        // maybe use the sessionsManager()->removeUnsavedChanges(m_lastProjectPathNeedingAutosave);
+    }
+
+    m_lastProjectPathNeedingAutosave = newProjectPath;
+}
+
+void ProjectAutoSaver::onTrySave()
+{
+    TRACEFUNC;
+
+    DEFER {
+        if (configuration()->isAutoSaveEnabled()) {
+            m_timer.start();
+        }
+    };
+
+    IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        LOGD() << "[autosave] no project";
+        return;
+    }
+
+    if (!project->needAutoSave()) {
+        LOGD() << "[autosave] project does not need save";
+        return;
+    }
+
+    if (!project->canSave()) {
+        LOGD() << "[autosave] project could not be saved";
+        return;
+    }
+
+    const muse::io::path_t savePath = project->path();
+
+    // Perform autosave to enable session restoration
+    Ret ret = project->save(savePath, SaveMode::AutoSave);
+    if (!ret) {
+        LOGE() << "[autosave] failed to save project, err: " << ret.toString();
+        return;
+    }
+
+    project->setNeedAutoSave(false);
+
+    LOGD() << "[autosave] successfully saved project";
+}

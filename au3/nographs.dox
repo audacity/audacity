@@ -1,0 +1,28 @@
+## doxygen configuration file, editable to turn on graphs selectively, defaulting all of it off
+
+## First include a complete generated configuration, plus some macros
+
+@INCLUDE = audacity.dox.in
+
+## uncomment these lines to enable graph generation and make them include hyperlinks,
+## but no graphs result unless later lines are edited too:
+
+##HAVE_DOT = YES
+##DOT_IMAGE_FORMAT = svg
+
+## COMMENT these lines to turn back on certain graphs selectively:
+## (CLASS_GRAPH seems to still need default YES to draw the basic non-graphViz boxes)
+
+##CLASS_GRAPH = NO
+COLLABORATION_GRAPH = NO
+GROUP_GRAPHS = NO
+TEMPLATE_RELATIONS = NO
+INCLUDE_GRAPH = NO
+INCLUDED_BY_GRAPH = NO
+GRAPHICAL_HIERARCHY = NO
+DIRECTORY_GRAPH = NO
+
+## UNCOMMENT these lines to get further, non-default graph information:
+
+##CALL_GRAPH = YES
+##CALLER_GRAPH = YES

@@ -1,0 +1,151 @@
+name: '[AU4] Check: Unit Tests (utest)'
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      code_coverage:
+        description: 'Enable code coverage'
+        type: boolean
+        required: false
+        default: false
+      publish_coverage_report:
+        description: 'Publish code coverage badge to S3 (main repository only)'
+        type: boolean
+        required: false
+        default: false
+  schedule:
+    - cron: "0 3 * * 4" # Every Thursday night at 03:00 for master branch
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI_DIR: buildscripts/ci
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v7
+      with:
+        submodules: recursive
+
+    - name: "Configure workflow"
+      run: |
+        cmake -DEVENT=${{ github.event_name }} \
+              -DBUILD_MODE="devel" \
+              -DARTIFACT_INFO="build.artifacts/" \
+              -P ${CI_DIR}/common/ci_configure.cmake
+
+    - name: Restore ccache files
+      id: restore-ccache
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{github.workflow}}-${{runner.arch}}-ccache-
+        restore-keys: ${{github.workflow}}-${{runner.arch}}-ccache-
+    - name: Setup ccache
+      run: |
+        sudo apt-get update && sudo apt-get install -y ccache
+        bash ./muse/buildscripts/ci/tools/setup_ccache_config.sh
+
+    - name: Free up disk space
+      run: |
+        sudo docker system prune -a -f
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc /usr/local/.ghcup
+        sudo rm -rf /usr/share/swift
+        sudo rm -rf /opt/hostedtoolcache/CodeQL
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.11.2'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
+
+    - name: Setup environment
+      run: |
+        bash ./buildscripts/ci/linux/setup.sh
+
+    - name: Install FFmpeg for the FFmpeg metadata tests
+      run: |
+        sudo apt-get install -y --no-install-recommends ffmpeg
+
+    - name: Build
+      env:
+        GITHUB_EVENT_NAME: ${{ github.event_name }}
+        CODE_COVERAGE: ${{ inputs.code_coverage }}
+      run: |
+
+        ENABLE_CODE_COVERAGE='false'
+
+        if [[ "$GITHUB_EVENT_NAME" == "schedule" || "$CODE_COVERAGE" == "true" ]]; then
+          ENABLE_CODE_COVERAGE='true'
+        else
+          ENABLE_CODE_COVERAGE='false'
+        fi
+
+        source $HOME/build_tools/environment.sh
+        cmake -DBUILD_ENABLE_CODE_COVERAGE=${ENABLE_CODE_COVERAGE} -P ${CI_DIR}/linux/ci_build_utests.cmake
+
+    - name: Show ccache stats
+      run: |
+        ccache -sv
+
+    - name: Run tests
+      run: |
+        # A capture device for the audio tests: PortAudio ignores ALSA's
+        # predefined "null" device, but not an alias of it.
+        echo 'pcm.test_null { type null }' >> ~/.asoundrc
+        cmake -P ${CI_DIR}/linux/ci_run_utests.cmake
+      env:
+        ASAN_OPTIONS: "detect_leaks=0"
+
+    - name: Code coverage
+      if: github.event_name == 'schedule' || inputs.code_coverage == true
+      run: |
+        # Writes filtered_coverage.info, coverage_badge.svg, coverage_report/ and exports COVERAGE, FUNCTIONS_COVERAGE
+        cmake -P ./muse/buildscripts/ci/codecoverage/make_code_coverage.cmake --build_dir build.debug
+
+    - name: Upload coverage report
+      if: github.event_name == 'schedule' || inputs.code_coverage == true
+      uses: actions/upload-artifact@v7
+      with:
+        name: code_coverage_report
+        path: |
+          filtered_coverage.info
+          coverage_badge.svg
+          coverage_report/
+
+    - name: Push to S3
+      if: github.repository == 'audacity/audacity' && ( github.event_name == 'schedule' || ( inputs.code_coverage && inputs.publish_coverage_report ) )
+      run: |
+        S3_URL='s3://extensions.musescore.org/test/code_coverage/au_coverage_badge.svg'
+
+        bash ./muse/buildscripts/ci/tools/s3_push_file.sh \
+          --s3_key '${{ secrets.S3_KEY }}' \
+          --s3_secret '${{ secrets.S3_SECRET }}' \
+          --s3_url "${S3_URL}" \
+          --file_path "coverage_badge.svg" \
+          --cache_control "max-age=300"
+
+    - name: Prepare ccache files for saving
+      id: prepare-save-ccache
+      if: always()
+      run: |
+        ccache --recompress 10
+        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
+    - name: Save ccache files
+      if: always()
+      uses: actions/cache/save@v6
+      with:
+        key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
+        path: ${{ github.workspace }}/.ccache

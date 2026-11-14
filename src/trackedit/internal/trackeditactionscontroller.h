@@ -1,0 +1,189 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <functional>
+#include <optional>
+
+#include "framework/rcommand/commandable.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/rcommand/icommanddispatcher.h"
+#include "framework/ui/inavigationcontroller.h"
+
+#include "audio/driver/iaudiodrivercontroller.h"
+#include "context/iglobalcontext.h"
+#include "projectscene/iprojectsceneconfiguration.h"
+#include "spectrogram/ifrequencyselectioncontroller.h"
+#include "spectrogram/ispectraleffectsregister.h"
+#include "../itracksviewrequestsservice.h"
+#include "../iprojecthistory.h"
+#include "../iselectioncontroller.h"
+#include "../itrackeditconfiguration.h"
+#include "../itrackeditinteraction.h"
+#include "itracknavigationcontroller.h"
+
+#include "deletebehavioronboardingscenario.h"
+
+namespace au::trackedit {
+class TrackeditActionsController : public muse::rcommand::Commandable, public muse::Contextable
+{
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<trackedit::ITrackeditConfiguration> configuration;
+    muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController { this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
+    muse::ContextInject<muse::ui::INavigationController> navigationController { this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
+
+public:
+    TrackeditActionsController(const muse::modularity::ContextPtr& ctx)
+        : muse::Contextable(ctx), m_deleteBehaviorOnboardingScenario(ctx) {}
+
+    void init();
+
+private:
+    friend class TrackeditActionsControllerTests;
+
+    bool isFocusedItemClip() const;
+    ClipKeyList clipsForInteraction() const;
+
+    struct ContiguousClipsSpan {
+        TrackId trackId = INVALID_TRACK;
+        secs_t begin = 0.0;
+        secs_t end = 0.0;
+    };
+    std::optional<ContiguousClipsSpan> contiguousSelectedClipsSpan() const;
+
+    bool isFocusedItemLabel() const;
+    LabelKeyList labelsForInteraction() const;
+    TrackItemKeyList itemsForInteraction() const;
+
+    TrackId currentFocusedOrSelectedTrack() const;
+    void focusTrack(const TrackId& trackId);
+    bool stepFocusOutOfSelection(const TrackItemKeyList& selectedItems, const TrackItemKey& focusedItem, const TrackId& currentTrack,
+                                 const std::function<void()>& resetSelection);
+
+    muse::Ret doGlobalCopy();
+    muse::Ret doGlobalCut();
+    muse::Ret doGlobalDelete();
+    muse::Ret doGlobalCancel();
+    muse::Ret doGlobalSplit();
+    muse::Ret doGlobalSplitIntoNewTrack();
+    muse::Ret doGlobalJoin();
+    muse::Ret doGlobalDisjoin();
+    muse::Ret doGlobalDuplicate();
+
+    muse::Ret doGlobalCutLeaveGap();
+    muse::Ret doGlobalCutPerClipRipple();
+    muse::Ret doGlobalCutPerTrackRipple();
+    muse::Ret doGlobalCutAllTracksRipple();
+
+    muse::Ret pasteDefault();
+    muse::Ret pasteOverlap();
+    muse::Ret pasteInsert();
+    muse::Ret pasteInsertRipple();
+
+    muse::Ret doGlobalDeleteLeaveGap();
+    muse::Ret doGlobalDeletePerClipRipple();
+    muse::Ret doGlobalDeletePerTrackRipple();
+    muse::Ret doGlobalDeleteAllTracksRipple();
+
+    muse::Ret multiClipCut(bool moveClips);
+    muse::Ret rangeSelectionCut(bool moveClips);
+
+    muse::Ret multiClipCopy();
+    muse::Ret rangeSelectionCopy();
+
+    muse::Ret multiClipDelete(bool moveClips);
+    muse::Ret rangeSelectionDelete(bool moveClips);
+
+    muse::Ret trackSplit(const TrackId& trackId);
+    muse::Ret tracksSplitAt(const TrackIdList& tracksIds, const std::vector<secs_t>& pivots);
+    muse::Ret splitClipsAtSilences(const ClipKeyList& clipKeys);
+    muse::Ret splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret splitClipsIntoNewTracks(const ClipKeyList& clipKeys);
+    muse::Ret mergeSelectedOnTrack(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret duplicateSelected(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret duplicateClips(const ClipKeyList& clipKeys);
+    muse::Ret splitCutSelected(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+    muse::Ret splitDeleteSelected(const TrackIdList& tracksIds, secs_t begin, secs_t end);
+
+    muse::Ret deleteTracks();
+    muse::Ret duplicateTracks();
+
+    muse::Ret moveTracksUp();
+    muse::Ret moveTracksDown();
+    muse::Ret moveTracksToTop();
+    muse::Ret moveTracksToBottom();
+
+    muse::Ret trimAudioOutsideSelection();
+    muse::Ret doGlobalSilence();
+    muse::Ret silenceAudioSelection();
+
+    muse::Ret openClipPitchAndSpeed();
+
+    muse::Ret swapStereoChannels();
+    muse::Ret splitStereoToLR();
+    muse::Ret splitStereoToCenter();
+    muse::Ret setCustomTrackRate();
+    muse::Ret makeStereoTrack();
+    muse::Ret resampleTracks();
+    muse::Ret mixAndRender(bool toNewTrack);
+
+    muse::Ret groupItems();
+    muse::Ret ungroupItems();
+
+    muse::Ret selectNone();
+    muse::Ret selectAllTracks();
+    muse::Ret selectLeftOfPlaybackPos();
+    muse::Ret selectRightOfPlaybackPos();
+    muse::Ret selectTrackStartToCursor();
+    muse::Ret selectCursorToTrackEnd();
+    muse::Ret selectTrackStartToEnd();
+    muse::Ret setSelection(const muse::rcommand::Params& params);
+    muse::Ret selectTrackByIndex(const muse::rcommand::Params& params);
+    muse::Ret moveCursorToClosestZeroCrossing();
+
+    muse::Ret setClipColor(const muse::rcommand::Params& params);
+    muse::Ret setTrackColor(const muse::rcommand::Params& params);
+    muse::Ret setTrackFormat(const muse::rcommand::Params& params);
+    muse::Ret setTrackRate(const muse::rcommand::Params& params);
+
+    muse::Ret toggleGlobalSpectrogramView();
+    muse::Ret changeTrackView(const TrackId& trackId, TrackViewType trackView);
+
+    muse::Ret addLabel();
+    muse::Ret renameSelectedItem();
+
+    muse::Ret labelDeleteMulti(bool moveLabels);
+    muse::Ret labelCutMulti(bool moveLabels);
+    muse::Ret labelCopyMulti();
+
+    void moveFocusedItem(secs_t timePositionOffset, int trackPositionOffset);
+    muse::Ret extendFocusedItemBoundaryLeft();
+    muse::Ret extendFocusedItemBoundaryRight();
+    muse::Ret reduceFocusedItemBoundaryLeft();
+    muse::Ret reduceFocusedItemBoundaryRight();
+
+    double zoomLevel() const;
+    double calculateStepSize() const;
+    TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
+    TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
+
+    context::IPlaybackStatePtr playbackState() const;
+
+    DeleteBehaviorOnboardingScenario m_deleteBehaviorOnboardingScenario;
+};
+}

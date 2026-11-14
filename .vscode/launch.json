@@ -1,0 +1,137 @@
+{
+    "configurations": [
+        {
+            "name": "Launch (cdb - Windows)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [
+                // "--memory-leak-report", // Enable memory-leak reporting
+                // Comment this out to run audacity in plugin registration mode
+                // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
+            ],
+            "environment": [
+                {
+                    "name": "QT_QPA_PLATFORM_PLUGIN_PATH",
+                    "value": "${env:QTDIR}/plugins/platforms"
+                },
+                {
+                    // The install step copies everything needed to `app/bin`
+                    "name": "PATH",
+                    "value": "${env:PATH};${workspaceFolder}/build/audacity-debug/src/app/bin"
+                }
+            ],
+            "sourceFileMap": {
+                "C:/work/build/qt5_workdir/w/s": "${env:QTDIR}/../Src",
+                "C:/Users/qt/worwk/install": "${env:QTDIR}/../Src",
+                "C:/Users/qt/work/qt": "${env:QTDIR}/../Src",
+                "Q:/qt_workdir/w/s": "${env:QTDIR}/../Src"
+            },
+            "symbolSearchPath": "${env:QTDIR}/bin;${env:QTDIR}/plugins/platforms",
+            "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis"
+        },
+        {
+            "name": "run audacity (MacOS)",
+            "type": "cppdbg",
+            "MIMode": "lldb",
+            "request": "launch",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${fileDirname}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [],
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "environment": [],
+            "sourceFileMap": {
+                "/Users/qt/work/qt": "${env:QTDIR}/../Src"
+            }
+        },
+        {
+            // Requires CodeLLDB extension
+            // Doesn't support visualizerFile but is much faster than cppdbg
+            "name": "Launch (lldb - Linux)",
+            "type": "lldb",
+            "request": "launch",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [
+                // "--register-audio-plugin",
+                // "https://wasted.audio/software/wstd_flangr"
+                // "--gtest_filter=*.tracksInRange*"
+            ],
+            // If you need to debug a plugin, you can do something like this.
+            "postRunCommands": [
+                // "target symbols add /usr/lib/lv2/meters.lv2/meters.so",
+                // "target symbols add /usr/lib/lv2/meters.lv2/meters_glui.so",
+            ],
+            "env": {
+                "LD_LIBRARY_PATH": "${command:cmake.launchTargetDirectory}/lib"
+            }
+        },
+        {
+            // Runs a testflow script without UI, like on CI: offscreen Qt platform
+            // and a fresh isolated profile (reset by the preLaunchTask).
+            // Exits with its result (0 = passed, 1 = failed, 2 = script not found).
+            // Only single scripts: to run a .testflow series use the "testflow: run test case" task.
+            // The script picker requires the Command Variable extension
+            "name": "Debug testflow test case headless (lldb - Linux)",
+            "type": "lldb",
+            "request": "launch",
+            "preLaunchTask": "testflow: reset headless profile",
+            // Read by the file picker of the Command Variable extension: as a ${command:} variable, it gets
+            // this whole object as arguments. Unlike an ${input:} of type command, escaping it cancels the run.
+            // Top-level scripts only: steps/ holds helpers, sub-directories hold series
+            "include": "share/testflowscripts/*.js",
+            "description": "Testflow script to debug",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [
+                "--test-case",
+                "${command:extension.commandvariable.file.pickFile}",
+                "--test-case-speed",
+                "Fast" // Default | Fast | Normal | Slow
+            ],
+            "env": {
+                "LD_LIBRARY_PATH": "${command:cmake.launchTargetDirectory}/lib",
+                "AU_ALLOW_MULTIPLE_PROCESSES": "1",
+                // Both are needed: AU_QT_QPA_PLATFORM stops main.cpp forcing xcb,
+                // QT_QPA_PLATFORM selects the offscreen plugin
+                "AU_QT_QPA_PLATFORM": "offscreen",
+                "QT_QPA_PLATFORM": "offscreen",
+                // Run the source scripts, so edits need no rebuild or install
+                "MUSE_TESTFLOW_SCRIPTS_PATH": "${workspaceFolder}/share/testflowscripts",
+                // Fresh profile per run, like CI
+                "XDG_CONFIG_HOME": "${config:au4.testflowProfileDir}/config",
+                "XDG_DATA_HOME": "${config:au4.testflowProfileDir}/data",
+                "XDG_CACHE_HOME": "${config:au4.testflowProfileDir}/cache",
+                "XDG_STATE_HOME": "${config:au4.testflowProfileDir}/state",
+                // Keep reports outside the wiped profile
+                "MUSE_TESTFLOW_DATA_PATH": "${workspaceFolder}/build/testflow_data"
+            }
+        },
+        {
+            "name": "Launch (gdb - Linux)",
+            "type": "cppdbg",
+            "MIMode": "gdb",
+            "request": "launch",
+            "preLaunchTask": "CMake: install",
+            "cwd": "${workspaceFolder}",
+            "program": "${command:cmake.launchTargetPath}",
+            "args": [
+                // "--register-audio-plugin",
+                // "https://wasted.audio/software/wstd_flangr"
+            ],
+            "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis",
+            "showDisplayString": true,
+            "environment": [
+                {
+                    "name": "LD_LIBRARY_PATH",
+                    "value": "${env:LD_LIBRARY_PATH}:${command:cmake.launchTargetDirectory}/lib"
+                }
+            ]
+        }
+    ]
+}

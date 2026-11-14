@@ -1,0 +1,251 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "effectpresetsprovider.h"
+
+#include "global/containers.h"
+#include "global/io/file.h"
+
+#include "au3-effects/Effect.h"
+#include "au3-effects/EffectManager.h" // GetUserPresets
+#include "au3-module-manager/PluginManager.h"
+
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include "../effecterrors.h"
+
+#include "log.h"
+
+using namespace muse;
+using namespace au::effects;
+
+static const PresetId DEFAULT_PRESET(wxT("default"));
+
+PresetIdList EffectPresetsProvider::factoryPresets(const EffectId& effectId) const
+{
+    const Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return {};
+    }
+    return effect->GetFactoryPresets();
+}
+
+PresetIdList EffectPresetsProvider::userPresets(const EffectId& effectId) const
+{
+    Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return {};
+    }
+    PresetIdList presets = GetUserPresets(*effect);
+    return presets;
+}
+
+muse::async::Channel<EffectId> EffectPresetsProvider::userPresetsChanged() const
+{
+    return m_userPresetsChanged;
+}
+
+muse::async::Channel<PresetSavedInfo> EffectPresetsProvider::presetSaved() const
+{
+    return m_presetSaved;
+}
+
+Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
+{
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    const Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return make_ret(Err::InternalError);
+    }
+    const EffectSettingsAccessPtr access = instancesRegister()->settingsAccessById(effectInstanceId);
+
+    Ret ret;
+
+    // try apply default
+    bool isApplied = false;
+    if (DEFAULT_PRESET == presetId) {
+        isApplied = true;
+        OptionalMessage msg;
+        access->ModifySettings([&](EffectSettings& settings)
+        {
+            msg = effect->LoadFactoryDefaults(settings);
+            return nullptr;
+        });
+        ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
+        if (!ret) {
+            LOGE() << "failed load factory defaults";
+        }
+    }
+
+    // try apply factory
+    if (!isApplied) {
+        PresetIdList presets = factoryPresets(effectId);
+        int idx = muse::indexOf(presets, presetId);
+        if (idx >= 0) {
+            isApplied = true;
+
+            OptionalMessage msg;
+            access->ModifySettings([&](EffectSettings& settings) {
+                msg = effect->LoadFactoryPreset(idx, settings);
+                return nullptr;
+            });
+            ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
+            if (!ret) {
+                LOGE() << "failed load factory preset";
+            }
+        }
+    }
+
+    // try apply user
+    if (!isApplied) {
+        OptionalMessage msg;
+        access->ModifySettings([&](EffectSettings& settings) {
+            msg = effect->LoadUserPreset(UserPresetsGroup(wxString(presetId)), settings);
+            return nullptr;
+        });
+        ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
+        if (!ret) {
+            LOGE() << "failed load user preset";
+        }
+    }
+
+    if (ret) {
+        access->Flush();
+        instancesRegister()->notifyAboutSettingsChanged(effectInstanceId);
+    }
+
+    return ret;
+}
+
+bool EffectPresetsProvider::hasUserPresetWithName(const EffectId& effectId, const std::string& presetName) const
+{
+    //! NOTE At the moment, the preset ID and name are the same thing.
+    PresetId presetId = au3::wxFromStdString(presetName);
+    PresetIdList presets = userPresets(effectId);
+    return muse::contains(presets, presetId);
+}
+
+Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId, const std::string& presetName)
+{
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    const Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return make_ret(Err::InternalError);
+    }
+
+    instancesRegister()->requestUpdateSettings(effectInstanceId);
+    const EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+    IF_ASSERT_FAILED(settings) {
+        return make_ret(Err::InternalError);
+    }
+
+    bool ok = effect->SaveUserPreset(UserPresetsGroup(au3::wxFromStdString(presetName)), *settings);
+
+    if (ok) {
+        m_userPresetsChanged.send(effectId);
+        m_presetSaved.send(PresetSavedInfo {
+            effectInstanceId,
+            effectId,
+            presetName
+        });
+    }
+
+    return ok ? muse::make_ok() : make_ret(Err::InternalError);
+}
+
+muse::Ret EffectPresetsProvider::deletePreset(const EffectId& effectId, const PresetId& presetId)
+{
+    auto& pluginManager = PluginManager::Get();
+    bool ok = pluginManager.RemoveConfigSubgroup(
+        PluginSettings::Private,
+        au3::wxFromString(effectId),
+        UserPresetsGroup(presetId)
+        );
+
+    if (ok) {
+        m_userPresetsChanged.send(effectId);
+    }
+
+    return ok ? muse::make_ok() : make_ret(Err::InternalError);
+}
+
+muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath)
+{
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return make_ret(Err::InternalError);
+    }
+
+    const EffectSettingsAccessPtr access = instancesRegister()->settingsAccessById(effectInstanceId);
+    IF_ASSERT_FAILED(access) {
+        return make_ret(Err::InternalError);
+    }
+
+    ByteArray data;
+    Ret ret = io::File::readFile(filePath, data);
+    if (!ret) {
+        return ret;
+    }
+
+    wxString params = wxString::FromUTF8(data.constChar());
+
+    wxString ident = params.BeforeFirst(':');
+    params = params.AfterFirst(':');
+
+    auto commandId = effect->GetSquashedName(effect->GetSymbol().Internal());
+
+    if (ident != commandId) {
+        // effect identifiers are a sensible length!
+        // must also have some params.
+        std::string msg;
+        if ((params.Length() < 2) || (ident.Length() < 2) || (ident.Length() > 30)) {
+            ret = make_ret(Err::PresetNotValid);
+        } else {
+            ret = make_ret(Err::PresetMismatch);
+        }
+    }
+
+    if (ret) {
+        OptionalMessage res;
+        access->ModifySettings([&](EffectSettings& settings) {
+            res = effect->LoadSettingsFromString(params, settings);
+            return nullptr;
+        });
+        ret = res ? muse::make_ok() : make_ret(Err::InternalError);
+        if (ret) {
+            access->Flush();
+            instancesRegister()->notifyAboutSettingsChanged(effectInstanceId);
+        } else {
+            LOGE() << "failed load settings from: " << data.constData();
+        }
+    }
+
+    return ret;
+}
+
+muse::Ret EffectPresetsProvider::exportPreset(const EffectInstanceId& effectInstanceId, const io::path_t& filePath)
+{
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return make_ret(Err::InternalError);
+    }
+
+    const EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
+    IF_ASSERT_FAILED(settings) {
+        return make_ret(Err::InternalError);
+    }
+
+    wxString params;
+    effect->SaveSettingsAsString(*settings, params);
+    auto commandId = effect->GetSquashedName(effect->GetSymbol().Internal());
+    params = commandId.GET() + wxT(":") + params;
+
+    std::string str = au3::wxToStdString(params);
+    ByteArray data = ByteArray::fromRawData(str.c_str(), str.size());
+
+    Ret ret = io::File::writeFile(filePath, data);
+
+    return ret;
+}

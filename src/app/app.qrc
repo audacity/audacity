@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>configs/learn.cfg</file>
+        <file>configs/light.cfg</file>
+        <file>configs/dark.cfg</file>
+        <file>configs/high_contrast_black.cfg</file>
+        <file>configs/high_contrast_white.cfg</file>
+        <file>configs/shortcuts.cfg</file>
+        <file>configs/data/shortcuts.json</file>
+        <file>configs/data/shortcuts_mac.json</file>
+        <file>configs/workspaces.cfg</file>
+        <file>configs/languages.cfg</file>
+        <file>configs/ui.cfg</file>
+        <file>configs/update.cfg</file>
+        <file>configs/user_agent.cfg</file>
+        <file alias="resources/appIcon.png">../../share/icons/AppIcon/AU4_AppIcon_96x96.png</file>
+    </qresource>
+</RCC>

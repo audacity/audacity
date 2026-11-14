@@ -1,0 +1,242 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#include "framework/global/runtime.h"
+#include "framework/global/async/async.h"
+#include "framework/ui/imainwindow.h"
+
+#include <QGuiApplication>
+
+#include "progressdialog.h"
+#include "au3basicui.h"
+
+muse::modularity::ContextPtr Au3BasicUI::contextFromPlacement(const BasicUI::WindowPlacement& placement) const
+{
+    if (auto* p = dynamic_cast<const Au3WindowPlacement*>(&placement)) {
+        return p->iocContext();
+    }
+    return nullptr;
+}
+
+muse::modularity::ContextPtr Au3BasicUI::contextFromPlacement(const BasicUI::WindowPlacement* placement) const
+{
+    if (!placement) {
+        return nullptr;
+    }
+    return contextFromPlacement(*placement);
+}
+
+muse::modularity::ContextPtr Au3BasicUI::activeContext() const
+{
+    QWindow* focused = QGuiApplication::focusWindow();
+    for (const auto& ctx : m_app->contexts()) {
+        auto w = muse::modularity::ioc(ctx)->resolve<muse::ui::IMainWindow>("au3wrap");
+        if (w && w->qWindow() == focused) {
+            return ctx;
+        }
+    }
+
+    auto ctxs = m_app->contexts();
+    if (!ctxs.empty()) {
+        return ctxs.front();
+    }
+    return nullptr;
+}
+
+std::shared_ptr<muse::IInteractive> Au3BasicUI::interactiveForContext(const muse::modularity::ContextPtr& ctx) const
+{
+    auto resolvedCtx = ctx ? ctx : activeContext();
+    if (!resolvedCtx) {
+        return nullptr;
+    }
+    return muse::modularity::ioc(resolvedCtx)->resolve<muse::IInteractive>("au3wrap");
+}
+
+void Au3BasicUI::DoCallAfter(const BasicUI::Action& action)
+{
+    muse::async::Async::call(this, action, muse::runtime::mainThreadId());
+}
+
+void Au3BasicUI::DoYield()
+{
+}
+
+void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, const ::TranslatableString& dlogTitle,
+                                   const ::TranslatableString& message, const ManualPageID& helpPage,
+                                   const BasicUI::ErrorDialogOptions& options)
+{
+    Q_UNUSED(helpPage);
+
+    LOGE() << dlogTitle.translated().toStdString();
+    LOGE() << message.translated().toStdString();
+
+    if (!options.log.empty()) {
+        LOGE() << QString::fromStdWString(options.log);
+    }
+
+    auto inter = interactiveForContext(contextFromPlacement(placement));
+    if (inter) {
+        inter->error(dlogTitle.translated().toStdString(), message.translated().toStdString());
+    }
+}
+
+BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const ::TranslatableString& message, BasicUI::MessageBoxOptions options)
+{
+    LOGI() << message.translated().toStdString();
+
+    auto inter = interactiveForContext(contextFromPlacement(options.parent));
+    if (!inter) {
+        return BasicUI::MessageBoxResult::None;
+    }
+
+    muse::IInteractive::ButtonDatas buttons;
+
+    if (options.cancelButton) {
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::Cancel));
+    }
+
+    switch (options.buttonStyle) {
+    case BasicUI::Button::Default:
+    case BasicUI::Button::Ok:
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::Ok));
+        break;
+    case BasicUI::Button::YesNo:
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::Yes));
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::No));
+    }
+
+    const std::string defaultCaption = BasicUI::DefaultCaption().translated().toStdString();
+    const std::string dialogTitle = options.caption.translated().toStdString() != defaultCaption
+                                    ? options.caption.translated().toStdString()
+                                    : defaultCaption;
+
+    const std::string contentTitle = dialogTitle;
+    const std::string body = message.translated().toStdString();
+
+    muse::IInteractive::Result iret;
+
+    switch (options.iconStyle) {
+    case BasicUI::Icon::None:
+        iret = inter->infoSync(contentTitle, body, buttons,
+                               int(muse::IInteractive::Button::NoButton), {}, dialogTitle);
+        break;
+    case BasicUI::Icon::Information:
+        iret = inter->infoSync(contentTitle, body, buttons,
+                               int(muse::IInteractive::Button::NoButton),
+                               { muse::IInteractive::Option::WithIcon }, dialogTitle);
+        break;
+    case BasicUI::Icon::Question:
+        iret = inter->questionSync(contentTitle, body, buttons,
+                                   int(muse::IInteractive::Button::NoButton), {}, dialogTitle);
+        break;
+    case BasicUI::Icon::Error:
+        iret = inter->errorSync(contentTitle, body, buttons,
+                                int(muse::IInteractive::Button::NoButton),
+                                { muse::IInteractive::Option::WithIcon }, dialogTitle);
+        break;
+    case BasicUI::Icon::Warning:
+        iret = inter->warningSync(contentTitle, body, buttons,
+                                  int(muse::IInteractive::Button::NoButton),
+                                  { muse::IInteractive::Option::WithIcon }, dialogTitle);
+        break;
+    default:
+        iret = { static_cast<int>(muse::IInteractive::Button::NoButton) };
+        break;
+    }
+
+    BasicUI::MessageBoxResult ret;
+
+    switch (iret.standardButton()) {
+    case muse::IInteractive::Button::Ok:
+        ret = BasicUI::MessageBoxResult::Ok;
+        break;
+    case muse::IInteractive::Button::Cancel:
+        ret = BasicUI::MessageBoxResult::Cancel;
+        break;
+    case muse::IInteractive::Button::Yes:
+        ret = BasicUI::MessageBoxResult::Yes;
+        break;
+    case muse::IInteractive::Button::No:
+        ret = BasicUI::MessageBoxResult::No;
+        break;
+    default:
+        ret = BasicUI::MessageBoxResult::None;
+        break;
+    }
+
+    return ret;
+}
+
+std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const ::TranslatableString& title, const ::TranslatableString& message,
+                                                                    unsigned int flags, const ::TranslatableString& remainingLabelText)
+{
+    Q_UNUSED(flags);
+    Q_UNUSED(remainingLabelText);
+    auto dialog = std::make_unique<au::au3::ProgressDialog>(activeContext());
+    dialog->SetDialogTitle(title);
+    dialog->SetMessage(message);
+    return dialog;
+}
+
+namespace {
+struct MyGenericProgress : BasicUI::GenericProgressDialog {
+    MyGenericProgress()
+    {}
+    ~MyGenericProgress() override = default;
+    BasicUI::ProgressResult Pulse() override
+    {
+        return BasicUI::ProgressResult::Stopped;
+    }
+};
+}
+
+std::unique_ptr<BasicUI::GenericProgressDialog> Au3BasicUI::DoMakeGenericProgress(const BasicUI::WindowPlacement& placement,
+                                                                                  const ::TranslatableString& title,
+                                                                                  const ::TranslatableString& message, int style)
+{
+    Q_UNUSED(placement);
+    Q_UNUSED(title);
+    Q_UNUSED(message);
+    Q_UNUSED(style);
+
+    return std::make_unique<MyGenericProgress>();
+}
+
+int Au3BasicUI::DoMultiDialog(const ::TranslatableString& message, const ::TranslatableString& title, const ::TranslatableStrings& buttons,
+                              const ManualPageID& helpPage, const ::TranslatableString& boxMsg, bool log)
+{
+    Q_UNUSED(message);
+    Q_UNUSED(buttons);
+    Q_UNUSED(helpPage);
+    Q_UNUSED(boxMsg);
+    Q_UNUSED(log);
+    Q_UNUSED(title);
+    return -1;
+}
+
+bool Au3BasicUI::DoOpenInDefaultBrowser(const wxString& url)
+{
+    Q_UNUSED(url);
+    return false;
+}
+
+std::unique_ptr<BasicUI::WindowPlacement> Au3BasicUI::DoFindFocus()
+{
+    return nullptr;
+}
+
+void Au3BasicUI::DoSetFocus(const BasicUI::WindowPlacement& focus)
+{
+    Q_UNUSED(focus);
+}
+
+bool Au3BasicUI::IsUsingRtlLayout() const
+{
+    return false;
+}
+
+bool Au3BasicUI::IsUiThread() const
+{
+    return false;
+}

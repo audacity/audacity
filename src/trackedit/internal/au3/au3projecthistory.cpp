@@ -1,0 +1,238 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#include "au3projecthistory.h"
+
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-project/Project.h"
+
+using namespace au::trackedit;
+using namespace au::au3;
+
+void au::trackedit::Au3ProjectHistory::init()
+{
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).InitialState();
+
+    m_historyChanged.send(HistoryEvent::RestoredState);
+}
+
+bool au::trackedit::Au3ProjectHistory::undoAvailable() const
+{
+    if (!globalContext()->currentProject()) {
+        return false;
+    }
+
+    auto& project = projectRef();
+    return ::ProjectHistory::Get(project).UndoAvailable();
+}
+
+void au::trackedit::Au3ProjectHistory::undo()
+{
+    doUndo();
+
+    m_interactionOngoing = false;
+    m_historyChanged.send(HistoryEvent::RestoredState);
+}
+
+bool au::trackedit::Au3ProjectHistory::redoAvailable() const
+{
+    if (!globalContext()->currentProject()) {
+        return false;
+    }
+
+    auto& project = projectRef();
+    return ::ProjectHistory::Get(project).RedoAvailable();
+}
+
+void au::trackedit::Au3ProjectHistory::redo()
+{
+    doRedo();
+
+    m_interactionOngoing = false;
+    m_historyChanged.send(HistoryEvent::RestoredState);
+}
+
+void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
+{
+    pushHistoryState(longDescription, shortDescription, UndoPushType::NONE);
+}
+
+void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription, UndoPushType flags)
+{
+    LOGI() << "pushHistoryState(\"" << shortDescription << "\", " << flags << ")";
+    auto& project = projectRef();
+    UndoPush undoFlags = static_cast<UndoPush>(flags);
+    ::ProjectHistory::Get(project).PushState(::TranslatableString::untranslatable(QString::fromStdString(longDescription)),
+                                             ::TranslatableString::untranslatable(QString::fromStdString(shortDescription)),
+                                             undoFlags);
+
+    m_interactionOngoing = false;
+    m_historyChanged.send(HistoryEvent::NewState);
+}
+
+void au::trackedit::Au3ProjectHistory::rollbackState()
+{
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).RollbackState();
+    m_interactionOngoing = false;
+    m_historyChanged.send(HistoryEvent::RestoredState);
+}
+
+void Au3ProjectHistory::startUserInteraction()
+{
+    LOGI() << "startUserInteraction()";
+    IF_ASSERT_FAILED(!m_interactionOngoing) {
+        return;
+    }
+    // Modify the state, so that if the interaction gets canceled,
+    // rollbackState would revert to the state at the beginning of the action.
+    modifyState(false);
+    m_interactionOngoing = true;
+}
+
+void Au3ProjectHistory::endUserInteraction(bool modifyState)
+{
+    LOGI() << "endUserInteraction()";
+    if (m_interactionOngoing) {
+        m_interactionOngoing = false;
+        if (modifyState) {
+            // No new history entry was pushed -> update the state.
+            this->modifyState(true);
+        }
+    }
+}
+
+void Au3ProjectHistory::modifyState(bool autoSave)
+{
+    LOGD() << "modifyState(" << (autoSave ? "true" : "false") << ")";
+    if (m_interactionOngoing) {
+        LOGW() << "Attempt to modify state during undoable action";
+        return;
+    }
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).ModifyState(autoSave);
+}
+
+void Au3ProjectHistory::modifyState(const std::type_index& restorerType)
+{
+    if (m_interactionOngoing) {
+        return;
+    }
+    auto& project = projectRef();
+    ::ProjectHistory::Get(project).ModifyState(restorerType);
+}
+
+void Au3ProjectHistory::markUnsaved()
+{
+    LOGD() << "markUnsaved()";
+    auto& project = projectRef();
+    ::UndoManager::Get(project).MarkUnsaved();
+}
+
+void Au3ProjectHistory::undoRedoToIndex(size_t index)
+{
+    if (currentStateIndex() == index) {
+        return;
+    }
+
+    while (currentStateIndex() > index && undoAvailable()) {
+        doUndo();
+    }
+    while (currentStateIndex() < index && redoAvailable()) {
+        doRedo();
+    }
+
+    m_historyChanged.send(HistoryEvent::RestoredState);
+}
+
+const muse::TranslatableString Au3ProjectHistory::topMostUndoActionName() const
+{
+    if (!undoAvailable()) {
+        return {};
+    }
+
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+
+    int currentStateIndex = undoManager.GetCurrentState();
+
+    TranslatableString actionName;
+    undoManager.GetShortDescription(currentStateIndex, &actionName);
+
+    return muse::TranslatableString::untranslatable(muse::String::fromQString(actionName.translated()));
+}
+
+const muse::TranslatableString Au3ProjectHistory::topMostRedoActionName() const
+{
+    if (!redoAvailable()) {
+        return {};
+    }
+
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+
+    int currentStateIndex = undoManager.GetCurrentState();
+
+    TranslatableString actionName;
+    undoManager.GetShortDescription(currentStateIndex + 1, &actionName);
+
+    return muse::TranslatableString::untranslatable(muse::String::fromQString(actionName.translated()));
+}
+
+size_t Au3ProjectHistory::undoRedoActionCount() const
+{
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+    return undoManager.GetNumStates();
+}
+
+size_t Au3ProjectHistory::currentStateIndex() const
+{
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+    return undoManager.GetCurrentState();
+}
+
+const muse::TranslatableString Au3ProjectHistory::lastActionNameAtIdx(size_t idx) const
+{
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+
+    TranslatableString actionName;
+    undoManager.GetShortDescription(idx, &actionName);
+
+    return muse::TranslatableString::untranslatable(muse::String::fromQString(actionName.translated()));
+}
+
+muse::async::Channel<HistoryEvent> Au3ProjectHistory::historyChanged() const
+{
+    return m_historyChanged;
+}
+
+Au3Project& au::trackedit::Au3ProjectHistory::projectRef() const
+{
+    return *reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+}
+
+void Au3ProjectHistory::doUndo()
+{
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+    undoManager.Undo(
+        [&]( const UndoStackElem& elem ){
+        ::ProjectHistory::Get(project).PopState(elem.state);
+    });
+}
+
+void Au3ProjectHistory::doRedo()
+{
+    auto& project = projectRef();
+    auto& undoManager = UndoManager::Get(project);
+    undoManager.Redo(
+        [&]( const UndoStackElem& elem ){
+        ::ProjectHistory::Get(project).PopState(elem.state);
+    });
+}

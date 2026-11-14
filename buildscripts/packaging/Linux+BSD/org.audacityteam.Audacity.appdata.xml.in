@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop">
+  <developer_name>Muse Group</developer_name>
+  <id>org.audacityteam.Audacity</id>
+  <launchable type="desktop-id">audacity.desktop</launchable>
+  <project_license>GPL-3.0-only</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+  <name>Audacity</name>
+  <summary>Audacity is the world's most popular audio editing and recording app</summary>
+  <description>
+    <p>Audacity is the world's most popular audio editing and recording app.</p>
+    <p>You can use Audacity to:</p>
+    <ul>
+      <li>Record live audio</li>
+      <li>Convert tapes and records into digital recordings or CDs</li>
+      <li>Edit WAV, AIFF, FLAC, MP2, MP3 or Ogg Vorbis sound files</li>
+      <li>Cut, copy, splice or mix sounds together</li>
+      <li>Change the speed or pitch of a recording</li>
+      <li>Apply a wide range of other effects to audio recordings</li>
+      <li>and much more!</li>
+    </ul>
+  </description>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+  </categories>
+  <content_rating type="oars-1.1" />
+  <url type="homepage">https://www.audacityteam.org/</url>
+  <url type="bugtracker">https://github.com/audacity/audacity/issues</url>
+  <url type="faq">https://manual.audacityteam.org/man/faq.html</url>
+  <url type="help">https://support.audacityteam.org/</url>
+  <url type="translate">https://support.audacityteam.org/community/contributing/translating</url>
+  <releases>
+    <release version="4.0.0 beta" date="2024-09-12">
+     <description>
+        <p>New Audacity 4.0</p>
+        <p>Watch the release video or read the changelog to learn more.</p>
+      </description>
+      <url>https://support.audacityteam.org/additional-resources/changelog/audacity-3.6</url>
+      <url>https://www.audacityteam.org/3.6.0-video</url>
+    </release>
+  </releases>
+</component>

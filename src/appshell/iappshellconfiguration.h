@@ -1,0 +1,96 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+#ifndef AU_APPSHELL_IAPPSHELLCONFIGURATION_H
+#define AU_APPSHELL_IAPPSHELLCONFIGURATION_H
+
+#include "framework/global/types/ret.h"
+#include "framework/global/io/path.h"
+#include "framework/global/async/notification.h"
+
+#include "modularity/imoduleinterface.h"
+
+#include "appshelltypes.h"
+
+namespace au::appshell {
+class IAppShellConfiguration : MODULE_GLOBAL_INTERFACE
+{
+    INTERFACE_ID(IAppshellConfiguration)
+
+public:
+    virtual ~IAppShellConfiguration() = default;
+
+    virtual bool hasCompletedFirstLaunchSetup() const = 0;
+    virtual void setHasCompletedFirstLaunchSetup(bool has) = 0;
+
+    virtual bool welcomeDialogShowOnStartup() const = 0;
+    virtual void setWelcomeDialogShowOnStartup(bool show) = 0;
+    virtual muse::async::Notification welcomeDialogShowOnStartupChanged() const = 0;
+
+    virtual std::string welcomeDialogLastShownVersion() const = 0;
+    virtual void setWelcomeDialogLastShownVersion(const std::string& version) = 0;
+
+    virtual int welcomeDialogLastShownIndex() const = 0;
+    virtual void setWelcomeDialogLastShownIndex(int index) = 0;
+
+    virtual StartupModeType startupModeType() const = 0;
+    virtual void setStartupModeType(StartupModeType type) = 0;
+
+    virtual muse::io::path_t startupProjectPath() const = 0;
+    virtual void setStartupProjectPath(const muse::io::path_t& scorePath) = 0;
+
+    virtual muse::io::path_t userDataPath() const = 0;
+
+    virtual std::string handbookUrl() const = 0;
+    virtual std::string askForHelpUrl() const = 0;
+    virtual std::string appUrl() const = 0;
+    virtual std::string forumUrl() const = 0;
+    virtual std::string contributionUrl() const = 0;
+
+    virtual std::string audacityVersion() const = 0;
+    virtual std::string appRevision() const = 0;
+
+    virtual bool needShowSplashScreen() const = 0;
+    virtual void setNeedShowSplashScreen(bool show) = 0;
+
+    virtual const QString& preferencesDialogLastOpenedPageId() const = 0;
+    virtual void setPreferencesDialogLastOpenedPageId(const QString& lastOpenedPageId) = 0;
+
+    virtual void startEditSettings() = 0;
+    virtual void applySettings() = 0;
+    virtual void rollbackSettings() = 0;
+    virtual muse::async::Notification settingsApplied() const = 0;
+
+    virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
+                                         bool notifyOtherInstances = true) = 0;
+
+    virtual muse::async::Notification aboutToRevertToFactorySettings() const = 0;
+
+    virtual muse::io::paths_t sessionProjectsPaths() const = 0;
+    virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;
+
+    virtual bool isEffectsPanelVisible() const = 0;
+    virtual void setIsEffectsPanelVisible(bool visible) = 0;
+    virtual muse::async::Notification isEffectsPanelVisibleChanged() const = 0;
+};
+}
+
+#endif // AU_APPSHELL_IAPPSHELLCONFIGURATION_H

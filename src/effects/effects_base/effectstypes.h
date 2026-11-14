@@ -1,0 +1,290 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <algorithm>
+#include <cmath>
+#include <vector>
+#include <string>
+
+#include "framework/global/types/string.h"
+#include "framework/global/types/ratio.h"
+#include "framework/audioplugins/audiopluginstypes.h"
+
+class Effect;
+class EffectInstanceEx;
+class RealtimeEffectState;
+class EffectSettingsAccess;
+struct EffectSettings;
+class wxString;
+
+namespace muse {
+class String;
+namespace uicomponents {
+class MenuItem;
+using MenuItemList = QList<MenuItem*>;
+}
+}
+
+namespace au::effects {
+using secs_t = muse::number_t<double>;
+using percent_t = muse::number_t<float>;
+using ratio_t = muse::ratio_t;
+using db_t = muse::db_t;
+using rms_t = float;
+
+using EffectId = muse::String;              // PluginID from AU3
+using Effect = ::Effect;                    // Effect from AU3
+using EffectInstanceId = int;
+using EffectInstance = ::EffectInstanceEx;  // EffectInstanceEx from AU3
+using EffectSettings = ::EffectSettings;
+using EffectSettingsAccess = ::EffectSettingsAccess;
+using EffectSettingsAccessPtr = std::shared_ptr<EffectSettingsAccess>;
+using RealtimeEffectState = ::RealtimeEffectState;
+using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
+using TrackId = long;
+using EffectChainLinkIndex = int;
+
+static const muse::String EFFECT_TITLE_ATTRIBUTE(u"title");
+static const muse::String EFFECT_TITLE_CONTEXT_ATTRIBUTE(u"titleContext");
+static const muse::String EFFECT_DESCRIPTION_ATTRIBUTE(u"description");
+static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
+static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
+static const muse::String EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE(u"isRealtimeCapable");
+static const muse::String EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE(u"paramsAreInputAgnostic");
+static const muse::String EFFECT_VERSION_ATTRIBUTE(u"version");
+static const muse::String EFFECT_MODULE_ATTRIBUTE(u"module");
+static const muse::String EFFECT_ACTIVATED_ATTRIBUTE(u"activated"); // `AudioPluginInfo`'s `enabled` field actually has semantic "valid".
+
+enum class EffectMenuOrganization {
+    Grouped = 0,
+    Flat = 1,
+};
+
+enum class EffectUIMode {
+    VendorUI = 0,      // Use plugin's native/graphical UI
+    FallbackUI = 1,   // Use Audacity's fallback UI
+};
+
+//! What to do with third-party plugins discovered at startup
+enum class StartupPluginValidationPolicy {
+    AskUser,
+    Skip, // register them, but skip validation
+};
+
+// Parameter types for auto-generated UI
+enum class ParameterType {
+    Unknown = -1,
+    Toggle,        // Boolean on/off
+    Dropdown,      // Enumerated list of choices
+    Slider,        // Continuous value with range
+    Numeric,       // Numeric input field
+    ReadOnly,      // Display-only (meter, status, informational text)
+    Time,          // Time value with timecode formatting
+    File,          // File path with file picker
+    Text,          // Text input field (free-form string)
+};
+
+// Parameter metadata for auto-generated UI
+// Values are stored in "Full Range" (display) representation, e.g., -60 to +6 for dB.
+// Use getNormalizedValue() to convert to normalized [0,1] for plugin API calls.
+struct ParameterInfo {
+    muse::String id;              // Unique parameter identifier
+    muse::String name;            // Display name
+    muse::String description;     // Optional description
+    muse::String units;           // Unit string (dB, Hz, %, etc.)
+    muse::String group;           // Parameter group/category
+
+    ParameterType type = ParameterType::Unknown;
+
+    // Value range in "Full Range" (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
+    // For plugins that don't implement proper conversions, these will be 0.0 to 1.0.
+    double minValue = 0.0;
+    double maxValue = 0.0;
+    double defaultValue = 0.0;
+    double currentValue = 0.0;
+
+    // Formatted value string from plugin (e.g., "440 Hz", "3.5 dB", "-12.0 dB")
+    muse::String currentValueString;
+
+    // For discrete parameters
+    int stepCount = 0;            // 0=continuous, 1=toggle, >1=discrete steps
+    double stepSize = 0.0;        // Step increment for discrete values
+
+    // For dropdown/enumeration parameters
+    std::vector<muse::String> enumValues;  // List of choice labels
+    std::vector<double> enumIndices;       // Corresponding normalized values
+
+    // For file parameters
+    std::vector<muse::String> fileFilters;  // File type filters (e.g., "Nyquist Plug-in (*.ny *.NY)")
+    bool isFileSave = false;                // true for save dialog, false for open dialog
+    bool isFileMultiple = false;            // true to allow multiple file selection
+    bool isDirectory = false;
+
+    // Flags
+    bool isReadOnly = false;
+    bool isHidden = false;
+    bool isLogarithmic = false;
+    bool isInteger = false;
+    bool canAutomate = true;
+
+    // -1 means "auto-derive from stepSize / isInteger". Effects can override
+    // for cases where display precision and stepSize differ (e.g. sliding-stretch).
+    int numDecimalsOverride = -1;
+
+    //! Upper bound on displayed fractional digits, applied by the auto-derive
+    //! path in numDecimals(). Overrides set elsewhere should clamp to this too.
+    static constexpr int maxNumDecimals = 6;
+
+    bool isValid() const { return !id.empty(); }
+
+    //! Number of decimals to display for numeric input.
+    //! Honors `numDecimalsOverride` if set; otherwise derives from `stepSize`.
+    int numDecimals() const
+    {
+        if (numDecimalsOverride >= 0) {
+            return numDecimalsOverride;
+        }
+        if (isInteger) {
+            return 0;
+        }
+        if (!(stepSize > 0)) {
+            return 2;
+        }
+        int n = 0;
+        double s = stepSize;
+        while (n < maxNumDecimals && std::abs(s - std::round(s)) > 1e-9 * std::max(1.0, std::abs(s))) {
+            s *= 10.0;
+            ++n;
+        }
+        return n;
+    }
+
+    //! Convert current "Full Range" value to normalized [0,1] for plugin API calls
+    double getNormalizedValue() const
+    {
+        if (maxValue == minValue) {
+            return 0.0; // Avoid division by zero
+        }
+        return (currentValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a "Full Range" value to normalized [0,1]
+    double toNormalized(double fullRangeValue) const
+    {
+        if (maxValue == minValue) {
+            return 0.0;
+        }
+        return (fullRangeValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a normalized [0,1] value to "Full Range"
+    double toFullRange(double normalizedValue) const
+    {
+        return minValue + normalizedValue * (maxValue - minValue);
+    }
+};
+
+using ParameterInfoList = std::vector<ParameterInfo>;
+
+class EffectFamilies
+{
+    Q_GADGET
+public:
+    enum class EffectFamily {
+        Unknown = -1,
+        Builtin,
+        VST3,
+#ifdef Q_OS_LINUX
+        LV2,
+#endif
+#ifdef Q_OS_MACOS
+        AudioUnit,
+#endif
+        Nyquist,
+        Extension,
+        _count
+    };
+    Q_ENUM(EffectFamily)
+};
+
+using EffectFamily = EffectFamilies::EffectFamily;
+
+enum class EffectCategory {
+    Unspecified = -1,
+    None,
+    VolumeAndCompression,
+    Fading,
+    PitchAndTempo,
+    EqAndFilters,
+    NoiseRemovalAndRepair,
+    DelayAndReverb,
+    DistortionAndModulation,
+    Special,
+    SpectralTools,
+    Legacy,
+};
+
+enum class EffectType {
+    Unknown = -1,
+    Analyzer,
+    Generator,
+    Processor,
+    Tool,
+    _count
+};
+
+struct EffectMeta {
+    EffectId id;
+    EffectFamily family = EffectFamily::Unknown;
+    EffectType type = EffectType::Unknown;
+    muse::String title;
+    muse::String titleContext;
+    muse::String description;
+    muse::String vendor;
+    muse::String version;
+    muse::String module;
+    muse::io::path_t path;
+
+    muse::String category;
+
+    bool isRealtimeCapable = false;
+    bool paramsAreInputAgnostic = true;
+    bool isActivated = true;
+
+    // Carried verbatim so save() round-trips Discovered/Missing/Error.
+    // Undefined marks a default-constructed meta that must not read as loadable.
+    muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Undefined;
+
+    bool isValid() const { return !id.empty(); }
+    bool isLoadable() const { return state == muse::audioplugins::AudioPluginState::Validated; }
+};
+
+using EffectMetaList = std::vector<EffectMeta>;
+
+const std::string DESTRUCTIVE_EFFECT_VIEWER_URI = "audacity://effects/destructive_viewer?instanceId=%1&effectFamily=%2";
+
+using PresetId = wxString;
+using PresetIdList = std::vector<PresetId>;
+
+struct PresetKey {
+    EffectId effectId;
+    std::string realtimeEffectState;
+};
+
+struct PresetSavedInfo {
+    EffectInstanceId instanceId = -1;
+    EffectId effectId;
+    std::string presetId;
+};
+
+class IEffectMenuItemFactory
+{
+public:
+    virtual ~IEffectMenuItemFactory() = default;
+    virtual muse::uicomponents::MenuItem* makeMenuSeparator() = 0;
+    virtual muse::uicomponents::MenuItem* makeMenuEffectItem(const EffectId& effectId) = 0;
+    virtual muse::uicomponents::MenuItem* makeMenuEffect(const muse::String& title, const muse::uicomponents::MenuItemList& items) = 0;
+};
+}

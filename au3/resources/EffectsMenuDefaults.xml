@@ -1,0 +1,105 @@
+<EffectMenuList>
+    <Group>
+        <!-- Effects menu group name; audio dynamics compression, not data compression -->
+        <Name>Volume and Compression</Name>
+        <Effects>
+            <Effect>Amplify</Effect>
+            <Effect>Compressor</Effect>
+            <Effect>Limiter</Effect>
+            <Effect>Normalize</Effect>
+            <Effect>Loudness Normalization</Effect>
+            <Effect>Auto Duck</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <!-- Effects menu group name -->
+        <Name>Fading</Name>
+        <Effects>
+            <Effect>Fade In</Effect>
+            <Effect>Fade Out</Effect>
+            <Effect>Studio Fade Out</Effect>
+            <Effect>Adjustable Fade</Effect>
+            <Effect>Crossfade Clips</Effect>
+            <Effect>Crossfade Tracks</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <Name>Pitch and Tempo</Name>
+        <Effects>
+            <Effect>Change Pitch</Effect>
+            <Effect>Change Speed and Pitch</Effect>
+            <Effect>Change Tempo</Effect>
+            <Effect>Paulstretch</Effect>
+            <Effect>Sliding Stretch</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <Name>EQ and Filters</Name>
+        <Effects>
+            <Effect>Bass and Treble</Effect>
+            <Effect>Graphic EQ</Effect>
+            <Effect>Filter Curve EQ</Effect>
+            <Effect>High-Pass Filter</Effect>
+            <Effect>Low-Pass Filter</Effect>
+            <Effect>Shelf Filter</Effect>
+            <Effect>Notch Filter</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <Name>Noise Removal and Repair</Name>
+        <Effects>
+            <Effect>Click Removal</Effect>
+            <Effect>Noise Reduction</Effect>
+            <Effect>Noise Gate</Effect>
+            <Effect>Repair</Effect>
+            <Effect>Clip Fix</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <Name>Delay and Reverb</Name>
+        <Effects>
+            <Effect>Echo</Effect>
+            <Effect>Reverb</Effect>
+            <Effect>Delay</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <Name>Distortion and Modulation</Name>
+        <Effects>
+            <Effect>Tremolo</Effect>
+            <Effect>Distortion</Effect>
+            <Effect>Wahwah</Effect>
+            <Effect>Phaser</Effect>
+            <Effect>Vocoder</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <!-- Effects menu group name -->
+        <Name>Special</Name>
+        <Effects>
+            <Effect>Repeat</Effect>
+            <Effect>Reverse</Effect>
+            <Effect>Invert</Effect>
+            <Effect>Truncate Silence</Effect>
+            <Effect>Vocal Reduction and Isolation</Effect>
+            <Effect>Vocal Remover</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <Name>Spectral Tools</Name>
+        <Effects>
+            <Effect>Spectral Delete</Effect>
+            <Effect>Spectral Edit Multi Tool</Effect>
+            <Effect>Spectral Edit Parametric EQ</Effect>
+            <Effect>Spectral Edit Shelves</Effect>
+        </Effects>
+    </Group>
+    <Group>
+        <Name>Legacy</Name>
+        <Effects>
+            <Effect>Legacy Compressor</Effect>
+            <Effect>Legacy Limiter</Effect>
+            <Effect>Classic Filters</Effect>
+         </Effects>
+    </Group>
+</EffectMenuList>

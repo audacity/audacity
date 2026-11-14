@@ -1,0 +1,647 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "waveview.h"
+
+#include "global/translation.h"
+
+#include <QPainter>
+#include <QElapsedTimer>
+
+#include "global/types/color.h"
+#include "global/log.h"
+
+#include "au3/wavepainterutils.h"
+#include "au3/samplespainterutils.h"
+#include "view/timeline/timelinecontext.h"
+#include "view/common/selectioncolor.h"
+
+using namespace au::projectscene;
+
+static const QColor BACKGROUND_COLOR = QColor(255, 255, 255);
+static const QColor SAMPLES_BASE_COLOR = QColor(0, 0, 0);
+static const QColor SAMPLES_HIGHLIGHT_COLOR = QColor(255, 255, 255);
+static const QColor RMS_BASE_COLOR = QColor(255, 255, 255);
+static const QColor RMS_SELECTED_COLOR = QColor(255, 255, 255); // TODO: This need update
+static const QColor CLIPPING_SOLID_COLOR = QColor(239, 71, 111);
+static const QColor CENTER_LINE_COLOR = QColor(0, 0, 0);
+static const QColor SAMPLE_HEAD_COLOR = QColor(0, 0, 0);
+static const QColor SAMPLE_STALK_COLOR = QColor(0, 0, 0);
+
+// AU3 colors from au3/libraries/au3-theme-resources/light/Components/Colors.txt
+static const QColor CLASSIC_BACKGROUND_COLOR = QColor(240, 243, 255);               // Unselected: #f0f3ff
+static const QColor CLASSIC_BACKGROUND_SELECTED_COLOR = QColor(170, 195, 242);      // Selected: #aac3f2
+static const QColor CLASSIC_SAMPLES_BASE_COLOR = QColor(100, 100, 211);             // Sample: #6464D3
+static const QColor CLASSIC_SAMPLES_BASE_SELECTED_COLOR = QColor(103, 124, 228);    // SelSample: #677ce4
+static const QColor CLASSIC_RMS_COLOR = QColor(151, 151, 253);                      // Rms: #9797FD
+static const QColor CLASSIC_RMS_SELECTED_COLOR = QColor(151, 151, 253);             // Rms: #9797FD // TODO: This need update
+static const QColor CLASSIC_CLIPPING_COLOR = QColor(239, 71, 111);                  // Clipped: #ef476f
+
+static const float SAMPLE_HEAD_DEFAULT_ALPHA= 0.6;
+static const float SAMPLE_HEAD_CLIP_SELECTED_ALPHA = 0.8;
+static const float SAMPLE_HEAD_DATA_SELECTED_ALPHA = 0.9;
+static const float SAMPLE_STALK_DEFAULT_ALPHA = 0.4;
+static const float SAMPLE_STALK_CLIP_SELECTED_ALPHA = 0.6;
+static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
+
+WaveView::WaveView(QQuickItem* parent)
+    : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+{
+    //! NOTE: Push history state after edit is completed to avoid multiple unecessary calls.
+    connect(this, &WaveView::isIsolationModeChanged, [this]() {
+        if (!m_isIsolationMode) {
+            pushProjectHistorySampleEdit();
+        }
+    });
+
+    connect(this, &WaveView::visibleChanged, [this]() {
+        emit isNearSampleChanged();
+    });
+
+    connect(this, &WaveView::multiSampleEditChanged, [this]() {
+        if (!m_multiSampleEdit) {
+            pushProjectHistorySampleEdit();
+        }
+    });
+
+    configuration()->isRMSInWaveformVisibleChanged().onReceive(this, [this](bool) {
+        update();
+    });
+
+    configuration()->isClippingInWaveformVisibleChanged().onReceive(this, [this](bool) {
+        update();
+    });
+
+    configuration()->clipStyleChanged().onReceive(this, [this](projectscene::ClipStyles::Style) {
+        emit backgroundColorChanged();
+        update();
+    });
+}
+
+WaveView::~WaveView()
+{
+}
+
+void WaveView::setClipKey(const ClipKey& newClipKey)
+{
+    m_clipKey = newClipKey;
+    emit clipKeyChanged();
+
+    update();
+}
+
+IWavePainter::Params WaveView::getWavePainterParams() const
+{
+    IWavePainter::Params params;
+    params.geometry.height = height();
+    params.geometry.width = width();
+    params.geometry.left = 0.0;
+
+    params.zoom = m_context->zoom();
+    params.fromTime = (m_clipTime.itemStartTime - m_clipTime.startTime);
+    params.toTime = params.fromTime + (m_clipTime.itemEndTime - m_clipTime.itemStartTime);
+    params.selectionStartTime = m_clipTime.selectionStartTime;
+    params.selectionEndTime = m_clipTime.selectionEndTime;
+    params.channelHeightRatio = m_channelHeightRatio;
+    params.showRMS = configuration()->isRMSInWaveformVisible();
+    params.showClipping = configuration()->isClippingInWaveformVisible();
+    params.isLinear = m_isLinear;
+    params.dbRange = m_dbRange;
+    params.displayBounds = m_displayBounds;
+
+    projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
+    if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
+        applyColorfulStyle(params, m_clipColor, m_clipSelectedColor, m_clipSelected);
+    } else {
+        applyClassicStyle(params, m_clipSelected);
+    }
+
+    return params;
+}
+
+void WaveView::applyColorfulStyle(IWavePainter::Params& params,
+                                  const QColor& clipColor,
+                                  const QColor& clipSelectedColor,
+                                  bool selected) const
+{
+    float normalBgAlpha = 0.8;
+    if (selected) {
+        params.style.blankBrush = clipSelectedColor;
+        params.style.normalBackground = clipSelectedColor;
+        params.style.selectedBackground = clipSelectedColor;
+        params.style.envelopeBackground = clipSelectedColor;
+        params.style.selectedEnvelopeBackground = clipSelectedColor;
+    } else {
+        params.style.blankBrush = muse::blendQColors(BACKGROUND_COLOR, clipColor, 0.9);
+        params.style.normalBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
+        params.style.selectedBackground = clipSelectedColor;
+        params.style.envelopeBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
+        params.style.selectedEnvelopeBackground = clipSelectedColor;
+    }
+
+    params.style.samplePen = muse::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
+    params.style.selectedSamplePen = muse::blendQColors(params.style.blankBrush,
+                                                        selected ? SAMPLES_HIGHLIGHT_COLOR : SAMPLES_BASE_COLOR,
+                                                        0.75);
+    params.style.rmsPen = muse::blendQColors(params.style.samplePen, RMS_BASE_COLOR, 0.25);
+    params.style.rmsSelectedPen = muse::blendQColors(params.style.selectedSamplePen, RMS_BASE_COLOR, 0.6); // TODO: use RMS_SELECTED_COLOR
+    params.style.clippedPen = CLIPPING_SOLID_COLOR;
+    params.style.centerLine = muse::blendQColors(params.style.samplePen, CENTER_LINE_COLOR, 0.2);
+
+    float headAlpha = selected ? SAMPLE_HEAD_CLIP_SELECTED_ALPHA : SAMPLE_HEAD_DEFAULT_ALPHA;
+    float stalkAlpha = selected ? SAMPLE_STALK_CLIP_SELECTED_ALPHA : SAMPLE_STALK_DEFAULT_ALPHA;
+
+    params.style.sampleHead = muse::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR, headAlpha);
+    params.style.sampleStalk = muse::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR, stalkAlpha);
+
+    if (!selected) {
+        params.style.sampleHeadSelection = muse::blendQColors(params.style.samplePen, SAMPLE_HEAD_COLOR,
+                                                              SAMPLE_HEAD_DATA_SELECTED_ALPHA);
+        params.style.sampleStalkSelection
+            = muse::blendQColors(params.style.samplePen, SAMPLE_STALK_COLOR, SAMPLE_STALK_DATA_SELECTED_ALPHA);
+    }
+}
+
+void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) const
+{
+    params.style.blankBrush = selected ? CLASSIC_BACKGROUND_SELECTED_COLOR : CLASSIC_BACKGROUND_COLOR;
+    params.style.normalBackground = params.style.blankBrush;
+    params.style.selectedBackground = selected ? timeSelectionColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+
+    params.style.envelopeBackground = params.style.blankBrush;
+    params.style.selectedEnvelopeBackground
+        = selected ? timeSelectionColor(CLASSIC_BACKGROUND_SELECTED_COLOR) : CLASSIC_BACKGROUND_SELECTED_COLOR;
+
+    QColor baseSampleColor = selected ? CLASSIC_SAMPLES_BASE_SELECTED_COLOR : CLASSIC_SAMPLES_BASE_COLOR;
+    params.style.samplePen = baseSampleColor;
+    params.style.selectedSamplePen = CLASSIC_SAMPLES_BASE_SELECTED_COLOR;
+    params.style.rmsPen = CLASSIC_RMS_COLOR;
+    params.style.rmsSelectedPen = muse::blendQColors(params.style.selectedSamplePen, CLASSIC_RMS_COLOR, 0.6); // TODO: use CLASSIC_RMS_SELECTED_COLOR
+    params.style.clippedPen = CLASSIC_CLIPPING_COLOR;
+    params.style.centerLine = baseSampleColor;
+    params.style.sampleHead = baseSampleColor;
+    params.style.sampleStalk = baseSampleColor;
+
+    if (!selected) {
+        params.style.sampleHeadSelection = baseSampleColor;
+        params.style.sampleStalkSelection = baseSampleColor;
+    }
+}
+
+void WaveView::paint(QPainter* painter)
+{
+    IWavePainter::Params params = getWavePainterParams();
+    IWavePainter::PlotType pType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, params.zoom);
+
+    bool isStemPlot = pType == IWavePainter::PlotType::Stem;
+
+    setIsStemPlot(isStemPlot);
+    setAntialiasing(isStemPlot);
+
+    wavePainter()->paint(*painter, m_clipKey.key, params, pType);
+
+    if (globalContext()->isRecording()) {
+        paintRecordingPlaceholder(*painter, params);
+    }
+}
+
+void WaveView::paintRecordingPlaceholder(QPainter& painter, const IWavePainter::Params& params)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackedit::Clip clip = prj->clip(m_clipKey.key);
+    if (!clip.isValid() || m_clipTime.itemEndTime <= clip.endTime) {
+        return;
+    }
+
+    const double x0 = std::max(0.0, (clip.endTime - m_clipTime.itemStartTime) * params.zoom);
+    const double x1 = std::min(width(), (m_clipTime.itemEndTime - m_clipTime.itemStartTime) * params.zoom);
+    if (x1 - x0 < 1.0) {
+        return;
+    }
+
+    const double bandsHeight = params.geometry.height;
+    std::vector<std::pair<double, double> > channelBands;
+    if (muse::is_equal(m_channelHeightRatio, 1.0)) {
+        channelBands.emplace_back(0.0, bandsHeight);
+    } else {
+        channelBands.emplace_back(0.0, bandsHeight * m_channelHeightRatio);
+        channelBands.emplace_back(bandsHeight * m_channelHeightRatio, bandsHeight * (1.0 - m_channelHeightRatio));
+    }
+
+    for (const auto& [top, bandHeight] : channelBands) {
+        const double centerY = top + bandHeight / 2.0;
+
+        painter.setPen(params.style.samplePen);
+        painter.drawLine(QPointF(x0, centerY), QPointF(x1, centerY));
+    }
+}
+
+ClipKey WaveView::clipKey() const
+{
+    return m_clipKey;
+}
+
+TimelineContext* WaveView::timelineContext() const
+{
+    return m_context;
+}
+
+void WaveView::setTimelineContext(TimelineContext* newContext)
+{
+    if (m_context == newContext) {
+        return;
+    }
+
+    if (m_context) {
+        disconnect(m_context, nullptr, this, nullptr);
+    }
+
+    m_context = newContext;
+
+    if (m_context) {
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
+
+        onWaveZoomChanged();
+    }
+
+    emit timelineContextChanged();
+}
+
+void WaveView::updateView()
+{
+    update();
+}
+
+QColor WaveView::clipColor() const
+{
+    return m_clipColor;
+}
+
+void WaveView::setClipColor(const QColor& newClipColor)
+{
+    if (m_clipColor == newClipColor) {
+        return;
+    }
+    m_clipColor = newClipColor;
+    emit clipColorChanged();
+    emit backgroundColorChanged();
+
+    update();
+}
+
+QColor WaveView::clipSelectedColor() const
+{
+    return m_clipSelectedColor;
+}
+
+void WaveView::setClipSelectedColor(const QColor& newClipSelectedColor)
+{
+    if (m_clipSelectedColor == newClipSelectedColor) {
+        return;
+    }
+    m_clipSelectedColor = newClipSelectedColor;
+    emit clipSelectedColorChanged();
+    emit backgroundColorChanged();
+
+    update();
+}
+
+bool WaveView::clipSelected() const
+{
+    return m_clipSelected;
+}
+
+void WaveView::setClipSelected(bool newClipSelected)
+{
+    if (m_clipSelected == newClipSelected) {
+        return;
+    }
+    m_clipSelected = newClipSelected;
+    emit clipSelectedChanged();
+    emit backgroundColorChanged();
+
+    update();
+}
+
+QColor WaveView::backgroundColor() const
+{
+    const IWavePainter::Params params = getWavePainterParams();
+
+    const bool endWithinSelection = m_clipTime.selectionStartTime < m_clipTime.selectionEndTime
+                                    && m_clipTime.selectionStartTime <= m_clipTime.endTime
+                                    && m_clipTime.selectionEndTime >= m_clipTime.endTime;
+
+    return endWithinSelection ? params.style.selectedBackground : params.style.normalBackground;
+}
+
+ClipTime WaveView::clipTime() const
+{
+    return m_clipTime;
+}
+
+void WaveView::setClipTime(const ClipTime& newClipTime)
+{
+    if (m_clipTime == newClipTime) {
+        return;
+    }
+    m_clipTime = newClipTime;
+    emit clipTimeChanged();
+    emit backgroundColorChanged();
+
+    update();
+}
+
+double WaveView::channelHeightRatio() const
+{
+    return m_channelHeightRatio;
+}
+
+void WaveView::setChannelHeightRatio(double channelHeightRatio)
+{
+    m_channelHeightRatio = channelHeightRatio;
+    emit channelHeightRatioChanged();
+    update();
+}
+
+bool WaveView::isNearSample() const
+{
+    return isVisible() && m_isNearSample;
+}
+
+void WaveView::setIsNearSample(bool isNearSample)
+{
+    if (m_isNearSample == isNearSample) {
+        return;
+    }
+
+    m_isNearSample = isNearSample;
+    emit isNearSampleChanged();
+}
+
+bool WaveView::isStemPlot() const
+{
+    return m_isStemPlot;
+}
+
+void WaveView::setIsStemPlot(bool isStemPlot)
+{
+    if (m_isStemPlot == isStemPlot) {
+        return;
+    }
+
+    m_isStemPlot = isStemPlot;
+    emit isStemPlotChanged();
+}
+
+int WaveView::currentChannel() const
+{
+    return m_currentChannel.value_or(0);
+}
+
+void WaveView::setCurrentChannel(int currentChannel)
+{
+    m_currentChannel = currentChannel;
+}
+
+bool WaveView::isIsolationMode() const
+{
+    return m_isIsolationMode;
+}
+
+void WaveView::setIsIsolationMode(bool isIsolationMode)
+{
+    if (m_isIsolationMode == isIsolationMode) {
+        return;
+    }
+
+    m_isIsolationMode = isIsolationMode;
+    emit isIsolationModeChanged();
+}
+
+void WaveView::setMultiSampleEdit(bool multiSampleEdit)
+{
+    if (m_multiSampleEdit == multiSampleEdit) {
+        return;
+    }
+
+    m_multiSampleEdit = multiSampleEdit;
+    emit multiSampleEditChanged();
+}
+
+bool WaveView::multiSampleEdit() const
+{
+    return m_multiSampleEdit;
+}
+
+void WaveView::setIsBrush(bool isBrush)
+{
+    if (m_isBrush == isBrush) {
+        return;
+    }
+
+    m_isBrush = isBrush;
+    emit isBrushChanged();
+}
+
+bool WaveView::isBrush() const
+{
+    return m_isBrush;
+}
+
+bool WaveView::isLinear() const
+{
+    return m_isLinear;
+}
+
+void WaveView::setIsLinear(bool isLinear)
+{
+    if (m_isLinear == isLinear) {
+        return;
+    }
+
+    m_isLinear = isLinear;
+    update();
+}
+
+double WaveView::dbRange() const
+{
+    return m_dbRange;
+}
+
+void WaveView::setDbRange(double dbRange)
+{
+    if (m_dbRange == dbRange) {
+        return;
+    }
+
+    m_dbRange = dbRange;
+    update();
+}
+
+QVariant WaveView::displayBounds() const
+{
+    QMap<QString, float> bounds;
+    bounds["min"] = m_displayBounds.first;
+    bounds["max"] = m_displayBounds.second;
+    return QVariant::fromValue(bounds);
+}
+
+void WaveView::setDisplayBounds(const QVariant& displayBounds)
+{
+    float minBound = displayBounds.toMap().value("min", -1.0f).toFloat();
+    float maxBound = displayBounds.toMap().value("max", 1.0f).toFloat();
+
+    if (m_displayBounds.first == minBound && m_displayBounds.second == maxBound) {
+        return;
+    }
+
+    m_displayBounds.first = minBound;
+    m_displayBounds.second = maxBound;
+
+    update();
+}
+
+void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
+{
+    if (wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                      m_context->zoom()) != IWavePainter::PlotType::Stem) {
+        return;
+    }
+
+    const auto params = getWavePainterParams();
+    m_currentChannel =  samplespainterutils::hitNearestSampleChannelIndex(globalContext()->currentProject(), m_clipKey.key, QPoint(x,
+                                                                                                                                   y),
+                                                                          params);
+    setIsNearSample(m_currentChannel.has_value());
+}
+
+void WaveView::setLastClickPos(const unsigned lastX, const unsigned lastY, const unsigned int x, const unsigned int y)
+{
+    if (wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                      m_context->zoom()) != IWavePainter::PlotType::Stem) {
+        return;
+    }
+
+    // Prevent sample editing during playback
+    if (playbackState()->isPlaying()) {
+        return;
+    }
+
+    const auto currentPosition = QPoint(x, y);
+    const auto lastPosition = QPoint(lastX, lastY);
+
+    const auto params = getWavePainterParams();
+
+    if (!m_currentChannel.has_value()) {
+        m_currentChannel = samplespainterutils::hitNearestSampleChannelIndex(
+            globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+        return;
+    }
+
+    samplespainterutils::setLastClickPos(
+        m_currentChannel.value(),
+        globalContext()->currentProject(), m_clipKey.key, lastPosition, currentPosition, params);
+
+    m_lastClickedPoint = currentPosition;
+}
+
+void WaveView::smoothLastClickPos(unsigned int x, const unsigned int y)
+{
+    if (!m_isStemPlot) {
+        return;
+    }
+
+    // Prevent sample editing during playback
+    if (playbackState()->isPlaying()) {
+        return;
+    }
+
+    const auto currentPosition = QPoint(x, y);
+    const auto params = getWavePainterParams();
+
+    auto channel = samplespainterutils::hitChannelIndex(globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+
+    if (!channel) {
+        return;
+    }
+
+    samplespainterutils::smoothLastClickPos(
+        channel.value(),
+        globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+
+    //! NOTE: History state is only pushed when data is actually changed.
+    // For smooth edition there is no data change on button press or release
+    // just on mouse click.
+    pushProjectHistorySampleEdit();
+}
+
+void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
+{
+    if (!m_isStemPlot) {
+        return;
+    }
+
+    if (!m_isIsolationMode) {
+        return;
+    }
+
+    // Prevent sample editing during playback
+    if (playbackState()->isPlaying()) {
+        return;
+    }
+
+    if (!m_lastClickedPoint.has_value()) {
+        return;
+    }
+
+    const auto currentPosition = QPoint(x, y);
+    const auto params = getWavePainterParams();
+
+    if (!m_currentChannel.has_value()) {
+        m_currentChannel = samplespainterutils::hitNearestSampleChannelIndex(
+            globalContext()->currentProject(), m_clipKey.key, currentPosition, params);
+        return;
+    }
+
+    samplespainterutils::setIsolatedPoint(
+        m_currentChannel.value(),
+        m_clipKey.key, globalContext()->currentProject(), m_lastClickedPoint.value(), currentPosition, params);
+}
+
+void WaveView::onWaveZoomChanged()
+{
+    const IWavePainter::PlotType currentPlotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
+                                                                                 m_context->zoom());
+    const bool wasStemPlot = m_isStemPlot;
+    const bool isStemPlot = currentPlotType == IWavePainter::PlotType::Stem;
+
+    if (wasStemPlot != isStemPlot) {
+        setIsStemPlot(isStemPlot);
+        if (!isStemPlot && m_isNearSample) {
+            // force isNearSample to false when transitioning away from stem plot mode
+            setIsNearSample(false);
+        }
+        // Note: When transitioning TO stem plot mode, ClipItem.qml onIsStemPlotChanged
+        // will trigger mouse position update to force isNearSample to be set correctly
+    }
+
+    update();
+}
+
+void WaveView::pushProjectHistorySampleEdit()
+{
+    projectHistory()->pushHistoryState(muse::trc("projectscene", "Moved Samples"), muse::trc("projectscene", "Sample Edit"),
+                                       trackedit::UndoPushType::CONSOLIDATE);
+}
+
+au::context::IPlaybackStatePtr WaveView::playbackState() const
+{
+    return globalContext()->playbackState();
+}

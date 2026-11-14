@@ -1,0 +1,547 @@
+#include "trackeditinteraction.h"
+
+namespace au::trackedit {
+TrackeditInteraction::TrackeditInteraction(const muse::modularity::ContextPtr& ctx, std::unique_ptr<ITrackeditInteraction> interaction)
+    : muse::Contextable(ctx), m_interaction(std::move(interaction))
+{
+}
+
+muse::secs_t TrackeditInteraction::clipStartTime(const trackedit::ClipKey& clipKey) const
+{
+    return m_interaction->clipStartTime(clipKey);
+}
+
+muse::secs_t TrackeditInteraction::clipEndTime(const ClipKey& clipKey) const
+{
+    return m_interaction->clipEndTime(clipKey);
+}
+
+bool TrackeditInteraction::changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeClipStartTime, clipKey, newStartTime, completed);
+}
+
+muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> TrackeditInteraction::clipStartTimeChanged() const
+{
+    return m_interaction->clipStartTimeChanged();
+}
+
+bool TrackeditInteraction::trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::trimTracksData, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::silenceTracksData, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::silenceClips(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::silenceClips, clipKeyList);
+}
+
+bool TrackeditInteraction::tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const
+{
+    return m_interaction->tracksDataIsSilent(tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title)
+{
+    return m_interaction->changeTrackTitle(trackId, title);
+}
+
+bool TrackeditInteraction::changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle)
+{
+    return m_interaction->changeClipTitle(clipKey, newTitle);
+}
+
+bool TrackeditInteraction::changeClipPitch(const ClipKey& clipKey, int pitch)
+{
+    return m_interaction->changeClipPitch(clipKey, pitch);
+}
+
+bool TrackeditInteraction::resetClipPitch(const ClipKey& clipKey)
+{
+    return m_interaction->resetClipPitch(clipKey);
+}
+
+bool TrackeditInteraction::changeClipSpeed(const ClipKey& clipKey, double speed)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeClipSpeed, clipKey, speed);
+}
+
+bool TrackeditInteraction::resetClipSpeed(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::resetClipSpeed, clipKey);
+}
+
+bool TrackeditInteraction::changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex)
+{
+    return m_interaction->changeClipColor(clipKey, colorIndex);
+}
+
+bool TrackeditInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t duration, bool completed)
+{
+    return m_interaction->changeClipFadeIn(clipKey, duration, completed);
+}
+
+bool TrackeditInteraction::changeClipFadeOut(const ClipKey& clipKey, secs_t duration, bool completed)
+{
+    return m_interaction->changeClipFadeOut(clipKey, duration, completed);
+}
+
+bool TrackeditInteraction::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
+{
+    return m_interaction->changeTracksColor(tracksIds, colorIndex);
+}
+
+bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeClipOptimizeForVoice, clipKey, optimize);
+}
+
+bool TrackeditInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::renderClipPitchAndSpeed, clipKey);
+}
+
+bool TrackeditInteraction::resetClipPitchAndSpeed(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::resetClipPitchAndSpeed, clipKey);
+}
+
+void TrackeditInteraction::clearClipboard()
+{
+    return m_interaction->clearClipboard();
+}
+
+muse::Ret TrackeditInteraction::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
+{
+    return withPlaybackStop(&ITrackeditInteraction::pasteFromClipboard, begin, moveClips, moveAllTracks);
+}
+
+bool TrackeditInteraction::cutClipIntoClipboard(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::cutClipIntoClipboard, clipKey);
+}
+
+bool TrackeditInteraction::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips,
+                                                    bool isRangeSelection)
+{
+    return withPlaybackStop(&ITrackeditInteraction::cutItemDataIntoClipboard, tracksIds, begin, end, moveClips, isRangeSelection);
+}
+
+bool TrackeditInteraction::copyClipIntoClipboard(const trackedit::ClipKey& clipKey)
+{
+    return m_interaction->copyClipIntoClipboard(clipKey);
+}
+
+bool TrackeditInteraction::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const ClipKeyList& clipKeys, secs_t offset)
+{
+    return m_interaction->copyNonContinuousTrackDataIntoClipboard(trackId, clipKeys, offset);
+}
+
+bool TrackeditInteraction::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
+{
+    return m_interaction->copyContinuousTrackDataIntoClipboard(trackId, begin, end);
+}
+
+bool TrackeditInteraction::removeClip(const trackedit::ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeClip, clipKey);
+}
+
+bool TrackeditInteraction::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeClips, clipKeyList, moveClips);
+}
+
+bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeTracksData, tracksIds, begin, end, moveClips);
+}
+
+muse::RetVal<ClipKeyList> TrackeditInteraction::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
+                                                          int trackPositionOffset)
+{
+    return withPlaybackStopRetVal(&ITrackeditInteraction::moveClips,
+                                  clipKeyList,
+                                  timePositionOffset,
+                                  trackPositionOffset);
+}
+
+bool TrackeditInteraction::moveRangeSelection(secs_t timePositionOffset, bool completed)
+{
+    return m_interaction->moveRangeSelection(timePositionOffset, completed);
+}
+
+void TrackeditInteraction::cancelItemDragEdit()
+{
+    m_interaction->cancelItemDragEdit();
+}
+
+bool TrackeditInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitTracksAt, tracksIds, pivots);
+}
+
+bool TrackeditInteraction::splitClipsAtSilences(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitClipsAtSilences, clipKeyList);
+}
+
+bool TrackeditInteraction::splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitRangeSelectionAtSilences, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitRangeSelectionIntoNewTracks, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::splitClipsIntoNewTracks(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitClipsIntoNewTracks, clipKeyList);
+}
+
+bool TrackeditInteraction::mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::mergeSelectedOnTracks, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::duplicateSelectedOnTracks, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::duplicateClip(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::duplicateClip, clipKey);
+}
+
+bool TrackeditInteraction::duplicateClips(const ClipKeyList& clipKeyList)
+{
+    return withPlaybackStop(&ITrackeditInteraction::duplicateClips, clipKeyList);
+}
+
+bool TrackeditInteraction::clipSplitCut(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::clipSplitCut, clipKey);
+}
+
+bool TrackeditInteraction::clipSplitDelete(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::clipSplitDelete, clipKey);
+}
+
+bool TrackeditInteraction::splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitCutSelectedOnTracks, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitDeleteSelectedOnTracks, tracksIds, begin, end);
+}
+
+bool TrackeditInteraction::trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                         UndoPushType type)
+{
+    return withPlaybackStop(&ITrackeditInteraction::trimClipsLeft, clipKeyList, deltaSec, minClipDuration, completed, type);
+}
+
+bool TrackeditInteraction::trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                          UndoPushType type)
+{
+    return withPlaybackStop(&ITrackeditInteraction::trimClipsRight, clipKeyList, deltaSec, minClipDuration, completed, type);
+}
+
+bool TrackeditInteraction::stretchClipsLeft(const ClipKeyList& clipKeyList,
+                                            secs_t deltaSec,
+                                            secs_t minClipDuration,
+                                            bool completed,
+                                            UndoPushType type)
+{
+    return withPlaybackStop(&ITrackeditInteraction::stretchClipsLeft, clipKeyList, deltaSec, minClipDuration, completed, type);
+}
+
+bool TrackeditInteraction::stretchClipsRight(const ClipKeyList& clipKeyList,
+                                             secs_t deltaSec,
+                                             secs_t minClipDuration,
+                                             bool completed,
+                                             UndoPushType type)
+{
+    return withPlaybackStop(&ITrackeditInteraction::stretchClipsRight,
+                            clipKeyList,
+                            deltaSec,
+                            minClipDuration,
+                            completed,
+                            type);
+}
+
+muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
+{
+    return m_interaction->clipDuration(clipKey);
+}
+
+double TrackeditInteraction::nearestZeroCrossing(double time) const
+{
+    return m_interaction->nearestZeroCrossing(time);
+}
+
+muse::Ret TrackeditInteraction::makeRoomForClip(const ClipKey& clipKey)
+{
+    return m_interaction->makeRoomForClip(clipKey);
+}
+
+bool TrackeditInteraction::newMonoTrack()
+{
+    return withPlaybackStop(&ITrackeditInteraction::newMonoTrack);
+}
+
+bool TrackeditInteraction::newStereoTrack()
+{
+    return withPlaybackStop(&ITrackeditInteraction::newStereoTrack);
+}
+
+muse::RetVal<TrackId> TrackeditInteraction::newLabelTrack(const muse::String& title)
+{
+    return withPlaybackStopRetVal(&ITrackeditInteraction::newLabelTrack, title);
+}
+
+bool TrackeditInteraction::deleteTracks(const TrackIdList& trackIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::deleteTracks, trackIds);
+}
+
+bool TrackeditInteraction::duplicateTracks(const TrackIdList& trackIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::duplicateTracks, trackIds);
+}
+
+void TrackeditInteraction::moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction)
+{
+    return m_interaction->moveTracks(trackIds, direction);
+}
+
+void TrackeditInteraction::moveTracksTo(const TrackIdList& trackIds, int to)
+{
+    return m_interaction->moveTracksTo(trackIds, to);
+}
+
+ClipKeyList TrackeditInteraction::clipsOnTrack(const TrackId trackId)
+{
+    return m_interaction->clipsOnTrack(trackId);
+}
+
+bool TrackeditInteraction::undo()
+{
+    return withPlaybackStop(&ITrackeditInteraction::undo);
+}
+
+bool TrackeditInteraction::canUndo()
+{
+    return m_interaction->canUndo();
+}
+
+bool TrackeditInteraction::redo()
+{
+    return withPlaybackStop(&ITrackeditInteraction::redo);
+}
+
+bool TrackeditInteraction::canRedo()
+{
+    return m_interaction->canRedo();
+}
+
+bool TrackeditInteraction::undoRedoToIndex(size_t index)
+{
+    // Already at the requested state: nothing will change, so don't interrupt playback.
+    if (projectHistory()->currentStateIndex() == index) {
+        return false;
+    }
+    return withPlaybackStop(&ITrackeditInteraction::undoRedoToIndex, index);
+}
+
+muse::async::Notification TrackeditInteraction::cancelDragEditRequested() const
+{
+    return m_interaction->cancelDragEditRequested();
+}
+
+void TrackeditInteraction::notifyAboutCancelDragEdit()
+{
+    m_interaction->notifyAboutCancelDragEdit();
+}
+
+bool TrackeditInteraction::insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration)
+{
+    return withPlaybackStop(&ITrackeditInteraction::insertSilence, trackIds, begin, end, duration);
+}
+
+bool TrackeditInteraction::toggleStretchToMatchProjectTempo(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::toggleStretchToMatchProjectTempo, clipKey);
+}
+
+bool TrackeditInteraction::changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format)
+{
+    return withProgress([&, this]() {
+        return withPlaybackStop(&ITrackeditInteraction::changeTracksFormat, tracksIds, format);
+    });
+}
+
+bool TrackeditInteraction::changeTracksRate(const TrackIdList& tracksIds, int rate)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeTracksRate, tracksIds, rate);
+}
+
+bool TrackeditInteraction::swapStereoChannels(const TrackIdList& tracksIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::swapStereoChannels, tracksIds);
+}
+
+bool TrackeditInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitStereoTracksToLRMono, tracksIds);
+}
+
+bool TrackeditInteraction::splitStereoTracksToCenterMono(const TrackIdList& tracksIds)
+{
+    return withPlaybackStop(&ITrackeditInteraction::splitStereoTracksToCenterMono, tracksIds);
+}
+
+bool TrackeditInteraction::makeStereoTrack(const TrackId left, const TrackId right)
+{
+    return withPlaybackStop(&ITrackeditInteraction::makeStereoTrack, left, right);
+}
+
+bool TrackeditInteraction::resampleTracks(const TrackIdList& tracksIds, int rate)
+{
+    return withProgress([&, this]() {
+        return withPlaybackStop(&ITrackeditInteraction::resampleTracks, tracksIds, rate);
+    });
+}
+
+muse::RetVal<TrackId> TrackeditInteraction::mixAndRender(const TrackIdList& tracksIds, bool toNewTrack)
+{
+    return withPlaybackStopRetVal(&ITrackeditInteraction::mixAndRender, tracksIds, toNewTrack);
+}
+
+muse::RetVal<LabelKey> TrackeditInteraction::addLabel(const TrackId& toTrackId)
+{
+    return m_interaction->addLabel(toTrackId);
+}
+
+muse::RetVal<LabelKey> TrackeditInteraction::addLabelToSelection()
+{
+    return m_interaction->addLabelToSelection();
+}
+
+bool TrackeditInteraction::changeLabelTitle(const LabelKey& labelKey, const muse::String& title)
+{
+    return m_interaction->changeLabelTitle(labelKey, title);
+}
+
+bool TrackeditInteraction::changeLabelLowFrequency(const LabelKey& labelKey, double frequency)
+{
+    return m_interaction->changeLabelLowFrequency(labelKey, frequency);
+}
+
+bool TrackeditInteraction::changeLabelHighFrequency(const LabelKey& labelKey, double frequency)
+{
+    return m_interaction->changeLabelHighFrequency(labelKey, frequency);
+}
+
+bool TrackeditInteraction::removeLabel(const LabelKey& labelKey)
+{
+    return m_interaction->removeLabel(labelKey);
+}
+
+bool TrackeditInteraction::removeLabels(const LabelKeyList& labelKeys, bool moveLabels)
+{
+    return m_interaction->removeLabels(labelKeys, moveLabels);
+}
+
+bool TrackeditInteraction::cutLabel(const LabelKey& labelKey)
+{
+    return m_interaction->cutLabel(labelKey);
+}
+
+bool TrackeditInteraction::copyLabel(const LabelKey& labelKey)
+{
+    return m_interaction->copyLabel(labelKey);
+}
+
+muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
+                                                            int trackPositionOffset)
+{
+    return m_interaction->moveLabels(labelKeys, timePositionOffset, trackPositionOffset);
+}
+
+muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+{
+    return m_interaction->moveLabelsToTrack(labelKeys, toTrackId, completed);
+}
+
+bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)
+{
+    return m_interaction->stretchLabelLeft(labelKey, newStartTime, completed);
+}
+
+bool TrackeditInteraction::stretchLabelsLeft(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed)
+{
+    return m_interaction->stretchLabelsLeft(labelKeyList, deltaSec, completed);
+}
+
+bool TrackeditInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
+{
+    return m_interaction->stretchLabelRight(labelKey, newEndTime, completed);
+}
+
+bool TrackeditInteraction::stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed)
+{
+    return m_interaction->stretchLabelsRight(labelKeyList, deltaSec, completed);
+}
+
+void TrackeditInteraction::resetLabelStretchState()
+{
+    m_interaction->resetLabelStretchState();
+}
+
+bool TrackeditInteraction::copyItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys)
+{
+    return m_interaction->copyItems(clipKeys, labelKeys);
+}
+
+bool TrackeditInteraction::cutItems(const ClipKeyList& clipKeys, const LabelKeyList& labelKeys, bool moveClips)
+{
+    return withPlaybackStop(&ITrackeditInteraction::cutItems, clipKeys, labelKeys, moveClips);
+}
+
+int64_t TrackeditInteraction::itemGroupId(const TrackItemKey& key) const
+{
+    return m_interaction->itemGroupId(key);
+}
+
+void TrackeditInteraction::groupItems(const TrackItemKeyList& keys)
+{
+    m_interaction->groupItems(keys);
+}
+
+void TrackeditInteraction::ungroupItems(const TrackItemKeyList& keys)
+{
+    m_interaction->ungroupItems(keys);
+}
+
+ItemKeys TrackeditInteraction::itemsInGroup(int64_t id) const
+{
+    return m_interaction->itemsInGroup(id);
+}
+
+muse::Progress TrackeditInteraction::progress() const
+{
+    return m_interaction->progress();
+}
+}

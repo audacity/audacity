@@ -1,0 +1,131 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "au3wrap/au3types.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
+#include "context/iglobalcontext.h"
+#include "trackedit/itrackeditconfiguration.h"
+#include "trackedit/iclipsinteraction.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
+#include "playback/iplaybackconfiguration.h"
+
+#include "../../itracksinteraction.h"
+
+namespace au::trackedit {
+class Au3TrackData;
+using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
+
+class Au3TracksInteraction : public ITracksInteraction, public muse::Contextable
+{
+    muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
+    muse::ContextInject<au::trackedit::ITrackNavigationController> trackNavigationController{ this };
+
+public:
+    Au3TracksInteraction(const muse::modularity::ContextPtr& ctx);
+
+    bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
+    bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
+    bool tracksDataIsSilent(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) const override;
+    bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
+    bool changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex) override;
+
+    muse::Ret paste(const std::vector<ITrackDataPtr>& data, secs_t begin, bool moveClips, bool moveAllTracks, bool isMultiSelectionCopy,
+                    bool& projectWasModified) override;
+
+    ITrackDataPtr cutTrackData(const TrackId trackId, secs_t begin, secs_t end, bool moveClips) override;
+    ITrackDataPtr copyNonContinuousTrackData(const TrackId trackId, const TrackItemKeyList& itemKeys, secs_t offset) override;
+    ITrackDataPtr copyContinuousTrackData(const TrackId trackId, secs_t begin, secs_t end) override;
+    bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
+
+    bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
+    bool splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool splitRangeSelectionIntoNewTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool mergeSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    bool duplicateSelectedOnTracks(const TrackIdList& tracksIds, secs_t begin, secs_t end) override;
+    std::vector<ITrackDataPtr> splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
+    bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
+
+    bool newMonoTrack() override;
+    bool newStereoTrack() override;
+    muse::RetVal<TrackId> newLabelTrack(const muse::String& title = muse::String()) override;
+
+    bool deleteTracks(const TrackIdList& trackIds) override;
+    bool duplicateTracks(const TrackIdList& trackIds) override;
+    bool moveTracks(const TrackIdList& trackIds, const TrackMoveDirection direction) override;
+    bool moveTracksTo(const TrackIdList& trackIds, int to) override;
+
+    bool insertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration) override;
+
+    bool changeTracksFormat(const TrackIdList& tracksIds, trackedit::TrackFormat format) override;
+    bool changeTracksRate(const TrackIdList& tracksIds, int rate) override;
+
+    bool swapStereoChannels(const TrackIdList& tracksIds) override;
+    bool splitStereoTracksToLRMono(const TrackIdList& tracksIds) override;
+    bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
+    bool makeStereoTrack(const TrackId left, const TrackId right) override;
+    bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
+    muse::RetVal<TrackId> mixAndRender(const TrackIdList& tracksIds) override;
+
+    double nearestZeroCrossing(double time) const override;
+
+    au::trackedit::TrackId addWaveTrack(int nChannels) override;
+    void removeDragAddedTracks(size_t numTracksWhenDragStarted, bool emptyOnly) override;
+
+    muse::Progress progress() const override;
+
+private:
+    friend class Au3TracksInteractionTests;
+
+    au3::Au3Project& projectRef() const;
+    TrackIdList pasteIntoNewTracks(const std::vector<Au3TrackDataPtr>& tracksData);
+    std::shared_ptr<au3::Au3Track> createNewTrackAndPaste(std::shared_ptr<au3::Au3Track> data, au3::Au3TrackList& list, secs_t begin);
+    TrackIdList determineDestinationTracksIds(const std::vector<Track>& tracks, const TrackIdList& destinationTrackIds,
+                                              const std::vector<Au3TrackDataPtr>& clipboardData, bool forLabels = false) const;
+
+    bool userIsOkCombineMonoToStereo() const;
+    bool canMergeMonoTracksToStereo(const TrackId left, const TrackId right);
+    muse::Ret canPasteTrackData(const TrackIdList& tracksIds, const std::vector<Au3TrackDataPtr>& clipsToPaste) const;
+
+    muse::Ret makeRoomForDataOnTracks(const std::vector<TrackId>& tracksIds, const std::vector<Au3TrackDataPtr>& trackData, secs_t begin,
+                                      bool pasteIntoExistingClip);
+    muse::Ret makeRoomForDataOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+
+    muse::Ret pasteClips(const std::vector<Au3TrackDataPtr>& copiedData, const TrackIdList& dstTracksIds, secs_t begin, bool moveClips,
+                         bool isMultiSelectionCopy, bool pasteIntoExistingClip, bool& projectWasModified);
+    muse::Ret pasteLabels(const std::vector<Au3TrackDataPtr>& copiedData, const TrackIdList& dstTracksIds, secs_t begin, bool moveClips,
+                          bool& projectWasModified);
+
+    bool mergeSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+    void doInsertSilence(const TrackIdList& trackIds, secs_t begin, secs_t end, secs_t duration);
+    void insertBlankSpace(const TrackIdList& trackIds, secs_t begin, secs_t duration);
+    std::shared_ptr<WaveTrack> createMonoTrack();
+    std::shared_ptr<WaveTrack> createStereoTrack();
+
+    ITrackDataPtr splitCutSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+    bool splitDeleteSelectedOnTrack(const TrackId trackId, secs_t begin, secs_t end);
+
+    bool canMoveTrack(const TrackId trackId, const TrackMoveDirection direction);
+    int trackPosition(const TrackId trackId);
+    void moveTrack(const TrackId trackId, const TrackMoveDirection direction);
+    void moveTrackTo(const TrackId trackId, int pos);
+
+    context::IPlaybackStatePtr playbackState() const;
+
+    muse::Progress m_progress;
+    std::atomic<bool> m_busy = false;
+};
+}

@@ -1,0 +1,263 @@
+import QtQuick
+
+import Muse.Ui
+import Muse.UiComponents
+
+Rectangle {
+    id: root
+
+    property string title: ""
+
+    property bool isPoint: false
+
+    property color backgroundColor: "transparent"
+    property color labelColor: ui.theme.extra["black_color"]
+
+    property int earWidth: 0
+
+    component TimeSelection: QtObject {
+        property real start: 0
+        property real width: 0
+        property color color: "transparent"
+    }
+
+    readonly property TimeSelection timeSelection: TimeSelection {}
+
+    property real leftVisibleMargin: 0
+
+    property bool enableCursorInteraction: true
+
+    property var navigationPanel: null
+
+    signal titleEditAccepted(var newTitle)
+
+    signal editStarted
+    signal editFinished
+
+    signal requestSingleSelected
+
+    signal mousePositionChanged(real x, real y)
+    signal headerHoveredChanged(bool value)
+
+    property int contentWidth: Math.max(50, Math.min(400, titleLoader.contentWidth + 8))
+    property int contentHeight: titleLoader.isEditState && titleLoader.item ? titleLoader.item.contentHeight : 14
+
+    x: root.isPoint ? root.earWidth + 3 : 0
+    y: 0
+
+    color: root.backgroundColor
+    radius: root.isPoint ? 2 : 0
+
+    function edit() {
+        titleLoader.edit()
+    }
+
+    QtObject {
+        id: prv
+
+        readonly property int doubleClickInterval: 400
+        readonly property int doubleClickMaxDistance: 5
+    }
+
+    Rectangle {
+        id: selectionHighlight
+
+        readonly property real startX: Math.max(0, root.timeSelection.start)
+        readonly property real endX: Math.min(root.width, root.timeSelection.start + root.timeSelection.width)
+
+        x: startX
+        width: Math.max(0, endX - startX)
+        height: root.height
+
+        radius: root.radius
+        color: root.timeSelection.color
+        visible: width > 0
+    }
+
+    MouseArea {
+        id: headerDragArea
+        anchors.fill: parent
+
+        property var lastClickTime: Date()
+        property point doubleClickStartPosition
+
+        acceptedButtons: Qt.LeftButton
+        hoverEnabled: true
+        cursorShape: Qt.OpenHandCursor
+
+        visible: root.enableCursorInteraction
+
+        onPressed: function (e) {
+            var currentTime = Date.now()
+
+            if (currentTime - lastClickTime < prv.doubleClickInterval) {
+                // Double click - edit title
+                titleLoader.edit()
+            } else {
+                // Single click - select
+                root.requestSingleSelected()
+                lastClickTime = currentTime
+                doubleClickStartPosition = Qt.point(e.x, e.y)
+            }
+            e.accepted = false
+        }
+
+        onClicked: function (e) {
+            e.accepted = false
+        }
+
+        onPositionChanged: function (e) {
+            // Reset double click timer if the mouse has moved,
+            // to prevent rapid clip movement activate title editing
+            if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance || Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
+                lastClickTime = 0
+            }
+
+            root.mousePositionChanged(e.x, e.y)
+
+            e.accepted = false
+        }
+
+        onContainsMouseChanged: {
+            if (!root.visible) {
+                return
+            }
+            root.headerHoveredChanged(containsMouse)
+        }
+    }
+
+    Item {
+        id: titleViewport
+
+        anchors.top: parent.top
+        anchors.topMargin: titleLoader.isEditState ? 0 : 2
+        anchors.left: parent.left
+        anchors.leftMargin: root.isPoint ? 4 : root.earWidth
+        anchors.right: parent.right
+        anchors.rightMargin: root.isPoint ? 4 : root.earWidth
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 2
+
+        clip: true
+
+        Loader {
+            id: titleLoader
+
+            property bool isEditState: false
+            property real contentWidth: item ? (isEditState ? item.contentWidth + 1 : item.implicitWidth + 1) : 0
+            property real contentHeight: item ? (isEditState ? item.contentHeight : item.implicitHeight) : 0
+
+            x: Math.max(0, root.leftVisibleMargin - root.x)
+            width: parent.width
+            height: parent.height
+
+            sourceComponent: isEditState ? titleEditComp : titleComp
+
+            function edit() {
+                root.editStarted()
+
+                titleLoader.isEditState = true
+                titleLoader.item.currentText = root.title
+                titleLoader.item.newTitle = root.title
+                titleLoader.item.ensureActiveFocus()
+            }
+
+            Component {
+                id: titleComp
+
+                StyledTextLabel {
+                    text: root.title
+
+                    color: root.labelColor
+
+                    horizontalAlignment: Qt.AlignLeft
+                    elide: Text.ElideNone
+                    wrapMode: Text.NoWrap
+                    maximumLineCount: 1
+                }
+            }
+
+            Component {
+                id: titleEditComp
+
+                TextInputArea {
+                    id: titleEdit
+
+                    property string newTitle: ""
+                    property real contentWidth: titleMetrics.implicitWidth
+                    property real contentHeight: scrollableContentHeight
+                    property bool _editEscaped: false
+
+                    allowNewLineByEnter: false
+
+                    Text {
+                        id: titleMetrics
+                        visible: false
+                        wrapMode: Text.NoWrap
+                        font: titleEdit.inputField.font
+                        text: titleEdit.newTitle
+                    }
+
+                    background.color: root.backgroundColor
+                    background.border.width: 0
+                    background.radius: 0
+
+                    inputField.color: root.labelColor
+                    textSidePadding: 0
+
+                    onTextChanged: function (text) {
+                        titleEdit.newTitle = text
+                    }
+
+                    onAccepted: {
+                        Qt.callLater(root.titleEditAccepted, newTitle)
+
+                        titleLoader.isEditState = false
+                    }
+
+                    onEscaped: {
+                        titleEdit._editEscaped = true
+                    }
+
+                    onFocusChanged: {
+                        if (!titleEdit.focus) {
+                            titleEdit.visible = false
+                            Qt.callLater(function () {
+                                var escaped = titleEdit._editEscaped
+                                titleEdit._editEscaped = false
+                                if (!escaped) {
+                                    titleEdit.accepted()
+                                } else {
+                                    titleLoader.isEditState = false
+                                }
+                                root.editFinished()
+                            })
+                        }
+                    }
+                }
+            }
+
+            NavigationControl {
+                id: titleEditNavCtrl
+                name: "TitleEditNavCtrl"
+                enabled: root.visible
+                panel: root.navigationPanel
+                column: 3
+
+                accessible.enabled: titleEditNavCtrl.enabled
+
+                onTriggered: {
+                    titleLoader.edit()
+                }
+            }
+
+            NavigationFocusBorder {
+                navigationCtrl: titleEditNavCtrl
+
+                anchors.topMargin: 1
+                anchors.bottomMargin: 0
+                radius: 5
+            }
+        }
+    }
+}

@@ -1,0 +1,177 @@
+#include "domconverter.h"
+
+#include <algorithm>
+
+#include "au3-label-track/LabelTrack.h"
+#include "au3-clip-processing/ClipFades.h"
+#include "au3-time-track/TimeTrack.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3types.h"
+#include "trackcolor.h"
+
+#include "wxtypes_convert.h"
+
+#include "../au3types.h"
+
+using namespace au::au3;
+
+namespace {
+au::trackedit::TrackType trackType(const Au3Track* track)
+{
+    if (dynamic_cast<const LabelTrack*>(track)) {
+        return au::trackedit::TrackType::Label;
+    }
+
+    if (dynamic_cast<const TimeTrack*>(track)) {
+        return au::trackedit::TrackType::Undefined;
+    }
+
+    switch (track->NChannels()) {
+    case 1:
+        return au::trackedit::TrackType::Mono;
+    case 2:
+        return au::trackedit::TrackType::Stereo;
+    default:
+        break;
+    }
+
+    return au::trackedit::TrackType::Undefined;
+}
+
+au::trackedit::TrackFormat trackFormat(const Au3Track* track)
+{
+    const WaveTrack* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    if (!waveTrack) {
+        return au::trackedit::TrackFormat::Undefined;
+    }
+
+    switch (waveTrack->GetSampleFormat()) {
+    case sampleFormat::int16Sample:
+        return au::trackedit::TrackFormat::Int16;
+    case sampleFormat::int24Sample:
+        return au::trackedit::TrackFormat::Int24;
+    case sampleFormat::floatSample:
+        return au::trackedit::TrackFormat::Float32;
+    default:
+        return au::trackedit::TrackFormat::Undefined;
+    }
+}
+
+int trackRate(const Au3Track* track)
+{
+    const WaveTrack* waveTrack = dynamic_cast<const WaveTrack*>(track);
+    if (!waveTrack) {
+        return -1;
+    }
+    return waveTrack->GetRate();
+}
+
+bool trackSolo(const Au3Track* track)
+{
+    const auto* playableTrack = dynamic_cast<const PlayableTrack*>(track);
+    if (playableTrack == nullptr) {
+        return false;
+    }
+
+    return playableTrack->GetSolo();
+}
+
+bool trackMute(const Au3Track* track)
+{
+    const auto* playableTrack = dynamic_cast<const PlayableTrack*>(track);
+    if (playableTrack == nullptr) {
+        return false;
+    }
+
+    return playableTrack->GetMute();
+}
+}
+
+namespace {
+au::trackedit::FadeType fadeType(::FadeType type)
+{
+    switch (type) {
+    case ::FadeType::Logarithmic:
+        return au::trackedit::FadeType::Logarithmic;
+    case ::FadeType::Linear:
+    default:
+        return au::trackedit::FadeType::Linear;
+    }
+}
+}
+
+au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
+{
+    au::trackedit::Clip clip;
+    clip.key.trackId = waveTrack->GetId();
+    clip.key.itemId = au3clip->GetId();
+    clip.clipVersion = au3clip->GetVersion();
+
+    clip.title = wxToString(au3clip->GetName());
+    clip.startTime = au3clip->GetPlayStartTime();
+    clip.endTime = au3clip->GetPlayEndTime();
+    int clipColorIdx = au3clip->GetColorIndex();
+    clip.isAutoColor = (clipColorIdx == trackedit::CLIP_COLOR_INDEX_NONE);
+    clip.colorIndex = clip.isAutoColor ? TrackColor::Get(waveTrack).GetColorIndex() : clipColorIdx;
+    clip.groupId = au3clip->GetGroupId();
+    clip.stereo = au3clip->NChannels() > 1;
+
+    clip.pitch = au3clip->GetCentShift();
+    clip.speed = au3clip->GetStretchRatio();
+    clip.optimizeForVoice = au3clip->GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
+
+    clip.stretchToMatchTempo = au3clip->GetStretchToMatchProjectTempo();
+
+    const ClipFades& fades = ClipFades::Get(*au3clip);
+    clip.fadeInDuration = fades.fadeIn();
+    clip.fadeOutDuration = fades.fadeOut();
+    clip.fadeInType = fadeType(fades.fadeInType());
+    clip.fadeOutType = fadeType(fades.fadeOutType());
+
+    return clip;
+}
+
+au::trackedit::Track DomConverter::track(const Au3Track* track)
+{
+    trackedit::Track au4t;
+    au4t.id = track->GetId();
+    au4t.title = wxToString(track->GetName());
+    au4t.type = trackType(track);
+
+    au4t.colorIndex = TrackColor::Get(track).GetColorIndex();
+    if (au4t.colorIndex == 0) {
+        TrackColor::Get(track).assignColor();
+        au4t.colorIndex = TrackColor::Get(track).GetColorIndex();
+    }
+
+    au4t.format = trackFormat(track);
+    au4t.rate = trackRate(track);
+    au4t.solo = trackSolo(track);
+    au4t.mute = trackMute(track);
+    return au4t;
+}
+
+au::trackedit::Track DomConverter::labelTrack(const Au3LabelTrack* labelTrack)
+{
+    return track(labelTrack);
+}
+
+au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, const Au3Label* au3label)
+{
+    au::trackedit::Label label;
+    label.key.trackId = labelTrack->GetId();
+    label.key.itemId = au3label->GetId();
+
+    label.title = wxToString(au3label->title);
+    label.startTime = au3label->getT0();
+    label.endTime = au3label->getT1();
+    label.lowFrequency = au3label->getLowFrequency();
+    label.highFrequency = au3label->getHighFrequency();
+    label.groupId = au3label->GetGroupId();
+
+    label.colorIndex = TrackColor::Get(labelTrack).GetColorIndex();
+
+    return label;
+}

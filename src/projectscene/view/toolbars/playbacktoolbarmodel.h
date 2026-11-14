@@ -1,0 +1,88 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "framework/uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/iuiconfiguration.h"
+#include "framework/ui/iuistate.h"
+
+#include "context/iglobalcontext.h"
+#include "context/iuicontextresolver.h"
+#include "playback/iplaybackconfiguration.h"
+#include "playback/iplaybackuistate.h"
+#include "playback/iplaybackcontroller.h"
+#include "record/irecordcontroller.h"
+
+namespace au::project {
+class IAudacityProject;
+}
+
+namespace au::projectscene {
+class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
+{
+    Q_OBJECT
+
+    Q_PROPERTY(bool isEnabled READ isEnabled NOTIFY isEnabledChanged)
+
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<playback::IPlaybackConfiguration> configuration;
+
+    muse::ContextInject<muse::ui::IUiState> uiState { this };
+    muse::ContextInject<context::IGlobalContext> context{ this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
+    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<playback::IPlaybackUiState> playbackUiState{ this };
+    muse::ContextInject<record::IRecordController> recordController{ this };
+
+public:
+    explicit PlaybackToolBarModel(QObject* parent = nullptr);
+
+    enum ItemType
+    {
+        PLAYBACK_LEVEL = muse::uicomponents::ToolBarItemType::USER_TYPE + 1,
+        RECORD_LEVEL,
+        PLAYBACK_TIME,
+        PLAYBACK_BPM,
+        PLAYBACK_TIME_SIGNATURE,
+        PLAYBACK_CONTROL,
+        PROJECT_CONTROL,
+        SNAP
+    };
+    Q_ENUM(ItemType)
+
+    Q_INVOKABLE void load() override;
+
+    bool isEnabled() const;
+
+signals:
+    void isEnabledChanged();
+
+private:
+    void reload();
+    void setupProjectConnections(project::IAudacityProject& project);
+
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
+
+    void updateStates();
+    void updatePlayState();
+    void updateStopState();
+    void updateRecordState();
+    void updateLoopState();
+    void updateClipGainAutomationState();
+    void updateSplitState();
+    void updateGlobalSpectrogramViewState();
+
+    void updateToggleState(const muse::rcommand::Command& command, bool isOn);
+
+    QColor themeColor(muse::ui::ThemeStyleKey key) const;
+
+    void updateActions();
+
+    muse::uicomponents::ToolBarItem* makeLocalItem(const muse::rcommand::Command& command);
+
+    bool m_inited = false;
+};
+}

@@ -1,0 +1,62 @@
+#[[
+Implements audio import and export pipelines.
+]]
+
+set( TARGET au3-import-export )
+
+set( SOURCES
+   Export.cpp
+   Export.h
+   ExportOptionsEditor.cpp
+   ExportOptionsEditor.h
+   ExportPlugin.cpp
+   ExportPlugin.h
+   ExportPluginHelpers.cpp
+   ExportPluginHelpers.h
+   ExportPluginRegistry.cpp
+   ExportPluginRegistry.h
+   ExportProgressUI.cpp
+   ExportProgressUI.h
+   ExportTypes.h
+   ExportUtils.cpp
+   ExportUtils.h
+   Import.cpp
+   Import.h
+   ImportExport.cpp
+   ImportExport.h
+   ImportForwards.h
+   ImportPlugin.cpp
+   ImportPlugin.h
+   ImportProgressListener.cpp
+   ImportProgressListener.h
+   ImportUtils.cpp
+   ImportUtils.h
+   PlainExportOptionsEditor.cpp
+   PlainExportOptionsEditor.h
+)
+set( LIBRARIES
+PUBLIC
+   au3-basic-ui
+   au3-file-formats
+   au3-files
+   au3-math
+   au3-registries
+   au3-strings
+   au3-track
+PRIVATE
+   au3-effects
+   au3-mixer
+   au3-preferences
+   au3-project
+   au3-project-rate
+   au3-clip-processing
+   au3-tags
+   au3-time-frequency-selection
+   au3-wave-track
+   au3-xml
+   rapidjson::rapidjson
+   wxBase
+)
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
+)

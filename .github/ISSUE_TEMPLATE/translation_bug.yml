@@ -1,0 +1,73 @@
+name: Translation / localization bug
+description: Report a problem with how Audacity displays a translated language
+labels: ["translation / i18n"]
+type: "bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before you report:**
+        **Do not open an issue** for mistranslated or incorrect translations. Translations are contributed by the community.
+
+        Instead, join the [Audacity project on Transifex](https://app.transifex.com/audacity/audacity/) and suggest your fix there.
+
+        **Do report:**
+        - Characters that aren't displayed correctly (missing glyphs, boxes or mojibake, broken accents)
+        - Strings rendered in English even though the language is marked as 100% translated on Transifex
+        - Severe UI problems caused by a translation (blank or unreadable text, overlapping controls, broken menus)
+  - type: checkboxes
+    id: not-wording
+    attributes:
+      label: Confirmation
+      options:
+        - label: This is not about an incorrect or incomplete translation (those go to Transifex)
+          required: true
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      description: Which interface language are you using?
+      placeholder: e.g. Vietnamese
+    validations:
+      required: true
+  - type: textarea
+    id: desc
+    attributes:
+      label: Bug description
+      description: What is displayed wrong, and where in the app?
+    validations:
+      required: true
+  - type: textarea
+    id: str
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Set the language to ...
+        2. go to ...
+        3. then ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Audacity Version
+      description: What version of Audacity are you running? (Found under Help > About Audacity)
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      description: What OS does this bug occur on?
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Linux
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Screenshots and additional context
+      description: A screenshot of the problem helps a lot

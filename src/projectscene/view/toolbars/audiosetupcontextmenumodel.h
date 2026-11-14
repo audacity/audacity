@@ -1,0 +1,37 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "audio/driver/iaudiodrivercontroller.h"
+#include "context/iglobalcontext.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+
+namespace au::projectscene {
+class AudioSetupContextMenuModel : public muse::uicomponents::AbstractMenuModel
+{
+    Q_OBJECT
+
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+
+public:
+    AudioSetupContextMenuModel() = default;
+
+    Q_INVOKABLE void load() override;
+    Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
+
+protected:
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
+
+private:
+    void makeMenuItems();
+    muse::uicomponents::MenuItem* makeQueryMenuItem(const muse::rcommand::CommandQuery& query, const muse::TranslatableString& title);
+
+    muse::uicomponents::MenuItemList makeHostItems();
+    muse::uicomponents::MenuItemList makePlaybackDevicesItems();
+    muse::uicomponents::MenuItemList makeRecordingDevicesItems();
+    muse::uicomponents::MenuItemList makeInputChannelsItems();
+};
+}

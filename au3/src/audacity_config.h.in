@@ -1,0 +1,120 @@
+/* src/configtemplate.h.  Generated from configure.ac by autoheader.  */
+
+/* define if Audacity is being installed under a name other than "audacity",
+   so it can find the files it needs at runtime */
+#cmakedefine AUDACITY_NAME "@AUDACITY_NAME@"
+
+/* Use system FFmpeg library and disable dynamic loading of it. */
+#cmakedefine DISABLE_DYNAMIC_LOADING_FFMPEG 1
+
+/* Define if LAME should be linked at compile time */
+#cmakedefine DISABLE_DYNAMIC_LOADING_LAME 1
+
+/* Define to 1 if you have the <alloca.h> header file. */
+#cmakedefine HAVE_ALLOCA_H 1
+
+/* Define to 1 if you have the <dlfcn.h> header file */
+#cmakedefine HAVE_DLFCN_H 1
+
+/* This is a quick hack to disable dladdr if it is not present in <dlfcn.h> */
+#cmakedefine DISABLE_DLADDR 1
+
+/* Define if GTK is available */
+#cmakedefine HAVE_GTK 1
+
+/* Define to 1 if you have the <libudev.h> header file. */
+#cmakedefine HAVE_LIBUDEV_H 1
+
+/* Define if you have C99's lrint function. */
+#cmakedefine HAVE_LRINT 1
+
+/* Define if you have C99's lrintf function. */
+#cmakedefine HAVE_LRINTF 1
+
+/* Define if you have the mlock functions. */
+#cmakedefine HAVE_MLOCK 1
+
+/* Define to 1 or 0, depending whether the compiler supports simple visibility
+   declarations. */
+#cmakedefine HAVE_VISIBILITY 1
+
+/* Define as prefix where Audacity is installed */
+#define INSTALL_PREFIX "@INSTALL_PREFIX@"
+
+/* Define where libraries get installed */
+#define LIBDIR "@LIBDIR@"
+
+/* Define where Audacity specific libraries get installed */
+#define PKGLIBDIR "@PKGLIBDIR@"
+
+/* Define if Audio Unit plug-ins are enabled (Mac OS X only) */
+#cmakedefine USE_AUDIO_UNITS 1
+
+/* Define if ffmpeg (multi-format import and export) support should be enabled
+   */
+#cmakedefine USE_FFMPEG 1
+
+/* Define if LADSPA plug-ins are enabled */
+#cmakedefine USE_LADSPA 1
+
+/* Define if the FLAC library is present */
+#cmakedefine USE_LIBFLAC 1
+
+/* Define if libid3tag is present */
+#cmakedefine USE_LIBID3TAG 1
+
+/* Define if mp3 support is implemented with the libmpg123 library */
+#cmakedefine USE_LIBMPG123 1
+
+/* Define if mp3 export support is implemented with the libmpg123 library */
+#cmakedefine USE_LIBMP3LAME 1
+
+/* Define if wavpack support is implemented with the wavpack library */
+#cmakedefine USE_WAVPACK 1
+
+/* Define if libtwolame (MP2 export) support should be enabled */
+#cmakedefine USE_LIBTWOLAME 1
+
+/* Define if the ogg vorbis decoding library is present */
+#cmakedefine USE_LIBVORBIS 1
+
+/* Define if LV2 support should be enabled */
+#cmakedefine USE_LV2 1
+
+/* Define if midi support should be enabled */
+#cmakedefine USE_MIDI 1
+
+/* Define if Nyquist support should be enabled */
+#cmakedefine USE_NYQUIST 1
+
+/* Define if PortMixer support should be enabled */
+#cmakedefine USE_PORTMIXER 1
+
+/* Define if SBSMS support should be enabled */
+#cmakedefine USE_SBSMS 1
+
+/* Define if SoundTouch support should be enabled */
+#cmakedefine USE_SOUNDTOUCH 1
+
+/* Define if Vamp analysis plugin support should be enabled */
+#cmakedefine USE_VAMP 1
+
+/* Define if VST plug-in support is enabled */
+#cmakedefine USE_VST 1
+
+/* Version number of package */
+#cmakedefine VERSION "@VERSION@"
+
+/* Placeholder for large file support */
+#cmakedefine _FILE_OFFSET_BITS 0
+
+/* We're using cygwin */
+#cmakedefine __CYGWIN__ 1
+
+/* Define if libopus support should be enabled */
+#cmakedefine USE_LIBOPUS 1
+
+/* Define if opusfile support should be enabled */
+#cmakedefine USE_OPUSFILE 1
+
+#cmakedefine AUDACITY_BUILD_LEVEL @AUDACITY_BUILD_LEVEL@

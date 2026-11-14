@@ -1,0 +1,190 @@
+import QtQuick
+
+import Audacity.ProjectScene
+
+Item {
+    id: root
+
+    property bool isDataSelected: false
+    property bool selectionInProgress: false
+    property alias active: selRect.visible
+    property var context: null
+
+    signal selectionResize(var x1, var x2, var completed)
+    signal requestSelectionContextMenu(real x, real y)
+    signal handleGuideline(var x, var completed)
+
+    Rectangle {
+        id: selRect
+
+        x: root.context.selectionStartPosition
+        width: root.context.selectionEndPosition - selRect.x
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        visible: isDataSelected
+        color: "transparent"
+    }
+
+    MouseArea {
+        id: centerMa
+
+        acceptedButtons: Qt.RightButton
+
+        anchors.left: leftMa.right
+        anchors.right: rightMa.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        visible: isDataSelected
+
+        hoverEnabled: false
+        // setting cursorShape to undefined on purpose - otherwise
+        // it overrides ClipItem's (even if hover is disabled)
+        cursorShape: undefined
+
+        onClicked: function (mouse) {
+            let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
+            root.requestSelectionContextMenu(position.x, position.y)
+        }
+    }
+
+    MouseArea {
+        id: leftMa
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        x: selRect.x
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        visible: (isDataSelected || leftMa.pressed) && !root.selectionInProgress
+        width: selRect.width >= 16 ? 8 : (selRect.width / 2)
+        cursorShape: Qt.BlankCursor
+
+        Component.onCompleted: CustomCursorProvider.setCursorShape(leftMa, ":/images/customCursorShapes/SelectionLeft.png")
+
+        property real startX: 0
+        property real startW: 0
+
+        onPressed: function (mouse) {
+            if (mouse.button !== Qt.LeftButton) {
+                return
+            }
+            leftMa.startX = selRect.x
+            leftMa.startW = selRect.width
+            leftMa.x = selRect.x
+            CustomCursorProvider.overrideCursor(":/images/customCursorShapes/SelectionLeft.png")
+            handleGuideline(selRect.x, false)
+        }
+
+        onPositionChanged: function (mouse) {
+            if (!(leftMa.pressedButtons & Qt.LeftButton)) {
+                return
+            }
+            var anchor = leftMa.startX + leftMa.startW
+            var dragged = leftMa.startX + mouse.x
+            root.selectionResize(anchor, dragged, false)
+            handleGuideline(dragged <= anchor ? selRect.x : selRect.x + selRect.width, false)
+        }
+
+        onReleased: function (mouse) {
+            if (mouse.button !== Qt.LeftButton) {
+                return
+            }
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
+            leftMa.x = Qt.binding(function () {
+                return selRect.x
+            })
+            CustomCursorProvider.restoreCursor()
+            handleGuideline(selRect.x, true)
+        }
+
+        onCanceled: {
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
+            leftMa.x = Qt.binding(function () {
+                return selRect.x
+            })
+            CustomCursorProvider.restoreCursor()
+            handleGuideline(selRect.x, true)
+        }
+
+        onClicked: function (mouse) {
+            if (mouse.button === Qt.RightButton) {
+                let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
+                root.requestSelectionContextMenu(position.x, position.y)
+            }
+        }
+    }
+
+    MouseArea {
+        id: rightMa
+
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+        x: selRect.x + selRect.width - rightMa.width
+
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+
+        visible: (isDataSelected || rightMa.pressed) && !root.selectionInProgress
+        width: selRect.width >= 16 ? 8 : (selRect.width / 2)
+        cursorShape: Qt.BlankCursor
+
+        Component.onCompleted: CustomCursorProvider.setCursorShape(rightMa, ":/images/customCursorShapes/SelectionRight.png")
+
+        property real startX: 0
+        property real startW: 0
+
+        onPressed: function (mouse) {
+            if (mouse.button !== Qt.LeftButton) {
+                return
+            }
+            rightMa.startX = selRect.x
+            rightMa.startW = selRect.width
+            rightMa.x = selRect.x + selRect.width - rightMa.width
+            CustomCursorProvider.overrideCursor(":/images/customCursorShapes/SelectionRight.png")
+            handleGuideline(root.context.selectionEndPosition, false)
+        }
+
+        onPositionChanged: function (mouse) {
+            if (!(rightMa.pressedButtons & Qt.LeftButton)) {
+                return
+            }
+            var anchor = rightMa.startX
+            var dragged = rightMa.x + mouse.x
+            root.selectionResize(anchor, dragged, false)
+            handleGuideline(dragged >= anchor ? root.context.selectionEndPosition : selRect.x, false)
+        }
+
+        onReleased: function (mouse) {
+            if (mouse.button !== Qt.LeftButton) {
+                return
+            }
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
+            rightMa.x = Qt.binding(function () {
+                return selRect.x + selRect.width - rightMa.width
+            })
+            CustomCursorProvider.restoreCursor()
+            handleGuideline(root.context.selectionEndPosition, true)
+        }
+
+        onCanceled: {
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
+            rightMa.x = Qt.binding(function () {
+                return selRect.x + selRect.width - rightMa.width
+            })
+            CustomCursorProvider.restoreCursor()
+            handleGuideline(root.context.selectionEndPosition, true)
+        }
+
+        onClicked: function (mouse) {
+            if (mouse.button === Qt.RightButton) {
+                let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
+                root.requestSelectionContextMenu(position.x, position.y)
+            }
+        }
+    }
+}

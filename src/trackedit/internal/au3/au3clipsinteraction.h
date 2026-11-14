@@ -1,0 +1,130 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <functional>
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
+#include "context/iglobalcontext.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditconfiguration.h"
+#include "trackedit/iprojecthistory.h"
+#include "automation/iclipgaininteraction.h"
+
+#include "au3wrap/au3types.h"
+
+#include "au3interactiontypes.h"
+
+#include "trackedit/iclipsinteraction.h"
+
+namespace au::trackedit {
+class Au3TrackData;
+using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
+
+class Au3ClipsInteraction : public IClipsInteraction, public muse::Contextable
+{
+    muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
+
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<automation::IClipGainInteraction> clipGainInteraction{ this };
+
+public:
+    Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx);
+
+    muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
+    muse::secs_t clipEndTime(const trackedit::ClipKey& clipKey) const override;
+    muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
+
+    bool changeClipStartTime(const trackedit::ClipKey& clipKey, secs_t newStartTime, bool completed) override;
+    bool changeClipsStartTime(const ClipKeyList& clipKeys, secs_t timePositionOffset, bool completed) override;
+    muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> clipStartTimeChanged() const override;
+
+    bool changeClipTitle(const trackedit::ClipKey& clipKey, const muse::String& newTitle) override;
+    bool changeClipPitch(const ClipKey& clipKey, int pitch) override;
+    bool resetClipPitch(const ClipKey& clipKey) override;
+    bool changeClipSpeed(const ClipKey& clipKey, double speed) override;
+    bool resetClipSpeed(const ClipKey& clipKey) override;
+    bool changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex) override;
+    bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration) override;
+    bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration) override;
+    bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
+    bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
+
+    ITrackDataPtr cutClip(const ClipKey& clipKey) override;
+    ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
+    std::optional<TimeSpan> removeClip(const trackedit::ClipKey& clipKey) override;
+    bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
+    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset) override;
+
+    bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
+    bool splitClipsIntoNewTracks(const ClipKeyList& clipKeyList) override;
+
+    bool duplicateClip(const ClipKey& clipKey) override;
+    bool duplicateClips(const ClipKeyList& clipKeyList) override;
+    ITrackDataPtr clipSplitCut(const ClipKey& clipKey) override;
+    bool clipSplitDelete(const ClipKey& clipKey) override;
+
+    bool trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+    bool trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+
+    bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+    bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
+
+    muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
+    muse::Ret makeRoomForClips(const ClipKeyList& clipKeys) override;
+
+    ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) override;
+
+    bool toggleStretchToMatchProjectTempo(const ClipKey& clipKey) override;
+
+    int64_t clipGroupId(const trackedit::ClipKey& clipKey) const override;
+    void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) override;
+    ClipKeyList clipsInGroup(int64_t id) const override;
+
+    muse::Progress progress() const override;
+
+    //! TODO
+    bool clipTransferNeedsDownmixing(const std::vector<ITrackDataPtr>& srcTracks, const TrackIdList& dstTracks) const override;
+    bool userIsOkWithDownmixing() const override;
+
+private:
+    friend class Au3ClipsInteractionTests;
+
+    au3::Au3Project& projectRef() const;
+
+    NeedsDownmixing moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset, muse::Ret& ret);
+
+    muse::Ret doMakeRoomForClip(const trackedit::ClipKey& clipKey);
+    bool noPlayRegionsOverlap(const trackedit::TrackId& trackId) const;
+
+    std::optional<secs_t> shortestClipDuration(const ClipKeyList& clipKeys) const;
+    std::optional<secs_t> leftmostClipStartTime(const ClipKeyList& clipKeys) const;
+    bool anyLeftFullyUntrimmed(const ClipKeyList& clipKeys) const;
+    bool anyRightFullyUntrimmed(const ClipKeyList& clipKeys) const;
+    ClipKeyList determineClipsForInteraction(const ClipKey& clipKey) const;
+    secs_t clampLeftTrimDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    secs_t clampRightTrimDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    secs_t clampLeftStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    secs_t clampRightStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
+    bool trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
+    bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
+
+    //! Returns the @p edit result for the last clip.
+    bool applyClipEdit(const ClipKeyList& clipKeys, bool completed, const std::function<bool(au3::Au3WaveClip&)>& edit);
+
+    bool doChangeClipSpeed(const ClipKey& clipKey, double speed);
+
+    context::IPlaybackStatePtr playbackState() const;
+
+    muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
+
+    muse::Progress m_progress;
+    std::atomic<bool> m_busy = false;
+};
+}

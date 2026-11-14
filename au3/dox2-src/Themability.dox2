@@ -1,0 +1,249 @@
+/**********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  Themability.dox2
+
+  James Crook
+
+********************************************************************//**
+
+\page Themability Themability of Audacity
+
+\section ThemeIntro Introduction
+
+Audacity is Themable.  That means the images, colours and fonts can be
+changed at run time, and pre-built combinations can be loaded when the
+program starts.
+
+A sample of the saved ImageCache is shown here, hover over any 
+part to see its name (if there is no image shown here, you will need
+to add the image ImageCache.png into the html directory):
+
+\htmlonly
+<img src="ImageCache.png" width=192 height=584 usemap="#map1" align="left" hspace="10">
+<map name="map1">
+<area title="Bitmap:Pause" shape=rect coords="0,0,15,15">
+<area title="Bitmap:PauseDisabled" shape=rect coords="0,16,15,31">
+<area title="Bitmap:Play" shape=rect coords="16,0,31,15">
+<area title="Bitmap:PlayDisabled" shape=rect coords="16,16,31,31">
+<area title="Bitmap:Loop" shape=rect coords="32,0,47,15">
+<area title="Bitmap:LoopDisabled" shape=rect coords="32,16,47,31">
+<area title="Bitmap:Stop" shape=rect coords="48,0,63,15">
+<area title="Bitmap:StopDisabled" shape=rect coords="48,16,63,31">
+<area title="Bitmap:Rewind" shape=rect coords="64,0,79,15">
+<area title="Bitmap:RewindDisabled" shape=rect coords="64,16,79,31">
+<area title="Bitmap:FFwd" shape=rect coords="80,0,95,15">
+<area title="Bitmap:FFwdDisabled" shape=rect coords="80,16,95,31">
+<area title="Bitmap:Record" shape=rect coords="96,0,111,15">
+<area title="Bitmap:RecordDisabled" shape=rect coords="96,16,111,31">
+<area title="Bitmap:CleanSpeech" shape=rect coords="112,0,127,15">
+<area title="Bitmap:CleanSpeechDisabled" shape=rect coords="112,16,127,31">
+<area title="Bitmap:ToolBarToggle" shape=rect coords="0,32,42,66">
+<area title="Bitmap:ToolBarTarget" shape=rect coords="43,32,59,57">
+<area title="Bitmap:ToolBarGrabber" shape=rect coords="60,32,76,39">
+<area title="Bitmap:UpButton" shape=rect coords="0,67,47,114">
+<area title="Bitmap:DownButton" shape=rect coords="48,67,95,114">
+<area title="Bitmap:HiliteButton" shape=rect coords="96,67,143,114">
+<area title="Bitmap:RecolouredUpButton" shape=rect coords="144,67,191,114">
+<area title="Bitmap:RecolouredDownButton" shape=rect coords="0,115,47,162">
+<area title="Bitmap:RecolouredHiliteButton" shape=rect coords="48,115,95,162">
+<area title="Bitmap:IBeamCursor" shape=rect coords="0,163,31,194">
+<area title="Bitmap:DrawCursor" shape=rect coords="0,195,31,226">
+<area title="Bitmap:EnvCursor" shape=rect coords="32,163,63,194">
+<area title="Bitmap:TimeCursor" shape=rect coords="32,195,63,226">
+<area title="Bitmap:ZoomInCursor" shape=rect coords="64,163,95,194">
+<area title="Bitmap:ZoomOutCursor" shape=rect coords="64,195,95,226">
+<area title="Bitmap:LabelCursorLeft" shape=rect coords="96,163,127,194">
+<area title="Bitmap:LabelCursorRight" shape=rect coords="96,195,127,226">
+<area title="Bitmap:DisabledCursor" shape=rect coords="128,163,159,194">
+<area title="Bitmap:Cut" shape=rect coords="0,227,25,250">
+<area title="Bitmap:CutDisabled" shape=rect coords="0,251,25,274">
+<area title="Bitmap:Copy" shape=rect coords="26,227,51,250">
+<area title="Bitmap:CopyDisabled" shape=rect coords="26,251,51,274">
+<area title="Bitmap:Paste" shape=rect coords="52,227,77,250">
+<area title="Bitmap:PasteDisabled" shape=rect coords="52,251,77,274">
+<area title="Bitmap:Trim" shape=rect coords="78,227,103,250">
+<area title="Bitmap:TrimDisabled" shape=rect coords="78,251,103,274">
+<area title="Bitmap:Silence" shape=rect coords="104,227,129,250">
+<area title="Bitmap:SilenceDisabled" shape=rect coords="104,251,129,274">
+<area title="Bitmap:Undo" shape=rect coords="130,227,155,250">
+<area title="Bitmap:UndoDisabled" shape=rect coords="130,251,155,274">
+<area title="Bitmap:Redo" shape=rect coords="156,227,181,250">
+<area title="Bitmap:RedoDisabled" shape=rect coords="156,251,181,274">
+<area title="Bitmap:ZoomFit" shape=rect coords="0,275,26,301">
+<area title="Bitmap:ZoomFitDisabled" shape=rect coords="0,302,26,328">
+<area title="Bitmap:ZoomIn" shape=rect coords="27,275,53,301">
+<area title="Bitmap:ZoomInDisabled" shape=rect coords="27,302,53,328">
+<area title="Bitmap:ZoomOut" shape=rect coords="54,275,80,301">
+<area title="Bitmap:ZoomOutDisabled" shape=rect coords="54,302,80,328">
+<area title="Bitmap:ZoomSel" shape=rect coords="81,275,107,301">
+<area title="Bitmap:ZoomSelDisabled" shape=rect coords="81,302,107,328">
+<area title="Bitmap:IBeam" shape=rect coords="108,275,134,301">
+<area title="Bitmap:Zoom" shape=rect coords="108,302,134,328">
+<area title="Bitmap:Envelope" shape=rect coords="135,275,161,301">
+<area title="Bitmap:TimeShift" shape=rect coords="135,302,161,328">
+<area title="Bitmap:Draw" shape=rect coords="162,275,188,301">
+<area title="Bitmap:Multi" shape=rect coords="162,302,188,328">
+<area title="Bitmap:Mic" shape=rect coords="0,329,24,353">
+<area title="Bitmap:Speaker" shape=rect coords="25,329,49,353">
+<area title="Bitmap:Up" shape=rect coords="0,354,26,380">
+<area title="Bitmap:Down" shape=rect coords="27,354,53,380">
+<area title="Bitmap:Hilite" shape=rect coords="54,354,80,380">
+<area title="Bitmap:PostfishHome" shape=rect coords="81,354,99,370">
+<area title="Bitmap:PostfishFastRewind" shape=rect coords="100,354,116,370">
+<area title="Bitmap:PostfishRewind" shape=rect coords="117,354,134,370">
+<area title="Bitmap:PostfishPlay" shape=rect coords="135,354,163,370">
+<area title="Bitmap:PostfishForward" shape=rect coords="164,354,181,370">
+<area title="Bitmap:PostfishFastForward" shape=rect coords="0,381,16,397">
+<area title="Bitmap:PostfishEnd" shape=rect coords="17,381,35,397">
+<area title="Bitmap:PostfishLoop" shape=rect coords="36,381,64,397">
+<area title="Colour:Blank" shape=rect coords="0,398,9,407">
+<area title="Colour:Unselected" shape=rect coords="10,398,19,407">
+<area title="Colour:Selected" shape=rect coords="20,398,29,407">
+<area title="Colour:Sample" shape=rect coords="30,398,39,407">
+<area title="Colour:SelSample" shape=rect coords="40,398,49,407">
+<area title="Colour:DragSample" shape=rect coords="50,398,59,407">
+<area title="Colour:MuteSample" shape=rect coords="60,398,69,407">
+<area title="Colour:Rms" shape=rect coords="70,398,79,407">
+<area title="Colour:MuteRms" shape=rect coords="80,398,89,407">
+<area title="Colour:Shadow" shape=rect coords="90,398,99,407">
+</map>
+\endhtmlonly
+
+ThemeBase provides most of the implementation of Themes.  It is destined for 
+\ref WidgetMigration.   Theme is Audacity's variant of a class derived 
+from ThemeBase.  It contains the Audacity specific list of icons and images
+and overloads for the required virtual functions.  A singleton instance, 
+\p theTheme is created by Audacity.
+
+
+<hr>
+
+\section RepresentationOfIcons The Different Ways Theme Images are Stored 
+
+Audacity includes a system for loading and saving different icons and 
+colours.
+
+There are three formats:
+ - Images stored combined into one PNG file.
+ - Images stored as individual PNG files.
+ - The PNG file as a file of comma separated numbers.
+ 
+The first form is the one usually used.  It is useful for designers 
+making systematic changes of the images, particularly systematic 
+colour changes.  It is also convenient for archives containing many 
+themes and for sharing of themes.  However it is inconvenient when 
+there are additions to and removals from the image set used in 
+Audacity, as can happen between versions.  A combined PNG made 
+for one version of Audacity may no longer be suitable for the next 
+version.
+
+Storing as individual images solves that problem and makes it easier
+for a designer to change just one image.  In SVN we check in the 
+individual images.
+
+The third form allows Audacity to store the combined PNG in 'C' format
+for use in the exe.  It is only ever used by developers.  It is this 
+third form that provides the built in defaults in Audacity.
+
+\attention The button to save a theme in the 'C' format is only 
+provided in debug builds. 
+
+<hr>
+
+\section ThemesChoosingVersion How Audacity Chooses Which Version Of The images To Use?  
+
+At the time of writing this document, Audacity also has a deprecated system
+for its images where they initially start out with contents determined by
+XPMs built into the program.  
+
+The current algorithm for determining which image to use is:
+  - IF loading the theme at start up is disabled, use the XPM defaults.
+  - ELSE if the image cache is available THEN use it.
+  - ELSE use the built in ' ThemeAsCeeCode.h ' defaults.
+
+This is handled in function \ref ThemeBase::LoadThemeAtStartUp().  Once the 
+deprecated XPMs have been removed, we will switch over to using the built 
+in 'ThemeAsCeeCode.h' defaults where we currently use the XPM defaults.
+
+
+
+
+<hr>
+
+\section ChangingTheColourScheme Changing The Colour Scheme
+
+To change the colour scheme:
+
+ - Run the program and use the 'Save Theme' button on the ThemePrefs panel.  
+This saves all the images as a single .png file, ImageCache.png.
+ - Use the GIMP to modify the colours in ImageCache.png.  Using the colour 
+balance feature provides a nice way to make a systematic change.  Note in 
+particular near the end of the image a row of small squares.  These are 
+used for colours such as the colours in the waveform.
+ - Use the 'Load Theme' button on the ThemePrefs panel to accept the 
+changes.
+ - Check the 'Load Theme At Startup' check box so that the theme will be 
+loaded next time you start Audacity.
+
+<hr>
+
+\section AddingNewImages Adding New Images
+
+To add a new image to Audacity, add a blank place holder for the image into
+the program like so:
+
+\code
+	IMAGE( bmpSomeNewImage, wxBitmap(64,64), wxT("SomeNewImage") )
+\endcode
+
+This reserves a 64 x 64 pixel bitmap.  You can now refer to it from within the 
+program using bmpSomeNewImage.  If you add images on to the end of the list 
+you will generally have the least problems with compatibility of versions.  
+If you are adding many images, the most efficient packing of images occurs 
+when the images are added in tallest-first order since Audacity starts a new
+row whenever the height increases.
+
+Having defined the new image, follow these steps:
+
+ - Compile Audacity in debug mode.
+ - Run the program and use the 'Save Components' button on the 
+ThemePrefs panel.  This saves all the images as .png files, including 
+a blank image for your new image.  
+ - Replace that .png file with the image you want to use.
+ - Press the 'Load Components' button on the ThemPrefs panel.
+ - Press the 'Save Theme' button on the ThemePrefs panel.  You now have
+a composite .png file that includes your image.
+ - Press the 'Output Sourcery' button on the Theme prefs panel.  This
+generates a new data file, ThemeAsCeeCode.h, which can be used for defaults.
+ - Replace the existing ThemeAsCeeCode.h in the Audacity source code
+and recompile.  You should now have a version of Audacity with the new
+.png as a built in default.
+ 
+Audacity will now be using the image.  
+
+ - When you come to check in the updated code into SVN, including 
+ThemeAsCeeCode.h, remember to also add your new .png image into SVN 
+too.
+
+<hr>
+
+\section RescuingDefaultImages Rescuing Default Images
+
+It is possible to completely screw up the built in default images 
+through using an incorrect ThemeAsCeeCode.h.  A correct ThemeAsCeeCode.h
+can be regenerated as follows:
+
+ - Retrieve a correct set of images from SVN and place them in the 
+components directory used by Audacity.
+ - Compile Audacity in debug mode.
+ - Use ThemePrefs 'Load Components' to load the correct set of images.
+ - Press the 'Output Sourcery' button on the Theme prefs panel.  This
+generates a corrected ThemeAsCeeCode.h using the images you just loaded.
+ - Replace the existing ThemeAsCeeCode.h in the Audacity source code
+and recompile.  
+
+
+
+*//********************************************************************/

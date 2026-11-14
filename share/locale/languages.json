@@ -1,0 +1,284 @@
+{
+    "af": {
+        "name": "Afrikaans"
+    },
+    "ar": {
+        "name": "العربية"
+    },
+    "ar_DZ": {
+        "name": "\u200e(العربية (الجزائر",
+        "fallbackLanguages": ["ar"]
+    },
+    "ar_EG": {
+        "name": "\u200e(العربية (مصر",
+        "fallbackLanguages": ["ar"]
+    },
+    "ar_SD": {
+        "name": "\u200e(العربية (السودان",
+        "fallbackLanguages": ["ar", "en_GB"]
+    },
+    "ast": {
+        "name": "Asturianu"
+    },
+    "be": {
+        "name": "Беларуская мова"
+    },
+    "bg": {
+        "name": "български"
+    },
+    "bn": {
+        "name": "বাংলা"
+    },
+    "br": {
+        "name": "Brezhoneg"
+    },
+    "bs": {
+        "name": "Bosanski"
+    },
+    "ca": {
+        "name": "Català",
+        "fallbackLanguages": ["ca@valencia"]
+    },
+    "ca@valencia": {
+        "name": "Valencià",
+        "fallbackLanguages": ["ca"]
+    },
+    "co": {
+        "name": "Corsu",
+        "fallbackLanguages": ["fr"]
+    },
+    "cs": {
+        "name": "Čeština"
+    },
+    "cy": {
+        "name": "Cymraeg",
+        "fallbackLanguages": ["en_GB"]
+    },
+    "da": {
+        "name": "Dansk"
+    },
+    "de": {
+        "name": "Deutsch"
+    },
+    "el": {
+        "name": "ελληνικά"
+    },
+    "en_GB": {
+        "name": "English (GB)",
+        "fallbackLanguages": ["en_US"]
+    },
+    "en_US": {
+        "name": "English (US)"
+    },
+    "eo": {
+        "name": "Esperanto"
+    },
+    "es": {
+        "name": "Español"
+    },
+    "et": {
+        "name": "Eesti"
+    },
+    "eu": {
+        "name": "Euskara"
+    },
+    "fa": {
+        "name": "فارس"
+    },
+    "fi": {
+        "name": "Suomi"
+    },
+    "fil": {
+        "name": "Filipino",
+        "fallbackLanguages": ["en_US"]
+    },
+    "fo": {
+        "name": "Føroyskt"
+    },
+    "fr": {
+        "name": "Français"
+    },
+    "ga": {
+        "name": "Gaeilge",
+        "fallbackLanguages": ["en_GB"]
+    },
+    "gd": {
+        "name": "Gàidhlig",
+        "fallbackLanguages": ["en_GB"]
+    },
+    "gl": {
+        "name": "Galego"
+    },
+    "he": {
+        "name": "עברית"
+    },
+    "hi": {
+        "name": "हिन्दी",
+        "fallbackLanguages": ["en_GB"]
+    },
+    "hr": {
+        "name": "Hrvatski"
+    },
+    "hu": {
+        "name": "Magyar"
+    },
+    "hy": {
+        "name": "Հայերեն"
+    },
+    "id": {
+        "name": "Bahasa Indonesia"
+    },
+    "ig": {
+        "name": "Ásụ̀sụ̀ Ị̀gbò",
+        "fallbackLanguages": ["en_GB"]
+    },
+    "is": {
+        "name": "Íslenska"
+    },
+    "it": {
+        "name": "Italiano"
+    },
+    "ja": {
+        "name": "日本語"
+    },
+    "ka": {
+        "name": "ქართული"
+    },
+    "kab": {
+        "name": "ⵜⴰⵇⴱⴰⵢⵍⵉⵜ"
+    },
+    "km": {
+        "name": "ខ្មែរ"
+    },
+    "ko": {
+        "name": "한국어"
+    },
+    "lt": {
+        "name": "Lietuvių"
+    },
+    "lv": {
+        "name": "Latviešu"
+    },
+    "mk": {
+        "name": "Македонски"
+    },
+    "ml": {
+        "name": "മലയാളം",
+        "fallbackLanguages": ["en_GB"]
+    },
+    "mn_MN": {
+        "name": "Монгол хэл"
+    },
+    "mr": {
+        "name": "मराठी"
+    },
+    "ms": {
+        "name": "Bahasa Melayu"
+    },
+    "mt": {
+        "name": "Malti",
+        "fallbackLanguages": ["en_GB"]
+    },
+    "my": {
+        "name": "မြန်မာ"
+    },
+    "nb": {
+        "name": "Norsk (Bokmål)",
+        "fallbackLanguages": ["nn"]
+    },
+    "nl": {
+        "name": "Nederlands"
+    },
+    "nn": {
+        "name": "Norsk (Nynorsk)",
+        "fallbackLanguages": ["nb"]
+    },
+    "oc": {
+        "name": "Occitan"
+    },
+    "pl": {
+        "name": "Polski"
+    },
+    "pt_BR": {
+        "name": "Português brasileiro",
+        "fallbackLanguages": ["pt_PT"]
+    },
+    "pt_PT": {
+        "name": "Português",
+        "fallbackLanguages": ["pt_BR"]
+    },
+    "ro": {
+        "name": "Română"
+    },
+    "ru": {
+        "name": "Русский"
+    },
+    "scn": {
+        "name": "Sicilianu"
+    },
+    "sk": {
+        "name": "Slovenčina"
+    },
+    "sl": {
+        "name": "Slovenščina"
+    },
+    "sq": {
+        "name": "Shqip"
+    },
+    "sr": {
+        "name": "Srpski"
+    },
+    "sr_RS": {
+        "name": "Српски"
+    },
+    "sv": {
+        "name": "Svenska (modern)",
+        "fallbackLanguages": ["sv_SE"]
+    },
+    "sv_SE": {
+        "name": "Svenska (traditionell)",
+        "fallbackLanguages": ["sv"]
+    },
+    "ta": {
+        "name": "தமிழ்"
+    },
+    "te": {
+        "name": "తెలుగు"
+    },
+    "tg": {
+        "name": "Тоҷикӣ"
+    },
+    "th": {
+        "name": "ภาษาไทย"
+    },
+    "tl": {
+        "name": "Tagalog"
+    },
+    "tr": {
+        "name": "Türkçe"
+    },
+    "uk": {
+        "name": "Українська"
+    },
+    "uz@Latn": {
+        "name": "O'zbek tili"
+    },
+    "vi": {
+        "name": "Tiếng Việt"
+    },
+    "yi": {
+        "name": "ייִדיש"
+    },
+    "yo": {
+        "name": "Yorùbá"
+    },
+    "zh_CN": {
+        "name": "简体中文"
+    },
+    "zh_HK": {
+        "name": "繁體中文 (香港)"
+    },
+    "zh_TW": {
+        "name": "繁體中文 (台灣)"
+    }
+}

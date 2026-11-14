@@ -1,0 +1,11 @@
+name: Internal task
+description: Development tasks of Audacity 4. For internal use.
+labels: ["Task"]
+type: "task"
+body:
+  - type: textarea
+    id: desc
+    attributes:
+      label: Description
+    validations:
+      required: true

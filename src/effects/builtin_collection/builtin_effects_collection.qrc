@@ -1,0 +1,50 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/BuiltinEffectsCollection/qmldir</file>
+        <file>qml/Audacity/BuiltinEffectsCollection/DynamicsEffectBase.qml</file>
+        <file>qml/Audacity/BuiltinEffectsCollection/SliderWithTextInput.qml</file>
+        <file>qml/Audacity/BuiltinEffectsCollection/ParameterKnob.qml</file>
+        <file>qml/Audacity/BuiltinEffectsCollection/BigParameterKnob.qml</file>
+        <file>qml/Audacity/BuiltinEffectsCollection/SettingKnob.qml</file>
+
+        <file>amplify/AmplifyView.qml</file>
+        <file>autoduck/AutoDuckView.qml</file>
+        <file>autoduck/AutoDuckGraph.qml</file>
+        <file>autoduck/duck.png</file>
+        <file>clickremoval/ClickRemovalView.qml</file>
+        <file>loudness/NormalizeLoudnessView.qml</file>
+        <file>truncatesilence/TruncateSilenceView.qml</file>
+        <file>changepitch/ChangePitchView.qml</file>
+
+        <file>dynamics/compressor/CompressorView.qml</file>
+        <file>dynamics/compressor/CompressionCurve.qml</file>
+        <file>dynamics/compressor/CompressionCurvePainter.qml</file>
+        <file>dynamics/limiter/LimiterView.qml</file>
+        <file>dynamics/timeline/meters/DynamicsMeter.qml</file>
+        <file>dynamics/timeline/ClipIndicator.qml</file>
+        <file>dynamics/timeline/DynamicsPanel.qml</file>
+
+        <file>normalize/NormalizeView.qml</file>
+        <file>graphiceq/GraphicEqBoard.qml</file>
+        <file>graphiceq/GraphicEqFader.qml</file>
+        <file>graphiceq/GraphicEqFaderHandle.qml</file>
+        <file>graphiceq/GraphicEqGridLines.qml</file>
+        <file>graphiceq/GraphicEqView.qml</file>
+        <file>filtercurveeq/FilterCurveEqTooltip.qml</file>
+        <file>filtercurveeq/FilterCurveEqView.qml</file>
+        <file>tonegen/ChirpView.qml</file>
+        <file>tonegen/ToneView.qml</file>
+        <file>dtmfgen/DtmfView.qml</file>
+        <file>silencegen/SilenceView.qml</file>
+        <file>slidingstretch/SlidingStretchView.qml</file>
+        <file>slidingstretch/SlidingStretchCard.qml</file>
+        <file>slidingstretch/SlidingStretchTempoControls.qml</file>
+        <file>slidingstretch/SlidingStretchPitchControls.qml</file>
+        <file>reverb/ReverbView.qml</file>
+        <file>basstreble/BassTrebleView.qml</file>
+        <file>paulstretch/PaulstretchView.qml</file>
+        <file>noisegen/NoiseView.qml</file>
+        <file>noisereduction/NoiseReductionSlider.qml</file>
+        <file>noisereduction/NoiseReductionView.qml</file>
+    </qresource>
+</RCC>

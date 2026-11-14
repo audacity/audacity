@@ -1,0 +1,44 @@
+#[[
+A library of mathematical utilities and manipulation of samples
+]]
+
+set( TARGET au3-math )
+
+set( SOURCES
+   Biquad.cpp
+   Biquad.h
+   Dither.cpp
+   Dither.h
+   EBUR128.cpp
+   EBUR128.h
+   InterpolateAudio.cpp
+   InterpolateAudio.h
+   LinearFit.h
+   Matrix.cpp
+   Matrix.h
+   PitchName.cpp
+   PitchName.h
+   Resample.cpp
+   Resample.h
+   Reverb_libSoX.h
+   RoundUpUnsafe.h
+   SampleCount.cpp
+   SampleCount.h
+   SampleFormat.cpp
+   SampleFormat.h
+   float_cast.h
+   Gain.h
+)
+set( LIBRARIES
+PUBLIC
+   au3-utility
+PRIVATE
+   au3-components
+   au3-preferences
+   au3-strings
+   soxr
+   wxBase
+)
+audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
+   "" ""
+)

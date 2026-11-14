@@ -1,0 +1,53 @@
+;; upic.sal -- play upic data
+;;
+
+define function upic(data)
+  begin
+    if data then
+      ;; use reverse to make a copy of data since sort is destructive
+      return upic-curve(sort(reverse(data), quote(upic-compare)))
+    else
+      return s-rest() 
+  end
+
+
+define function upic-compare(a, b)
+  return third(a) < third(b)
+
+
+define function upic-curve(data)
+  begin
+    with curve = first(data),
+         waveform = first(curve),
+         envelope = second(curve),
+         points = cddr(curve),
+         from-time = first(points),
+         to-time = nth(length(points) - 2, points),
+         dur = to-time - from-time,
+         next = rest(data),
+         next-start, snd
+    ;; shift curve to start at t = 0
+    loop
+      with relpoints
+      while points
+      set relpoints @= first(points) - from-time
+      set relpoints @= second(points)
+      set points = cddr(points)
+      finally set points = cdr(reverse(relpoints))
+    end
+    set snd = hzosc(pwlv-list(points), symbol-value(waveform)) *
+              (funcall(envelope) ~ dur)
+    if next then
+      begin
+        set next-start = third(first(next))
+        ;; display "curve", from-time, dur
+        set snd = seq(set-logical-stop(snd, next-start - from-time),
+                      upic-curve(next))
+       end
+    return snd
+  end
+
+
+define function upic-env()
+  return env(0.01, 0.01, 0.01, 1, 1, 1)
+

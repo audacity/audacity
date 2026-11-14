@@ -1,0 +1,521 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#include "nyquistparameterextractorservice.h"
+
+#include <algorithm>
+#include <cmath>
+
+#include "au3wrap/internal/wxtypes_convert.h"
+#include "translation.h"
+
+// AU3 Nyquist effect base class
+#include "au3-nyquist-effects/NyquistBase.h"
+#include "au3-effects/StatefulEffectBase.h"
+
+using namespace au::effects;
+using namespace muse;
+
+namespace {
+//! Round a raw step to the nearest "nice" 1/2/5 x power-of-ten value.
+//!
+//! `range / ticks` often lands on an ugly value (e.g. 999.999/1000 = 0.999999),
+//! which then drives both the spinbox increment and the derived decimal count.
+//! Snapping it to a nice number makes the arrows step by +1, +0.5, +2, etc.
+double niceStep(double raw)
+{
+    if (!(raw > 0.0) || !std::isfinite(raw)) {
+        return 1.0;
+    }
+    const double exponent = std::floor(std::log10(raw));
+    const double mag = std::pow(10.0, exponent);
+    const double frac = raw / mag; // in [1, 10)
+    double niceFrac;
+    if (frac < 1.5) {
+        niceFrac = 1.0;
+    } else if (frac < 3.0) {
+        niceFrac = 2.0;
+    } else if (frac < 7.0) {
+        niceFrac = 5.0;
+    } else {
+        niceFrac = 10.0;
+    }
+    return niceFrac * mag;
+}
+
+//! Digits after the decimal point in a token (0 for ints or "nil").
+//! Tokens are .ny source text, so '.' is never localized.
+int fractionalDigits(const wxString& str)
+{
+    const int dot = str.Find(wxT('.'));
+    if (dot == wxNOT_FOUND) {
+        return 0;
+    }
+    int digits = 0;
+    for (size_t i = dot + 1; i < str.length(); ++i) {
+        if (!wxIsdigit(str[i])) {
+            break;
+        }
+        ++digits;
+    }
+    return digits;
+}
+
+//! Display precision for a float control: the most precise of its declared
+//! default/min/max values, clamped to ParameterInfo::maxNumDecimals so a
+//! numDecimalsOverride set from here never exceeds the auto-derive path's cap.
+int maxFractionalDigits(const wxString& a, const wxString& b, const wxString& c)
+{
+    const int n = std::max({ fractionalDigits(a), fractionalDigits(b), fractionalDigits(c) });
+    return std::min(n, ParameterInfo::maxNumDecimals);
+}
+
+//! Convert NyqControlType to AU4 ParameterType
+ParameterType convertControlType(int nyqType)
+{
+    switch (nyqType) {
+    case NYQ_CTRL_INT_TEXT:
+    case NYQ_CTRL_FLOAT_TEXT:
+        // `int-text` and `float-text` render as a plain numeric input (no slider)
+        // to match legacy AU3 semantics (au3/src/effects/nyquist/Nyquist.cpp:487-522):
+        // authors pick the `-text` variants when a slider is unwanted (e.g.
+        // open-ended ranges, where a `nil` bound is parsed as +/-FLT_MAX in
+        // NyquistBase.cpp).
+        return ParameterType::Numeric;
+    case NYQ_CTRL_INT:
+    case NYQ_CTRL_FLOAT:
+        return ParameterType::Slider;
+    case NYQ_CTRL_CHOICE:
+        return ParameterType::Dropdown;
+    case NYQ_CTRL_STRING:
+        return ParameterType::Text; // Free-form text input field
+    case NYQ_CTRL_TIME:
+        return ParameterType::Time;
+    case NYQ_CTRL_TEXT: // Informational text, not editable
+        return ParameterType::ReadOnly;
+    case NYQ_CTRL_FILE:
+        return ParameterType::File;
+    default:
+        return ParameterType::Unknown;
+    }
+}
+
+//! Convert NyqControl to AU4 ParameterInfo
+ParameterInfo convertControl(const NyqControl& ctrl)
+{
+    ParameterInfo info;
+
+    // Use variable name as ID
+    info.id = String::fromStdString(au::au3::wxToStdString(ctrl.var));
+
+    // ctrl.name / ctrl.label hold the SOURCE strings as parsed from the .ny
+    // script (UnQuoteMsgid in NyquistBase.cpp returns untranslatable so that
+    // mName / mAuthor / ... stay locale-stable for plugin identifier composition).
+    // Translate the display strings here instead
+    const auto translateNyquist = [](const wxString& s) -> String {
+        if (s.empty()) {
+            return {};
+        }
+        const auto utf8 = s.utf8_str();
+        return mtrc("effects-nyquist", utf8.data());
+    };
+    info.name = translateNyquist(ctrl.name);
+    // Nyquist's ctrl.label is a freeform descriptor (e.g. "30 - 300 beats/minute"),
+    // not a unit symbol. Map it to `description`; leave `units` empty.
+    // For file controls it is the browse button caption, which the UI provides itself.
+    if (ctrl.type != NYQ_CTRL_FILE) {
+        info.description = translateNyquist(ctrl.label);
+    }
+
+    info.type = convertControlType(ctrl.type);
+
+    // Value range
+    info.minValue = ctrl.low;
+    info.maxValue = ctrl.high;
+    info.defaultValue = ctrl.val;
+    info.currentValue = ctrl.val;
+
+    // For integer controls
+    if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT) {
+        info.isInteger = true;
+        info.stepSize = 1.0;
+    } else if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT) {
+        // Derive a step from the range (ticks is hard-coded to 1000 in
+        // NyquistBase.cpp), snapped to a nice 1/2/5 value so the spinbox arrows
+        // step by e.g. +1 instead of +0.999999. A `nil` bound is parsed as
+        // ±FLT_MAX there, leaving no usable range: fall back to a step of 1.
+        const double range = ctrl.high - ctrl.low;
+        if (ctrl.ticks > 0 && std::isfinite(range) && range > 0 && range < 1e15) {
+            info.stepSize = niceStep(range / ctrl.ticks);
+            info.stepCount = ctrl.ticks;
+        } else {
+            info.stepSize = 1.0;
+        }
+        // Floor at 3 so integer-declared floats accept fractions and use
+        // the double validator, whose bounds survive nil (+/-FLT_MAX).
+        // Keep the step-derived precision (numDecimals() while the override
+        // is still unset) so a fine step such as 0.0001 stays displayable.
+        info.numDecimalsOverride = std::max({ 3, info.numDecimals(),
+                                              maxFractionalDigits(ctrl.valStr, ctrl.lowStr, ctrl.highStr) });
+    }
+
+    // For choice controls, extract enum values
+    if (ctrl.type == NYQ_CTRL_CHOICE) {
+        info.enumValues.reserve(ctrl.choices.size());
+        info.enumIndices.reserve(ctrl.choices.size());
+
+        for (size_t i = 0; i < ctrl.choices.size(); ++i) {
+            const auto& choice = ctrl.choices[i];
+            info.enumValues.push_back(String::fromQString(choice.Msgid().translated()));
+            info.enumIndices.push_back(static_cast<double>(i));
+        }
+
+        // Update min/max to match the enum indices range
+        if (!ctrl.choices.empty()) {
+            info.minValue = 0.0;
+            info.maxValue = static_cast<double>(ctrl.choices.size() - 1);
+        }
+    }
+
+    // For file controls, extract file type filters and parse flags
+    if (ctrl.type == NYQ_CTRL_FILE) {
+        info.fileFilters.reserve(ctrl.fileTypes.size());
+
+        for (const auto& fileType : ctrl.fileTypes) {
+            // Convert FileType to filter string format: "Description (*.ext1 *.ext2)"
+            wxString filterStr = ::au3::qtToWx(fileType.description.translated());
+
+            if (!fileType.extensions.empty()) {
+                wxString extList;
+                for (const auto& ext : fileType.extensions) {
+                    if (!extList.empty()) {
+                        extList += wxT(" ");
+                    }
+                    if (ext.empty()) {
+                        // Empty extension means "all files"
+                        extList += wxT("*");
+                    } else {
+                        extList += wxT("*.") + ext;
+                    }
+                }
+                filterStr += wxT(" (") + extList + wxT(")");
+            }
+
+            info.fileFilters.push_back(String::fromStdString(au::au3::wxToStdString(filterStr)));
+        }
+
+        // Parse file control flags from highStr (e.g., "open,exists,multiple" or "save,overwrite")
+        wxString flags = ctrl.highStr.Lower();
+        info.isFileSave = flags.Contains(wxT("save"));
+        info.isFileMultiple = flags.Contains(wxT("multiple"));
+
+        // Set currentValueString from valStr for file controls
+        info.currentValueString = String::fromStdString(au::au3::wxToStdString(ctrl.valStr));
+    }
+
+    // For string controls, set currentValueString from valStr
+    if (ctrl.type == NYQ_CTRL_STRING) {
+        info.currentValueString = String::fromStdString(au::au3::wxToStdString(ctrl.valStr));
+    }
+
+    // For float/slider controls, format the current value as string
+    // This is needed for the formattedValue display next to the slider in the UI.
+    // Match the precision derived above so the display agrees with the text box.
+    if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT) {
+        info.currentValueString = String::number(ctrl.val, info.numDecimalsOverride);
+    }
+
+    return info;
+}
+
+//! Get NyquistBase effect from EffectInstance
+NyquistBase* getNyquistBase(::EffectInstance* instance)
+{
+    if (!instance) {
+        return nullptr;
+    }
+
+    // The instance is a StatefulEffectBase::Instance, not the NyquistBase itself
+    // We need to get the effect from the instance
+    auto* statefulInstance = dynamic_cast<StatefulEffectBase::Instance*>(instance);
+    if (!statefulInstance) {
+        return nullptr;
+    }
+
+    // Get the effect and cast to NyquistBase
+    return dynamic_cast<NyquistBase*>(&statefulInstance->GetEffect());
+}
+
+//! Find control by variable name (const version)
+const NyqControl* findControl(const std::vector<NyqControl>& controls, const String& varName)
+{
+    const std::string varNameStd = varName.toStdString();
+    for (const auto& ctrl : controls) {
+        if (au::au3::wxToStdString(ctrl.var) == varNameStd) {
+            return &ctrl;
+        }
+    }
+    return nullptr;
+}
+
+//! Find control by variable name (non-const version)
+//! Implemented by calling the const version and casting away constness
+NyqControl* findControl(std::vector<NyqControl>& controls, const String& varName)
+{
+    // Call the const version and cast away constness
+    // This is safe because we know the original vector is non-const
+    return const_cast<NyqControl*>(findControl(const_cast<const std::vector<NyqControl>&>(controls), varName));
+}
+} // anonymous namespace
+
+ParameterInfoList NyquistParameterExtractorService::extractParameters(EffectInstance* instance,
+                                                                      [[maybe_unused]] EffectSettingsAccessPtr settingsAccess) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return {};
+    }
+
+    ParameterInfoList result;
+    result.reserve(nyquist->mControls.size());
+
+    for (const auto& ctrl : nyquist->mControls) {
+        result.push_back(convertControl(ctrl));
+    }
+
+    return result;
+}
+
+ParameterInfo NyquistParameterExtractorService::getParameter(EffectInstance* instance, const String& parameterId) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return {};
+    }
+
+    const NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return {};
+    }
+
+    return convertControl(*ctrl);
+}
+
+double NyquistParameterExtractorService::getParameterValue(EffectInstance* instance, const String& parameterId) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return 0.0;
+    }
+
+    const NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return 0.0;
+    }
+
+    return ctrl->val;
+}
+
+bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instance, const String& parameterId,
+                                                         double fullRangeValue, EffectSettingsAccessPtr settingsAccess)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return false;
+    }
+
+    NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return false;
+    }
+
+    // For choice controls, use the number of choices to determine valid range
+    // (ctrl->low and ctrl->high are 0 for choice controls)
+    if (ctrl->type == NYQ_CTRL_CHOICE) {
+        const double maxChoice = static_cast<double>(ctrl->choices.size() - 1);
+        ctrl->val = std::max(0.0, std::min(maxChoice, fullRangeValue));
+    } else {
+        // For other controls, clamp to the specified range
+        ctrl->val = std::max(ctrl->low, std::min(ctrl->high, fullRangeValue));
+    }
+
+    // Update string representation
+    ctrl->valStr = wxString::Format(wxT("%g"), ctrl->val);
+
+    // Sync mControls back to EffectSettings for preset saving
+    // This ensures that when SaveUserPreset() is called, it has the updated control values
+    if (settingsAccess) {
+        settingsAccess->ModifySettings([&](EffectSettings& settings) {
+            NyquistBase::GetSettings(settings).controls = nyquist->mControls;
+            return nullptr;
+        });
+    }
+
+    return true;
+}
+
+bool NyquistParameterExtractorService::setParameterStringValue(EffectInstance* instance, const String& parameterId,
+                                                               const String& stringValue, EffectSettingsAccessPtr settingsAccess)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return false;
+    }
+
+    NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return false;
+    }
+
+    // Only file and string parameters support string values
+    if (ctrl->type != NYQ_CTRL_FILE && ctrl->type != NYQ_CTRL_STRING) {
+        return false;
+    }
+
+    // Set the string value directly
+    ctrl->valStr = au3::wxFromString(stringValue);
+
+    // Sync mControls back to EffectSettings for preset saving
+    if (settingsAccess) {
+        settingsAccess->ModifySettings([&](EffectSettings& settings) {
+            NyquistBase::GetSettings(settings).controls = nyquist->mControls;
+            return nullptr;
+        });
+    }
+
+    return true;
+}
+
+muse::String NyquistParameterExtractorService::getParameterValueString(EffectInstance* instance,
+                                                                       const String& parameterId, double value) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return String();
+    }
+
+    const NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return String();
+    }
+
+    // Format based on control type
+    switch (ctrl->type) {
+    case NYQ_CTRL_INT:
+    case NYQ_CTRL_INT_TEXT:
+        return String::number(static_cast<int>(value));
+
+    case NYQ_CTRL_CHOICE:
+    {
+        // Return the choice label for the given index
+        int index = static_cast<int>(value);
+        if (index >= 0 && index < static_cast<int>(ctrl->choices.size())) {
+            return String::fromQString(ctrl->choices[index].Msgid().translated());
+        }
+        return String::number(index);
+    }
+
+    case NYQ_CTRL_TIME:
+        // TODO: Format as time (HH:MM:SS or similar)
+        // For now, just return the numeric value
+        return String::number(value, 3);
+
+    case NYQ_CTRL_FILE:
+        // Return the file path from valStr
+        return String::fromStdString(au3::wxToStdString(ctrl->valStr));
+
+    case NYQ_CTRL_STRING:
+        // Return the string value from valStr
+        return String::fromStdString(au3::wxToStdString(ctrl->valStr));
+
+    case NYQ_CTRL_TEXT:
+        // Return the informational text from name field (read-only display)
+        return String::fromStdString(au3::wxToStdString(ctrl->name));
+
+    default:
+        // For numeric types, format with appropriate precision
+        if (ctrl->type == NYQ_CTRL_FLOAT || ctrl->type == NYQ_CTRL_FLOAT_TEXT) {
+            // Use reasonable precision: 2 decimal places for most cases
+            // Could be made more sophisticated based on the range/stepSize in the future
+            return String::number(value, 2);
+        }
+        return String::number(value);
+    }
+}
+
+muse::String NyquistParameterExtractorService::getPromptCommandText(EffectInstance* instance) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist || !nyquist->mIsPrompt) {
+        return String();
+    }
+
+    return String::fromStdString(au3::wxToStdString(nyquist->mInputCmd));
+}
+
+bool NyquistParameterExtractorService::setPromptCommandText(EffectInstance* instance, const String& commandText,
+                                                            [[maybe_unused]] EffectSettingsAccessPtr settingsAccess)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist || !nyquist->mIsPrompt) {
+        return false;
+    }
+
+    // Set the command text directly on the NyquistBase instance
+    nyquist->mInputCmd = au3::wxFromString(commandText);
+
+    return true;
+}
+
+void NyquistParameterExtractorService::setDebugMode(EffectInstance* instance, bool enable)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return;
+    }
+
+    nyquist->mDebug = enable;
+    // Note: Do NOT call RedirectOutput() here!
+    // When mRedirectOutput is false, OutputCallback captures to mDebugOutputStr
+    // When mRedirectOutput is true, OutputCallback prints to std::cout
+    // We want to capture to mDebugOutputStr, so we leave mRedirectOutput as false
+}
+
+muse::String NyquistParameterExtractorService::getDebugOutput(EffectInstance* instance) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return String();
+    }
+
+    return String::fromStdString(au3::wxToStdString(nyquist->mDebugOutputStr));
+}
+
+muse::String NyquistParameterExtractorService::executeForDebug(EffectInstance* instance, EffectSettings& settings)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return String();
+    }
+
+    // Use SetCommand to parse the current command text
+    // This sets up mCmd, mIsSal, and other necessary state
+    nyquist->SetCommand(nyquist->mInputCmd);
+
+    // Enable debug mode
+    nyquist->mDebug = true;
+    // Clear previous debug output
+    nyquist->mDebugOutputStr.clear();
+
+    // Execute the Nyquist code by calling Process
+    // This will run the code and capture output to mDebugOutputStr
+    nyquist->Process(*instance, settings);
+
+    // Get the captured output
+    String debugOutput = String::fromStdString(au3::wxToStdString(nyquist->mDebugOutputStr));
+
+    // Disable debug mode
+    nyquist->mDebug = false;
+
+    return debugOutput;
+}

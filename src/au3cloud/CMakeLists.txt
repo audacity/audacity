@@ -1,0 +1,71 @@
+#
+# Audacity: A Digital Audio Editor
+#
+
+declare_module(au3cloud)
+
+set(MODULE_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/au3cloudmodule.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3cloudmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/au3clouderrors.h
+    ${CMAKE_CURRENT_LIST_DIR}/cloudcommands.h
+    ${CMAKE_CURRENT_LIST_DIR}/cloudtypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/iauthorization.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3audiocomservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3cloudconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/icloudprojectsprovider.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudactionscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudcommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudcommandsstate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudprojectsprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudprojectsprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomtypeconv.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomtypeconv.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudurlhandler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudurlhandler.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/customschemeregistrar.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/accountmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/accountmodel.h
+    )
+
+if (OS_IS_WIN)
+    list(APPEND MODULE_SRC ${CMAKE_CURRENT_LIST_DIR}/internal/platform/win/customschemeregistrar.cpp)
+else()
+    list(APPEND MODULE_SRC ${CMAKE_CURRENT_LIST_DIR}/internal/customschemeregistrar.cpp)
+endif()
+
+set(MODULE_LINK
+        au3wrap
+        au3-import-export
+        au3-network-manager
+        au3-preferences
+        au3-project-file-io
+        au3-project-rate
+        au3-string-utils
+        au3-utility
+        au3-wave-track
+        Qt6::Network
+        Qt6::NetworkAuth
+        au3-cloud-audiocom
+        au3-concurrency
+)
+
+setup_module()

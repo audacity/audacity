@@ -1,0 +1,14 @@
+* To install or reinstall Audacity, drag the "Audacity.app" icon in the
+   DMG window to the /Applications folder icon on the right. Alternatively,
+   drag the "Audacity.app" icon to any other location of your choosing. 
+
+* Do not double-click the "Audacity" icon in the DMG to launch Audacity 
+   from there. 
+   
+* If you still have an "Audacity" installation folder for a version before 
+   2.1.3, you will see working duplicates of Audacity's shipped Nyquist
+   plug-ins in the Generate, Effect or Analyze Menu. You may also see 
+   non-working duplicates of other previously shipped plug-ins. To clean
+   up the duplicates please see:
+   http://manual.audacityteam.org/man/installing_and_updating_audacity_on_mac_os_x.html .
+

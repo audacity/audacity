@@ -1,0 +1,99 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <memory>
+#include <optional>
+#include <set>
+
+#include "modularity/imoduleinterface.h"
+
+#include "global/async/notifylist.h"
+#include "global/async/channel.h"
+#include "global/types/retval.h"
+
+#include "trackedittypes.h"
+#include "dom/track.h"
+#include "dom/label.h"
+
+namespace au::au3 {
+class IAu3Project;
+}
+
+namespace au::trackedit {
+struct TracksAndItems
+{
+    trackedit::TrackList tracks;
+    std::vector<trackedit::Clips> clips;
+    std::vector<trackedit::Labels> labels;
+};
+
+class ITrackeditProject
+{
+public:
+    virtual ~ITrackeditProject() = default;
+
+    virtual std::vector<TrackId> trackIdList() const = 0;
+    virtual std::vector<Track> trackList() const = 0;
+    virtual muse::ValCh<bool> hasAudioContent() const = 0;
+    virtual muse::ValCh<bool> hasLabels() const = 0;
+    virtual bool timeTrackFound() const = 0;
+    virtual std::optional<Track> track(TrackId trackId) const = 0;
+    virtual Clip clip(const ClipKey& key) const = 0;
+    virtual Label label(const LabelKey& key) const = 0;
+    virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
+    virtual muse::async::NotifyList<Label> labelList(const TrackId& trackId) const = 0;
+    virtual ItemTimeSpanList itemTimeSpansSorted(const TrackId& trackId) const = 0;
+    virtual std::optional<TimeSpan> itemTimeSpan(const TrackItemKey& key) const = 0;
+    virtual std::set<int64_t> groupsIdsList() const = 0;
+    virtual std::optional<std::string> trackName(const TrackId& trackId) const = 0;
+
+    virtual void reload() = 0;
+
+    virtual void notifyAboutTrackAdded(const Track& track) = 0;
+    virtual void notifyAboutTrackChanged(const Track& track) = 0;
+    virtual void notifyAboutTrackRemoved(const Track& track) = 0;
+    virtual void notifyAboutTrackInserted(const Track& track, int pos) = 0;
+    virtual void notifyAboutTrackMoved(const Track& track, int pos) = 0;
+
+    virtual void notifyAboutTrackClipListChanged(const Track& track) = 0;
+
+    virtual void notifyAboutClipChanged(const Clip& clip) = 0;
+    virtual void notifyAboutClipAdded(const Clip& clip) = 0;
+    virtual void notifyAboutClipRemoved(const Clip& clip) = 0;
+
+    virtual void notifyAboutLabelChanged(const Label& label) = 0;
+    virtual void notifyAboutLabelAdded(const Label& label) = 0;
+    virtual void notifyAboutLabelRemoved(const Label& label) = 0;
+
+    virtual TimeSignature timeSignature() const = 0;
+    virtual void setTimeSignature(const TimeSignature& timeSignature, bool noStretch = false) = 0;
+    virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;
+
+    virtual muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const = 0;
+    virtual muse::async::Channel<trackedit::Track> trackAdded() const = 0;
+    virtual muse::async::Channel<trackedit::Track> trackChanged() const = 0;
+    virtual muse::async::Channel<trackedit::Track> trackClipListChanged() const = 0;
+    virtual muse::async::Channel<trackedit::Track> trackRemoved() const = 0;
+    virtual muse::async::Channel<trackedit::Track, int> trackInserted() const = 0;
+    virtual muse::async::Channel<trackedit::Track, int> trackMoved() const = 0;
+
+    virtual secs_t totalTime() const = 0;
+
+    virtual int64_t createNewGroupID(int64_t startingId = 0) const = 0;
+
+    virtual TracksAndItems buildTracksAndItems() const = 0;
+};
+
+using ITrackeditProjectPtr = std::shared_ptr<ITrackeditProject>;
+
+class ITrackeditProjectCreator : MODULE_GLOBAL_INTERFACE
+{
+    INTERFACE_ID(ITrackeditProjectCreator)
+public:
+    ~ITrackeditProjectCreator() override = default;
+
+    virtual ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const = 0;
+};
+}

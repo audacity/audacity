@@ -1,0 +1,881 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#include "tracknavigationcontroller.h"
+
+#include "framework/ui/navigationcommands.h"
+
+#include <algorithm>
+
+#include "framework/global/async/async.h"
+#include "framework/global/containers.h"
+
+#include "au3wrap/internal/domaccessor.h"
+
+#include "itrackeditproject.h"
+#include "trackedit/trackeditcommands.h"
+#include "trackedit/trackedittypes.h"
+
+#include "log.h"
+
+// #define TRACK_NAVIGATION_LOGGING_ENABLED
+
+#ifdef TRACK_NAVIGATION_LOGGING_ENABLED
+#define MYLOG() LOGI()
+#else
+#define MYLOG() LOGN()
+#endif
+
+using namespace au::trackedit;
+using namespace muse;
+using namespace muse::rcommand;
+
+void TrackNavigationController::init()
+{
+    auto cd = commandDispatcher();
+    cd->onRequest(this, TRACK_NAVIGATION_NEXT_PANEL_COMMAND, [this]() { return navigateToNextPanel(); });
+    cd->onRequest(this, TRACK_NAVIGATION_PREV_PANEL_COMMAND, [this]() { return navigateToPrevPanel(); });
+
+    cd->onRequest(this, TRACK_NAVIGATION_FIRST_TRACK_COMMAND, [this]() { return navigateToFirstTrack(); });
+    cd->onRequest(this, TRACK_NAVIGATION_LAST_TRACK_COMMAND, [this]() { return navigateToLastTrack(); });
+
+    cd->onRequest(this, TRACK_NAVIGATION_ABOVE_ITEM_COMMAND, [this]() { return navigateToAboveItem(); });
+    cd->onRequest(this, TRACK_NAVIGATION_BELOW_ITEM_COMMAND, [this]() { return navigateToBelowItem(); });
+
+    cd->onRequest(this, TRACK_NAVIGATION_REPLACE_SELECTION_COMMAND, [this]() { return replaceSelection(); });
+    cd->onRequest(this, TRACK_NAVIGATION_TOGGLE_SELECTION_COMMAND, [this]() { return toggleSelection(); });
+    cd->onRequest(this, TRACK_NAVIGATION_RANGE_SELECTION_COMMAND, [this]() { return rangeSelection(); });
+
+    cd->onRequest(this, TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_PREV_COMMAND, [this]() { return multiSelectionUp(); });
+    cd->onRequest(this, TRACK_NAVIGATION_EXTEND_TRACK_SELECTION_NEXT_COMMAND, [this]() { return multiSelectionDown(); });
+
+    cd->onRequest(this, TRACK_NAVIGATION_ITEM_CONTEXT_MENU_COMMAND, [this]() { return openContextMenuForFocusedItem(); });
+    cd->onRequest(this, TRACK_NAVIGATION_RULER_CONTEXT_MENU_COMMAND, [this]() { return openContextMenuForFocusedRuler(); });
+
+    playbackController()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
+        m_selectionStart = std::nullopt;
+    });
+
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
+        if (trackIds.size() == 1) {
+            // The idea here is that range selection also supports the base track to be selected using the mouse.
+            m_lastSelectedTrack = trackIds.front();
+        }
+    });
+
+    m_selectionStart = std::nullopt;
+
+    //! NOTE Undo and redo recreate labels under new ids and can remove the focused item altogether,
+    //! and this receiver runs before the selection is re-published from the restored project
+    projectHistory()->historyChanged().onReceive(this, [this](HistoryEvent) {
+        revalidateFocusedItem();
+    });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        muse::async::Async::call(this, [this]() {
+            ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+            if (prj) {
+                std::vector<Track> trackList = prj->trackList();
+                if (!trackList.empty()) {
+                    setFocus(TrackFocus::track(trackList.front().id));
+                }
+
+                prj->trackAdded().onReceive(this, [this](const Track&) {
+                    revalidateFocusedTrack();
+                });
+
+                prj->trackInserted().onReceive(this, [this](const Track&, int) {
+                    revalidateFocusedTrack();
+                });
+
+                prj->trackRemoved().onReceive(this, [this](const Track&) {
+                    revalidateFocusedTrack();
+                });
+
+                prj->trackChanged().onReceive(this, [this](const Track&) {
+                    revalidateFocusedItem();
+                });
+            }
+        });
+    });
+}
+
+bool TrackNavigationController::isNavigationEnabled() const
+{
+    return m_isNavigationActive;
+}
+
+void TrackNavigationController::setIsNavigationActive(bool active)
+{
+    if (m_isNavigationActive == active) {
+        return;
+    }
+
+    MYLOG() << "navigation active: " << active;
+
+    m_isNavigationActive = active;
+    m_isNavigationActiveChannel.notify();
+}
+
+muse::async::Notification TrackNavigationController::isNavigationActiveChanged() const
+{
+    return m_isNavigationActiveChannel;
+}
+
+au::trackedit::TrackId TrackNavigationController::focusedTrack() const
+{
+    return m_focus.trackId;
+}
+
+muse::async::Channel<au::trackedit::TrackId, bool> TrackNavigationController::focusedTrackChanged() const
+{
+    return m_focusedTrackChanged;
+}
+
+TrackFocus TrackNavigationController::focus() const
+{
+    return m_focus;
+}
+
+void TrackNavigationController::setFocus(const TrackFocus& requested, bool highlight)
+{
+    //! NOTE The navigation controls lag behind the project, so a control can still name an
+    //! item that has moved away; such a request focuses the item's track instead
+    const TrackFocus focus = itemExists(requested) ? requested : TrackFocus::track(requested.trackId);
+
+    if (m_focus == focus) {
+        return;
+    }
+
+    const bool isTrackChanged = m_focus.trackId != focus.trackId;
+
+    MYLOG() << "track: " << focus.trackId << ", item: " << focusedItemKey().itemId << ", highlight: " << highlight
+            << ", track changed: " << isTrackChanged;
+
+    m_focus = focus;
+
+    if (isTrackChanged) {
+        au3SetTrackFocused(m_focus.trackId);
+
+        m_focusedTrackChanged.send(m_focus.trackId, highlight);
+    }
+
+    m_focusChanged.send(m_focus, highlight);
+}
+
+muse::async::Channel<TrackFocus, bool> TrackNavigationController::focusChanged() const
+{
+    return m_focusChanged;
+}
+
+muse::async::Channel<TrackItemKey> TrackNavigationController::openContextMenuRequested() const
+{
+    return m_openContextMenuRequested;
+}
+
+muse::async::Channel<au::trackedit::TrackId> TrackNavigationController::openRulerContextMenuRequested() const
+{
+    return m_openRulerContextMenuRequested;
+}
+
+TrackItemKey TrackNavigationController::focusedItemKey() const
+{
+    return m_focus.itemKey().value_or(TrackItemKey { m_focus.trackId, INVALID_TRACK_ITEM });
+}
+
+bool TrackNavigationController::isFocusedItemValid() const
+{
+    return m_focus.isItem();
+}
+
+bool TrackNavigationController::isFocusedItemLabel() const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const std::optional<Track> track = prj ? prj->track(m_focus.trackId) : std::nullopt;
+    return track.has_value() && track->type == TrackType::Label;
+}
+
+ItemKeys TrackNavigationController::focusedItemGroup() const
+{
+    const TrackItemKey key = focusedItemKey();
+    const int64_t groupId = trackeditInteraction()->itemGroupId(key);
+    if (groupId != -1) {
+        return trackeditInteraction()->itemsInGroup(groupId);
+    }
+
+    return isFocusedItemLabel() ? ItemKeys { {}, { key } } : ItemKeys { { key }, {} };
+}
+
+bool TrackNavigationController::isSelected(const ItemKeys& items) const
+{
+    const ClipKeyList selectedClips = selectionController()->selectedClips();
+    const LabelKeyList selectedLabels = selectionController()->selectedLabels();
+    return std::all_of(items.clips.begin(), items.clips.end(), [&selectedClips](const ClipKey& key) {
+        return muse::contains(selectedClips, key);
+    }) && std::all_of(items.labels.begin(), items.labels.end(), [&selectedLabels](const LabelKey& key) {
+        return muse::contains(selectedLabels, key);
+    });
+}
+
+TrackItemKeyList TrackNavigationController::sortedItemsKeys(const TrackId& trackId) const
+{
+    TrackItemKeyList result;
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return result;
+    }
+
+    for (const ItemTimeSpan& item : prj->itemTimeSpansSorted(trackId)) {
+        result.emplace_back(item.key);
+    }
+
+    return result;
+}
+
+void TrackNavigationController::resetNavigation()
+{
+    MYLOG() << "====";
+
+    m_savedItemStartTime = std::nullopt;
+    navigationController()->setIsHighlight(false);
+}
+
+bool TrackNavigationController::isTrackItemsEmpty(const TrackId& trackId) const
+{
+    TrackItemKeyList itemsKeys = sortedItemsKeys(trackId);
+    return itemsKeys.empty();
+}
+
+bool TrackNavigationController::isFirstTrack(const TrackId& trackId) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return true;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return true;
+    }
+
+    return trackList.front().id == trackId;
+}
+
+bool TrackNavigationController::isLastTrack(const TrackId& trackId) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return true;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return true;
+    }
+
+    return trackList.back().id == trackId;
+}
+
+muse::Ret TrackNavigationController::navigateToNextPanel()
+{
+    MYLOG() << "====";
+
+    if (navigateToAdjacentItem(true /*next*/)) {
+        return make_ok();
+    }
+
+    MYLOG() << "no next item on the track, go to the next panel";
+
+    commandDispatcher()->dispatch(muse::ui::NEXT_PANEL_COMMAND);
+    return make_ok();
+}
+
+muse::Ret TrackNavigationController::navigateToPrevPanel()
+{
+    MYLOG() << "====";
+
+    if (navigateToAdjacentItem(false /*next*/)) {
+        return make_ok();
+    }
+
+    MYLOG() << "no prev item on the track, go to the prev panel";
+
+    commandDispatcher()->dispatch(muse::ui::PREV_PANEL_COMMAND);
+    return make_ok();
+}
+
+bool TrackNavigationController::navigateToAdjacentItem(bool next)
+{
+    const std::optional<TrackItemKey> focusedItem = m_focus.itemKey();
+    if (!focusedItem) {
+        MYLOG() << "no focused item, the track items are not navigated";
+        return false;
+    }
+
+    const TrackItemKeyList itemsKeys = sortedItemsKeys(focusedItem->trackId);
+
+    for (size_t i = 0; i < itemsKeys.size(); ++i) {
+        if (itemsKeys.at(i).itemId != focusedItem->itemId) {
+            continue;
+        }
+
+        if (next) {
+            if (i + 1 >= itemsKeys.size()) {
+                return false;
+            }
+            setFocus(TrackFocus::item(itemsKeys.at(i + 1)), true /*highlight*/);
+        } else {
+            if (i == 0) {
+                return false;
+            }
+            setFocus(TrackFocus::item(itemsKeys.at(i - 1)), true /*highlight*/);
+        }
+
+        m_savedItemStartTime = std::nullopt;
+        return true;
+    }
+
+    return false;
+}
+
+void TrackNavigationController::navigateToPrevTrack()
+{
+    MYLOG() << "====";
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    const TrackId currentFocusedTrack = focusedTrack();
+
+    for (size_t i = 0; i < trackList.size(); ++i) {
+        const Track& track = trackList[i];
+        if (track.id == currentFocusedTrack) {
+            if (i == 0) {
+                setFocus(TrackFocus::track(trackList.back().id), true /*highlight*/);
+            } else {
+                setFocus(TrackFocus::track(trackList.at(i - 1).id), true /*highlight*/);
+            }
+            return;
+        }
+    }
+}
+
+void TrackNavigationController::navigateToNextTrack()
+{
+    MYLOG() << "====";
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    const TrackId currentFocusedTrack = focusedTrack();
+
+    for (size_t i = 0; i < trackList.size(); ++i) {
+        const Track& track = trackList[i];
+        if (track.id == currentFocusedTrack) {
+            if (++i < trackList.size()) {
+                setFocus(TrackFocus::track(trackList[i].id), true /*highlight*/);
+            } else {
+                setFocus(TrackFocus::track(trackList.front().id), true /*highlight*/);
+            }
+            return;
+        }
+    }
+}
+
+muse::Ret TrackNavigationController::navigateToFirstTrack()
+{
+    MYLOG() << "====";
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    setFocus(TrackFocus::track(trackList.front().id), true /*highlight*/);
+    return make_ok();
+}
+
+muse::Ret TrackNavigationController::navigateToLastTrack()
+{
+    MYLOG() << "====";
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    setFocus(TrackFocus::track(trackList.back().id), true /*highlight*/);
+    return make_ok();
+}
+
+double TrackNavigationController::itemStartTime(const TrackItemKey& key) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return 0.0;
+    }
+
+    const std::optional<TimeSpan> span = prj->itemTimeSpan(key);
+    return span.has_value() ? span->start().raw() : 0.0;
+}
+
+TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return TrackItemKey { trackId, INVALID_TRACK_ITEM };
+    }
+
+    const ItemTimeSpanList items = prj->itemTimeSpansSorted(trackId);
+    if (items.empty()) {
+        return TrackItemKey { trackId, INVALID_TRACK_ITEM };
+    }
+
+    TrackItemKey closest = items.front().key;
+    double closestDiff = std::numeric_limits<double>::max();
+
+    for (const ItemTimeSpan& item : items) {
+        double diff = std::abs(item.span.start().raw() - referenceStartTime);
+        if (diff < closestDiff) {
+            closestDiff = diff;
+            closest = item.key;
+        }
+    }
+
+    return closest;
+}
+
+muse::Ret TrackNavigationController::navigateToAboveItem()
+{
+    MYLOG() << "====";
+
+    if (m_focus.isRuler()) {
+        navigateToAdjacentRuler(SelectionDirection::Up);
+        return make_ok();
+    }
+
+    if (m_focus.isTrack()) {
+        navigateToPrevTrack();
+        return make_ok();
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    if (!m_savedItemStartTime.has_value()) {
+        m_savedItemStartTime = itemStartTime(focusedItemKey());
+    }
+
+    const TrackId currentTrackId = m_focus.trackId;
+
+    for (size_t i = 0; i < trackList.size(); ++i) {
+        if (trackList[i].id == currentTrackId) {
+            for (size_t j = i; j > 0; --j) {
+                TrackId candidateId = trackList[j - 1].id;
+                if (!isTrackItemsEmpty(candidateId)) {
+                    TrackItemKey closest = findClosestItemOnTrack(candidateId, *m_savedItemStartTime);
+                    setFocus(TrackFocus::item(closest), true /*highlight*/);
+                    return make_ok();
+                }
+            }
+            return make_ret(Ret::Code::NotSupported);
+        }
+    }
+
+    return make_ret(Ret::Code::NotSupported);
+}
+
+muse::Ret TrackNavigationController::navigateToBelowItem()
+{
+    MYLOG() << "====";
+
+    if (m_focus.isRuler()) {
+        navigateToAdjacentRuler(SelectionDirection::Down);
+        return make_ok();
+    }
+
+    if (m_focus.isTrack()) {
+        navigateToNextTrack();
+        return make_ok();
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    if (!m_savedItemStartTime.has_value()) {
+        m_savedItemStartTime = itemStartTime(focusedItemKey());
+    }
+
+    const TrackId currentTrackId = m_focus.trackId;
+
+    for (size_t i = 0; i < trackList.size(); ++i) {
+        if (trackList[i].id == currentTrackId) {
+            for (size_t j = i + 1; j < trackList.size(); ++j) {
+                TrackId candidateId = trackList[j].id;
+                if (!isTrackItemsEmpty(candidateId)) {
+                    TrackItemKey closest = findClosestItemOnTrack(candidateId, *m_savedItemStartTime);
+                    setFocus(TrackFocus::item(closest), true /*highlight*/);
+                    return make_ok();
+                }
+            }
+            return make_ret(Ret::Code::NotSupported);
+        }
+    }
+
+    return make_ret(Ret::Code::NotSupported);
+}
+
+void TrackNavigationController::navigateToAdjacentRuler(SelectionDirection direction)
+{
+    MYLOG() << "====";
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    const std::vector<Track> trackList = prj->trackList();
+    const auto current = std::ranges::find(trackList, m_focus.trackId, &Track::id);
+    if (current == trackList.end()) {
+        return;
+    }
+
+    //! NOTE: label tracks have no vertical ruler, so they are skipped, as the tracks without items are for the items
+    const int count = static_cast<int>(trackList.size());
+    const int step = direction == SelectionDirection::Up ? -1 : 1;
+    for (int pos = static_cast<int>(std::distance(trackList.begin(), current)) + step; pos >= 0 && pos < count; pos += step) {
+        if (trackList[pos].type != TrackType::Label) {
+            setFocus(TrackFocus::ruler(trackList[pos].id), true /*highlight*/);
+            return;
+        }
+    }
+}
+
+void TrackNavigationController::navigateToFirstItem()
+{
+    MYLOG() << "====";
+
+    TrackItemKeyList itemsKeys = sortedItemsKeys(m_focus.trackId);
+
+    if (itemsKeys.empty()) {
+        navigateToNextTrack();
+        return;
+    }
+
+    setFocus(TrackFocus::item(itemsKeys.front()), true /*highlight*/);
+}
+
+void TrackNavigationController::navigateToLastItem()
+{
+    MYLOG() << "====";
+
+    TrackItemKeyList itemsKeys = sortedItemsKeys(m_focus.trackId);
+
+    if (itemsKeys.empty()) {
+        navigateToPrevTrack();
+        return;
+    }
+
+    setFocus(TrackFocus::item(itemsKeys.back()), true /*highlight*/);
+}
+
+muse::Ret TrackNavigationController::replaceSelection()
+{
+    const TrackItemKey focusedKey = focusedItemKey();
+    const bool isTrackPanel = !m_focus.isItem();
+
+    bool isSelect = false;
+
+    if (!isTrackPanel) {
+        const ItemKeys items = focusedItemGroup();
+        isSelect = !isSelected(items);
+        selectionController()->setSelectedItems(isSelect ? items : ItemKeys {});
+    } else {
+        TrackIdList selectedTracks = selectionController()->selectedTracks();
+        isSelect = !muse::contains(selectedTracks, focusedKey.trackId);
+        selectionController()->setSelectedTracks(isSelect ? TrackIdList { focusedKey.trackId } : TrackIdList {});
+    }
+
+    m_lastSelectedTrack = isSelect ? std::optional<TrackId>(focusedKey.trackId) : std::nullopt;
+    if (isSelect && !isTrackPanel) {
+        selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
+    }
+    return make_ok();
+}
+
+muse::Ret TrackNavigationController::toggleSelection()
+{
+    const TrackItemKey focusedKey = focusedItemKey();
+    const bool isTrackPanel = !m_focus.isItem();
+
+    if (!isTrackPanel) {
+        const ItemKeys items = focusedItemGroup();
+        if (isSelected(items)) {
+            for (const ClipKey& key : items.clips) {
+                selectionController()->removeClipSelection(key);
+            }
+            for (const LabelKey& key : items.labels) {
+                selectionController()->removeLabelSelection(key);
+            }
+        } else {
+            for (const ClipKey& key : items.clips) {
+                selectionController()->addSelectedClip(key);
+            }
+            for (const LabelKey& key : items.labels) {
+                selectionController()->addSelectedLabel(key);
+            }
+            selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
+        }
+    } else {
+        TrackIdList selectedTracks = selectionController()->selectedTracks();
+        const TrackId focusedTrack = focusedKey.trackId;
+        if (muse::contains(selectedTracks, focusedTrack)) {
+            selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), focusedTrack), selectedTracks.end());
+        } else {
+            selectedTracks.push_back(focusedTrack);
+        }
+        selectionController()->setSelectedTracks(selectedTracks);
+        m_lastSelectedTrack = focusedTrack;
+    }
+    return make_ok();
+}
+
+muse::Ret TrackNavigationController::rangeSelection()
+{
+    const TrackItemKey focusedKey = focusedItemKey();
+    const bool isTrackPanel = !m_focus.isItem();
+
+    bool isSelect = false;
+
+    if (!isTrackPanel) {
+        ItemKeys range = selectionController()->itemsWithinBoxFromAnchorTo(focusedKey);
+        const bool startNewSelection = range.empty();
+        if (startNewSelection) {
+            if (isFocusedItemLabel()) {
+                range.labels.push_back(focusedKey);
+            } else {
+                range.clips.push_back(focusedKey);
+            }
+        }
+
+        selectionController()->setSelectedItems(range);
+
+        if (startNewSelection) {
+            selectionController()->setItemSelectionAnchor(itemStartTime(focusedKey), focusedKey);
+        }
+
+        return make_ok();
+    } else {
+        const auto orderedTracks = selectionController()->orderedTrackList();
+        if (orderedTracks.empty()) {
+            return make_ret(Ret::Code::NotSupported);
+        }
+
+        TrackIdList selectedTracks = selectionController()->selectedTracks();
+        TrackId focusedTrack = focusedKey.trackId;
+
+        if (!m_lastSelectedTrack) {
+            m_lastSelectedTrack = focusedTrack;
+            selectionController()->setSelectedTracks({ focusedTrack });
+            return make_ok();
+        }
+
+        if (!muse::contains(selectedTracks, *m_lastSelectedTrack)) {
+            m_lastSelectedTrack = selectedTracks.size() == 1 ? selectedTracks.front() : focusedTrack;
+        }
+
+        auto startIt = std::find(orderedTracks.begin(), orderedTracks.end(), *m_lastSelectedTrack);
+        auto endIt = std::find(orderedTracks.begin(), orderedTracks.end(), focusedTrack);
+
+        if (startIt > endIt) {
+            std::swap(startIt, endIt);
+        }
+
+        au::trackedit::TrackIdList newSelectedTracks;
+        for (auto it = startIt; it <= endIt; ++it) {
+            newSelectedTracks.push_back(*it);
+        }
+
+        selectionController()->setSelectedTracks(newSelectedTracks);
+    }
+
+    m_lastSelectedTrack = isSelect ? std::optional<TrackId>(focusedKey.trackId) : std::nullopt;
+    return make_ok();
+}
+
+muse::Ret TrackNavigationController::multiSelectionUp()
+{
+    updateSelectionStart(SelectionDirection::Up);
+
+    au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
+    const au::trackedit::TrackId focusedTrackId = focusedTrack();
+
+    navigateToPrevTrack();
+    updateTrackSelection(selectedTracks, focusedTrackId);
+    return make_ok();
+}
+
+muse::Ret TrackNavigationController::multiSelectionDown()
+{
+    updateSelectionStart(SelectionDirection::Down);
+
+    const au::trackedit::TrackId focusedTrackId = focusedTrack();
+    au::trackedit::TrackIdList selectedTracks = selectionController()->selectedTracks();
+
+    navigateToNextTrack();
+    updateTrackSelection(selectedTracks, focusedTrackId);
+    return make_ok();
+}
+
+void TrackNavigationController::updateSelectionStart(SelectionDirection direction)
+{
+    const au::trackedit::TrackId focusedTrackId = focusedTrack();
+
+    if (!m_selectionStart) {
+        const auto orderedTracks = selectionController()->orderedTrackList();
+        const auto selectedTracks = selectionController()->selectedTracks();
+
+        std::vector<TrackId> orderedSelectedTracks;
+        for (const auto& trackId : orderedTracks) {
+            if (muse::contains(selectedTracks, trackId)) {
+                orderedSelectedTracks.push_back(trackId);
+            }
+        }
+
+        if (orderedSelectedTracks.empty()) {
+            m_selectionStart = focusedTrackId;
+            selectionController()->setSelectedTracks({ focusedTrackId });
+            return;
+        }
+
+        if (muse::contains(orderedSelectedTracks, focusedTrackId)) {
+            const auto& firstTrack = orderedSelectedTracks.front();
+            const auto& lastTrack = orderedSelectedTracks.back();
+
+            if (focusedTrackId == firstTrack && direction == SelectionDirection::Down) {
+                m_selectionStart = lastTrack;
+            } else if (focusedTrackId == lastTrack && direction == SelectionDirection::Up) {
+                m_selectionStart = firstTrack;
+            } else {
+                m_selectionStart = focusedTrackId;
+                selectionController()->setSelectedTracks({ focusedTrackId });
+            }
+        } else {
+            m_selectionStart = focusedTrackId;
+            selectionController()->setSelectedTracks({ focusedTrackId });
+        }
+    }
+}
+
+void TrackNavigationController::updateTrackSelection(TrackIdList& selectedTracks,
+                                                     const TrackId& previousFocusedTrack)
+{
+    const TrackId newFocusedTrack = focusedTrack();
+    const int startDistance = selectionController()->trackDistance(*m_selectionStart, previousFocusedTrack);
+    const int endDistance = selectionController()->trackDistance(*m_selectionStart, newFocusedTrack);
+
+    if (startDistance == endDistance) {
+        return;
+    }
+
+    if (std::abs(startDistance) < std::abs(endDistance)) {
+        selectedTracks.push_back(newFocusedTrack);
+    } else {
+        selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), previousFocusedTrack), selectedTracks.end());
+    }
+
+    selectionController()->setSelectedTracks(selectedTracks);
+}
+
+muse::Ret TrackNavigationController::openContextMenuForFocusedItem()
+{
+    MYLOG() << "track: " << m_focus.trackId << ", item: " << focusedItemKey().itemId;
+
+    if (m_focus.trackId == INVALID_TRACK) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    m_openContextMenuRequested.send(focusedItemKey());
+    return make_ok();
+}
+
+muse::Ret TrackNavigationController::openContextMenuForFocusedRuler()
+{
+    MYLOG() << "track: " << m_focus.trackId;
+
+    if (m_focus.trackId == INVALID_TRACK) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    m_openRulerContextMenuRequested.send(m_focus.trackId);
+    return make_ok();
+}
+
+void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)
+{
+    if (auto project = globalContext()->currentProject()) {
+        auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        au3::DomAccessor::clearAllTrackFocus(*au3Project);
+        au3::DomAccessor::setTrackFocused(*au3Project, trackId, true);
+    }
+}
+
+bool TrackNavigationController::itemExists(const TrackFocus& focus) const
+{
+    const std::optional<TrackItemKey> key = focus.itemKey();
+    return !key.has_value() || muse::contains(sortedItemsKeys(key->trackId), *key);
+}
+
+void TrackNavigationController::revalidateFocusedItem()
+{
+    if (!itemExists(m_focus)) {
+        setFocus(TrackFocus::track(m_focus.trackId));
+    }
+}
+
+void TrackNavigationController::revalidateFocusedTrack()
+{
+    const TrackId focused = focusedTrack();
+    const TrackIdList tracks = selectionController()->orderedTrackList();
+    const bool focusedExists = std::any_of(tracks.begin(), tracks.end(),
+                                           [focused](const TrackId& t) { return t == focused; });
+
+    if (focusedExists) {
+        return;
+    }
+
+    const TrackId trackId = tracks.empty() ? INVALID_TRACK : tracks.front();
+    setFocus(TrackFocus::track(trackId));
+}

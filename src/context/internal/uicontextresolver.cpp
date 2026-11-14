@@ -1,0 +1,200 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+#include "uicontextresolver.h"
+
+#include "framework/extensions/extensionstypes.h"
+
+#include "framework/shortcuts_v2/shortcutcontext.h"
+#include "log.h"
+
+using namespace au::context;
+using namespace muse;
+using namespace muse::ui;
+
+static const Uri HOME_PAGE_URI("audacity://home");
+static const Uri PROJECT_PAGE_URI("audacity://project");
+
+static const muse::Uri EXTENSIONS_DIALOG_URI("muse://extensions/viewer");
+
+//! TODO AU4: this should point to sth like ProjectView
+//! but we don't have that yet, so binding it to
+//! area that's being focused when opening a project
+static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
+static const QString DEFAULT_NAVIGATION_SECTION("TrackViewSection");
+static const QString TIMELINE_NAVIGATION_SECTION("TimelineSection");
+
+UiContextResolver::UiContextResolver(const muse::modularity::ContextPtr& ctx)
+    : muse::Contextable(ctx)
+{
+}
+
+void UiContextResolver::init()
+{
+    interactive()->currentUri().ch.onReceive(this, [this](const Uri&) {
+        notifyAboutContextChanged();
+    });
+
+#ifdef AU_BUILD_PLAYBACK_MODULE
+    playbackController()->isPlayingChanged().onNotify(this, [this]() {
+        notifyAboutContextChanged();
+    });
+#endif
+
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        notifyAboutContextChanged();
+    });
+
+    navigationController()->navigationChanged().onNotify(this, [this]() {
+        notifyAboutContextChanged();
+    });
+}
+
+void UiContextResolver::notifyAboutContextChanged()
+{
+    m_currentUiContextChanged.notify();
+}
+
+muse::ui::UiContext UiContextResolver::resolveUiContext() const
+{
+    TRACEFUNC;
+    Uri currentUri = interactive()->currentUri().val;
+
+#ifdef MUE_BUILD_DIAGNOSTICS_MODULE
+    currentUri = diagnostics::diagnosticCurrentUri(interactive()->stack());
+#endif
+
+    if (currentUri == HOME_PAGE_URI) {
+        return context::UiCtxHomeOpened;
+    }
+
+    if (currentUri == PROJECT_PAGE_URI) {
+        auto project = globalContext()->currentProject();
+        if (!project) {
+            //! NOTE The notation page is open, but the notation itself is not loaded - we consider that the notation is not open.
+            //! We need to think, maybe we need a separate value for this case.
+            return context::UiCtxUnknown;
+        }
+
+        INavigationSection* activeSection = navigationController()->activeSection();
+        if (activeSection && activeSection->name() == TIMELINE_NAVIGATION_SECTION) {
+            return context::UiCtxProjectFocused;
+        }
+
+        if (activeSection && activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
+            //! NOTE: the project focus is bound to the track panel and the clips/labels panel.
+            //! The track header controls panel is navigated as a usual panel (general navigation),
+            //! so it is ignored here and treated as merely project-opened, letting the general
+            //! navigation shortcuts (arrows between the controls, ...) work on it
+            if (!trackNavigationController()->isNavigationEnabled()) {
+                return context::UiCtxProjectFocused;
+            }
+        }
+
+        return context::UiCtxProjectOpened;
+    }
+
+    if (interactive()->isCurrentUriDialog().val) {
+        bool isExtensionDialog = currentUri == EXTENSIONS_DIALOG_URI;
+        if (!isExtensionDialog) {
+            return context::UiCtxDialogOpened;
+        }
+    }
+
+    return context::UiCtxUnknown;
+}
+
+const muse::ui::UiContext& UiContextResolver::currentUiContext() const
+{
+    static muse::ui::UiContext current;
+    current = resolveUiContext();
+    return current;
+}
+
+bool UiContextResolver::match(const ui::UiContext& currentCtx, const ui::UiContext& actCtx) const
+{
+    if (actCtx == context::UiCtxAny) {
+        return true;
+    }
+
+    //! NOTE If the current context is `UiCtxProjectFocused`, then we allow `UiCtxProjectOpened` too
+    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectOpened) {
+        return true;
+    }
+
+    return currentCtx == actCtx;
+}
+
+bool UiContextResolver::matchWithCurrent(const UiContext& ctx) const
+{
+    if (ctx == ui::UiCtxAny) {
+        return true;
+    }
+
+    UiContext currentCtx = currentUiContext();
+    return match(currentCtx, ctx);
+}
+
+async::Notification UiContextResolver::currentUiContextChanged() const
+{
+    return m_currentUiContextChanged;
+}
+
+bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) const
+{
+    //! NOTE If (when) there are many different contexts here,
+    //! then the implementation of this method will need to be changed
+    //! so that it does not become spaghetti-code.
+    //! It would be nice if this context as part of the UI context,
+    //! for this we should complicate the implementation of the UI context,
+    //! probably make a tree, for example:
+    //! ProjectOpened
+    //!     ProjectFocused
+
+    if (muse::shortcuts::CTX_PROJECT_OPENED == scContext) {
+        return matchWithCurrent(context::UiCtxProjectOpened);
+    } else if (muse::shortcuts::CTX_PROJECT_FOCUSED == scContext) {
+        return matchWithCurrent(context::UiCtxProjectFocused);
+    } else if (muse::shortcuts::CTX_NOT_PROJECT_FOCUSED == scContext) {
+        return !matchWithCurrent(context::UiCtxProjectFocused);
+    }
+
+    return true;
+}
+
+bool UiContextResolver::isContextAllowed(const std::string& extensionContext) const
+{
+    const std::string_view contextName = extensionContext;
+    if (contextName == muse::extensions::ANY_CONTEXT) {
+        return true;
+    }
+
+    if (contextName != muse::extensions::PROJECT_OPENED_CONTEXT) {
+        LOGE() << "unknown extension context: " << extensionContext << ", using the default project-opened context";
+    }
+
+    return matchWithCurrent(context::UiCtxProjectOpened);
+}
+
+async::Notification UiContextResolver::contextChanged() const
+{
+    return currentUiContextChanged();
+}

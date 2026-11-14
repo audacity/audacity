@@ -1,0 +1,88 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#pragma once
+
+#include <gmock/gmock.h>
+
+#include "projectscene/iprojectsceneconfiguration.h"
+
+namespace au::projectscene {
+class ProjectSceneConfigurationMock : public projectscene::IProjectSceneConfiguration
+{
+public:
+    MOCK_METHOD(bool, isVerticalRulersVisible, (), (const, override));
+    MOCK_METHOD(void, setVerticalRulersVisible, (bool visible), (override));
+    MOCK_METHOD(muse::async::Channel<bool>, isVerticalRulersVisibleChanged, (), (const, override));
+
+    MOCK_METHOD(bool, isRMSInWaveformVisible, (), (const, override));
+    MOCK_METHOD(void, setRMSInWaveformVisible, (bool visible), (override));
+    MOCK_METHOD(muse::async::Channel<bool>, isRMSInWaveformVisibleChanged, (), (const, override));
+
+    MOCK_METHOD(bool, isClippingInWaveformVisible, (), (const, override));
+    MOCK_METHOD(void, setClippingInWaveformVisible, (bool visible), (override));
+    MOCK_METHOD(muse::async::Channel<bool>, isClippingInWaveformVisibleChanged, (), (const, override));
+
+    MOCK_METHOD(double, zoom, (const muse::modularity::ContextPtr& ctx), (const, override));
+
+    MOCK_METHOD(int, mouseZoomPrecision, (), (const, override));
+    MOCK_METHOD(void, setMouseZoomPrecision, (int precision), (override));
+
+    MOCK_METHOD(bool, isEffectsPanelVisible, (), (const, override));
+    MOCK_METHOD(void, setIsEffectsPanelVisible, (bool visible), (override));
+    MOCK_METHOD(muse::async::Notification, isEffectsPanelVisibleChanged, (), (const, override));
+
+    MOCK_METHOD((const std::vector<ClipColorInfo>&), clipColorInfos, (), (const, override));
+    MOCK_METHOD(muse::Color, clipColor, (trackedit::ClipColorIndex index), (const, override));
+    MOCK_METHOD(muse::Color, clipSelectedColor, (trackedit::ClipColorIndex index), (const, override));
+
+    MOCK_METHOD(ClipStyles::Style, clipStyle, (), (const, override));
+    MOCK_METHOD(void, setClipStyle, (ClipStyles::Style style), (override));
+    MOCK_METHOD(muse::async::Channel<ClipStyles::Style>, clipStyleChanged, (), (const, override));
+
+    MOCK_METHOD(StereoHeightsPref::AsymmetricStereoHeights,  stereoHeightsPref, (), (const, override));
+    MOCK_METHOD(void, setStereoHeightsPref, (StereoHeightsPref::AsymmetricStereoHeights pref), (override));
+    MOCK_METHOD(muse::async::Notification, stereoHeightsPrefChanged, (), (const, override));
+
+    MOCK_METHOD(std::vector<std::string>, asymmetricStereoHeightsWorkspaces, (), (const, override));
+    MOCK_METHOD(void, setAsymmetricStereoHeightsWorkspaces, (std::vector<std::string>& workspaces), (override));
+    MOCK_METHOD(muse::async::Notification, asymmetricStereoHeightsWorkspacesChanged, (), (const, override));
+
+    MOCK_METHOD(int, selectionTimecodeFormat, (), (const, override));
+    MOCK_METHOD(void, setSelectionTimecodeFormat, (int precision), (override));
+    MOCK_METHOD(muse::async::Notification, selectionTimecodeFormatChanged, (), (const, override));
+
+    MOCK_METHOD(int, durationTimecodeFormat, (), (const, override));
+    MOCK_METHOD(void, setDurationTimecodeFormat, (int format), (override));
+    MOCK_METHOD(muse::async::Notification, durationTimecodeFormatChanged, (), (const, override));
+
+    MOCK_METHOD(bool, playbackOnRulerClickEnabled, (), (const, override));
+    MOCK_METHOD(void, setPlaybackOnRulerClickEnabled, (bool enabled), (override));
+    MOCK_METHOD(muse::async::Notification, playbackOnRulerClickEnabledChanged, (), (const, override));
+
+    MOCK_METHOD(bool, updateDisplayWhilePlayingEnabled, (), (const, override));
+    MOCK_METHOD(void, setUpdateDisplayWhilePlayingEnabled, (bool enabled), (override));
+    MOCK_METHOD(muse::async::Notification, updateDisplayWhilePlayingEnabledChanged, (), (const, override));
+
+    MOCK_METHOD(bool, pinnedPlayHeadEnabled, (), (const, override));
+    MOCK_METHOD(void, setPinnedPlayHeadEnabled, (bool enabled), (override));
+    MOCK_METHOD(muse::async::Notification, pinnedPlayHeadEnabledChanged, (), (const, override));
+
+    MOCK_METHOD(int, labelEditorColumnFormat, (const std::string& columnName), (const, override));
+    MOCK_METHOD(void, setLabelEditorColumnFormat, (const std::string& columnName, int format), (const, override));
+
+    MOCK_METHOD(trackedit::TrackViewType, defaultTrackViewType, (), (const, override));
+    MOCK_METHOD(void, setDefaultTrackViewType, (trackedit::TrackViewType), (override));
+    MOCK_METHOD(muse::async::Notification, defaultTrackViewTypeChanged, (), (const, override));
+
+    MOCK_METHOD(trackedit::TrackRulerType, defaultRulerType, (), (const, override));
+    MOCK_METHOD(void, setDefaultRulerType, (trackedit::TrackRulerType), (override));
+    MOCK_METHOD(muse::async::Notification, defaultRulerTypeChanged, (), (const, override));
+
+    MOCK_METHOD(ZoomPresets::Preset, zoomPreset1, (), (const, override));
+    MOCK_METHOD(void, setZoomPreset1, (ZoomPresets::Preset preset), (override));
+    MOCK_METHOD(ZoomPresets::Preset, zoomPreset2, (), (const, override));
+    MOCK_METHOD(void, setZoomPreset2, (ZoomPresets::Preset preset), (override));
+};
+}

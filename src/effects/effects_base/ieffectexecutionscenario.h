@@ -1,0 +1,35 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <string>
+
+#include "framework/global/types/ret.h"
+#include "framework/global/types/retval.h"
+#include "framework/global/async/notification.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/modularity/imoduleinterface.h"
+
+#include "effectstypes.h"
+
+namespace au::effects {
+class IEffectExecutionScenario : MODULE_EXPORT_INTERFACE
+{
+    INTERFACE_ID(IEffectExecutionScenario)
+
+public:
+    virtual ~IEffectExecutionScenario() = default;
+
+    virtual muse::Ret performEffect(const EffectId& effectId) = 0;
+    virtual muse::Ret performEffect(const EffectId& effectId, const std::string& params) = 0;
+    virtual muse::RetVal<std::string> configureEffect(const EffectId& effectId, const std::string& params) = 0;
+    virtual bool lastProcessorIsAvailable() const = 0;
+    virtual muse::async::Notification lastProcessorIsNowAvailable() const = 0;
+    virtual muse::async::Channel<EffectId> lastProcessorIdChanged() const = 0;
+    virtual muse::Ret repeatLastProcessor() = 0;
+
+    virtual muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) = 0;
+    virtual void stopPreview() = 0;
+};
+}

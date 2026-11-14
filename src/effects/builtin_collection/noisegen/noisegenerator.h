@@ -1,0 +1,94 @@
+#pragma once
+
+#include "au3-effects/PerTrackEffect.h"
+#include "au3-components/SettingsVisitor.h"
+#include "../common/generatoreffect.h"
+
+#include "framework/global/types/number.h"
+
+namespace au::effects {
+struct NoiseSettings
+{
+    enum Type
+    {
+        White,
+        Pink,
+        Brownian,
+        Count
+    };
+
+    static constexpr Type typeDefault = Type::White;
+    static constexpr double amplitudeDefault = 0.8;
+    static constexpr double amplitudeMax = 1.0;
+    static constexpr double amplitudeMin = 0.0;
+
+    int type { typeDefault };
+    double amplitude { amplitudeDefault };
+
+    bool isApplyAllowed() const;
+};
+
+constexpr bool operator==(const NoiseSettings& a, const NoiseSettings& b)
+{
+    return a.type == b.type && muse::is_equal(a.amplitude, b.amplitude);
+}
+
+constexpr bool operator!=(const NoiseSettings& a, const NoiseSettings& b)
+{
+    return !(a == b);
+}
+
+class NoiseGenerator : public GeneratorEffect, public EffectWithSettings <NoiseSettings, PerTrackEffect>
+{
+public:
+    static const ComponentInterfaceSymbol Symbol;
+
+    NoiseGenerator();
+    virtual ~NoiseGenerator();
+
+    std::shared_ptr<::EffectInstance> MakeInstance() const override;
+
+    // ComponentInterface implementation
+    ComponentInterfaceSymbol GetSymbol() const override;
+    TranslatableString GetDescription() const override;
+    ManualPageID ManualPage() const override;
+
+    // EffectDefinitionInterface implementation
+    ::EffectType GetType() const override;
+    RegistryPaths GetFactoryPresets() const override;
+    OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;
+
+    struct Instance : public PerTrackEffect::Instance, public EffectInstanceWithBlockSize {
+        explicit Instance(const PerTrackEffect& effect);
+        unsigned GetAudioOutCount() const override;
+        unsigned GetAudioInCount() const override;
+
+        bool ProcessInitialize(
+            EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
+        size_t ProcessBlock(
+            EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
+
+        bool InstanceInit(
+            EffectSettings& settings, double sampleRate, ChannelNames chanMap);
+
+        size_t InstanceProcess(
+            EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen);
+
+        double mSampleRate {};
+        float y, z, buf0, buf1, buf2, buf3, buf4, buf5, buf6;
+    };
+
+protected:
+    const EffectParameterMethods& Parameters() const override;
+
+    static const EnumValueSymbol TypeStrings[NoiseSettings::Count];
+
+    static constexpr EnumParameter Type {
+        &NoiseSettings::type, L"Type", NoiseSettings::typeDefault, 0, NoiseSettings::Count - 1, 1, TypeStrings,
+        NoiseSettings::Count
+    };
+    static constexpr EffectParameter Amp {
+        &NoiseSettings::amplitude, L"Amplitude", 0.8, 0.0, 1.0, 1
+    };
+};
+}

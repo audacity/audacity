@@ -1,0 +1,70 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <map>
+#include <tuple>
+#include <vector>
+
+#include "framework/global/io/path.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/progress.h"
+#include "framework/global/types/val.h"
+
+#include "project/iaudacityproject.h"
+
+#include "types/exporttypes.h"
+#include "types/ret.h"
+
+namespace au::importexport {
+using ExportParameters = std::vector<std::tuple<int, OptionValue> >;
+
+class IExporter : MODULE_EXPORT_INTERFACE
+{
+    INTERFACE_ID(IExporter)
+
+public:
+    enum class OptionKey {
+        Format,
+        ProcessType,
+        ExportChannelsType,
+        ExportChannels,
+        ExportCustomChannelMapping,
+        ExportSampleRate,
+        Parameters,
+        FileNamePrefix,
+        IncludeNumbers,
+        IncludeAudioBeforeFirstLabel
+    };
+
+    using Options = std::map<OptionKey, muse::Val>;
+
+    virtual ~IExporter() = default;
+
+    virtual void init() = 0;
+    virtual muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr,
+                                 au::project::IAudacityProjectPtr project = nullptr) = 0;
+
+    virtual muse::Ret prepareSeparateFiles(const Options& options = {}) = 0;
+    virtual std::vector<std::string> separateFileNames() const = 0;
+    virtual muse::Ret exportSeparateFiles(const muse::io::path_t& directory, muse::ProgressPtr progress = nullptr) = 0;
+
+    virtual std::vector<std::string> formatsList() const = 0;
+    virtual int formatIndex(const std::string& format) const = 0;
+    virtual std::vector<std::string> formatExtensions(const std::string& format) const = 0;
+    virtual std::vector<std::string> cloudPreferredAudioFormats(bool preferLossless = true) const = 0;
+    virtual ExportParameters cloudExportParameters(const std::string& format) const = 0;
+    virtual bool isCustomFFmpegExportFormat() const = 0;
+    virtual bool hasMetadata() const = 0;
+
+    virtual int maxChannels() const = 0;
+    virtual std::vector<int> sampleRateList() const = 0;
+    virtual int projectSampleRate() const = 0;
+    virtual int optionsCount() const = 0;
+
+    virtual std::optional<ExportOption> option(int i) const = 0;
+    virtual std::optional<OptionValue> value(int id) const = 0;
+    virtual void setValue(int id, const OptionValue&) = 0;
+};
+}

@@ -1,0 +1,332 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#include "au3spectrogramsettings.h"
+
+#include "iglobalspectrogramconfiguration.h"
+#include "au3spectrogramutils.h"
+#include "spectrogramtypes.h"
+#include "shared/axis/numberscale.h"
+
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-fft/FFT.h"
+#include "au3-wave-track/WaveTrack.h"
+
+#include "framework/global/log.h"
+
+#include "tft/WaveletCalculator.h"
+
+#include <algorithm>
+#include <cmath>
+#include <memory>
+
+namespace au::spectrogram {
+namespace {
+static std::weak_ptr<IGlobalSpectrogramConfiguration> sGlobalConfiguration;
+
+static const AttachedTrackObjects::RegisteredFactory key1{
+    [](::Track&) -> std::shared_ptr<Au3SpectrogramSettings> {
+        auto settings = std::make_shared<Au3SpectrogramSettings>();
+        const auto globalConfig = sGlobalConfiguration.lock();
+        IF_ASSERT_FAILED(globalConfig) {
+            return settings;
+        }
+
+        settings->minFreq = globalConfig->minFreq();
+        settings->maxFreq = globalConfig->maxFreq();
+        settings->range = globalConfig->colorRangeDb();
+        settings->gain = globalConfig->colorGainDb();
+        settings->frequencyGain = globalConfig->colorHighBoostDbPerDec();
+        settings->SetWindowType(globalConfig->windowType());
+        settings->SetWindowSize(1 << globalConfig->winSizeLog2());
+        settings->SetZeroPaddingFactor(globalConfig->zeroPaddingFactor());
+        settings->colorScheme = globalConfig->colorScheme();
+        settings->scaleType = globalConfig->scale();
+        settings->algorithm = globalConfig->algorithm();
+
+        return settings;
+    }
+};
+}
+
+void Au3SpectrogramSettings::setGlobalSpectrogramConfiguration(std::weak_ptr<IGlobalSpectrogramConfiguration> globalConfig)
+{
+    sGlobalConfiguration = globalConfig;
+}
+
+const Au3SpectrogramSettings& Au3SpectrogramSettings::Get(const WaveTrack& track)
+{
+    return const_cast<WaveTrack&>(track).AttachedTrackObjects::Get<Au3SpectrogramSettings>(key1);
+}
+
+Au3SpectrogramSettings& Au3SpectrogramSettings::Get(WaveTrack& track)
+{
+    return track.AttachedTrackObjects::Get<Au3SpectrogramSettings>(key1);
+}
+
+Au3SpectrogramSettings::Au3SpectrogramSettings(const Au3SpectrogramSettings& other)
+    : syncWithGlobalSettings(other.syncWithGlobalSettings)
+    , minFreq(other.minFreq)
+    , maxFreq(other.maxFreq)
+    , range(other.range)
+    , gain(other.gain)
+    , frequencyGain(other.frequencyGain)
+    , colorScheme(other.colorScheme)
+    , scaleType(other.scaleType)
+    , algorithm(other.algorithm)
+
+    // Do not copy these!
+    , hFFT{}
+    , window{}
+    , tWindow{}
+    , dWindow{}
+
+    , m_windowType(other.m_windowType)
+    , m_windowSize(other.m_windowSize)
+    , m_zeroPaddingFactor(other.m_zeroPaddingFactor)
+{
+}
+
+Au3SpectrogramSettings& Au3SpectrogramSettings::operator=(const Au3SpectrogramSettings& other)
+{
+    if (this != &other) {
+        minFreq = other.minFreq;
+        maxFreq = other.maxFreq;
+        range = other.range;
+        gain = other.gain;
+        frequencyGain = other.frequencyGain;
+        m_windowType = other.m_windowType;
+        m_windowSize = other.m_windowSize;
+        m_zeroPaddingFactor = other.m_zeroPaddingFactor;
+        colorScheme = other.colorScheme;
+        scaleType = other.scaleType;
+        algorithm = other.algorithm;
+
+        // Invalidate the caches
+        DestroyWindows();
+    }
+    return *this;
+}
+
+Au3SpectrogramSettings::~Au3SpectrogramSettings()
+{
+    DestroyWindows();
+}
+
+void Au3SpectrogramSettings::CopyTo(::Track& track) const
+{
+    auto& specSettings = Au3SpectrogramSettings::Get(static_cast<WaveTrack&>(track));
+    specSettings = *this;
+}
+
+void Au3SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
+{
+    writer.WriteAttr("syncWithGlobalSettings", syncWithGlobalSettings);
+    writer.WriteAttr("minFreq", minFreq);
+    writer.WriteAttr("maxFreq", maxFreq);
+    writer.WriteAttr("range", range);
+    writer.WriteAttr("gain", gain);
+    writer.WriteAttr("frequencyGain", frequencyGain);
+    writer.WriteAttr("windowType", static_cast<int>(m_windowType));
+    writer.WriteAttr("windowSize", m_windowSize);
+    writer.WriteAttr("zeroPaddingFactor", m_zeroPaddingFactor);
+    writer.WriteAttr("colorScheme", static_cast<int>(colorScheme));
+    writer.WriteAttr("scaleType", static_cast<int>(scaleType));
+    writer.WriteAttr("algorithm", static_cast<int>(algorithm));
+}
+
+bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
+{
+    int nValue = 0;
+    double nValueDbl = 0.;
+    if (attr == "syncWithGlobalSettings" && valueView.TryGet(nValue)) {
+        syncWithGlobalSettings = (nValue != 0);
+        return true;
+    } else if (attr == "minFreq" && valueView.TryGet(nValueDbl)) {
+        minFreq = nValueDbl;
+        return true;
+    } else if (attr == "maxFreq" && valueView.TryGet(nValueDbl)) {
+        maxFreq = nValueDbl;
+        return true;
+    } else if (attr == "range" && valueView.TryGet(nValue)) {
+        range = nValue;
+        return true;
+    } else if (attr == "gain" && valueView.TryGet(nValue)) {
+        gain = nValue;
+        return true;
+    } else if (attr == "frequencyGain" && valueView.TryGet(nValue)) {
+        frequencyGain = nValue;
+        return true;
+    } else if (attr == "windowType" && valueView.TryGet(nValue)) {
+        m_windowType = static_cast<SpectrogramWindowType>(nValue);
+        return true;
+    } else if (attr == "windowSize" && valueView.TryGet(nValue)) {
+        m_windowSize = nValue;
+        return true;
+    } else if (attr == "zeroPaddingFactor" && valueView.TryGet(nValue)) {
+        m_zeroPaddingFactor = nValue;
+        return true;
+    } else if (attr == "colorScheme" && valueView.TryGet(nValue)) {
+        colorScheme = static_cast<SpectrogramColorScheme>(nValue);
+        return true;
+    } else if (attr == "scaleType" && valueView.TryGet(nValue)) {
+        scaleType = static_cast<SpectrogramScale>(nValue);
+        return true;
+    } else if (attr == "algorithm" && valueView.TryGet(nValue)) {
+        algorithm = static_cast<SpectrogramAlgorithm>(nValue);
+        return true;
+    }
+    return false;
+}
+
+void Au3SpectrogramSettings::DestroyWindows()
+{
+    hFFT.reset();
+    window.reset();
+    dWindow.reset();
+    tWindow.reset();
+    pTFCalculator.reset(nullptr);
+}
+
+namespace {
+enum {
+    WINDOW, TWINDOW, DWINDOW
+};
+void RecreateWindow(
+    Floats& window, int which, size_t fftLen,
+    size_t padding, SpectrogramWindowType windowType, size_t windowSize, double& scale)
+{
+    // Create the requested window function
+    window = Floats{ fftLen };
+    size_t ii;
+
+    const bool extra = padding > 0;
+    wxASSERT(windowSize % 2 == 0);
+    if (extra) {
+        // For windows that do not go to 0 at the edges, this improves symmetry
+        ++windowSize;
+    }
+    const size_t endOfWindow = padding + windowSize;
+    // Left and right padding
+    for (ii = 0; ii < padding; ++ii) {
+        window[ii] = 0.0;
+        window[fftLen - ii - 1] = 0.0;
+    }
+    // Default rectangular window in the middle
+    for (; ii < endOfWindow; ++ii) {
+        window[ii] = 1.0;
+    }
+    // Overwrite middle as needed
+    switch (which) {
+    case WINDOW:
+        NewWindowFunc(toAu3WindowType(windowType), windowSize, extra, window.get() + padding);
+        break;
+    case TWINDOW:
+        NewWindowFunc(toAu3WindowType(windowType), windowSize, extra, window.get() + padding);
+        {
+            for (int jj = padding, multiplier = -(int)windowSize / 2; jj < (int)endOfWindow; ++jj, ++multiplier) {
+                window[jj] *= multiplier;
+            }
+        }
+        break;
+    case DWINDOW:
+        DerivativeOfWindowFunc(toAu3WindowType(windowType), windowSize, extra, window.get() + padding);
+        break;
+    default:
+        wxASSERT(false);
+    }
+    // Scale the window function to give 0dB spectrum for 0dB sine tone
+    if (which == WINDOW) {
+        scale = 0.0;
+        for (ii = padding; ii < endOfWindow; ++ii) {
+            scale += window[ii];
+        }
+        if (scale > 0) {
+            scale = 2.0 / scale;
+        }
+    }
+    for (ii = padding; ii < endOfWindow; ++ii) {
+        window[ii] *= scale;
+    }
+}
+}
+
+void Au3SpectrogramSettings::CacheWindows()
+{
+    if (isConstantQ()) {
+        if (pTFCalculator == nullptr) {
+            // JUST USING CONSTANT PARAMETERS FOR NOW. @todo : Should be inferred from settings
+            pTFCalculator = std::make_unique<TFT::WaveletCalculator>(10 /*octaves*/, 0.4 /*fmax*/, 18 /*Q*/, 50 /*overlap*/);
+        }
+    } else if (hFFT == nullptr || window == nullptr
+               || (algorithm == SpectrogramAlgorithm::Reassignment && (tWindow == nullptr || dWindow == nullptr))) {
+        double scale;
+        auto factor = ZeroPaddingFactor();
+        const auto fftLen = WindowSize() * factor;
+        const auto padding = (WindowSize() * (factor - 1)) / 2;
+
+        hFFT = GetFFT(fftLen);
+        RecreateWindow(window, WINDOW, fftLen, padding, m_windowType, m_windowSize, scale);
+        if (algorithm == SpectrogramAlgorithm::Reassignment) {
+            RecreateWindow(tWindow, TWINDOW, fftLen, padding, m_windowType, m_windowSize, scale);
+            RecreateWindow(dWindow, DWINDOW, fftLen, padding, m_windowType, m_windowSize, scale);
+        }
+    }
+}
+
+namespace {
+constexpr auto isPowerOfTwo(int x) -> bool
+{
+    return (x != 0) && ((x & (x - 1)) == 0);
+}
+
+static_assert(isPowerOfTwo(3) == false);
+static_assert(isPowerOfTwo(4) == true);
+}
+
+void Au3SpectrogramSettings::SetWindowSize(int size)
+{
+    assert(isPowerOfTwo(size));
+    m_windowSize = size;
+    DestroyWindows();
+}
+
+float Au3SpectrogramSettings::findBin(float frequency, float binUnit) const
+{
+    float linearBin = frequency / binUnit;
+    if (linearBin < 0) {
+        return -1;
+    } else {
+        return linearBin;
+    }
+}
+
+size_t Au3SpectrogramSettings::GetFFTLength() const
+{
+    return m_windowSize * ((algorithm != SpectrogramAlgorithm::Pitch) ? m_zeroPaddingFactor : 1);
+}
+
+size_t Au3SpectrogramSettings::NBins() const
+{
+    // Omit the Nyquist frequency bin
+    return GetFFTLength() / 2;
+}
+
+void Au3SpectrogramSettings::SetZeroPaddingFactor(int factor)
+{
+    assert(isPowerOfTwo(factor));
+    m_zeroPaddingFactor = factor;
+    DestroyWindows();
+}
+
+void Au3SpectrogramSettings::SetWindowType(SpectrogramWindowType type)
+{
+    m_windowType = type;
+    DestroyWindows();
+}
+
+int Au3SpectrogramSettings::ZeroPaddingFactor() const
+{
+    return algorithm == SpectrogramAlgorithm::Pitch ? 1 : m_zeroPaddingFactor;
+}
+} // namespace au::spectrogram

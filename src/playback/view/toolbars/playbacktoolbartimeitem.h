@@ -1,0 +1,63 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <QString>
+
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
+#include "rcommand/icommanddispatcher.h"
+#include "playback/iplayback.h"
+#include "playback/iplaybackconfiguration.h"
+
+#include "uicomponents/qml/Muse/UiComponents/toolbaritem.h"
+
+namespace au::playback {
+class PlaybackToolBarTimeItem : public muse::uicomponents::ToolBarItem
+{
+    Q_OBJECT
+
+    Q_PROPERTY(int currentFormat READ currentFormat WRITE setCurrentFormat NOTIFY currentFormatChanged FINAL)
+
+    Q_PROPERTY(double currentValue READ currentValue WRITE setCurrentValue NOTIFY currentValueChanged FINAL)
+
+    Q_PROPERTY(double sampleRate READ sampleRate NOTIFY sampleRateChanged FINAL)
+    Q_PROPERTY(double tempo READ tempo NOTIFY timeSignatureChanged FINAL)
+    Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY timeSignatureChanged FINAL)
+    Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
+
+    muse::GlobalInject<IPlaybackConfiguration> configuration;
+
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
+    muse::ContextInject<IPlayback> playback{ this };
+
+public:
+    explicit PlaybackToolBarTimeItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
+                                     QObject* parent = nullptr);
+
+    int currentFormat() const;
+    void setCurrentFormat(int format);
+
+    double currentValue() const;
+    void setCurrentValue(double value);
+
+    double sampleRate() const;
+    double tempo() const;
+    int upperTimeSignature() const;
+    int lowerTimeSignature() const;
+
+signals:
+    void currentFormatChanged();
+    void currentValueChanged();
+
+    void sampleRateChanged();
+    void timeSignatureChanged();
+
+private:
+    void onProjectChanged();
+
+    context::IPlaybackStatePtr playbackState() const;
+};
+}

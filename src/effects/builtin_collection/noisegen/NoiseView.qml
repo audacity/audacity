@@ -1,0 +1,116 @@
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+
+import Muse.UiComponents
+
+import Audacity.Effects
+import Audacity.BuiltinEffects
+import Audacity.BuiltinEffectsCollection
+import Audacity.UiComponents
+
+// TODO: move to common controls
+import Audacity.Preferences
+
+BuiltinEffectBase {
+    id: root
+
+    property string title: qsTrc("effects", "Noise")
+    property bool isApplyAllowed: noise.isApplyAllowed
+
+    width: 300
+    implicitHeight: column.height
+
+    builtinEffectModel: NoiseViewModelFactory.createModel(root, root.instanceId)
+    property alias noise: root.builtinEffectModel
+
+    numNavigationPanels: 2
+    property NavigationPanel controlsNavigationPanel: NavigationPanel {
+        name: "NoiseControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+
+    Column {
+        id: column
+
+        width: parent.width
+        spacing: 16
+
+        ComboBoxWithTitle {
+            id: typeSelector
+
+            columnWidth: parent.width
+            title: qsTrc("effects/noise", "Type")
+            model: noise.types
+            textRole: "text"
+            valueRole: "value"
+            currentIndex: noise.types.findIndex(type => type.value === noise.type)
+
+            control.background.color: ui.theme.backgroundPrimaryColor
+            control.background.border.width: 1
+            control.itemColor: "transparent"
+
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: 0
+
+            onValueEdited: function (newIndex, newValue) {
+                noise.type = newIndex
+            }
+        }
+
+        IncrementalPropertyControlWithTitle {
+            id: amplitudeControl
+
+            title: qsTrc("effects/noise", "Amplitude (0-1)")
+
+            minValue: 0
+            maxValue: 1
+            decimals: 4
+            step: 0.01
+            currentValue: noise.amplitude
+
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: typeSelector.navigation.order + 1
+
+            onValueEdited: function (newValue) {
+                if (noise.amplitude !== newValue) {
+                    noise.amplitude = newValue
+                }
+            }
+        }
+
+        Column {
+
+            spacing: 8
+
+            StyledTextLabel {
+                text: qsTrc("effects/noise", "Duration")
+            }
+
+            Timecode {
+                id: timecode
+
+                Layout.fillWidth: true
+                Layout.fillHeight: false
+
+                value: noise.duration
+                mode: TimecodeModeSelector.Duration
+                currentFormatStr: noise.durationFormat
+                sampleRate: noise.sampleRate
+                tempo: noise.tempo
+                upperTimeSignature: noise.upperTimeSignature
+                lowerTimeSignature: noise.lowerTimeSignature
+
+                navigation.panel: root.controlsNavigationPanel
+                navigation.order: amplitudeControl.navigation.order + 1
+
+                onValueChanged: {
+                    noise.duration = timecode.value
+                }
+            }
+        }
+    }
+}

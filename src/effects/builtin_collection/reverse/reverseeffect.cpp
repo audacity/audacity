@@ -1,0 +1,86 @@
+#include "reverseeffect.h"
+
+#include <algorithm>
+#include <cmath>
+
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-label-track/LabelTrack.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
+
+namespace au::effects {
+ReverseEffect::ReverseEffect()
+{
+}
+
+ReverseEffect::~ReverseEffect()
+{
+}
+
+const ComponentInterfaceSymbol ReverseEffect::Symbol { TranslatableString("effects-reverse", "Reverse") };
+
+ComponentInterfaceSymbol ReverseEffect::GetSymbol() const
+{
+    return Symbol;
+}
+
+::TranslatableString ReverseEffect::GetDescription() const
+{
+    return ::TranslatableString("effects-reverse", "Reverses the selected audio");
+}
+
+// EffectDefinitionInterface implementation
+
+::EffectType ReverseEffect::GetType() const
+{
+    return EffectTypeProcess;
+}
+
+bool ReverseEffect::IsInteractive() const
+{
+    return false;
+}
+
+// Effect implementation
+
+bool ReverseEffect::Process(EffectInstance&, EffectSettings&)
+{
+    // all needed because ReverseEffect should move the labels too
+    EffectOutputTracks outputs {
+        *mTracks, GetType(), { { mT0, mT1 } }
+    };
+    bool bGoodResult = true;
+    int count = 0;
+
+    auto trackRange
+        =outputs.Get().Any();
+    trackRange.VisitWhile(
+        bGoodResult,
+        [&](WaveTrack& track) {
+        const auto progress = [&](double fraction) {
+            return !TrackProgress(count, fraction);
+        };
+        if (mT1 > mT0) {
+            auto start = track.TimeToLongSamples(mT0);
+            auto end = track.TimeToLongSamples(mT1);
+            auto len = end - start;
+
+            if (!WaveTrackUtilities::Reverse(track, start, len, progress)) {
+                bGoodResult = false;
+            }
+        }
+        count += track.NChannels();
+    },
+        [&](LabelTrack& track) {
+        track.ChangeLabelsOnReverse(mT0, mT1);
+        count++;
+    });
+
+    if (bGoodResult) {
+        outputs.Commit();
+    }
+
+    return bGoodResult;
+}
+}

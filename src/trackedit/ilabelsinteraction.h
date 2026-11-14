@@ -1,0 +1,52 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
+
+#include "global/types/string.h"
+#include "global/progress.h"
+
+#include "trackedittypes.h"
+#include "itrackdata.h"
+
+#include "modularity/imoduleinterface.h"
+
+namespace au::trackedit {
+class ILabelsInteraction : MODULE_EXPORT_INTERFACE
+{
+    INTERFACE_ID(ILabelsInteraction)
+
+public:
+    virtual ~ILabelsInteraction() = default;
+
+    virtual muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) = 0;
+    virtual muse::RetVal<LabelKey> addLabelToSelection() = 0;
+
+    virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
+    virtual bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) = 0;
+    virtual bool changeLabelHighFrequency(const LabelKey& labelKey, double frequency) = 0;
+
+    virtual bool removeLabel(const LabelKey& labelKey) = 0;
+    virtual bool removeLabels(const LabelKeyList& labelKeys, bool moveLabels) = 0;
+
+    virtual ITrackDataPtr cutLabel(const LabelKey& labelKey) = 0;
+    virtual ITrackDataPtr copyLabel(const LabelKey& labelKey) = 0;
+
+    virtual muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, int trackPositionOffset) = 0;
+    virtual muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const trackedit::TrackId& toTrackId) = 0;
+
+    virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
+    virtual bool stretchLabelsLeft(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) = 0;
+
+    virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
+    virtual bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) = 0;
+
+    virtual void resetLabelStretchState() = 0;
+
+    virtual int64_t labelGroupId(const LabelKey& labelKey) const = 0;
+    virtual void setLabelGroupId(const LabelKey& labelKey, int64_t id) = 0;
+    virtual LabelKeyList labelsInGroup(int64_t id) const = 0;
+
+    virtual muse::Progress progress() const = 0;
+};
+}

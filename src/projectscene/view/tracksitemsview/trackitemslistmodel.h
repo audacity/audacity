@@ -1,0 +1,157 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <functional>
+#include <optional>
+
+#include <QAbstractListModel>
+#include <QColor>
+#include <QPointer>
+
+#include "framework/global/async/asyncable.h"
+#include "framework/global/iapplication.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "framework/interactive/iinteractive.h"
+
+#include "context/iglobalcontext.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/itrackeditinteraction.h"
+#include "trackedit/trackedittypes.h"
+#include "trackedit/iprojecthistory.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
+
+#include "../timeline/timelinecontext.h"
+
+#include "projectscene/types/projectscenetypes.h"
+#include "viewtrackitem.h"
+#include "trackitemsmovecontroller.h"
+
+namespace au::projectscene {
+class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
+{
+    Q_OBJECT
+
+    Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(QVariant trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
+    Q_PROPERTY(TrackItemsMoveController * moveController READ moveController WRITE setMoveController NOTIFY moveControllerChanged FINAL)
+    Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
+
+protected:
+    muse::GlobalInject<muse::IApplication> application;
+
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+
+public:
+    explicit TrackItemsListModel(QObject* parent = nullptr);
+    ~TrackItemsListModel() override;
+
+    TimelineContext* timelineContext() const;
+    void setTimelineContext(TimelineContext* newContext);
+    QVariant trackId() const;
+    void setTrackId(const QVariant& newTrackId);
+
+    TrackItemsMoveController* moveController() const;
+    void setMoveController(TrackItemsMoveController* controller);
+
+    static int cacheBufferPx();
+
+    Q_INVOKABLE void init();
+    Q_INVOKABLE void reload();
+
+    Q_INVOKABLE virtual void startEditItem(const TrackItemKey& key);
+    Q_INVOKABLE virtual void endEditItem(const TrackItemKey& key);
+    Q_INVOKABLE bool cancelItemDragEdit(const TrackItemKey& key);
+
+    Q_INVOKABLE QVariant next(const TrackItemKey& key) const;
+    Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
+
+    Q_INVOKABLE bool containsItem(const TrackItemKey& key) const;
+    Q_INVOKABLE QColor timeSelectionColor(const QColor& itemColor) const;
+    Q_INVOKABLE virtual double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
+
+    Q_INVOKABLE void setFocusedItem(const TrackItemKey& key);
+    Q_INVOKABLE void resetFocusedItem();
+
+    int rowCount(const QModelIndex& parent) const override;
+    QHash<int, QByteArray> roleNames() const override;
+    QVariant data(const QModelIndex& index, int role) const override;
+
+signals:
+    void trackIdChanged();
+    void moveControllerChanged();
+    void timelineContextChanged();
+
+    void itemContextMenuOpenRequested(const TrackItemKey& key);
+
+    void itemDragCancelled(const TrackItemKey& key);
+
+protected slots:
+    virtual void onTimelineZoomChanged();
+    virtual void onTimelineFrameTimeChanged();
+
+protected:
+    enum RoleNames {
+        ItemRole = Qt::UserRole + 1,
+    };
+
+    void updateItemsMetrics();
+    virtual void updateItemMetrics(ViewTrackItem* item) = 0;
+
+    void setSelectedItems(const QList<ViewTrackItem*>& items);
+    void addSelectedItem(ViewTrackItem* item);
+    void clearSelectedItems();
+
+    ViewTrackItem* itemByKey(const trackedit::TrackItemKey& key) const;
+    int indexByKey(const trackedit::TrackItemKey& key) const;
+
+    virtual trackedit::TrackItemKeyList getSelectedItemKeys() const = 0;
+
+    virtual void onInit() = 0;
+    virtual void onReload() = 0;
+
+    void onSelectedItem(const trackedit::TrackItemKey& k);
+    void onSelectedItems(const trackedit::TrackItemKeyList& keyList);
+
+    void handleAutoScroll(bool ok, bool completed, const std::function<void()>& onAutoScrollFrame);
+    void disconnectAutoScroll();
+
+    QVariant neighbor(const TrackItemKey& key, int offset) const;
+
+    virtual ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) = 0;
+    double moveTimeOffset() const;
+
+    trackedit::SelectionMode selectionMode() const;
+
+    bool selectItemGroup(const trackedit::TrackItemKey& key, trackedit::SelectionMode mode, bool complete);
+    void handleItemRelease(const trackedit::TrackItemKey& key);
+    trackedit::ItemKeys m_pendingToggleDeselect;
+
+    Qt::KeyboardModifiers keyboardModifiers() const;
+
+    friend class TrackClipsSelectionTests;
+    friend class TrackLabelsSelectionTests;
+    friend class TrackItemsFindGuidelineTests;
+
+    TimelineContext* m_context = nullptr;
+    trackedit::TrackId m_trackId = -1;
+    QList<ViewTrackItem*> m_items;
+    QList<ViewTrackItem*> m_selectedItems;
+    QMetaObject::Connection m_autoScrollConnection;
+
+private:
+    void onItemsMoveChanged();
+    void updateDragGhostsMetrics();
+
+    QList<ViewTrackItem*> m_dragGhostItems;
+    QPointer<TrackItemsMoveController> m_moveController;
+    std::optional<trackedit::TrackItemKey> m_editedItem;
+};
+}

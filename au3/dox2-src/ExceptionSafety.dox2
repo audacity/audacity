@@ -1,0 +1,120 @@
+/*!
+@page exception-safety Exception safety guarantees
+@brief Principles of robust error recovery
+@tableofcontents
+
+@section Weak-guarantee Weak guarantee
+
+An operation providing a weak guarantee ensures that in case of errors
+or exceptions, related objects remain in a consistent, but
+unspecified, state.  What constitutes "consistency" varies but at
+minimum, each object can be safety destroyed or reassigned.
+
+A collection of cooperating objects, each providing a
+@ref Strong-guarantee "strong" guarantee for all of its methods, might only
+implement a weak guarantee for the higher level of organization.
+
+@section Partial-guarantee Partial guarantee
+
+Intermediate between @ref Strong-guarantee "strong" and
+@ref Weak-guarantee "weak", an operation may guarantee in case of errors
+and exceptions some less than total degree of preservation of prior
+data against loss, described in documentation comments.
+
+@section Strong-guarantee Strong guarantee
+
+An operation providing a strong guarantee ensures that in case of
+errors or exceptions, all related objects remain in the same state as
+they were in at the beginning.
+
+"Same" might refer only to logical
+contents, not necessarily bitwise, physical identity.
+
+This is not the strongest guarantee -- that would be
+@ref No-fail-guarantee "no-fail".
+
+@subsection Strong-guarantee-compound Strong guarantee for compound operations
+
+To reassign a complex object with a strong exception safety guarantee,
+the copy-and-swap C++ idiom is often used:
+
+- A temporary copy is built, risking exceptions at multiple places.
+
+- If a later stage of this construction fails,
+@ref No-throw-guarantee "no-throw" destructors for the
+earlier stages are invoked to reclaim resources allocated to the
+partial object.
+
+- Only after all possibility of exceptions, a @ref No-throw-guarantee
+"no-throw" swap changes the contents of @c *this.
+
+- The @ref No-throw-guarantee "no-throw" destructor of the temporary destroys
+the old contents.
+
+If the swap is never reached, then the contents of @c *this are left
+unchanged.
+
+What is described next can be seen as a generalization of that idiom.
+To provide a strong guarantee of a compound operation, another common
+pattern is this:
+
+-# for each step, implement a separate strong guarantee in case of
+   failure,
+
+-# for each step (except perhaps the last), implement a
+@ref No-fail-guarantee "no-fail" rollback operation that can undo it even
+after success,
+
+-# initialize a variable, typically called @c success or @c committed,
+to @c false,
+
+-# write one or more @ref finally blocks that invoke the rollbacks if the
+variable remains false,
+
+-# invoke the sequence of fallible, strongly guaranteed steps,
+
+-# only now, at the point of assured success, set the variable to
+@c true, so that the @ref finally blocks do nothing, and invoke other
+finalization steps, which must be
+@ref No-fail-guarantee "no-fail".
+
+Steps 4 and 5 might interleave, but it is very important to order all
+of step 5 before all of step 6.
+
+@section No-throw-guarantee No-throw guarantee
+
+An operation providing a no-throw guarantee will never allow an
+exception to escape, unless for certain conditions such as memory
+exhaustion that the program treats as absolutely unrecoverable.
+
+This guarantee refers only to the programming language technicality of
+exception propagation, and is not the same as the stronger
+@ref No-fail-guarantee "No-fail" guarantee.
+
+This is almost always a requirement for a C++ destructor.  This
+includes a lambda as argument to the function template @ref finally,
+which generates an ad hoc destructor.
+
+If a class has a swap operation, that too should be no-throw.
+
+@section No-fail-guarantee No-fail guarantee
+
+An operation providing a no-fail guarantee will never indicate failure
+by any means, whether that be an error return code or an escaping
+exception.  It will succeed unless in case of absolutely unrecoverable
+contingencies such as memory exhaustion or power failure.
+
+No-fail guarantees are often necessary in functions that perform a
+final phase commit of a collection of related changes or that perform
+rollbacks of unsuccessful changes -- whether for a database in the
+strict sense or analogously.
+
+@section Mixed-guarantee Mixed guarantees
+
+Some operations may provide a mix of guarantees: such as, that some
+condition will hold without fail whether the operation finishes
+normally or exceptionally; yet, only weak or strong guarantees are
+given with respect to other conditions.  Documentation comments should
+describe details.
+
+*/

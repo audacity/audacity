@@ -1,0 +1,1618 @@
+/**********************************************************************
+
+   Audacity: A Digital Audio Editor
+
+   ExportFFmpeg.cpp
+
+   Audacity(R) is copyright (c) 1999-2009 Audacity Team.
+   License: GPL v2 or later.  See License.txt.
+
+   LRN
+
+******************************************************************//**
+
+\class ExportFFmpeg
+\brief Controlling class for FFmpeg exporting.  Creates the options
+dialog of the appropriate type, adds tags and invokes the export
+function.
+
+*//*******************************************************************/
+
+#include <algorithm>
+
+#include "FFmpeg.h"
+#include "FFmpegMetadata.h"
+#include "lib-ffmpeg-support/FFmpegFunctions.h"
+#include "lib-ffmpeg-support/FifoBuffer.h"
+
+#include <wx/app.h>
+#include <wx/log.h>
+
+#include "au3-preferences/BasicSettings.h"
+#include "au3-mixer/Mix.h"
+#include "au3-tags/Tags.h"
+#include "au3-track/Track.h"
+#include "au3-files/wxFileNameWrapper.h"
+
+#if defined(__WXMSW__)
+#define OSINPUT(X) ((X).mb_str() ? (char*)(const char*)(X).mb_str() : "")
+#elif defined(__WXMAC__)
+#define OSFILENAME(X) ((char*)(const char*)(X).fn_str())
+#define OSINPUT(X) OSFILENAME(X)
+#else
+#define OSFILENAME(X) ((char*)(const char*)(X).mb_str())
+#define OSINPUT(X) OSFILENAME(X)
+#endif
+
+#include "au3-import-export/ExportPluginHelpers.h"
+#include "au3-import-export/PlainExportOptionsEditor.h"
+#include "FFmpegDefines.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+
+#include "ExportFFmpeg.h"
+
+#if defined(WIN32) && _MSC_VER < 1900
+#define snprintf _snprintf
+#endif
+
+// Define this to automatically resample audio to the nearest supported sample rate
+#define FFMPEG_AUTO_RESAMPLE 1
+
+static int AdjustFormatIndex(int format)
+{
+    int subFormat = -1;
+    for (int i = 0; i <= FMT_OTHER; i++) {
+        if (ExportFFmpegOptions::fmts[i].compiledIn) {
+            subFormat++;
+        }
+        if (subFormat == format || i == FMT_OTHER) {
+            subFormat = i;
+            break;
+        }
+    }
+
+    return subFormat;
+}
+
+namespace {
+const int iAC3SampleRates[] =
+{ 32000, 44100, 48000, 0 };
+
+const int iWMASampleRates[] =
+{ 8000, 11025, 16000, 22050, 44100, 0 };
+}
+
+///\param rates 0-terminated array
+ExportOptionsEditor::SampleRateList ToSampleRateList(const int* rates)
+{
+    ExportOptionsEditor::SampleRateList list;
+    int index = 0;
+    while (rates[index] != 0) {
+        list.push_back(rates[index++]);
+    }
+    return list;
+}
+
+//: kbps abbreviates "thousands of bits per second"
+TranslatableString n_kbps(int n) { return TranslatableString("import-export", "%1 kbps").arg(n); }
+//: kbps abbreviates "thousands of bits per second"
+TranslatableString f_kbps(double d) { return TranslatableString("import-export", "%1 kbps").arg(d); }
+
+enum : int
+{
+    AC3OptionIDBitRate = 0
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AC3Options {
+    {
+        {
+            AC3OptionIDBitRate, TranslatableString("import-export", "Bit Rate"),
+            160000,
+            ExportOption::TypeEnum,
+            {
+                32000,
+                40000,
+                48000,
+                56000,
+                64000,
+                80000,
+                96000,
+                112000,
+                128000,
+                160000,
+                192000,
+                224000,
+                256000,
+                320000,
+                384000,
+                448000,
+                512000,
+                576000,
+                640000
+            },
+            {
+                n_kbps(32),
+                n_kbps(40),
+                n_kbps(48),
+                n_kbps(56),
+                n_kbps(64),
+                n_kbps(80),
+                n_kbps(96),
+                n_kbps(112),
+                n_kbps(128),
+                n_kbps(160),
+                n_kbps(192),
+                n_kbps(224),
+                n_kbps(256),
+                n_kbps(320),
+                n_kbps(384),
+                n_kbps(448),
+                n_kbps(512),
+                n_kbps(576),
+                n_kbps(640),
+            }
+        }, wxT("/FileFormats/AC3BitRate")
+    }
+};
+
+enum : int
+{
+    AACOptionIDQuality = 0
+};
+
+//NB: user-entered values for AAC are not always followed; mono is clamped to 98-160, stereo 196-320
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AACOptions {
+    {
+        {
+            AACOptionIDQuality, TranslatableString("import-export", "Quality (kbps)"),
+            256,
+            ExportOption::TypeRange,
+            { 98, 320 }
+        }, wxT("/FileFormats/AACQuality")
+    }
+};
+
+enum : int
+{
+    AMRNBOptionIDBitRate = 0
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> AMRNBOptions {
+    {
+        {
+            AMRNBOptionIDBitRate, TranslatableString("import-export", "Bit Rate"),
+            12200,
+            ExportOption::TypeEnum,
+            {
+                4750,
+                5150,
+                5900,
+                6700,
+                7400,
+                7950,
+                10200,
+                12200,
+            },
+            {
+                f_kbps(4.75),
+                f_kbps(5.15),
+                f_kbps(5.90),
+                f_kbps(6.70),
+                f_kbps(7.40),
+                f_kbps(7.95),
+                f_kbps(10.20),
+                f_kbps(12.20),
+            }
+        }, wxT("/FileFormats/AMRNBBitRate")
+    }
+};
+
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
+enum : int
+{
+    OPUSOptionIDBitRate = 0,
+    OPUSOptionIDCompression,
+    OPUSOptionIDFrameDuration,
+    OPUSOptionIDVBRMode,
+    OPUSOptionIDApplication,
+    OPUSOptionIDCutoff
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
+    {
+        {
+            OPUSOptionIDBitRate, TranslatableString("import-export", "Bit Rate"),
+            128000,
+            ExportOption::TypeEnum,
+            {
+                6000,
+                8000,
+                16000,
+                24000,
+                32000,
+                40000,
+                48000,
+                64000,
+                80000,
+                96000,
+                128000,
+                160000,
+                192000,
+                256000
+            },
+            {
+                n_kbps(6),
+                n_kbps(8),
+                n_kbps(16),
+                n_kbps(24),
+                n_kbps(32),
+                n_kbps(40),
+                n_kbps(48),
+                n_kbps(64),
+                n_kbps(80),
+                n_kbps(96),
+                n_kbps(128),
+                n_kbps(160),
+                n_kbps(192),
+                n_kbps(256),
+            }
+        }, wxT("/FileFormats/OPUSBitrate")
+    },
+    {
+        {
+            OPUSOptionIDCompression, TranslatableString("import-export", "Compression"),
+            10,
+            ExportOption::TypeRange,
+            { 0, 10 }
+        }, wxT("/FileFormats/OPUSCompression")
+    },
+    {
+        {
+            OPUSOptionIDFrameDuration, TranslatableString("import-export", "Frame Duration"),
+            std::string("20"),
+            ExportOption::TypeEnum,
+            {
+                std::string("2.5"),
+                std::string("5"),
+                std::string("10"),
+                std::string("20"),
+                std::string("40"),
+                std::string("60")
+            },
+            {
+                TranslatableString("import-export", "2.5 ms"),
+                TranslatableString("import-export", "5 ms"),
+                TranslatableString("import-export", "10 ms"),
+                TranslatableString("import-export", "20 ms"),
+                TranslatableString("import-export", "40 ms"),
+                TranslatableString("import-export", "60 ms"),
+            }
+        }, wxT("/FileFormats/OPUSFrameDuration")
+    },
+    {
+        {
+            //: VBR is "variable bit rate"
+            OPUSOptionIDVBRMode, TranslatableString("import-export", "Vbr Mode"),
+            std::string("on"),
+            ExportOption::TypeEnum,
+            { std::string("off"), std::string("on"), std::string("constrained") },
+            { TranslatableString("import-export", "Off"), TranslatableString("import-export", "On"), TranslatableString("import-export",
+                                                                                                                        "Constrained") }
+        }, wxT("/FileFormats/OPUSVbrMode")
+    },
+    {
+        {
+            OPUSOptionIDApplication, TranslatableString("import-export", "Application"),
+            std::string("audio"),
+            ExportOption::TypeEnum,
+            { std::string("voip"), std::string("audio"), std::string("lowdelay") },
+            //: VOIP is "voice over IP"
+            { TranslatableString("import-export", "VOIP"), TranslatableString("import-export", "Audio"), TranslatableString("import-export",
+                                                                                                                            "Low Delay") }
+        }, wxT("/FileFormats/OPUSApplication")
+    },
+    {
+        {
+            OPUSOptionIDCutoff, TranslatableString("import-export", "Cutoff"),
+            std::string("0"),
+            ExportOption::TypeEnum,
+            {
+                std::string("0"),
+                std::string("4000"),
+                std::string("6000"),
+                std::string("8000"),
+                std::string("12000"),
+                std::string("20000")
+            },
+            {
+                TranslatableString("import-export", "Disabled"),
+                TranslatableString("import-export", "Narrowband"),
+                TranslatableString("import-export", "Mediumband"),
+                TranslatableString("import-export", "Wideband"),
+                TranslatableString("import-export", "Super Wideband"),
+                TranslatableString("import-export", "Fullband")
+            }
+        }, wxT("/FileFormats/OPUSCutoff")
+    },
+};
+#endif
+
+enum : int
+{
+    WMAOptionIDBitRate = 0
+};
+
+const std::initializer_list<PlainExportOptionsEditor::OptionDesc> WMAOptions {
+    {
+        {
+            WMAOptionIDBitRate, TranslatableString("import-export", "Bit Rate"),
+            128000,
+            ExportOption::TypeEnum,
+            {
+                24000,
+                32000,
+                40000,
+                48000,
+                64000,
+                80000,
+                96000,
+                128000,
+                160000,
+                192000,
+                256000,
+                320000
+            },
+            {
+                n_kbps(24),
+                n_kbps(32),
+                n_kbps(40),
+                n_kbps(48),
+                n_kbps(64),
+                n_kbps(80),
+                n_kbps(96),
+                n_kbps(128),
+                n_kbps(160),
+                n_kbps(192),
+                n_kbps(256),
+                n_kbps(320),
+            }
+        }, wxT("/FileFormats/WMABitRate")
+    }
+};
+
+const std::vector<ExportOption> FFmpegOptions {
+    { FELanguageID, {}, std::string() },
+    { FESampleRateID, {}, 0 },
+    { FEBitrateID, {}, 0 },
+    { FETagID, {}, std::string() },
+    { FEQualityID, {}, 0 },
+    { FECutoffID, {}, 0 },
+    { FEBitReservoirID, {}, true },
+    { FEVariableBlockLenID, {}, true },
+    { FECompLevelID, {}, -1 },
+    { FEFrameSizeID, {}, 0 },
+    { FELPCCoeffsID, {}, 0 },
+    { FEMinPredID, {}, -1 },
+    { FEMaxPredID, {}, -1 },
+    { FEMinPartOrderID, {}, -1 },
+    { FEMaxPartOrderID, {}, -1 },
+    { FEPredOrderID, {}, 0 },
+    { FEMuxRateID, {}, 0 },
+    { FEPacketSizeID, {}, 0 },
+    { FECodecID, {}, std::string() },
+    { FEFormatID, {}, std::string() }
+};
+
+FFmpegExporter::FFmpegExporter(std::shared_ptr<FFmpegFunctions> ffmpeg,
+                               const wxFileNameWrapper& filename,
+                               int numChannels,
+                               int subFormat)
+    : mFFmpeg(std::move(ffmpeg))
+    , mName(filename)
+    , mChannels(numChannels)
+    , mSubFormat(subFormat)
+{
+    if (!mFFmpeg) {
+        mFFmpeg = FFmpegFunctions::Load();
+    }
+}
+
+std::unique_ptr<Mixer> FFmpegExporter::CreateMixer(
+    const AudacityProject& project, bool selectionOnly, double startTime,
+    double stopTime, MixerOptions::Downmix* mixerSpec)
+{
+    return ExportPluginHelpers::CreateMixer(
+        project, selectionOnly, startTime, stopTime, mChannels, mDefaultFrameSize,
+        true, mSampleRate, int16Sample, mixerSpec);
+}
+
+ExportFFmpeg::ExportFFmpeg()
+{
+    mFFmpeg = FFmpegFunctions::Load();
+
+    int avfver = mFFmpeg ? mFFmpeg->AVFormatVersion.GetIntVersion() : 0;
+
+    int newfmt;
+    // Adds export types from the export type list
+    for (newfmt = 0; newfmt < FMT_LAST; newfmt++) {
+        wxString shortname(ExportFFmpegOptions::fmts[newfmt].shortname);
+        // Don't hide export types when there's no av-libs, and don't hide FMT_OTHER
+        if (newfmt < FMT_OTHER && mFFmpeg) {
+            // Format/Codec support is compiled in?
+            auto avoformat = mFFmpeg->GuessOutputFormat(shortname.mb_str(), nullptr, nullptr);
+            auto avcodec = mFFmpeg->CreateEncoder(mFFmpeg->GetAVCodecID(ExportFFmpegOptions::fmts[newfmt].codecid));
+
+            if (avoformat == NULL || avcodec == NULL) {
+                ExportFFmpegOptions::fmts[newfmt].compiledIn = false;
+                continue;
+            }
+        }
+        FormatInfo formatInfo {};
+        formatInfo.format = ExportFFmpegOptions::fmts[newfmt].name;
+        formatInfo.extensions.push_back(ExportFFmpegOptions::fmts[newfmt].extension);
+        // For some types add other extensions
+        switch (newfmt) {
+        case FMT_M4A:
+            formatInfo.extensions.push_back(wxT("3gp"));
+            formatInfo.extensions.push_back(wxT("m4r"));
+            formatInfo.extensions.push_back(wxT("mp4"));
+            break;
+        case FMT_WMA2:
+            formatInfo.extensions.push_back(wxT("asf"));
+            formatInfo.extensions.push_back(wxT("wmv"));
+            break;
+        default:
+            break;
+        }
+        formatInfo.maxChannels = ExportFFmpegOptions::fmts[newfmt].maxchannels;
+        formatInfo.description = ExportFFmpegOptions::fmts[newfmt].description;
+
+        const int canmeta = ExportFFmpegOptions::fmts[newfmt].canmetadata;
+        formatInfo.canMetaData = canmeta && (canmeta == AV_CANMETA || canmeta <= avfver);
+
+        mFormatInfos.push_back(std::move(formatInfo));
+    }
+}
+
+ExportFFmpeg::~ExportFFmpeg() = default;
+
+std::unique_ptr<ExportOptionsEditor>
+ExportFFmpeg::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const
+{
+    switch (AdjustFormatIndex(format)) {
+    case FMT_M4A:
+        return std::make_unique<PlainExportOptionsEditor>(AACOptions, listener);
+    case FMT_AC3:
+        return std::make_unique<PlainExportOptionsEditor>(
+            AC3Options,
+            ToSampleRateList(iAC3SampleRates),
+            listener);
+    case FMT_AMRNB:
+        return std::make_unique<PlainExportOptionsEditor>(
+            AMRNBOptions,
+            ExportOptionsEditor::SampleRateList { 8000 },
+            listener);
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
+    case FMT_OPUS:
+        return std::make_unique<PlainExportOptionsEditor>(OPUSOptions, listener);
+#endif
+    case FMT_WMA2:
+        return std::make_unique<PlainExportOptionsEditor>(
+            WMAOptions,
+            ToSampleRateList(iWMASampleRates),
+            listener);
+    case FMT_OTHER:
+        return std::make_unique<ExportOptionsFFmpegCustomEditor>(listener);
+    }
+    return {};
+}
+
+int ExportFFmpeg::GetFormatCount() const
+{
+    return static_cast<int>(mFormatInfos.size());
+}
+
+FormatInfo ExportFFmpeg::GetFormatInfo(int index) const
+{
+    if (index >= 0 && index < mFormatInfos.size()) {
+        return mFormatInfos[index];
+    }
+    return mFormatInfos[FMT_OTHER];
+}
+
+bool ExportFFmpeg::CheckFileName(wxFileName& WXUNUSED(filename), int WXUNUSED(format)) const
+{
+    bool result = true;
+
+    // Show "Locate FFmpeg" dialog
+    mFFmpeg = FFmpegFunctions::Load();
+    if (!mFFmpeg) {
+        FindFFmpegLibs();
+        mFFmpeg = FFmpegFunctions::Load();
+
+        return LoadFFmpeg(true);
+    }
+
+    return result;
+}
+
+std::unique_ptr<ExportProcessor> ExportFFmpeg::CreateProcessor(int format) const
+{
+    return std::make_unique<FFmpegExportProcessor>(mFFmpeg, format);
+}
+
+ExportOptionsFFmpegCustomEditor::ExportOptionsFFmpegCustomEditor(ExportOptionsEditor::Listener* listener)
+    : mListener(listener)
+{
+}
+
+std::string ExportOptionsFFmpegCustomEditor::GetName() const
+{
+    return "custom_ffmpeg";
+}
+
+int ExportOptionsFFmpegCustomEditor::GetOptionsCount() const
+{
+    return static_cast<int>(FFmpegOptions.size());
+}
+
+bool ExportOptionsFFmpegCustomEditor::GetOption(int index, ExportOption& option) const
+{
+    if (index >= 0 && index < FFmpegOptions.size()) {
+        option = FFmpegOptions[index];
+        return true;
+    }
+    return false;
+}
+
+bool ExportOptionsFFmpegCustomEditor::GetValue(int id, ExportValue& value) const
+{
+    auto it = mValues.find(id);
+    if (it != mValues.end()) {
+        value = it->second;
+        return true;
+    }
+    return false;
+}
+
+bool ExportOptionsFFmpegCustomEditor::SetValue(int id, const ExportValue& value)
+{
+    return false;
+}
+
+ExportOptionsFFmpegCustomEditor::SampleRateList ExportOptionsFFmpegCustomEditor::GetSampleRateList() const
+{
+    if (!mAVCodec) {
+        auto it = mValues.find(FECodecID);
+        if (it == mValues.end()) {
+            return {};
+        }
+
+        const auto codecId = *std::get_if<std::string>(&it->second);
+        if (mFFmpeg) {
+            mAVCodec = mFFmpeg->CreateEncoder(codecId.c_str());
+        }
+    }
+    if (!mAVCodec) {
+        return {};
+    }
+
+    if (const auto rates = mAVCodec->GetSupportedSamplerates()) {
+        return ToSampleRateList(rates);
+    }
+    return {};
+}
+
+void ExportOptionsFFmpegCustomEditor::Load(const audacity::BasicSettings& config)
+{
+    mValues[FELanguageID] = std::string(config.Read(wxT("/FileFormats/FFmpegLanguage"), wxT("")).ToUTF8());
+    mValues[FESampleRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegSampleRate"), 0L));
+    mValues[FEBitrateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegBitRate"), 0L));
+    mValues[FETagID] = std::string(config.Read(wxT("/FileFormats/FFmpegTag"), wxT(""))
+                                   .mb_str(wxConvUTF8));
+    mValues[FEQualityID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegQuality"), -99999L));
+    mValues[FECutoffID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCutOff"), 0L));
+    mValues[FEBitReservoirID] = config.ReadBool(wxT("/FileFormats/FFmpegBitReservoir"), true);
+    mValues[FEVariableBlockLenID] = config.ReadBool(wxT("/FileFormats/FFmpegVariableBlockLen"), true);
+    mValues[FECompLevelID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegCompLevel"), -1L));
+    mValues[FEFrameSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegFrameSize"), 0L));
+
+    mValues[FELPCCoeffsID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegLPCCoefPrec"), 0L));
+    mValues[FEMinPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPredOrder"), -1L));
+    mValues[FEMaxPredID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPredOrder"), -1L));
+    mValues[FEMinPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMinPartOrder"), -1L));
+    mValues[FEMaxPartOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMaxPartOrder"), -1L));
+    mValues[FEPredOrderID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPredOrderMethod"), 0L));
+    mValues[FEMuxRateID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegMuxRate"), 0L));
+    mValues[FEPacketSizeID] = static_cast<int>(config.Read(wxT("/FileFormats/FFmpegPacketSize"), 0L));
+    mValues[FECodecID] = std::string(config.Read(wxT("/FileFormats/FFmpegCodec")));
+    mValues[FEFormatID] = std::string(config.Read(wxT("/FileFormats/FFmpegFormat")));
+}
+
+void ExportOptionsFFmpegCustomEditor::Store(audacity::BasicSettings& settings) const
+{
+}
+
+//     bool ExportOptionsFFmpegCustomEditor::CheckFFmpeg(bool showError)
+//     {
+//         // Show "Locate FFmpeg" dialog
+//         if (!mFFmpeg) {
+//             mFFmpeg = FFmpegFunctions::Load();
+//             if (!mFFmpeg) {
+//                 FindFFmpegLibs();
+//                 return LoadFFmpeg(showError);
+//             }
+//         }
+//         return true;
+//     }
+
+//     void ExportOptionsFFmpegCustomEditor::UpdateCodecAndFormat()
+//     {
+//         mFormat->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegFormat"), wxT("")));
+//         mCodec->SetValue(gPrefs->Read(wxT("/FileFormats/FFmpegCodec"), wxT("")));
+//     }
+
+//  void ExportOptionsFFmpegCustomEditor::OnOpen(const wxCommandEvent&)
+//  {
+//      if (!CheckFFmpeg(true)) {
+//          return;
+//      }
+
+// #ifdef __WXMAC__
+//      // Bug 2077 Must be a parent window on OSX or we will appear behind.
+//      auto pWin = wxGetTopLevelParent(mParent);
+// #else
+//      // Use GetTopWindow on windows as there is no hWnd with top level parent.
+//      auto pWin = wxTheApp->GetTopWindow();
+// #endif
+
+//      ExportFFmpegOptions od(pWin);
+//      od.ShowModal();
+//      //ExportFFmpegOptions uses gPrefs to store options
+//      //Instead we could provide it with instance of wxConfigBase
+//      //constructed locally and read from it later
+//      Load(*gPrefs);
+//      mAVCodec.reset();
+
+//      UpdateCodecAndFormat();
+//      if (mListener) {
+//          mListener->OnSampleRateListChange();
+//      }
+//  }
+
+bool FFmpegExporter::Init(const char* shortname,
+                          AudacityProject* project,
+                          int sampleRate,
+                          const Tags* metadata,
+                          const ExportProcessor::Parameters& parameters)
+{
+    if (!mFFmpeg) {
+        return false;
+    }
+
+    // See if libavformat has modules that can write our output format. If so, mEncFormatDesc
+    // will describe the functions used to write the format (used internally by libavformat)
+    // and the default video/audio codecs that the format uses.
+    const auto path = mName.GetFullPath();
+    if ((mEncFormatDesc = mFFmpeg->GuessOutputFormat(shortname, OSINPUT(path), nullptr)) == nullptr) {
+        //: %1 is the file path
+        throw ExportException(au3::qtToWx(TranslatableString("import-export",
+                                                             "FFmpeg : ERROR - Can’t determine format description for file “%1”.").arg(path)
+                                          .translated()));
+    }
+
+    // mEncFormatCtx is used by libavformat to carry around context data re our output file.
+    mEncFormatCtx = mFFmpeg->CreateAVFormatContext();
+    if (!mEncFormatCtx) {
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "FFmpeg : ERROR - Can’t allocate output format context.").c_str()));
+    }
+
+    // Initialise the output format context.
+    mEncFormatCtx->SetOutputFormat(mFFmpeg->CreateAVOutputFormatWrapper(mEncFormatDesc->GetWrappedValue()));
+    mEncFormatCtx->SetFilename(OSINPUT(path));
+
+    // At the moment Audacity can export only one audio stream
+    if ((mEncAudioStream = mEncFormatCtx->CreateStream()) == nullptr) {
+        //: %1 is the file path
+        throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can’t add audio stream to output file “%1”.")
+                              .Format(path)
+                              .Translation());
+    }
+
+    // Documentation for avformat_new_stream says
+    // "User is required to call avcodec_close() and avformat_free_context() to clean
+    // up the allocation by avformat_new_stream()."
+
+    // We use smart pointers that ensure these cleanups either in their destructors or
+    // sooner if they are reset.  These are std::unique_ptr with nondefault deleter
+    // template parameters.
+
+    // mEncFormatCtx takes care of avformat_free_context(), so
+    // mEncAudioStream can be a plain pointer.
+
+    // mEncAudioCodecCtx now becomes responsible for closing the codec:
+    mEncAudioCodecCtx = mEncAudioStream->GetAVCodecContext();
+    mEncAudioStream->SetId(0);
+
+    // Open the output file.
+    if (!(mEncFormatDesc->GetFlags() & AUDACITY_AVFMT_NOFILE)) {
+        AVIOContextWrapper::OpenResult result
+            =mEncFormatCtx->OpenOutputContext(path);
+
+        if (result != AVIOContextWrapper::OpenResult::Success) {
+            //: %1 is the file path, %2 is the error code
+            throw ExportException(TranslatableString("import-export",
+                                                     "FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.")
+                                  .Format(path, static_cast<int>(result))
+                                  .Translation());
+        }
+    }
+
+    // Open the audio stream's codec and initialise any stream related data.
+    if (!InitCodecs(sampleRate, parameters)) {
+        return false;
+    }
+
+    if (mEncAudioStream->SetParametersFromContext(*mEncAudioCodecCtx) < 0) {
+        return false;
+    }
+
+    if (metadata == NULL) {
+        metadata = &Tags::Get(*project);
+    }
+
+    // Add metadata BEFORE writing the header.
+    // At the moment that works with ffmpeg-git and ffmpeg-0.5 for MP4.
+    const auto canmeta = ExportFFmpegOptions::fmts[mSubFormat].canmetadata;
+    const auto avfver = mFFmpeg->AVFormatVersion.GetIntVersion();
+    if (canmeta && (canmeta == AV_CANMETA || canmeta <= avfver)) {
+        mSupportsUTF8 = ExportFFmpegOptions::fmts[mSubFormat].canutf8;
+        AddTags(metadata);
+    }
+
+    // Write headers to the output file.
+    int err
+        =mFFmpeg->avformat_write_header(mEncFormatCtx->GetWrappedValue(), nullptr);
+
+    if (err < 0) {
+        //: %1 is the file path, %2 is the error code
+        throw ExportException(TranslatableString("import-export",
+                                                 "FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.")
+                              .Format(path, err)
+                              .Translation());
+    }
+
+    return true;
+}
+
+bool FFmpegExporter::CheckSampleRate(int rate, int lowrate, int highrate, const int* sampRates)
+{
+    if (lowrate && highrate) {
+        if (rate < lowrate || rate > highrate) {
+            return false;
+        }
+    }
+
+    if (sampRates) {
+        for (int i = 0; sampRates[i] > 0; i++) {
+            if (rate == sampRates[i]) {
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+bool FFmpegExporter::InitCodecs(int sampleRate,
+                                const ExportProcessor::Parameters& parameters)
+{
+    std::unique_ptr<AVCodecWrapper> codec;
+
+    AVDictionaryWrapper options(*mFFmpeg);
+
+    // Get the sample rate from the passed settings if we haven't set it before.
+    // Doing this only when not set allows us to carry the sample rate from one
+    // iteration of ExportMultiple to the next.  This prevents multiple resampling
+    // dialogs in the event the codec can't support the specified rate.
+    if (!mSampleRate) {
+        //TODO: Does not work with export multiple any more...
+        mSampleRate = sampleRate;
+    }
+
+    // Configure the audio stream's codec context.
+
+    const auto codecID = ExportFFmpegOptions::fmts[mSubFormat].codecid;
+
+    mEncAudioCodecCtx->SetGlobalQuality(-99999); //quality mode is off by default;
+
+    // Each export type has its own settings
+    switch (mSubFormat) {
+    case FMT_M4A:
+    {
+        int q = ExportPluginHelpers::GetParameterValue(parameters, AACOptionIDQuality, -99999);
+
+        q = std::clamp(q, static_cast<int>(98 * mChannels), static_cast<int>(160 * mChannels));
+        // Set bit rate to between 98 kbps and 320 kbps (if two channels)
+        mEncAudioCodecCtx->SetBitRate(q * 1000);
+        mEncAudioCodecCtx->SetProfile(AUDACITY_FF_PROFILE_AAC_LOW);
+        mEncAudioCodecCtx->SetCutoff(0);
+
+        break;
+    }
+    case FMT_AC3:
+        mEncAudioCodecCtx->SetBitRate(ExportPluginHelpers::GetParameterValue(parameters, AC3OptionIDBitRate, 192000));
+        if (!CheckSampleRate(
+                mSampleRate, iAC3SampleRates[0],
+                iAC3SampleRates[2],
+                &iAC3SampleRates[0])) {
+            mSampleRate = AskResample(
+                mEncAudioCodecCtx->GetBitRate(), mSampleRate,
+                iAC3SampleRates[0],
+                iAC3SampleRates[2],
+                &iAC3SampleRates[0]);
+        }
+        break;
+    case FMT_AMRNB:
+        mSampleRate = 8000;
+        mEncAudioCodecCtx->SetBitRate(ExportPluginHelpers::GetParameterValue(parameters, AMRNBOptionIDBitRate, 12200));
+        break;
+#ifdef SHOW_FFMPEG_OPUS_EXPORT
+    case FMT_OPUS:
+        options.Set("b", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDBitRate, "128000"), 0);
+        options.Set("vbr", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDVBRMode, "on"), 0);
+        options.Set("compression_level", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDCompression, "10"), 0);
+        options.Set("frame_duration", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDFrameDuration, "20"), 0);
+        options.Set("application", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDApplication, "audio"), 0);
+        options.Set("cutoff", ExportPluginHelpers::GetParameterValue<std::string>(parameters, OPUSOptionIDCutoff, "0"), 0);
+        options.Set("mapping_family", mChannels <= 2 ? "0" : "255", 0);
+        break;
+#endif
+    case FMT_WMA2:
+        mEncAudioCodecCtx->SetBitRate(ExportPluginHelpers::GetParameterValue(parameters, WMAOptionIDBitRate, 198000));
+        if (!CheckSampleRate(
+                mSampleRate, iWMASampleRates[0],
+                iWMASampleRates[4],
+                &iWMASampleRates[0])) {
+            mSampleRate = AskResample(
+                mEncAudioCodecCtx->GetBitRate(), mSampleRate,
+                iWMASampleRates[0],
+                iWMASampleRates[4],
+                &iWMASampleRates[0]);
+        }
+        break;
+    case FMT_OTHER:
+    {
+        AVDictionaryWrapper streamMetadata = mEncAudioStream->GetMetadata();
+        streamMetadata.Set(
+            "language",
+            ExportPluginHelpers::GetParameterValue<std::string>(parameters, FELanguageID), 0);
+
+        mEncAudioStream->SetMetadata(streamMetadata);
+
+        mEncAudioCodecCtx->SetSampleRate(
+            ExportPluginHelpers::GetParameterValue(parameters, FESampleRateID, 0));
+
+        if (mEncAudioCodecCtx->GetSampleRate() != 0) {
+            mSampleRate = mEncAudioCodecCtx->GetSampleRate();
+        }
+
+        mEncAudioCodecCtx->SetBitRate(
+            ExportPluginHelpers::GetParameterValue(parameters, FEBitrateID, 0));
+
+        mEncAudioCodecCtx->SetCodecTagFourCC(
+            ExportPluginHelpers::GetParameterValue<std::string>(parameters, FETagID).c_str());
+
+        mEncAudioCodecCtx->SetGlobalQuality(
+            ExportPluginHelpers::GetParameterValue(parameters, FEQualityID, -99999));
+        mEncAudioCodecCtx->SetCutoff(
+            ExportPluginHelpers::GetParameterValue(parameters, FECutoffID, 0));
+        mEncAudioCodecCtx->SetFlags2(0);
+
+        if (ExportPluginHelpers::GetParameterValue(parameters, FEBitReservoirID, true)) {
+            options.Set("reservoir", "1", 0);
+        }
+
+        if (ExportPluginHelpers::GetParameterValue(parameters, FEVariableBlockLenID, true)) {
+            mEncAudioCodecCtx->SetFlags2(
+                mEncAudioCodecCtx->GetFlags2() | 0x0004); // WMA only?
+        }
+        mEncAudioCodecCtx->SetCompressionLevel(
+            ExportPluginHelpers::GetParameterValue(parameters, FECompLevelID, -1));
+        mEncAudioCodecCtx->SetFrameSize(
+            ExportPluginHelpers::GetParameterValue(parameters, FEFrameSizeID, 0));
+
+        // FIXME The list of supported options for the selected encoder should be
+        // extracted instead of a few hardcoded
+
+        options.Set(
+            "lpc_coeff_precision",
+            ExportPluginHelpers::GetParameterValue(parameters, FELPCCoeffsID, 0));
+        options.Set(
+            "min_prediction_order",
+            ExportPluginHelpers::GetParameterValue(parameters, FEMinPredID, -1));
+        options.Set(
+            "max_prediction_order",
+            ExportPluginHelpers::GetParameterValue(parameters, FEMaxPredID, -1));
+        options.Set(
+            "min_partition_order",
+            ExportPluginHelpers::GetParameterValue(parameters, FEMinPartOrderID, -1));
+        options.Set(
+            "max_partition_order",
+            ExportPluginHelpers::GetParameterValue(parameters, FEMaxPartOrderID, -1));
+        options.Set(
+            "prediction_order_method",
+            ExportPluginHelpers::GetParameterValue(parameters, FEPredOrderID, 0));
+        options.Set(
+            "muxrate",
+            ExportPluginHelpers::GetParameterValue(parameters, FEMuxRateID, 0));
+
+        mEncFormatCtx->SetPacketSize(
+            ExportPluginHelpers::GetParameterValue(parameters, FEPacketSizeID, 0));
+
+        codec = mFFmpeg->CreateEncoder(
+            ExportPluginHelpers::GetParameterValue<std::string>(parameters, FECodecID).c_str());
+
+        if (!codec) {
+            codec = mFFmpeg->CreateEncoder(mEncFormatDesc->GetAudioCodec());
+        }
+    }
+    break;
+    default:
+        return false;
+    }
+
+    // This happens if user refused to resample the project
+    if (mSampleRate == 0) {
+        return false;
+    }
+
+    if (mEncAudioCodecCtx->GetGlobalQuality() >= 0) {
+        mEncAudioCodecCtx->SetFlags(
+            mEncAudioCodecCtx->GetFlags() | AUDACITY_AV_CODEC_FLAG_QSCALE);
+    } else {
+        mEncAudioCodecCtx->SetGlobalQuality(0);
+    }
+
+    mEncAudioCodecCtx->SetGlobalQuality(mEncAudioCodecCtx->GetGlobalQuality() * AUDACITY_FF_QP2LAMBDA);
+    mEncAudioCodecCtx->SetSampleRate(mSampleRate);
+    mEncAudioCodecCtx->SetChannelLayout(mFFmpeg->CreateDefaultChannelLayout(mChannels).get());
+    mEncAudioCodecCtx->SetTimeBase({ 1, mSampleRate });
+    mEncAudioCodecCtx->SetSampleFmt(static_cast<AVSampleFormatFwd>(AUDACITY_AV_SAMPLE_FMT_S16));
+    mEncAudioCodecCtx->SetStrictStdCompliance(
+        AUDACITY_FF_COMPLIANCE_EXPERIMENTAL);
+
+    if (codecID == AUDACITY_AV_CODEC_ID_AC3) {
+        // As of Jan 4, 2011, the default AC3 encoder only accept SAMPLE_FMT_FLT samples.
+        // But, currently, Audacity only supports SAMPLE_FMT_S16.  So, for now, look for the
+        // "older" AC3 codec.  this is not a proper solution, but will suffice until other
+        // encoders no longer support SAMPLE_FMT_S16.
+        codec = mFFmpeg->CreateEncoder("ac3_fixed");
+    }
+
+    if (!codec) {
+        codec = mFFmpeg->CreateEncoder(mFFmpeg->GetAVCodecID(codecID));
+    }
+
+    // Is the required audio codec compiled into libavcodec?
+    if (codec == NULL) {
+        /*: "codec" is short for a "coder-decoder" algorithm */
+        throw ExportException(TranslatableString("import-export",
+                                                 "FFmpeg cannot find audio codec 0x%1.\nSupport for this codec is probably not compiled in.")
+                              .Format(wxString::Format(wxT("%x"), static_cast<unsigned int>(codecID.value)))
+                              .Translation());
+    }
+
+    if (codec->GetSampleFmts()) {
+        for (int i = 0; codec->GetSampleFmts()[i] != AUDACITY_AV_SAMPLE_FMT_NONE; i++) {
+            AVSampleFormatFwd fmt = codec->GetSampleFmts()[i];
+
+            if (
+                fmt == AUDACITY_AV_SAMPLE_FMT_U8
+                || fmt == AUDACITY_AV_SAMPLE_FMT_U8P
+                || fmt == AUDACITY_AV_SAMPLE_FMT_S16
+                || fmt == AUDACITY_AV_SAMPLE_FMT_S16P
+                || fmt == AUDACITY_AV_SAMPLE_FMT_S32
+                || fmt == AUDACITY_AV_SAMPLE_FMT_S32P
+                || fmt == AUDACITY_AV_SAMPLE_FMT_FLT
+                || fmt == AUDACITY_AV_SAMPLE_FMT_FLTP) {
+                mEncAudioCodecCtx->SetSampleFmt(fmt);
+            }
+
+            if (
+                fmt == AUDACITY_AV_SAMPLE_FMT_S16
+                || fmt == AUDACITY_AV_SAMPLE_FMT_S16P) {
+                break;
+            }
+        }
+    }
+
+    if (codec->GetSupportedSamplerates()) {
+        // Workaround for crash in bug #2378.  Proper fix is to get a newer version of FFmpeg.
+        if (codec->GetId() == mFFmpeg->GetAVCodecID(AUDACITY_AV_CODEC_ID_AAC)) {
+            std::vector<int> rates;
+            int i = 0;
+
+            while (codec->GetSupportedSamplerates()[i]
+                   && codec->GetSupportedSamplerates()[i] != 7350)
+            {
+                rates.push_back(codec->GetSupportedSamplerates()[i++]);
+            }
+
+            rates.push_back(0);
+
+            if (!CheckSampleRate(mSampleRate, 0, 0, rates.data())) {
+                mSampleRate = AskResample(0, mSampleRate, 0, 0, rates.data());
+                mEncAudioCodecCtx->SetSampleRate(mSampleRate);
+            }
+        } else {
+            if (!CheckSampleRate(
+                    mSampleRate, 0, 0, codec->GetSupportedSamplerates())) {
+                mSampleRate = AskResample(
+                    0, mSampleRate, 0, 0, codec->GetSupportedSamplerates());
+                mEncAudioCodecCtx->SetSampleRate(mSampleRate);
+            }
+        }
+
+        // This happens if user refused to resample the project
+        if (mSampleRate == 0) {
+            return false;
+        }
+    }
+
+    if (mEncFormatCtx->GetOutputFormat()->GetFlags() & AUDACITY_AVFMT_GLOBALHEADER) {
+        mEncAudioCodecCtx->SetFlags(mEncAudioCodecCtx->GetFlags() | AUDACITY_AV_CODEC_FLAG_GLOBAL_HEADER);
+        mEncFormatCtx->SetFlags(mEncFormatCtx->GetFlags() | AUDACITY_AV_CODEC_FLAG_GLOBAL_HEADER);
+    }
+
+    // Open the codec.
+    int rc = mEncAudioCodecCtx->Open(codec.get(), &options);
+    if (rc < 0) {
+        TranslatableString errmsg;
+
+        switch (rc) {
+        case AUDACITY_AVERROR(EPERM):
+            errmsg = TranslatableString("import-export", "The codec reported a generic error (EPERM)");
+            break;
+        case AUDACITY_AVERROR(EINVAL):
+            errmsg = TranslatableString("import-export", "The codec reported an invalid parameter (EINVAL)");
+            break;
+        default:
+            char buf[64];
+            mFFmpeg->av_strerror(rc, buf, sizeof(buf));
+            errmsg = TranslatableString::untranslatable(buf);
+        }
+
+        /*: "codec" is short for a "coder-decoder" algorithm */
+        //: %1 is the codec name, %2 is the codec id (hex), %3 is the error message
+        throw ExportException(TranslatableString("import-export", "Can’t open audio codec “%1” (0x%2)\n\n%3")
+                              .Format(codec->GetName(), wxString::Format(wxT("%x"), static_cast<unsigned int>(codecID.value)), errmsg)
+                              .Translation());
+    }
+
+    mDefaultFrameSize = mEncAudioCodecCtx->GetFrameSize();
+
+    if (mDefaultFrameSize == 0) {
+        mDefaultFrameSize = 1024; // arbitrary non zero value;
+    }
+    wxLogDebug(
+        wxT("FFmpeg : Audio Output Codec Frame Size: %d samples."),
+        mEncAudioCodecCtx->GetFrameSize());
+
+    // The encoder may require a minimum number of raw audio samples for each encoding but we can't
+    // guarantee we'll get this minimum each time an audio frame is decoded from the input file so
+    // we use a FIFO to store up incoming raw samples until we have enough for one call to the codec.
+    mEncAudioFifo = std::make_unique<FifoBuffer>(mDefaultFrameSize * mChannels * sizeof(int16_t));
+
+    mEncAudioFifoOutBufSize = 2 * MaxAudioPacketSize;
+    // Allocate a buffer to read OUT of the FIFO into. The FIFO maintains its own buffer internally.
+    mEncAudioFifoOutBuf = mFFmpeg->CreateMemoryBuffer<int16_t>(mEncAudioFifoOutBufSize);
+
+    if (mEncAudioFifoOutBuf.empty()) {
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.").c_str()));
+    }
+
+    return true;
+}
+
+void FFmpegExporter::WritePacket(AVPacketWrapper& pkt)
+{
+    // Set presentation time of frame (currently in the codec's timebase) in the
+    // stream timebase.
+    if (pkt.GetPresentationTimestamp() != AUDACITY_AV_NOPTS_VALUE) {
+        pkt.RescalePresentationTimestamp(
+            mEncAudioCodecCtx->GetTimeBase(), mEncAudioStream->GetTimeBase());
+    }
+
+    if (pkt.GetDecompressionTimestamp() != AUDACITY_AV_NOPTS_VALUE) {
+        pkt.RescaleDecompressionTimestamp(
+            mEncAudioCodecCtx->GetTimeBase(), mEncAudioStream->GetTimeBase());
+    }
+
+    if (pkt.GetDuration() > 0) {
+        pkt.RescaleDuration(
+            mEncAudioCodecCtx->GetTimeBase(), mEncAudioStream->GetTimeBase());
+    }
+
+    if (
+        mFFmpeg->av_interleaved_write_frame(
+            mEncFormatCtx->GetWrappedValue(), pkt.GetWrappedValue()) != 0) {
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "FFmpeg : ERROR - Couldn’t write audio frame to output file.").c_str()));
+    }
+}
+
+// Returns 0 if no more output, 1 if more output, negative if error
+int FFmpegExporter::EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, int nb_samples)
+{
+    // Assume *pkt is already initialized.
+
+    int i, ch, buffer_size, ret, got_output = 0;
+    AVDataBuffer<uint8_t> samples;
+
+    std::unique_ptr<AVFrameWrapper> frame;
+
+    if (audio_samples) {
+        frame = mFFmpeg->CreateAVFrameWrapper();
+
+        if (!frame) {
+            return AUDACITY_AVERROR(ENOMEM);
+        }
+
+        frame->SetSamplesCount(nb_samples);
+        frame->SetFormat(mEncAudioCodecCtx->GetSampleFmt());
+        frame->SetChannelLayout(mEncAudioCodecCtx->GetChannelLayout());
+
+        buffer_size = mFFmpeg->av_samples_get_buffer_size(
+            NULL, mEncAudioCodecCtx->GetChannels(), nb_samples,
+            mEncAudioCodecCtx->GetSampleFmt(), 0);
+
+        if (buffer_size < 0) {
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                              "FFmpeg : ERROR - Could not get sample buffer size").c_str()));
+        }
+
+        samples = mFFmpeg->CreateMemoryBuffer<uint8_t>(buffer_size);
+
+        if (samples.empty()) {
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                              "FFmpeg : ERROR - Could not allocate bytes for samples buffer").c_str()));
+        }
+        /* setup the data pointers in the AVFrame */
+        ret = mFFmpeg->avcodec_fill_audio_frame(
+            frame->GetWrappedValue(), mEncAudioCodecCtx->GetChannels(),
+            mEncAudioCodecCtx->GetSampleFmt(), samples.data(), buffer_size, 0);
+
+        if (ret < 0) {
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - Could not setup audio frame").c_str()));
+        }
+
+        const int channelsCount = mEncAudioCodecCtx->GetChannels();
+
+        for (ch = 0; ch < mEncAudioCodecCtx->GetChannels(); ch++) {
+            for (i = 0; i < nb_samples; i++) {
+                switch (static_cast<AudacityAVSampleFormat>(
+                            mEncAudioCodecCtx->GetSampleFmt())) {
+                case AUDACITY_AV_SAMPLE_FMT_U8:
+                    ((uint8_t*)(frame->GetData(0)))[ch + i * channelsCount] = audio_samples[ch + i * channelsCount] / 258 + 128;
+                    break;
+                case AUDACITY_AV_SAMPLE_FMT_U8P:
+                    ((uint8_t*)(frame->GetData(ch)))[i] = audio_samples[ch + i * channelsCount] / 258 + 128;
+                    break;
+                case AUDACITY_AV_SAMPLE_FMT_S16:
+                    ((int16_t*)(frame->GetData(0)))[ch + i * channelsCount] = audio_samples[ch + i * channelsCount];
+                    break;
+                case AUDACITY_AV_SAMPLE_FMT_S16P:
+                    ((int16_t*)(frame->GetData(ch)))[i] = audio_samples[ch + i * channelsCount];
+                    break;
+                case AUDACITY_AV_SAMPLE_FMT_S32:
+                    ((int32_t*)(frame->GetData(0)))[ch + i * channelsCount] = audio_samples[ch + i * channelsCount] << 16;
+                    break;
+                case AUDACITY_AV_SAMPLE_FMT_S32P:
+                    ((int32_t*)(frame->GetData(ch)))[i] = audio_samples[ch + i * channelsCount] << 16;
+                    break;
+                case AUDACITY_AV_SAMPLE_FMT_FLT:
+                    ((float*)(frame->GetData(0)))[ch + i * channelsCount] = audio_samples[ch + i * channelsCount] / 32767.0;
+                    break;
+                case AUDACITY_AV_SAMPLE_FMT_FLTP:
+                    ((float*)(frame->GetData(ch)))[i] = audio_samples[ch + i * channelsCount] / 32767.;
+                    break;
+                default:
+                    wxASSERT(false);
+                    break;
+                }
+            }
+        }
+    }
+
+    pkt.ResetData();
+
+    pkt.SetStreamIndex(mEncAudioStream->GetIndex());
+
+    if (mFFmpeg->avcodec_send_frame != nullptr) {
+        ret = mFFmpeg->avcodec_send_frame(
+            mEncAudioCodecCtx->GetWrappedValue(),
+            frame ? frame->GetWrappedValue() : nullptr);
+
+        while (ret >= 0)
+        {
+            ret = mFFmpeg->avcodec_receive_packet(
+                mEncAudioCodecCtx->GetWrappedValue(), pkt.GetWrappedValue());
+
+            if (ret == AUDACITY_AVERROR(EAGAIN) || ret == AUDACITY_AVERROR_EOF) {
+                ret = 0;
+                break;
+            } else if (ret < 0) {
+                break;
+            }
+
+            WritePacket(pkt);
+
+            got_output = true;
+        }
+    } else {
+        ret = mFFmpeg->avcodec_encode_audio2(
+            mEncAudioCodecCtx->GetWrappedValue(), pkt.GetWrappedValue(),
+            frame ? frame->GetWrappedValue() : nullptr, &got_output);
+
+        if (ret == 0) {
+            WritePacket(pkt);
+        }
+    }
+
+    if (ret < 0 && ret != AUDACITY_AVERROR_EOF) {
+        char buf[64];
+        mFFmpeg->av_strerror(ret, buf, sizeof(buf));
+        wxLogDebug("%s", buf);
+
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - encoding frame failed").c_str()));
+    }
+
+    pkt.ResetTimestamps(); // We don't set frame timestamps thus don't trust the AVPacket timestamps
+
+    return got_output;
+}
+
+bool FFmpegExporter::Finalize()
+{
+    // Flush the audio FIFO and encoder.
+    for (;;) {
+        std::unique_ptr<AVPacketWrapper> pkt = mFFmpeg->CreateAVPacketWrapper();
+
+        const auto nFifoBytes
+            =mEncAudioFifo->GetAvailable(); // any bytes left in audio FIFO?
+
+        int encodeResult = 0;
+
+        // Flush the audio FIFO first if necessary. It won't contain a _full_ audio frame because
+        // if it did we'd have pulled it from the FIFO during the last encodeAudioFrame() call
+        if (nFifoBytes > 0) {
+            const int nAudioFrameSizeOut = mDefaultFrameSize * mEncAudioCodecCtx->GetChannels() * sizeof(int16_t);
+
+            if (nAudioFrameSizeOut > mEncAudioFifoOutBufSize || nFifoBytes > mEncAudioFifoOutBufSize) {
+                throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - Too much remaining data.").c_str()));
+            }
+
+            // We have an incomplete buffer of samples left, encode it.
+            // If codec supports CODEC_CAP_SMALL_LAST_FRAME, we can feed it with smaller frame
+            // Or if frame_size is 1, then it's some kind of PCM codec, they don't have frames and will be fine with the samples
+            // Otherwise we'll send a full frame of audio + silence padding to ensure all audio is encoded
+            int frame_size = mDefaultFrameSize;
+            if (
+                mEncAudioCodecCtx->GetCodec()->GetCapabilities()
+                & AUDACITY_AV_CODEC_CAP_SMALL_LAST_FRAME
+                || frame_size == 1) {
+                frame_size = nFifoBytes
+                             / (mEncAudioCodecCtx->GetChannels() * sizeof(int16_t));
+            }
+
+            wxLogDebug(wxT("FFmpeg : Audio FIFO still contains %lld bytes, writing %d sample frame ..."),
+                       nFifoBytes, frame_size);
+
+            // Fill audio buffer with zeroes. If codec tries to read the whole buffer,
+            // it will just read silence. If not - who cares?
+            memset(mEncAudioFifoOutBuf.data(), 0, mEncAudioFifoOutBufSize);
+            //const AVCodec *codec = mEncAudioCodecCtx->codec;
+
+            // Pull the bytes out from the FIFO and feed them to the encoder.
+            if (mEncAudioFifo->Read(mEncAudioFifoOutBuf.data(), nFifoBytes) == nFifoBytes) {
+                encodeResult = EncodeAudio(*pkt, mEncAudioFifoOutBuf.data(), frame_size);
+            } else {
+                wxLogDebug(wxT("FFmpeg : Reading from Audio FIFO failed, aborting"));
+                // TODO: more precise message
+                throw ExportErrorException("FFmpeg:825");
+            }
+        } else {
+            // Fifo is empty, flush encoder. May be called multiple times.
+            encodeResult
+                =EncodeAudio(*pkt.get(), nullptr, 0);
+        }
+
+        if (encodeResult < 0) {
+            // TODO: more precise message
+            throw ExportErrorException("FFmpeg:837");
+        } else if (encodeResult == 0) {
+            break;
+        }
+    }
+
+    // Write any file trailers.
+    if (mFFmpeg->av_write_trailer(mEncFormatCtx->GetWrappedValue()) != 0) {
+        // TODO: more precise message
+        throw ExportErrorException("FFmpeg:868");
+    }
+
+    return true;
+}
+
+// All paths in this that fail must report their error to the user.
+bool FFmpegExporter::EncodeAudioFrame(int16_t* pFrame, size_t numSamples)
+{
+    const auto frameSize = numSamples * sizeof(int16_t) * mChannels;
+    int nBytesToWrite = 0;
+    uint8_t* pRawSamples = nullptr;
+    int nAudioFrameSizeOut = mDefaultFrameSize * mEncAudioCodecCtx->GetChannels() * sizeof(int16_t);
+    int ret;
+
+    nBytesToWrite = frameSize;
+    pRawSamples  = (uint8_t*)pFrame;
+
+    // Put the raw audio samples into the FIFO.
+    ret = mEncAudioFifo->Write(pRawSamples, nBytesToWrite);
+
+    if (ret != nBytesToWrite) {
+        throw ExportErrorException("FFmpeg:913");
+    }
+
+    if (nAudioFrameSizeOut > mEncAudioFifoOutBufSize) {
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - nAudioFrameSizeOut too large.").c_str()));
+    }
+
+    // Read raw audio samples out of the FIFO in nAudioFrameSizeOut byte-sized groups to encode.
+    while (mEncAudioFifo->GetAvailable() >= nAudioFrameSizeOut)
+    {
+        mEncAudioFifo->Read(
+            mEncAudioFifoOutBuf.data(), nAudioFrameSizeOut);
+
+        std::unique_ptr<AVPacketWrapper> pkt = mFFmpeg->CreateAVPacketWrapper();
+
+        ret = EncodeAudio(*pkt,                     // out
+                          mEncAudioFifoOutBuf.data(), // in
+                          mDefaultFrameSize);
+
+        if (ret < 0) {
+            return false;
+        }
+    }
+    return true;
+}
+
+FFmpegExportProcessor::FFmpegExportProcessor(std::shared_ptr<FFmpegFunctions> ffmpeg, int subformat)
+    : mFFmpeg(std::move(ffmpeg))
+{
+    context.subformat = subformat;
+}
+
+bool FFmpegExportProcessor::Initialize(AudacityProject& project,
+                                       const Parameters& parameters,
+                                       const wxFileNameWrapper& fName,
+                                       double t0, double t1, bool selectionOnly,
+                                       double sampleRate, unsigned channels,
+                                       MixerOptions::Downmix* mixerSpec,
+                                       const Tags* metadata)
+{
+    context.t0 = t0;
+    context.t1 = t1;
+
+    if (!FFmpegFunctions::Load()) {
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > General.")
+                                                 .c_str()));
+    }
+    // subformat index may not correspond directly to fmts[] index, convert it
+    const auto adjustedFormatIndex = AdjustFormatIndex(context.subformat);
+    if (channels > ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels) {
+        //: %1 is the requested channel count, %2 is the maximum supported
+        throw ExportException(TranslatableString("import-export",
+                                                 "Attempted to export %1 channels, but maximum number of channels for selected output format is %2")
+                              .Format(
+                                  channels,
+                                  ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels)
+                              .Translation());
+    }
+
+    bool ret = true;
+
+    if (adjustedFormatIndex >= FMT_LAST) {
+        // TODO: more precise message
+        throw ExportErrorException("FFmpeg:996");
+    }
+
+    wxString shortname(ExportFFmpegOptions::fmts[adjustedFormatIndex].shortname);
+    if (adjustedFormatIndex == FMT_OTHER) {
+        shortname = ExportPluginHelpers::GetParameterValue<std::string>(parameters, FEFormatID, "matroska");
+    }
+
+    context.exporter = std::make_unique<FFmpegExporter>(mFFmpeg, fName, channels, adjustedFormatIndex);
+
+    ret = context.exporter->Init(shortname.mb_str(), &project, static_cast<int>(sampleRate), metadata, parameters);
+
+    if (!ret) {
+        // TODO: more precise message
+        throw ExportErrorException("FFmpeg:1008");
+    }
+
+    context.mixer
+        =context.exporter->CreateMixer(project, selectionOnly, t0, t1, mixerSpec);
+
+    context.status = selectionOnly
+                     //: %1 is format description
+                     ? TranslatableString("import-export", "Exporting selected audio as %1")
+                     .Format(ExportFFmpegOptions::fmts[adjustedFormatIndex].description)
+                     //: %1 is format description
+                     : TranslatableString("import-export", "Exporting the audio as %1")
+                     .Format(ExportFFmpegOptions::fmts[adjustedFormatIndex].description);
+
+    return true;
+}
+
+ExportResult FFmpegExportProcessor::Process(ExportProcessorDelegate& delegate)
+{
+    delegate.SetStatusString(context.status);
+    auto exportResult = ExportResult::Success;
+    {
+        while (exportResult == ExportResult::Success) {
+            auto pcmNumSamples = context.mixer->Process();
+            if (pcmNumSamples == 0) {
+                break;
+            }
+
+            short* pcmBuffer = (short*)context.mixer->GetBuffer();
+
+            if (!context.exporter->EncodeAudioFrame(pcmBuffer, pcmNumSamples)) {
+                // All errors should already have been reported.
+                return ExportResult::Error;
+            }
+
+            if (exportResult == ExportResult::Success) {
+                exportResult = ExportPluginHelpers::UpdateProgress(
+                    delegate, *context.mixer, context.t0, context.t1);
+            }
+        }
+    }
+
+    if (exportResult != ExportResult::Cancelled) {
+        if (!context.exporter->Finalize()) { // Finalize makes its own messages
+            return ExportResult::Error;
+        }
+    }
+    return exportResult;
+}
+
+void AddStringTagUTF8(char field[], int size, wxString value)
+{
+    memset(field, 0, size);
+    memcpy(field, value.ToUTF8(), (int)strlen(value.ToUTF8()) > size - 1 ? size - 1 : strlen(value.ToUTF8()));
+}
+
+void AddStringTagANSI(char field[], int size, wxString value)
+{
+    memset(field, 0, size);
+    memcpy(field, value.mb_str(), (int)strlen(value.mb_str()) > size - 1 ? size - 1 : strlen(value.mb_str()));
+}
+
+bool FFmpegExporter::AddTags(const Tags* tags)
+{
+    if (tags == NULL) {
+        return false;
+    }
+
+    for (const auto& [key, value] : FFmpegMetadata::ExportEntries(*tags)) {
+        SetMetadata(key, value);
+    }
+
+    return true;
+}
+
+void FFmpegExporter::SetMetadata(const std::string& name, const wxString& value)
+{
+    AVDictionaryWrapper metadata = mEncFormatCtx->GetMetadata();
+
+    metadata.Set(name, mSupportsUTF8 ? value : value.mb_str(), 0);
+    mEncFormatCtx->SetMetadata(metadata);
+}
+
+//----------------------------------------------------------------------------
+// AskResample dialog
+//----------------------------------------------------------------------------
+
+int FFmpegExporter::AskResample(int bitrate, int rate, int lowrate, int highrate, const int* sampRates)
+{
+#if defined(FFMPEG_AUTO_RESAMPLE)
+    std::vector<int> rates;
+
+    for (int i = 0; sampRates[i]; ++i) {
+        rates.push_back(sampRates[i]);
+    }
+
+    std::sort(rates.begin(), rates.end());
+
+    int bestRate = 0;
+    for (auto i : rates) {
+        bestRate = i;
+        if (i > rate) {
+            break;
+        }
+    }
+
+    return bestRate;
+#else
+    wxDialogWrapper d(nullptr, wxID_ANY, TranslatableString("import-export", "Invalid sample rate"));
+    d.SetName();
+    wxChoice* choice;
+    ShuttleGui S(&d, eIsCreating);
+
+    int selected = -1;
+
+    S.StartVerticalLay();
+    {
+        S.SetBorder(10);
+        S.StartStatic(TranslatableString("import-export", "Resample"));
+        {
+            S.StartHorizontalLay(wxALIGN_CENTER, false);
+            {
+                S.AddTitle(
+                    (bitrate == 0
+                     ? TranslatableString("import-export",
+                                          "The project sample rate (%1) is not supported by the current output\nfile format. ")
+                     .Format(rate)
+                     : TranslatableString("import-export",
+                                          "The project sample rate (%1) and bit rate (%2 kbps) combination is not\nsupported by the current output file format. ")
+                     .Format(rate, bitrate / 1000))
+                    + TranslatableString("import-export", "You may resample to one of the rates below.")
+                    );
+            }
+            S.EndHorizontalLay();
+
+            S.StartHorizontalLay(wxALIGN_CENTER, false);
+            {
+                choice = S.AddChoice(TranslatableString("import-export", "Sample Rates"),
+                                     [&]{
+                    TranslatableStrings choices;
+                    for (int i = 0; sampRates[i] > 0; i++) {
+                        int label = sampRates[i];
+                        if ((!lowrate || label >= lowrate) && (!highrate || label <= highrate)) {
+                            wxString name = wxString::Format(wxT("%d"), label);
+                            choices.push_back(TranslatableString::untranslatable(name));
+                            if (label <= rate) {
+                                selected = i;
+                            }
+                        }
+                    }
+                    return choices;
+                }(),
+                                     std::max(0, selected)
+                                     );
+            }
+            S.EndHorizontalLay();
+        }
+        S.EndStatic();
+
+        S.AddStandardButtons();
+    }
+    S.EndVerticalLay();
+
+    d.Layout();
+    d.Fit();
+    d.SetMinSize(d.GetSize());
+    d.Center();
+
+    if (d.ShowModal() == wxID_CANCEL) {
+        return 0;
+    }
+
+    return wxAtoi(choice->GetStringSelection());
+#endif
+}

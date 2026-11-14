@@ -1,0 +1,84 @@
+name: Audacity 3.x Bug report
+description: Report an issue with Audacity 3
+labels: ["AU3-bug"]
+type: "bug"
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please verify whether the issue is also in Audacity 4. Download it from https://www.audacityteam.org/download/
+  - type: dropdown
+    id: au4-repro
+    attributes:
+      label: Is this bug reproducible in Audacity 4?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+  - type: textarea
+    id: desc
+    attributes:
+      label: Bug description
+      description: A more detailled description of the bug
+      placeholder: Context for the bug that didn't fit in the title
+    validations:
+      required: false
+  - type: textarea
+    id: str
+    attributes:
+      label: Steps to reproduce
+      description: Please provide step-by-step instructions to reproduce this bug
+      placeholder: |
+        1. go to ...
+        2. then click on ...
+        3. then ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What should happen when you do these things?
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: What are you actually seeing?
+    validations:
+      required: false
+  - type: dropdown
+    id: version
+    attributes:
+      label: Audacity Version
+      description: What version of Audacity are you running?
+      options:
+        - Audacity 3.7.9
+        - Audacity 3.7.8
+        - Audacity 3.7.7
+        - Audacity 3.7.6 or older
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      description: What OS does this bug occur on?
+      multiple: true
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other
+        - OS independent
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Further information which may be relevant to this bug
+      placeholder: Sound card, Screenshots, commit ID, related bugs, ...

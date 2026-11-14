@@ -1,0 +1,436 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "viewtrackslistmodel.h"
+
+#include "global/async/async.h"
+
+#include "global/containers.h"
+#include "playback/playbacktypes.h"
+#include "trackedit/dom/track.h"
+
+using namespace au::projectscene;
+
+namespace {
+constexpr int numDecimals(float value)
+{
+    constexpr int MAX_DECIMAL_PLACES = 4;
+    constexpr float POWER_OF_TEN = 10000.0f;
+
+    int rounded_scaled_value = static_cast<int>((value * POWER_OF_TEN) + 0.5f);
+    int integer_part = static_cast<int>(value);
+    int decimal_part_scaled = rounded_scaled_value - (integer_part * static_cast<int>(POWER_OF_TEN));
+
+    if (decimal_part_scaled == 0) {
+        return 0;
+    }
+
+    int count = MAX_DECIMAL_PLACES;
+    int power_of_ten = 10;
+
+    while (count > 0 && (decimal_part_scaled % power_of_ten) == 0) {
+        count--;
+        power_of_ten *= 10;
+    }
+
+    return count;
+}
+
+static_assert(numDecimals(0.14999999) == 2);
+static_assert(numDecimals(1.00) == 0);
+static_assert(numDecimals(0.005) == 3);
+}
+
+ViewTracksListModel::ViewTracksListModel(QObject* parent)
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+{
+}
+
+void ViewTracksListModel::load()
+{
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        load();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    au::trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this]() {
+        emit escapePressed();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    trackPlaybackControl()->muteOrSoloChanged().onReceive(this, [this] (long trackId) {
+        emit dataChanged(indexOf(trackId), indexOf(trackId), { IsTrackAudibleRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    beginResetModel();
+
+    m_trackList = prj->trackList();
+
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& tracksIds) {
+        Q_UNUSED(tracksIds);
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        QModelIndex beginIndex = index(0);
+        QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
+
+        emit dataChanged(beginIndex, lastIndex, { IsTrackSelectedRole, IsDataSelectedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& /*trackId*/, bool /*highlight*/) {
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        QModelIndex beginIndex = index(0);
+        QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
+
+        emit dataChanged(beginIndex, lastIndex, { IsTrackFocusedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    selectionController()->clipsSelected().onReceive(this, [this](const trackedit::ClipKeyList& clipKeys) {
+        Q_UNUSED(clipKeys);
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    selectionController()->labelsSelected().onReceive(this, [this](const trackedit::LabelKeyList& labelKeys) {
+        Q_UNUSED(labelKeys);
+
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
+        Q_UNUSED(trackIds);
+
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
+        Q_UNUSED(trackIds);
+
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole, IsDataSelectedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
+        Q_UNUSED(begin);
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    selectionController()->dataSelectedEndTimeChanged().onReceive(this, [this](trackedit::secs_t end) {
+        Q_UNUSED(end);
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto) {
+        if (m_trackList.empty()) {
+            return;
+        }
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { FrequencySelectionRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
+        Q_UNUSED(tracks);
+        muse::async::Async::call(this, [this]() {
+            load();
+        });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prj->trackAdded().onReceive(this, [this](const trackedit::Track& track) {
+        const int size = static_cast<int>(m_trackList.size());
+        beginInsertRows(QModelIndex(), size, size);
+        m_trackList.push_back(track);
+        endInsertRows();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prj->trackInserted().onReceive(this, [this](const trackedit::Track& track, const int pos) {
+        const int size = static_cast<int>(m_trackList.size());
+        const int index = ((pos >= 0) && (pos <= size)) ? pos : size;
+
+        beginInsertRows(QModelIndex(), index, index);
+        m_trackList.insert(m_trackList.begin() + index, track);
+
+        endInsertRows();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prj->trackMoved().onReceive(this, [this](const trackedit::Track& track, const int pos) {
+        const auto iterator = std::find_if(m_trackList.begin(), m_trackList.end(), [&track](const trackedit::Track& it)
+        {
+            return it.id == track.id;
+        });
+
+        if (iterator == m_trackList.end()) {
+            return;
+        }
+
+        const int from = static_cast<int>(std::distance(m_trackList.begin(), iterator));
+        const int to = std::clamp(pos, 0, static_cast<int>(m_trackList.size()));
+
+        beginMoveRows(QModelIndex(), from, from, QModelIndex(), to > from ? to + 1 : to);
+        m_trackList.erase(iterator);
+        m_trackList.insert(m_trackList.begin() + to, track);
+        endMoveRows();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prj->trackRemoved().onReceive(this, [this](const trackedit::Track& track) {
+        for (size_t i = 0; i < m_trackList.size(); ++i) {
+            if (m_trackList.at(i).id == track.id) {
+                beginRemoveRows(QModelIndex(), i, i);
+                m_trackList.erase(m_trackList.begin() + i);
+                endRemoveRows();
+                break;
+            }
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    prj->trackChanged().onReceive(this, [this](const trackedit::Track& track) {
+        QModelIndex idx = indexOf(track.id);
+        if (!idx.isValid()) {
+            return;
+        }
+        m_trackList[idx.row()] = track;
+        emit dataChanged(idx, idx);
+        emit verticalRulerWidthChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    endResetModel();
+
+    projectSceneConfiguration()->isVerticalRulersVisibleChanged().onReceive(this, [this](bool) {
+        emit isVerticalRulersVisibleChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+    emit isVerticalRulersVisibleChanged();
+
+    playbackConfiguration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
+        emit dataChanged(index(0), index(m_trackList.size() - 1), { DbRangeRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    const IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
+
+    if (!viewState) {
+        return;
+    }
+
+    viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
+        emit totalTracksHeightChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+    emit totalTracksHeightChanged();
+
+    viewState->verticalRulerWidth().ch.onReceive(this, [this](int) {
+        emit verticalRulerWidthChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    viewState->clipGainAutomationEnabled().ch.onReceive(this, [this](int) {
+        QModelIndex beginIndex = index(0);
+        QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
+
+        emit dataChanged(beginIndex, lastIndex, { IsAutomationEnabledRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+}
+
+int ViewTracksListModel::rowCount(const QModelIndex&) const
+{
+    return static_cast<int>(m_trackList.size());
+}
+
+namespace {
+au::trackedit::TrackViewType getTrackViewType(const au::project::IAudacityProjectPtr& prj, const au::trackedit::TrackId& trackId)
+{
+    if (!prj) {
+        return au::trackedit::TrackViewType::Undefined;
+    }
+    const auto viewState = prj->viewState();
+    return viewState->trackViewType(trackId).val;
+}
+}
+
+QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
+{
+    if (!index.isValid()) {
+        return {};
+    }
+
+    const au::trackedit::Track& track = m_trackList.at(index.row());
+    switch (role) {
+    case TrackIdRole:
+        return QVariant::fromValue(track.id);
+    case TrackTitleRole:
+        return QVariant::fromValue(track.title.toQString());
+    case TrackSampleRateRole: {
+        return static_cast<int>(track.rate);
+    }
+    case IsDataSelectedRole: {
+        return muse::contains(selectionController()->selectedTracks(), track.id) && !selectionController()->timeSelectionIsEmpty();
+    }
+    case IsTrackSelectedRole: {
+        return muse::contains(selectionController()->selectedTracks(), track.id);
+    }
+    case IsTrackFocusedRole: {
+        return trackNavigationController()->focusedTrack() == track.id;
+    }
+    case IsMultiSelectionActiveRole: {
+        return selectionController()->selectedClips().size() + selectionController()->selectedLabels().size() > 1;
+    }
+    case IsTrackAudibleRole: {
+        if (track.type == au::trackedit::TrackType::Label) {
+            return false;
+        }
+
+        if (trackPlaybackControl()->solo(track.id)) {
+            return true;
+        } else if (trackPlaybackControl()->muted(track.id)) {
+            return false;
+        } else {
+            return std::none_of(m_trackList.begin(), m_trackList.end(), [this](const au::trackedit::Track& t) {
+                    return trackPlaybackControl()->solo(t.id);
+                });
+        }
+    }
+    case TypeRole:
+        return QVariant::fromValue(track.type);
+
+    case IsStereoRole:
+        return track.type == au::trackedit::TrackType::Stereo;
+
+    case IsAutomationEnabledRole: {
+        const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+        const IProjectViewStatePtr vs = prj ? prj->viewState() : nullptr;
+
+        if (!vs) {
+            return false;
+        }
+
+        return vs->clipGainAutomationEnabled().val;
+    }
+
+    case IsWaveformViewVisibleRole: {
+        const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
+        return vt == trackedit::TrackViewType::Waveform || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
+    }
+
+    case IsSpectrogramViewVisibleRole: {
+        const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
+        return vt == trackedit::TrackViewType::Spectrogram || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
+    }
+
+    case FrequencySelectionRole: {
+        const spectrogram::FrequencySelection selection = frequencySelectionController()->frequencySelection();
+        const auto startFrequency = selection.trackId
+                                    == track.id ? selection.startFrequency() : spectrogram::SelectionInfo::UndefinedFrequency;
+        const auto endFrequency = selection.trackId == track.id ? selection.endFrequency() : spectrogram::SelectionInfo::UndefinedFrequency;
+        const QVariantMap frequencySelectionMap {
+            { "startFrequency", startFrequency },
+            { "endFrequency", endFrequency }
+        };
+        return frequencySelectionMap;
+    }
+
+    case DbRangeRole:
+        return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
+
+    case ColorRole: {
+        return QVariant::fromValue(projectSceneConfiguration()->clipColor(track.colorIndex).toQColor());
+    }
+
+    default:
+        break;
+    }
+
+    return {};
+}
+
+QHash<int, QByteArray> ViewTracksListModel::roleNames() const
+{
+    static QHash<int, QByteArray> roles
+    {
+        { TypeRole, "trackType" },
+        { TrackIdRole, "trackId" },
+        { TrackTitleRole, "trackTitle" },
+        { TrackSampleRateRole, "trackSampleRate" },
+        { IsDataSelectedRole, "isDataSelected" },
+        { IsTrackSelectedRole, "isTrackSelected" },
+        { IsTrackFocusedRole, "isTrackFocused" },
+        { IsMultiSelectionActiveRole, "isMultiSelectionActive" },
+        { IsTrackAudibleRole, "isTrackAudible" },
+        { IsStereoRole, "isStereo" },
+        { DbRangeRole, "dbRange" },
+        { IsAutomationEnabledRole, "isAutomationEnabled" },
+        { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
+        { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
+        { FrequencySelectionRole, "frequencySelection" },
+        { ColorRole, "color" }
+    };
+    return roles;
+}
+
+bool ViewTracksListModel::isVerticalRulersVisible() const
+{
+    return projectSceneConfiguration()->isVerticalRulersVisible();
+}
+
+int ViewTracksListModel::verticalRulerWidth() const
+{
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+
+    if (!viewState) {
+        return 0;
+    }
+
+    return viewState->verticalRulerWidth().val;
+}
+
+QModelIndex ViewTracksListModel::indexOf(trackedit::TrackId trackId)
+{
+    for (size_t i = 0; i < m_trackList.size(); i++) {
+        if (m_trackList[i].id == trackId) {
+            return index(static_cast<int>(i));
+        }
+    }
+    return QModelIndex();
+}
+
+int ViewTracksListModel::totalTracksHeight() const
+{
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = prj ? prj->viewState() : nullptr;
+
+    if (!viewState) {
+        return 0;
+    }
+
+    return viewState->totalTrackHeight().val;
+}

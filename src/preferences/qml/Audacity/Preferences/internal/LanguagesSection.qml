@@ -1,0 +1,83 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+
+import Muse.Ui 1.0
+import Muse.UiComponents
+
+import Audacity.UiComponents 1.0
+
+BaseSection {
+    id: root
+
+    navigation.direction: NavigationPanel.Horizontal
+
+    property alias languages: dropdown.model
+    property string currentLanguageCode: ""
+    property bool isNeedRestart: false
+
+    signal languageSelected(string languageCode)
+    signal checkForUpdateRequested
+
+    function setUpdateProgress(current, total, status) {
+        progressBtn.to = total
+        progressBtn.value = current
+        progressBtn.progressStatus = status
+    }
+
+    Column {
+        spacing: 12
+
+        StyledTextLabel {
+            text: qsTrc("preferences", "Language")
+        }
+
+        StyledDropdown {
+            id: dropdown
+
+            width: root.columnWidth
+
+            textRole: "name"
+            valueRole: "code"
+
+            popupItemsCount: 11
+            currentIndex: dropdown.indexOfValue(root.currentLanguageCode)
+
+            navigation.name: "LanguagesBox"
+            navigation.accessible.name: qsTrc("preferences", "Language %1").arg(currentText)
+            navigation.panel: root.navigation
+            navigation.column: 1
+
+            indeterminateText: ""
+
+            onActivated: function (index, value) {
+                root.languageSelected(value)
+            }
+        }
+    }
+
+    StyledTextLabel {
+        text: qsTrc("preferences", "Restart required")
+        visible: root.isNeedRestart
+    }
+}

@@ -1,0 +1,40 @@
+#
+# Audacity: A Digital Audio Editor
+#
+
+set(MODULE_TEST record_tests)
+
+set(MODULE_TEST_SRC
+    ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
+
+    ${CMAKE_CURRENT_LIST_DIR}/../../au3audio/tests/mocks/audioenginemock.h
+    ${CMAKE_CURRENT_LIST_DIR}/../../audio/tests/mocks/audiodrivercontrollermock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/recordconfigurationmock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/recordcontrollermock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/recordmock.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/../qml/Audacity/Record/timedrecordingviewformatter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/../qml/Audacity/Record/timedrecordingviewformatter.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/recordcontroller_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3record_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/timedrecordingformatter_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/timedrecordingschedule_tests.cpp
+    )
+
+set(MODULE_TEST_INCLUDE
+    ${CMAKE_CURRENT_LIST_DIR}/..
+    )
+
+set(MODULE_TEST_LINK
+    record
+    au3wrap
+    au3-track
+    au3-wave-track
+
+    muse::ui
+    )
+
+set(MODULE_TEST_DATA_ROOT ${CMAKE_CURRENT_LIST_DIR})
+
+include(SetupGTest)

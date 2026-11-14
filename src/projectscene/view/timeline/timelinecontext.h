@@ -1,0 +1,303 @@
+#pragma once
+
+#include <QObject>
+#include <QTimer>
+#include <QVariantAnimation>
+
+#include "modularity/ioc.h"
+#include "global/iapplication.h"
+#include "context/iglobalcontext.h"
+#include "global/async/asyncable.h"
+#include "rcommand/icommanddispatcher.h"
+
+#include "projectscene/iprojectsceneactionscontroller.h"
+#include "projectscene/iprojectsceneconfiguration.h"
+#include "playback/iplayback.h"
+#include "playback/iplaybackcontroller.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
+
+//! NOTE This class does two things:
+//! 1. This is a context that is passed to other classes
+//! 2. This is a controller that interprets mouse and view resize events into context values
+//!
+//! If this class becomes more complex,
+//! or we notice that its "controller" methods are being called in unexpected places,
+//! then we should split it into two separate classes.
+
+namespace au::projectscene {
+using Direction = DirectionType::Direction;
+
+class SnapTimeFormatter;
+class TimelineViewController;
+class PlayPositionActionController;
+class TimelineContext : public QObject, public muse::async::Asyncable, public muse::Contextable
+{
+    Q_OBJECT
+
+    //  0 sec     visible frame          end
+    //          | ~~~~~ ~~~~ ~~~|
+    Q_PROPERTY(double frameStartTime READ frameStartTime NOTIFY frameStartTimeChanged FINAL)
+    Q_PROPERTY(double frameEndTime READ frameEndTime NOTIFY frameEndTimeChanged FINAL)
+    Q_PROPERTY(double zoom READ zoom NOTIFY zoomChanged FINAL)
+    Q_PROPERTY(int BPM READ BPM WRITE setBPM NOTIFY BPMChanged FINAL)
+
+    Q_PROPERTY(double selectionStartTime READ selectionStartTime NOTIFY selectionStartTimeChanged FINAL)
+    Q_PROPERTY(double selectionEndTime READ selectionEndTime NOTIFY selectionEndTimeChanged FINAL)
+    Q_PROPERTY(double selectionStartPosition READ selectionStartPosition NOTIFY selectionStartPositionChanged FINAL)
+    Q_PROPERTY(double selectionEndPosition READ selectionEndPosition NOTIFY selectionEndPositionChanged FINAL)
+    Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
+
+    Q_PROPERTY(double selectedItemStartTime READ selectedItemStartTime NOTIFY selectedItemStartTimeChanged FINAL)
+    Q_PROPERTY(double selectedItemEndTime READ selectedItemEndTime NOTIFY selectedItemEndTimeChanged FINAL)
+    Q_PROPERTY(double selectedItemStartPosition READ selectedItemStartPosition NOTIFY selectedItemStartPositionChanged FINAL)
+    Q_PROPERTY(double selectedItemEndPosition READ selectedItemEndPosition NOTIFY selectedItemEndPositionChanged FINAL)
+    Q_PROPERTY(bool singleItemSelected READ singleItemSelected NOTIFY singleItemSelectedChanged FINAL)
+
+    Q_PROPERTY(qreal startHorizontalScrollPosition READ startHorizontalScrollPosition NOTIFY horizontalScrollChanged)
+    Q_PROPERTY(qreal horizontalScrollbarSize READ horizontalScrollbarSize NOTIFY horizontalScrollChanged)
+    Q_PROPERTY(
+        qreal startVerticalScrollPosition READ startVerticalScrollPosition WRITE setStartVerticalScrollPosition NOTIFY verticalScrollChanged)
+    Q_PROPERTY(qreal verticalScrollbarSize READ verticalScrollbarSize NOTIFY verticalScrollChanged)
+
+    Q_PROPERTY(bool playbackOnRulerClickEnabled READ playbackOnRulerClickEnabled NOTIFY playbackOnRulerClickEnabledChanged FINAL)
+    Q_PROPERTY(
+        bool updateDisplayWhilePlayingEnabled READ updateDisplayWhilePlayingEnabled NOTIFY updateDisplayWhilePlayingEnabledChanged FINAL)
+    Q_PROPERTY(bool pinnedPlayHeadEnabled READ pinnedPlayHeadEnabled NOTIFY pinnedPlayHeadEnabledChanged FINAL)
+    Q_PROPERTY(double lastPlaybackSeekPosition READ lastPlaybackSeekPosition NOTIFY lastPlaybackSeekPositionChanged FINAL)
+
+    Q_PROPERTY(double invalidGuidelineTime READ invalidGuidelineTime CONSTANT FINAL)
+
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+    muse::GlobalInject<muse::IApplication> application;
+
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+
+public:
+
+    static constexpr int ANIMATION_DURATION_MS = 500;
+    static constexpr double INVALID_GUIDELINE_TIME = -1.0;
+
+    TimelineContext(QObject* parent = nullptr);
+    ~TimelineContext() override;
+
+    double invalidGuidelineTime() const { return INVALID_GUIDELINE_TIME; }
+
+    double frameStartTime() const;
+    void setFrameStartTime(double newFrameStartTime);
+
+    double frameEndTime() const;
+    void setFrameEndTime(double newFrameEndTime);
+
+    double zoom() const;
+    void setZoom(double zoom, double mouseX);
+
+    int BPM() const;
+    void setBPM(int BPM);
+
+    int timeSigUpper() const;
+    void setTimeSigUpper(int timeSigUpper);
+
+    int timeSigLower() const;
+    void setTimeSigLower(int timeSigLower);
+
+    double selectionStartTime() const;
+    double selectionEndTime() const;
+    double selectionStartPosition() const;
+    double selectionEndPosition() const;
+    bool selectionActive() const;
+
+    double selectedItemStartTime() const;
+    double selectedItemEndTime() const;
+    double selectedItemStartPosition() const;
+    double selectedItemEndPosition() const;
+    bool singleItemSelected() const;
+
+    Q_INVOKABLE void init(double frameWidth);
+
+    Q_INVOKABLE void onResizeFrameWidth(double frameWidth);
+    Q_INVOKABLE void onResizeFrameHeight(double frameHeight);
+    Q_INVOKABLE void onResizeFrameContentHeight(double frameHeight);
+
+    Q_INVOKABLE void onWheel(double mouseX, const QPoint& pixelDelta, const QPoint& angleDelta);
+    Q_INVOKABLE void pinchToZoom(qreal scaleFactor, const QPointF& pos);
+    Q_INVOKABLE void scrollHorizontal(qreal newPos);
+    Q_INVOKABLE void scrollVertical(qreal newPos);
+
+    void zoomIn();
+    void zoomOut();
+    void zoomDefault();
+    void fitSelectionToWidth();
+    void fitProjectToWidth();
+    void zoomToggle();
+    void centerViewOnPlayhead(bool onlyIfPlayheadNotVisible);
+
+    void centerOnTime(double secs);
+    Q_INVOKABLE void insureVisible(double posSec);
+    Q_INVOKABLE void animatedInsureVisible(double posSec);
+    Q_INVOKABLE void startAutoScroll(double posSec);
+    Q_INVOKABLE void stopAutoScroll();
+
+    Q_INVOKABLE double timeToPosition(double time) const;
+    Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
+    double singleStepToTime(double position, Direction direction, const Snap& snap) const;
+    double applySnapToTime(double time) const;
+    double applySnapToItem(double time) const;
+    Q_INVOKABLE double applyDetectedSnap(double time) const;
+
+    Q_INVOKABLE double findGuideline(double time) const;
+    Q_INVOKABLE bool isGuidelineValid(double guidelineTime) const;
+
+    Q_INVOKABLE void updateMousePositionTime(double mouseX);
+    Q_INVOKABLE double mousePositionTime() const;
+
+    void moveToFrameTime(double startTime);
+    void shiftFrameTime(double secs);
+
+    void animatedCenterOnTime(double secs);
+    bool isAnimating() const;
+    void stopAnimation();
+
+    qreal startHorizontalScrollPosition() const;
+    qreal horizontalScrollbarSize() const;
+
+    qreal startVerticalScrollPosition() const;
+    void setStartVerticalScrollPosition(qreal position);
+
+    qreal verticalScrollbarSize() const;
+
+    Q_INVOKABLE void updateSelectedItemTime();
+
+    bool playbackOnRulerClickEnabled() const;
+    bool updateDisplayWhilePlayingEnabled() const;
+    bool pinnedPlayHeadEnabled() const;
+    double lastPlaybackSeekPosition() const;
+
+signals:
+
+    void frameStartTimeChanged();
+    void frameEndTimeChanged();
+    void frameTimeChanged(); // any or both together
+
+    void zoomChanged();
+    void BPMChanged();
+    void timeSigUpperChanged();
+    void timeSigLowerChanged();
+
+    void selectionStartTimeChanged();
+    void selectionEndTimeChanged();
+    void selectionStartPositionChanged();
+    void selectionEndPositionChanged();
+    void selectionActiveChanged();
+
+    void selectedItemStartTimeChanged();
+    void selectedItemEndTimeChanged();
+    void selectedItemStartPositionChanged();
+    void selectedItemEndPositionChanged();
+    void singleItemSelectedChanged();
+
+    void viewContentYChangeRequested(double contentY);
+    void contextMenuRequested();
+
+    void horizontalScrollChanged();
+    void verticalScrollChanged();
+
+    void playbackOnRulerClickEnabledChanged();
+
+    void updateDisplayWhilePlayingEnabledChanged();
+    void pinnedPlayHeadEnabledChanged();
+    void lastPlaybackSeekPositionChanged();
+
+    void userHorizontalScrolled();
+
+private:
+    trackedit::ITrackeditProjectPtr trackEditProject() const;
+    IProjectViewStatePtr viewState() const;
+    void initToViewState(double frameWidth);
+
+    void onProjectChanged();
+
+    qreal frameCenterPosition() const;
+    qreal selectionCenterPosition() const;
+    qreal findZoomFocusPosition() const;
+
+    double getZoomOfPreset(ZoomPresets::Preset preset) const;
+    double clampedZoom(double zoom) const;
+    std::pair<double, double> selectionRange() const;
+    void updateViewOnProjectTempoChange(double ratio);
+
+    bool hasSelection() const;
+
+    void shiftFrameTimeOnStep(int direction);
+    void updateFrameTime();
+    void autoScrollView(double scrollStep);
+    void animateToFrameTime(double targetStartTime);
+    double maxFrameEndTime() const;
+
+    void setSelectionStartTime(double time);
+    void setSelectionEndTime(double time);
+    void updateSelectionActive();
+
+    void setItemStartTime(double time);
+    void setItemEndTime(double time);
+    void updateSingleItemSelected();
+
+    void updateTimeSignature();
+
+    qreal horizontalScrollableSize() const;
+    qreal verticalScrollableSize() const;
+
+    double timeToContentPosition(double time) const;
+
+    void saveViewState() const;
+
+    context::IPlaybackStatePtr playbackState() const;
+
+    friend struct SnapTestAccess;
+
+    double m_frameWidth = 0.0;
+    double m_frameHeight = 0.0;
+    double m_frameContentHeight = 0.0;
+
+    double m_frameStartTime = 0.0;
+    double m_frameEndTime = 0.0;
+
+    double m_lastZoomEndTime = 0.0;
+
+    double m_zoom = 1.0; // see initToViewState
+    int m_BPM = 120;
+    // time signature
+    int m_timeSigUpper = 4;
+    int m_timeSigLower = 4;
+
+    trackedit::secs_t m_selectionStartTime = -1.0;
+    trackedit::secs_t m_selectionEndTime = -1.0;
+    bool m_selectionActive = false;
+
+    trackedit::secs_t m_selectedItemStartTime = -1.0;
+    trackedit::secs_t m_selectedItemEndTime = -1.0;
+    bool m_singleItemSelected = false;
+
+    std::shared_ptr<SnapTimeFormatter> m_snapTimeFormatter;
+    std::unique_ptr<TimelineViewController> m_viewController;
+    std::unique_ptr<PlayPositionActionController> m_playPositionController;
+
+    qreal m_previousVerticalScrollPosition = 0.0;
+    qreal m_previousHorizontalScrollPosition = 0.0;
+
+    qreal m_startVerticalScrollPosition = 0.0;
+
+    double m_mousePositionTime = 0.0;
+
+    QTimer m_scrollTimer;
+    double m_autoScrollStep = 0.0;
+
+    QVariantAnimation m_frameStartAnimation;
+};
+}

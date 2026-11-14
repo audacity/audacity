@@ -1,0 +1,336 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#include "splittoolcontroller.h"
+
+#include <cmath>
+
+#include <QGuiApplication>
+
+#include "view/common/customcursor.h"
+
+#include "internal/tapholdshortcut.h"
+#include "projectscene/projectscenecommands.h"
+#include "trackedit/trackeditcommands.h"
+#include "log.h"
+
+namespace au::projectscene {
+SplitToolController::SplitToolController(QObject* parent)
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+{
+}
+
+void SplitToolController::init(QObject* root)
+{
+    m_cursor = CustomCursorProvider::createScaledCursor(":/images/customCursorShapes/Split.png", DEFAULT_CURSOR_SIZE);
+
+    projectSceneActionsController()->splitToolToggleRequested().onNotify(this, [this]() {
+        setActive(!active());
+    });
+
+    m_shortcut = std::make_unique<TapHoldShortcut>(iocContext(), PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, root);
+
+    m_shortcut->pressed().onNotify(this, [this]() {
+        m_prePressState = active();
+        if (active()) {
+            return;
+        }
+        setActive(true);
+    });
+
+    m_shortcut->tapped().onNotify(this, [this]() {
+        setActive(!m_prePressState);
+    });
+
+    m_shortcut->holdStarted().onNotify(this, [this]() {
+        setActive(true);
+    });
+
+    m_shortcut->holdEnded().onNotify(this, [this]() {
+        setActive(false);
+    });
+
+    qApp->installEventFilter(this);
+
+    connect(qApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state){
+        if (state != Qt::ApplicationActive) {
+            setActive(false);
+            setSingleTrack(true);
+            setClipHovered(false);
+        }
+    });
+    uicontextResolver()->currentUiContextChanged().onNotify(this, [this]() {
+        setActive(false);
+        setSingleTrack(true);
+        setClipHovered(false);
+    });
+}
+
+SplitToolController::~SplitToolController() = default;
+
+void au::projectscene::SplitToolController::doSplit()
+{
+    if (!m_clipHovered || !hoveredTrackSplittable()) {
+        return;
+    }
+
+    Qt::KeyboardModifiers mods = QGuiApplication::queryKeyboardModifiers();
+
+    if (mods & Qt::ShiftModifier) {
+        auto allTracks = globalContext()->currentProject()->trackeditProject()->trackIdList();
+        splitTracksAt(allTracks, context()->positionToTime(m_guidelinePos));
+    } else {
+        splitTracksAt({ m_hoveredTrack }, context()->positionToTime(m_guidelinePos));
+    }
+}
+
+bool SplitToolController::hoveredTrackSplittable() const
+{
+    return trackSplittable(m_hoveredTrack);
+}
+
+bool SplitToolController::trackSplittable(int trackId) const
+{
+    if (trackId < 0) {
+        return false;
+    }
+
+    const auto prj = globalContext()->currentProject();
+    if (!prj) {
+        return false;
+    }
+
+    const std::optional<trackedit::Track> track = prj->trackeditProject()->track(trackId);
+    return track.has_value() && track->type != trackedit::TrackType::Label;
+}
+
+void SplitToolController::mouseDown(double pos)
+{
+    if (!active()) {
+        return;
+    }
+    updateGuideline(pos);
+    m_splitStartPos = m_guidelinePos;
+
+    doSplit();
+}
+
+void SplitToolController::mouseMove(double pos)
+{
+    updateGuideline(pos);
+}
+
+void SplitToolController::mouseUp(double pos)
+{
+    if (!active()) {
+        return;
+    }
+
+    updateGuideline(pos);
+
+    if (std::abs(m_splitStartPos - m_guidelinePos) < MIN_DOUBLE_SPLIT_DISTANCE) {
+        return;
+    }
+
+    doSplit();
+}
+
+double SplitToolController::guidelinePosition() const
+{
+    return m_guidelinePos;
+}
+
+bool SplitToolController::guidelineVisible() const
+{
+    return m_active && m_clipHovered && hoveredTrackSplittable() && muse::RealIsEqualOrMore(m_guidelinePos, 0);
+}
+
+TimelineContext* SplitToolController::context() const
+{
+    return m_context;
+}
+
+void SplitToolController::setContext(TimelineContext* newContext)
+{
+    m_context = newContext;
+    emit contextChanged();
+}
+
+bool SplitToolController::active() const
+{
+    return m_active;
+}
+
+void SplitToolController::setActive(bool newActive)
+{
+    if (m_active == newActive) {
+        return;
+    }
+    m_active = newActive;
+
+    auto prj = globalContext()->currentProject();
+    if (prj) {
+        prj->viewState()->setSplitToolEnabled(m_active);
+    }
+
+    updateCursor();
+
+    emit activeChanged();
+    emit guidelineVisibleChanged();
+}
+
+void SplitToolController::setGuidelinePos(double newGuidelinePos)
+{
+    if (muse::is_equal(m_guidelinePos, newGuidelinePos)) {
+        return;
+    }
+
+    m_guidelinePos = newGuidelinePos;
+    emit guidelinePositionChanged();
+    emit guidelineVisibleChanged();
+}
+
+void SplitToolController::updateGuideline(double pos)
+{
+    const bool snapEnabled = true;
+    double guideline = context()->findGuideline(context()->positionToTime(pos, snapEnabled));
+
+    if (!context()->isGuidelineValid(guideline)) {
+        guideline = context()->positionToTime(pos);
+    }
+
+    const double newPos = context()->timeToPosition(guideline);
+    if (muse::is_equal(newPos, m_guidelinePos)) {
+        return;
+    }
+    const bool wasVisible = guidelineVisible();
+
+    m_guidelinePos = newPos;
+    emit guidelinePositionChanged();
+
+    if (wasVisible != guidelineVisible()) {
+        emit guidelineVisibleChanged();
+    }
+}
+
+void SplitToolController::updateCursor()
+{
+    if (active() && clipHovered() && hoveredTrackSplittable()) {
+        overrideCursor();
+    } else {
+        restoreCursor();
+    }
+}
+
+void SplitToolController::overrideCursor()
+{
+    if (!m_cursorOverriden) {
+        m_cursorOverriden = true;
+        QGuiApplication::setOverrideCursor(m_cursor);
+    }
+}
+
+void SplitToolController::restoreCursor()
+{
+    if (m_cursorOverriden) {
+        m_cursorOverriden = false;
+        QGuiApplication::restoreOverrideCursor();
+    }
+}
+
+void SplitToolController::splitTracksAt(trackedit::TrackIdList ids, double t)
+{
+    if (ids.empty()) {
+        return;
+    }
+    muse::ValList trackIds;
+    for (const trackedit::TrackId& trackId : ids) {
+        trackIds.emplace_back(static_cast<int64_t>(trackId));
+    }
+
+    LOGD() << "Splitting tracks at " << t;
+    commandDispatcher()->dispatch(trackedit::TRACKEDIT_TRACK_SPLIT_AT_COMMAND, {
+            { trackedit::TRACKEDIT_TRACK_IDS_PARAM, muse::Val(trackIds) },
+            { trackedit::TRACKEDIT_PIVOTS_PARAM, muse::Val(muse::ValList { muse::Val(t) }) },
+        });
+}
+
+bool SplitToolController::clipHovered() const
+{
+    return m_clipHovered;
+}
+
+void SplitToolController::setClipHovered(bool newClipHovered)
+{
+    if (m_clipHovered == newClipHovered) {
+        return;
+    }
+
+    m_clipHovered = newClipHovered;
+
+    updateCursor();
+
+    emit clipHoveredChanged();
+    emit guidelineVisibleChanged();
+}
+
+int SplitToolController::hoveredTrack() const
+{
+    return m_hoveredTrack;
+}
+
+void SplitToolController::setHoveredTrack(int newHoveredTrack)
+{
+    if (m_hoveredTrack == newHoveredTrack) {
+        return;
+    }
+    m_hoveredTrack = newHoveredTrack;
+
+    updateCursor();
+
+    emit hoveredTrackChanged();
+    emit guidelineVisibleChanged();
+}
+
+bool SplitToolController::eventFilter(QObject* obj, QEvent* event)
+{
+    if (event->type() == QEvent::ShortcutOverride) {
+        auto* ke = static_cast<QKeyEvent*>(event);
+        if (ke->key() == Qt::Key_Escape && active()) {
+            setActive(false);
+            event->accept();
+            return true;
+        }
+    } else if (event->type() == QEvent::KeyPress) {
+        auto* ke = static_cast<QKeyEvent*>(event);
+        if (ke->key() == Qt::Key_Shift) {
+            setSingleTrack(false);
+            return true;
+        }
+    } else if (event->type() == QEvent::KeyRelease) {
+        auto* ke = static_cast<QKeyEvent*>(event);
+        if (ke->key() == Qt::Key_Shift) {
+            setSingleTrack(true);
+            return true;
+        }
+    }
+    return QObject::eventFilter(obj, event);
+}
+
+bool SplitToolController::singleTrack() const
+{
+    return m_singleTrack;
+}
+
+void SplitToolController::setSingleTrack(bool enabled)
+{
+    if (enabled == m_singleTrack) {
+        return;
+    }
+
+    m_singleTrack = enabled;
+
+    emit singleTrackChanged();
+}
+}

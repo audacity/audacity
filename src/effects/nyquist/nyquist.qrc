@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>nyquistprompt/qmldir</file>
+        <file>nyquistprompt/NyquistPromptView.qml</file>
+    </qresource>
+</RCC>

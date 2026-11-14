@@ -1,0 +1,64 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "trackitemslistmodel.h"
+#include "tracklabelitem.h"
+
+#include "trackedit/itracksviewrequestsservice.h"
+
+namespace au::projectscene {
+class TrackLabelsListModel : public TrackItemsListModel
+{
+    Q_OBJECT
+
+    muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
+
+public:
+    explicit TrackLabelsListModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void selectLabel(const LabelKey& key);
+    Q_INVOKABLE void selectLabelWithSharedStalk(const LabelKey& key, bool rightSide);
+    Q_INVOKABLE void resetSelectedLabels();
+    Q_INVOKABLE bool changeLabelTitle(const LabelKey& key, const QString& newTitle);
+    Q_INVOKABLE void titleEditRequestHandled(const LabelKey& key);
+
+    Q_INVOKABLE void toggleTracksDataSelectionByLabel(const LabelKey& key);
+
+    double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const override;
+
+    Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
+    Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, const LabelKey& rightLinkedLabel, bool unlink, bool completed);
+
+    void startEditItem(const TrackItemKey& key) override;
+    void endEditItem(const TrackItemKey& key) override;
+
+private:
+    friend class TrackLabelsLayoutManagerTests;
+    friend class TrackItemsMoveControllerTests;
+
+    void onInit() override;
+    void onReload() override;
+
+    void update();
+    void updatePendingTitleEdit();
+    void updateItemMetrics(ViewTrackItem* item) override;
+    ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
+    trackedit::TrackItemKeyList getSelectedItemKeys() const override;
+
+    TrackLabelItem* labelItemByKey(const trackedit::LabelKey& k) const;
+
+    void selectTracksDataFromLabelRange(const LabelKey& key);
+    void doSelectTracksData(const LabelKey& key);
+    bool isTrackDataSelected() const;
+
+    void resetSelectedTracksData();
+
+    muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
+    bool m_needToSelectTracksData = false;
+
+    double m_editedLabelStartTime = 0.0;
+    double m_editedLabelEndTime = 0.0;
+};
+}

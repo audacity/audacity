@@ -1,0 +1,190 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+import QtQuick 2.15
+
+import Muse.Ui 1.0
+import Muse.UiComponents
+import Muse.Dock 1.0
+import Muse.Toast 1.0
+
+import "./Gallery"
+import "./Interactive"
+import "./CrashHandler"
+import "./KeyNav"
+import "./Preferences"
+import "./Table"
+
+DockPage {
+    id: root
+
+    objectName: "DevTools"
+    uri: "audacity://devtools"
+
+    function setCurrentCentral(name) {
+        switch (name) {
+        case "settings":
+            root.central = settingsComp
+            break
+        case "gallery":
+            root.central = galleryComp
+            break
+        case "interactive":
+            root.central = interactiveComp
+            break
+        case "toastnotification":
+            root.central = toastNotificationComp
+            break
+        case "crashhandler":
+            root.central = crashhandlerComp
+            break
+        case "extensions":
+            root.central = extensionsComp
+            break
+        case "navigation":
+            root.central = keynavComp
+            break
+        case "cloud":
+            root.central = cloudComp
+            break
+        case "table":
+            root.central = tableComp
+            break
+        }
+    }
+
+    panels: [
+        DockPanel {
+            id: devtoolsPanel
+
+            objectName: "devtoolsPanel"
+
+            width: maximumWidth
+            minimumWidth: 200
+            maximumWidth: 280
+
+            floatable: false
+            closable: false
+
+            Rectangle {
+                anchors.fill: parent
+                color: ui.theme.backgroundPrimaryColor
+
+                DevToolsMenu {
+                    anchors.fill: parent
+
+                    model: [
+                        {
+                            "name": "settings",
+                            "title": "Settings"
+                        },
+                        {
+                            "name": "gallery",
+                            "title": "UI Gallery"
+                        },
+                        {
+                            "name": "interactive",
+                            "title": "Interactive"
+                        },
+                        {
+                            "name": "toastnotification",
+                            "title": "Toast Notification"
+                        },
+                        {
+                            "name": "crashhandler",
+                            "title": "Crash handler"
+                        },
+                        {
+                            "name": "extensions",
+                            "title": "Extensions"
+                        },
+                        {
+                            "name": "navigation",
+                            "title": "KeyNav"
+                        },
+                        {
+                            "name": "cloud",
+                            "title": "Cloud Tests"
+                        },
+                        {
+                            "name": "table",
+                            "title": "Table"
+                        }
+                    ]
+
+                    onSelected: function (name) {
+                        root.setCurrentCentral(name)
+                    }
+                }
+            }
+        }
+    ]
+
+    central: settingsComp
+
+    Component {
+        id: settingsComp
+
+        SettingsPage {}
+    }
+
+    Component {
+        id: galleryComp
+
+        GeneralComponentsGallery {}
+    }
+
+    Component {
+        id: interactiveComp
+
+        InteractiveTests {}
+    }
+
+    Component {
+        id: toastNotificationComp
+
+        ToastNotificationTests {}
+    }
+
+    Component {
+        id: crashhandlerComp
+
+        CrashHandlerDevTools {}
+    }
+
+    Component {
+        id: extensionsComp
+
+        ExtensionsListView {}
+    }
+
+    Component {
+        id: keynavComp
+
+        KeyNavExample {}
+    }
+
+    Component {
+        id: tableComp
+
+        TableTests {}
+    }
+}

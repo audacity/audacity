@@ -1,0 +1,12 @@
+This directory contains "nyx", Audacity's external API and glue code for
+embedding Nyquist, a standalone interactive program for audio processing.
+
+Nyx was written primarily by Dominic Mazzoni, in cooperation with Roger
+Dannenberg.  It is distributed under identical terms as Nyquist -
+essentially a BSD-style license with a nonbinding request that
+modifications be sent to the original authors.
+
+If any modifications affect nyx or Audacity, please send these
+modifications to the Audacity developers, otherwise contact Roger
+Dannenberg directly.
+

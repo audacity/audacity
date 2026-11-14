@@ -1,0 +1,120 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Audacity-CLA-applies
+ *
+ * Audacity
+ * A Digital Audio Editor
+ *
+ * Copyright (C) 2025 Audacity BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+import QtQuick 2.15
+
+import Muse.UiComponents
+
+import Audacity.UiComponents 1.0
+import Audacity.AppShell
+
+BaseSection {
+    id: root
+
+    title: qsTrc("preferences", "Buffer and latency")
+    spacing: 16
+
+    property var apiModel: null
+
+    Row {
+        width: parent.width
+        spacing: root.spacing
+
+        Column {
+            width: root.columnWidth
+
+            IncrementalPropertyControlWithTitle {
+                title: qsTrc("preferences", "Buffer length")
+
+                currentValue: apiModel.bufferLength
+
+                columnWidth: root.columnWidth
+                spacing: root.columnSpacing
+
+                //: Abbreviation of "milliseconds"
+                measureUnitsSymbol: qsTrc("global", "ms")
+
+                navigation.name: "BufferLengthControl"
+                navigation.panel: root.navigation
+                navigation.row: 1
+                navigation.column: 0
+
+                onValueEdited: function (newValue) {
+                    apiModel.bufferLengthSelected(newValue)
+                }
+            }
+        }
+
+        Column {
+            width: root.columnWidth
+            spacing: root.columnSpacing
+
+            StyledTextLabel {
+                text: qsTrc("preferences", "Latency compensation")
+
+                width: root.columnWidth
+                horizontalAlignment: Qt.AlignLeft
+                wrapMode: Text.WordWrap
+                maximumLineCount: 2
+            }
+
+            Row {
+                width: parent.width
+                spacing: 8
+
+                IncrementalPropertyControl {
+                    currentValue: apiModel.latencyCompensation
+
+                    enabled: !apiModel.automaticCompensationEnabled
+                    implicitWidth: 100
+
+                    //: Abbreviation of "milliseconds"
+                    measureUnitsSymbol: qsTrc("global", "ms")
+
+                    navigation.name: "LatencyCompensationControl"
+                    navigation.panel: root.navigation
+                    navigation.row: 1
+                    navigation.column: 1
+
+                    onValueEdited: function (newValue) {
+                        apiModel.latencyCompensationSelected(newValue)
+                    }
+                }
+
+                CheckBox {
+                    id: automaticCompensationCheckbox
+
+                    text: qsTrc("preferences", "Automatic")
+                    checked: apiModel.automaticCompensationEnabled
+                    onClicked: apiModel.setAutomaticCompensationEnabled(!checked)
+
+                    width: parent.width
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    navigation.name: "AutomaticLatencyCompensationCheckBox"
+                    navigation.panel: root.navigation
+                    navigation.row: 1
+                    navigation.column: 2
+                }
+            }
+        }
+    }
+}

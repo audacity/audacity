@@ -1,0 +1,146 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
+
+#include "internal/iclipchannelreader.h"
+#include "spectrogramtypes.h"
+
+#include "au3-clip-processing/ClipFades.h"
+#include "au3-utility/MemoryX.h"
+#include "au3-wave-track/WaveClip.h" // to inherit WaveClipListener
+
+#include <optional>
+#include <vector>
+
+class sampleCount;
+class WaveClipChannel;
+using WaveChannelInterval = WaveClipChannel;
+
+namespace au::spectrogram {
+class IClipChannelReader;
+
+using Floats = ArrayOf<float>;
+class Au3SpectrogramSettings;
+
+class SpecCache
+{
+public:
+
+    // Make invalid cache
+    SpecCache()
+        : spp(-1.0)
+        , start(-1.0)
+        , frequencyGain(-1)
+        , dirty(-1)
+    {
+    }
+
+    ~SpecCache()
+    {
+    }
+
+    bool Matches(
+        int dirty_, double samplesPerPixel, const Au3SpectrogramSettings& settings) const;
+
+    // Grow the cache while preserving the (possibly now invalid!) contents
+    void Grow(
+        size_t len_, Au3SpectrogramSettings& settings, double samplesPerPixel, double start /*relative to clip play start time*/);
+
+    // Calculate the dirty columns at the begin and end of the cache
+    void Populate(
+        const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip, int copyBegin, int copyEnd, size_t numPixels,
+        double pixelsPerSecond);
+    // Calculate the dirty columns at the begin and end of the cache (Constant-Q variant)
+    void PopulateConstantQ(
+        const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip, int copyBegin, int copyEnd, size_t numPixels,
+        double pixelsPerSecond);
+
+    size_t len { 0 };      // counts pixels, not samples
+    std::optional<SpectrogramAlgorithm> algorithm;
+    double spp;      // samples per pixel
+    double leftTrim{ .0 };
+    double rightTrim{ .0 };
+    ClipFades::Snapshot fades;
+    double start;      // relative to clip start
+    std::optional<SpectrogramWindowType> windowType;
+    int windowSize { 0 };
+    int zeroPaddingFactor { 0 };
+    int frequencyGain;
+    std::vector<float> freq;
+    std::vector<long long> where;
+
+    int dirty;
+
+private:
+    struct SpectrumParams {
+        const int xx;
+        const double pixelsPerSecond;
+        const int lowerBoundX;
+        const int upperBoundX;
+        const std::vector<float>& gainFactors;
+        float* const __restrict scratch;
+        float* const __restrict out;
+    };
+
+    struct ClipParams {
+        const long long numSamples;
+        const int sampleRate;
+        const double stretchRatio;
+    };
+
+    // Calculate one column of the spectrum
+    bool CalculateOneSpectrum(const Au3SpectrogramSettings& settings, IClipChannelReader& reader, const SpectrumParams& spectrumParams,
+                              const ClipParams& clipParams) const;
+};
+
+class SpecPxCache
+{
+public:
+    SpecPxCache(size_t cacheLen)
+        : len{cacheLen}
+        , values{len}
+    {
+    }
+
+    size_t len;
+    Floats values;
+
+    SpectrogramScale scaleType = static_cast<SpectrogramScale>(0);
+    int range = -1;
+    int gain = -1;
+    int minFreq = -1;
+    int maxFreq = -1;
+};
+
+struct WaveClipSpectrumCache final : WaveClipListener
+{
+    explicit WaveClipSpectrumCache(size_t nChannels);
+    ~WaveClipSpectrumCache() override;
+
+    std::unique_ptr<WaveClipListener> Clone() const override;
+
+    // Cache of values to colour pixels of Spectrogram - used by TrackArtist
+    std::vector<std::unique_ptr<SpecPxCache> > mSpecPxCaches;
+    std::vector<std::unique_ptr<SpecCache> > mSpecCaches;
+    int mDirty { 0 };
+
+    static WaveClipSpectrumCache& Get(const WaveChannelInterval& clip);
+
+    void MarkChanged() noexcept override; // NOFAIL-GUARANTEE
+    void Invalidate() override; // NOFAIL-GUARANTEE
+
+    /** Getting high-level data for screen display */
+    // PRL:
+    // > only the 0th channel of sequence is really used
+    // > In the interim, this still works correctly for WideSampleSequence backed
+    // > by a right channel track, which always ignores its partner.
+    bool GetSpectrogram(const WaveChannelInterval& clip, const float*& spectrogram, Au3SpectrogramSettings& spectrogramSettings,
+                        const long long*& where, size_t numPixels, double t0 /*absolute time*/, double pixelsPerSecond);
+
+    bool IsStereo() const { return mSpecCaches.size() == 2; }
+    void MakeStereo(WaveClipListener&& other, bool aligned) override;
+    void SwapChannels() override;
+    void Erase(size_t index) override;
+};
+}

@@ -1,0 +1,142 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * Audacity-CLA-applies
+ *
+ * Audacity
+ * A Digital Audio Editor
+ *
+ * Copyright (C) 2025 Audacity BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+import QtQuick 2.15
+
+import Muse.UiComponents
+import Audacity.Preferences
+
+PreferencesPage {
+    id: root
+
+    property int navigationOrderStart: 0
+
+    CommonAudioApiConfigurationModel {
+        id: apiModel
+    }
+
+    Component.onCompleted: {
+        apiModel.load()
+    }
+
+    function apply() {
+        return apiModel.apply()
+    }
+
+    function reset() {
+        apiModel.reset()
+    }
+
+    Column {
+        width: parent.width
+        spacing: root.sectionsSpacing
+
+        AudioApiSection {
+            id: audioApiSection
+
+            currentAudioApiIndex: apiModel.currentAudioApiIndex
+            audioApiList: apiModel.audioApiList()
+            apiModel: apiModel
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart
+
+            onCurrentAudioApiIndexChangeRequested: function (newIndex) {
+                apiModel.currentAudioApiIndex = newIndex
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine {
+            visible: asioSection.visible
+        }
+
+        AsioSection {
+            id: asioSection
+
+            visible: apiModel.isAsio
+            apiModel: apiModel
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine {}
+
+        SampleRateSection {
+            id: sampleRateSection
+
+            apiModel: apiModel
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 2
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine {}
+
+        BufferAndLatencySection {
+            id: bufferAndLatencySection
+
+            apiModel: apiModel
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 3
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine {}
+
+        MeterDbRangeSection {
+            id: meterDbRangeSection
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 4
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+    }
+}

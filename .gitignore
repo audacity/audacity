@@ -1,0 +1,279 @@
+CMakeUserPresets.json
+
+# Autotools generated files
+locale/Makefile.in
+Makefile
+aclocal.m4
+autom4te.cache
+config.status
+bin-stamp
+.deps
+.dirstamp
+lib-stamp
+libtool
+stamp-h*
+stamp-po
+*.stamp
+
+.cache/
+
+# Handcrafted makefiles
+!lib-src/lv2/Makefile
+!lib-src/mod-script-pipe/Makefile
+
+# Generated files by build system
+lib-src/libsoxr/soxr-config.h
+lib-src/libsoxr/src/libsoxr-dev.src
+lib-src/libsoxr/src/libsoxr.src
+lib-src/libsoxr/tests/ref-*.s32
+lib-src/sbsms/libsbsms.spec
+lib-src/sbsms/src/config.h
+lib-src/soundtouch/include/soundtouch_config.h
+lib-src/twolame/doc/html/Doxyfile
+lib-src/twolame/libtwolame/config.h
+locale/POTFILES
+src/audacity.desktop
+src/audacity-url-handler.desktop
+src/RevisionIdent.h
+src/configunix.h
+src/configwin.h
+*.pc
+
+# CMake build output
+lib-src/libsoxr/CMakeCache.txt
+lib-src/libsoxr/*.cmake
+CMakeFiles/
+CTestTestfile.cmake
+cmake_install.cmake
+build/*
+
+# Waf build output
+lib-src/lv2/.buildvars
+lib-src/lv2/include/
+lib-src/lv2/*/build/
+lib-src/lv2/srcdir.mk
+.lock-waf_linux2_build
+
+# Mac build outputs
+mac/Audacity.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+mac/Audacity.xcodeproj/project.xcworkspace/xcshareddata/Audacity.xccheckout
+mac/Makefile
+mac/confdefs.h
+mac/config.status
+mac/conftest.c
+mac/help/
+mac/images/
+mac/lib-src/
+mac/libtool
+mac/po/
+mac/src/
+mac/tests/
+
+# Doxygen output
+dox/
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+*.pyc
+
+# Other unwanted files.
+*.suo
+*.sdf
+*.exp
+*.ilk
+*.pdb
+*.idb
+*.lastbuild
+*.log
+*.tlog
+*.ipch
+*.opensdf
+*.vcxproj.user
+*.sbr
+*.bsc
+
+# Precompiled Headers
+*.gch
+*.pch
+*.ncb
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled translation files (GNU Machine Object)
+*.gmo
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.app
+
+# Executable without extension
+/audacity
+src/audacity
+
+lib-src/libsoxr/examples/1a-lsr
+lib-src/libsoxr/examples/3-options-input-fn
+lib-src/libsoxr/tests/vector-cmp
+lib-src/libsoxr/tests/vector-gen
+lib-src/soundtouch/source/SoundStretch/soundstretch
+lib-src/twolame/frontend/twolame
+lib-src/twolame/simplefrontend/stwolame
+
+# Mac Specific
+.DS_Store
+xcuserdata
+*.xcconfig
+mac/build
+
+# Windows specific
+win/Debug
+win/Release
+win/Projects/*/Debug
+win/Projects/*/Release
+win/.vs/
+win/packages
+win/.nuget
+win-alt-build
+
+# All those help files
+help/manual*
+help/temp*
+
+# Misc
+src/RevisionIdent.h
+win/resetPrefs.txt
+libraries/au3-music-information-retrieval/tests/benchmarking-dataset/
+libraries/au3-music-information-retrieval/tests/TatumQuantizationFitVisualization/debug_output.py
+libraries/au3-music-information-retrieval/tests/TatumQuantizationFitVisualization/stft_log.py
+libraries/au3-music-information-retrieval/tests/TatumQuantizationFitVisualization/__pycache__/
+compile_commands.json
+
+# Emacs backup files
+*~
+win/xaudacity.ico
+*.sublime-project
+*.sublime-workspace
+/tests/results/*.png
+
+#other files that get in the way
+*/not-for-git/*
+*.dll
+
+.idea/
+
+# AppImage
+linuxdeploy/*
+appimagetool/*
+
+.build.*/
+.conan/
+.debug/
+build-*
+build.release/
+build.debug/
+build.install/
+build.artifacts/
+
+.*,
+*~
+*.swp
+*.autosave
+.qped
+.directory
+.idea
+/builds
+build
+/build_overrides.cmake
+build.release
+build.debug
+build.install
+build.tooldata
+build.qtc
+build-*
+win32build
+win32install
+win64build
+win64install
+build.xcode
+applebuild
+build.artifacts
+build.symbols
+vtest.artifacts
+MuseScorePortable
+/*.config
+/*.creator
+/*.qtcreator
+/*.files
+/*.includes
+*.user
+/share/locale/*placeholder.ts
+/share/locale/*.qm
+# Derived from share/nyquist-plug-ins/*.ny by extract_nyquist_strings.py
+# (run via run_lupdate.sh). Never hand-edit; never commit.
+/tools/translations/nyquist_strings.cpp.generated
+# Diagnostic outputs from the au3->au4 migration pipeline.
+/share/locale/po_import_collisions.*.txt
+/share/locale/po_reuse_collisions.*.txt
+/tools/translations/au4_scan_paths.txt
+/share/instruments/tsv
+Doc
+DocLib
+build.qt5
+*.sfd~
+/.project
+mscore/revision.h
+local_build_revision.env
+.DS_Store
+CMakeLists.txt.user.*
+*.qmlc
+*.jsc
+vtest/html
+vtest/compare
+vtest/LOG
+vtest/META-INF
+vtest/Thumbnails
+vtest/Pictures
+.vs
+dependencies
+.cache
+
+# Downloaded files during build process
+VERSION
+/mscore/data/mscore.aps
+/msvc.*
+uncrustify.cfg
+.tools
+
+# Backup Files created by Merging Softwares (Example: Meld)
+*.orig
+
+temp_*
+
+*.local.cmake
+
+*_deps/*
+
+*.AppImage
+
+build.*
+
+# Private developer's files
+.vscode/settings.json
+CMakeUserPresets.json
+
+# QML language server
+**/.qmlls.ini
+
+.claude/settings.local.json
+_deps/

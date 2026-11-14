@@ -1,0 +1,34 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "framework/global/modularity/imodulesetup.h"
+
+#include "iglobalconfiguration.h"
+
+class Au3BasicUI;
+
+namespace au::au3 {
+class WxLogWrap;
+class Au3Playback;
+class Au3Record;
+class Au3WrapModule : public muse::modularity::IModuleSetup
+{
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<muse::IApplication> application;
+public:
+
+    std::string moduleName() const override;
+    void registerExports() override;
+    void onPreInit(const muse::IApplication::RunMode&) override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
+    void onAllInited(const muse::IApplication::RunMode& mode) override;
+    void onDeinit() override;
+
+private:
+
+    WxLogWrap* m_wxLog = nullptr;
+    std::shared_ptr<Au3BasicUI> m_au3BasicUi;
+};
+}

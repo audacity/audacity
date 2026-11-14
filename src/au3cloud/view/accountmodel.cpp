@@ -1,0 +1,75 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "accountmodel.h"
+
+#include <QDateTime>
+
+#include "framework/global/io/path.h"
+#include "framework/global/types/retval.h"
+
+#include "../cloudcommands.h"
+
+using namespace au::au3cloud;
+
+AccountModel::AccountModel(QObject* parent)
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+{
+}
+
+void AccountModel::init()
+{
+    authorization()->authState().ch.onReceive(this, [this] (const auto&) {
+        emit isAuthorizedChanged();
+    });
+
+    authorization()->accountInfoChanged().onNotify(this, [this] () {
+        emit accountInfoChanged();
+    });
+}
+
+bool AccountModel::isAuthorized() const
+{
+    return std::holds_alternative<au3cloud::Authorized>(authorization()->authState().val);
+}
+
+QUrl AccountModel::avatarPath() const
+{
+    if (authorization()->accountInfo().avatarPath.empty()) {
+        return QUrl();
+    }
+
+    QUrl url = muse::io::path_t{ authorization()->accountInfo().avatarPath }.toQUrl();
+    url.setQuery(QString::number(QDateTime::currentMSecsSinceEpoch()));
+
+    return url;
+}
+
+QString AccountModel::displayName() const
+{
+    std::string displayName
+        = !authorization()->accountInfo().displayName.empty()
+          ? authorization()->accountInfo().displayName
+          : authorization()->accountInfo().userSlug;
+    return QString::fromStdString(displayName);
+}
+
+void AccountModel::signOut() const
+{
+    authorization()->signOut();
+}
+
+void AccountModel::openSignInDialog() const
+{
+    authorization()->ensureAuthorized(iocContext());
+}
+
+void AccountModel::openCreateAccountDialog() const
+{
+    authorization()->ensureAuthorized(iocContext(), true);
+}
+
+void AccountModel::openProfile() const
+{
+    commandDispatcher()->dispatch(CLOUD_OPEN_PROFILE_PAGE_COMMAND);
+}

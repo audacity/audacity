@@ -1,0 +1,61 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#pragma once
+
+#include "framework/global/types/ret.h"
+#include "framework/global/translation.h"
+
+namespace au::record {
+static constexpr int RECORD_FIRST = 5000;
+
+enum class Err {
+    Undefined       = int(muse::Ret::Code::Undefined),
+    NoError         = int(muse::Ret::Code::Ok),
+    UnknownError    = RECORD_FIRST,
+
+    RecordingError,
+    RecordingStopError,
+    RecordingResumeError,
+    MismatchedSamplingRatesError,
+    TooFewCompatibleTracksSelected,
+    NoRecordingDevice,
+
+    LeadInRecordingNoValidClipAtCursor,
+    LeadInRecordingNoTracksSelected,
+};
+
+inline muse::Ret make_ret(Err e)
+{
+    int retCode = static_cast<int>(e);
+
+    switch (e) {
+    case Err::Undefined: return muse::Ret(retCode);
+    case Err::NoError: return muse::Ret(retCode);
+    case Err::UnknownError: return muse::Ret(retCode);
+    case Err::RecordingError: return muse::Ret(retCode, muse::trc("record", "Error opening recording device.\nError code: %1"));
+    case Err::RecordingStopError: return muse::Ret(retCode, muse::trc("record", "Cannot stop recording"));
+    case Err::RecordingResumeError: return muse::Ret(retCode, muse::trc("record", "Cannot resume recording"));
+    case Err::MismatchedSamplingRatesError: return muse::Ret(retCode,
+                                                             muse::trc("record",
+                                                                       "The tracks selected for recording must all have the same sampling rate"));
+    case Err::TooFewCompatibleTracksSelected: return muse::Ret(retCode,
+                                                               muse::trc("record",
+                                                                         "Too few tracks are selected for recording at this sample rate.\n"
+                                                                         "(Audacity requires two channels at the same sample rate foreach stereo track)"));
+    case Err::NoRecordingDevice: return muse::Ret(retCode,
+                                                  muse::trc("record",
+                                                            "No recording device available.\n"
+                                                            "Please connect an input device and rescan."));
+    case Err::LeadInRecordingNoValidClipAtCursor: return muse::Ret(retCode,
+                                                                   muse::trc("record",
+                                                                             "Please select a time within a clip."));
+    case Err::LeadInRecordingNoTracksSelected: return muse::Ret(retCode,
+                                                                muse::trc("record",
+                                                                          "Please select a track for lead-in recording."));
+    }
+
+    return muse::Ret(static_cast<int>(e));
+}
+}

@@ -1,0 +1,52 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#ifndef AU_PROJECTSCENE_PROJECTSCENEMODULE_H
+#define AU_PROJECTSCENE_PROJECTSCENEMODULE_H
+
+#include <memory>
+
+#include "modularity/imodulesetup.h"
+
+namespace au::projectscene {
+class ProjectSceneActionsController;
+class ProjectSceneConfiguration;
+class RealtimeEffectPanelTrackSelection;
+class ProjectSceneUiState;
+
+class ProjectSceneModule : public muse::modularity::IModuleSetup
+{
+public:
+
+    std::string moduleName() const override;
+    void registerResources() override;
+    void registerExports() override;
+    void resolveImports() override;
+    void registerUiTypes() override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
+
+    muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
+
+private:
+    std::shared_ptr<ProjectSceneConfiguration> m_configuration;
+};
+
+class ProjectSceneContext : public muse::modularity::IContextSetup
+{
+public:
+    ProjectSceneContext(const muse::modularity::ContextPtr& ctx)
+        : muse::modularity::IContextSetup(ctx) {}
+
+    void registerExports() override;
+    void resolveImports() override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
+    void onDeinit() override;
+
+private:
+    std::shared_ptr<ProjectSceneActionsController> m_projectSceneActionsController;
+    std::shared_ptr<RealtimeEffectPanelTrackSelection> m_realtimeEffectPanelTrackSelection;
+    std::shared_ptr<ProjectSceneUiState> m_uiState;
+};
+}
+
+#endif // AU_PROJECTSCENE_PROJECTSCENEMODULE_H

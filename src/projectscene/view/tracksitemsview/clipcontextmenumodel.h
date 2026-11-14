@@ -1,0 +1,46 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "context/iglobalcontext.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+
+#include "iprojectsceneconfiguration.h"
+#include "types/projectscenetypes.h"
+
+namespace au::projectscene {
+class ClipContextMenuModel : public muse::uicomponents::AbstractMenuModel
+{
+    Q_OBJECT
+
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+
+    Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
+
+public:
+    ClipContextMenuModel() = default;
+
+    Q_INVOKABLE void load() override;
+
+    ClipKey clipKey() const;
+    void setClipKey(const ClipKey& newClipKey);
+
+signals:
+    void clipKeyChanged();
+    void clipTitleEditRequested();
+
+private:
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
+    void updateStretchEnabledState(muse::uicomponents::MenuItem& item);
+    void updatePitchSpeedModifiedEnabledState(muse::uicomponents::MenuItem& item);
+
+    muse::rcommand::Params clipParams() const;
+    muse::uicomponents::MenuItemList makeClipColourItems();
+    void updateColorCheckedState();
+    void updateColorMenu();
+
+    ClipKey m_clipKey;
+};
+}

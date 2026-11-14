@@ -1,0 +1,49 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "trackedit/itrackeditclipboard.h"
+#include "trackedit/iclipboarddata.h"
+
+#include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
+
+namespace au::trackedit {
+class Au3TrackData;
+using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
+
+class Au3TrackeditClipboard : public ITrackeditClipboard, public muse::Contextable
+{
+    muse::GlobalInject<IClipboardData> clipboardData;
+
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+
+public:
+    Au3TrackeditClipboard(const muse::modularity::ContextPtr& ctx)
+        : muse::Contextable(ctx) {}
+
+    std::vector<ITrackDataPtr> trackDataCopy() const override;
+    void clearTrackData() override;
+    bool trackDataEmpty() const override;
+    size_t trackDataSize() const override;
+    void addTrackData(ITrackDataPtr) override;
+
+    void setMultiSelectionCopy(bool newValue) override;
+    bool isMultiSelectionCopy() const override;
+
+    void setRangeSelectionCopy(bool newValue) override;
+    bool isRangeSelectionCopy() const override;
+
+    std::vector<muse::io::path_t> systemClipboardFilePaths() const override;
+    void clearSystemClipboard() override;
+
+private:
+    friend class Au3TrackEditClipboardTests;
+
+    static std::set<int64_t> getGroupIDs(const std::vector<Au3TrackDataPtr>& tracksData);
+    std::vector<int64_t> createNewGroupIDs(const std::set<int64_t>& groupIDs) const;
+    static void updateTracksDataWithIDs(const std::vector<Au3TrackDataPtr>& tracksData, const std::set<int64_t>& groupIDs,
+                                        const std::vector<int64_t>& newGroupIDs);
+};
+}

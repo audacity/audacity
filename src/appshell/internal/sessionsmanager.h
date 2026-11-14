@@ -1,0 +1,75 @@
+/*
+ * SPDX-License-Identifier: GPL-3.0-only
+ * MuseScore-CLA-applies
+ *
+ * MuseScore
+ * Music Composition & Notation
+ *
+ * Copyright (C) 2021 MuseScore BVBA and others
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License version 3 as
+ * published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+#ifndef AU_APPSHELL_SESSIONSMANAGER_H
+#define AU_APPSHELL_SESSIONSMANAGER_H
+
+#include "async/asyncable.h"
+
+#include "modularity/ioc.h"
+#include "global/io/ifilesystem.h"
+#include "rcommand/icommanddispatcher.h"
+#include "context/iglobalcontext.h"
+#include "iappshellconfiguration.h"
+#include "multiwindows/imultiwindowsprovider.h"
+#include "isessionsmanager.h"
+#include "au3wrap/iau3project.h"
+
+#include "project/iprojectconfiguration.h"
+
+namespace au::appshell {
+class SessionsManager : public ISessionsManager, public muse::async::Asyncable, public muse::Contextable
+{
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
+
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+
+public:
+    SessionsManager(const muse::modularity::ContextPtr& ctx)
+        : muse::Contextable(ctx) {}
+
+    void init();
+
+    bool hasProjectsForRestore() override;
+    muse::io::paths_t projectsForRestore() const override;
+
+    void restore(const muse::io::paths_t& projects) override;
+    void discard(const muse::io::paths_t& projects) override;
+
+private:
+    void pruneOutdatedProjects();
+    void update();
+
+    void removeProjectFromSession(const muse::io::path_t& projectPath);
+    void addProjectToSession(const muse::io::path_t& projectPath);
+
+    void removeUnsavedChanges(const muse::io::path_t& projectPath);
+
+    muse::io::path_t m_lastOpenedProjectPath;
+};
+}
+
+#endif // AU_APPSHELL_SESSIONSMANAGER_H

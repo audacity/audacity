@@ -1,0 +1,28 @@
+if (NOT AU_MODULE_EFFECTS_AUDIO_UNIT)
+    add_subdirectory(audio_unit)
+endif()
+
+if (NOT AU_MODULE_EFFECTS_LV2)
+    add_subdirectory(lv2)
+endif()
+
+if (NOT AU_MODULE_EFFECTS_VST)
+    add_subdirectory(vst)
+endif()
+
+if (NOT AU_BUILD_CLOUD_AUDIOCOM)
+    add_subdirectory(au3cloud)
+endif()
+
+if (NOT AU_BUILD_MUSEHUB_MODULE)
+    add_subdirectory(musehub)
+endif()
+
+if (NOT AU_BUILD_USAGEINFO_MODULE)
+    add_subdirectory(usageinfo)
+endif()
+
+if (NOT MUSE_MODULE_EXTENSIONS)
+    add_subdirectory(extensions)
+    add_subdirectory(effects_extensions)
+endif()

@@ -1,0 +1,1044 @@
+/*  SPDX-License-Identifier: GPL-2.0-or-later */
+/*!********************************************************************
+
+  Audacity: A Digital Audio Editor
+
+  CloudSyncService.cpp
+
+  Dmitry Vedenko
+
+**********************************************************************/
+#include "CloudSyncService.h"
+
+#include <algorithm>
+#include <cassert>
+#include <chrono>
+#include <fstream>
+#include <mutex>
+#include <string>
+
+#include "CloudLibrarySettings.h"
+
+#include "UserService.h"
+#include "sync/CloudProjectsDatabase.h"
+#include "sync/CloudSyncDTO.h"
+#include "sync/RemoteProjectSnapshot.h"
+
+#include "au3-string-utils/CodeConversions.h"
+
+#include "OAuthService.h"
+#include "ServiceConfig.h"
+
+#include "au3-utility/MemoryX.h"
+
+#include "au3-project/Project.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+
+#include "au3-basic-ui/BasicUI.h"
+#include "au3-files/FileNames.h"
+
+#include "au3-network-manager/IResponse.h"
+#include "au3-network-manager/NetworkManager.h"
+#include "au3-network-manager/Request.h"
+
+#include "au3-concurrency/concurrency/CancellationContext.h"
+namespace audacity::cloud::audiocom {
+namespace {
+std::mutex& GetResponsesMutex()
+{
+    static std::mutex mutex;
+    return mutex;
+}
+
+std::vector<std::shared_ptr<audacity::network_manager::IResponse> >&
+GetPendingRequests()
+{
+    static std::vector<std::shared_ptr<audacity::network_manager::IResponse> >
+    requests;
+
+    return requests;
+}
+
+void RemovePendingRequest(audacity::network_manager::IResponse* request)
+{
+    std::lock_guard lock { GetResponsesMutex() };
+
+    auto& requests = GetPendingRequests();
+
+    requests.erase(
+        std::remove_if(
+            requests.begin(), requests.end(),
+            [request](const auto& r) { return r.get() == request; }),
+        requests.end());
+}
+
+void PerformProjectGetRequest(
+    OAuthService& oAuthService, std::string url,
+    std::function<void(ResponseResult)> dataCallback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
+{
+    assert(oAuthService.HasAccessToken());
+
+    if (!oAuthService.HasAccessToken()) {
+        dataCallback({ SyncResultCode::Unauthorized });
+        return;
+    }
+
+    using namespace audacity::network_manager;
+
+    auto request = Request(std::move(url));
+
+    request.setHeader(
+        common_headers::ContentType, common_content_types::ApplicationJson);
+
+    request.setHeader(
+        common_headers::Accept, common_content_types::ApplicationJson);
+
+    SetCommonHeaders(request);
+    SetOptionalHeaders(request);
+
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    if (context) {
+        context->OnCancelled(response);
+
+        if (progressCallback) {
+            response->setDownloadProgressCallback([context, progressCallback] (int64_t current, int64_t expected) {
+                const double progress = expected > 0 ? static_cast<double>(current) / expected : 0.0;
+                if (!progressCallback(progress)) {
+                    context->Cancel();
+                }
+            });
+        }
+    }
+
+    response->setRequestFinishedCallback(
+        [dataCallback = std::move(dataCallback), context](auto response)
+    {
+        BasicUI::CallAfter(
+            [dataCallback = std::move(dataCallback), response, context]
+        {
+            auto removeRequest
+                =finally([response] { RemovePendingRequest(response); });
+
+            if (context && context->Cancelled()) {
+                dataCallback({ SyncResultCode::Cancelled });
+                return;
+            }
+
+            dataCallback(GetResponseResult(*response, true));
+        });
+    });
+
+    std::lock_guard lock { GetResponsesMutex() };
+    GetPendingRequests().emplace_back(std::move(response));
+}
+
+void GetProjectInfo(
+    OAuthService& oAuthService, const ServiceConfig& serviceConfig,
+    std::string projectId,
+    std::function<void(sync::ProjectInfo, ResponseResult)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
+{
+    assert(callback);
+
+    PerformProjectGetRequest(
+        oAuthService, serviceConfig.GetProjectInfoUrl(projectId),
+        [callback = std::move(callback)](ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            callback(sync::ProjectInfo {}, std::move(result));
+            return;
+        }
+
+        auto projectInfo = sync::DeserializeProjectInfo(result.Content);
+
+        if (!projectInfo) {
+            callback(
+                {}, { SyncResultCode::UnexpectedResponse,
+                      std::move(result.Content) });
+            return;
+        }
+
+        callback(std::move(*projectInfo), std::move(result));
+    }, progressCallback, std::move(context));
+}
+
+void GetSnapshotInfo(
+    OAuthService& oAuthService, const ServiceConfig& serviceConfig,
+    std::string projectId, std::string snapshotId,
+    std::function<void(sync::SnapshotInfo, ResponseResult result)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
+{
+    assert(callback);
+
+    PerformProjectGetRequest(
+        oAuthService, serviceConfig.GetSnapshotInfoUrl(projectId, snapshotId),
+        [callback = std::move(callback)](ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            callback({}, std::move(result));
+            return;
+        }
+
+        auto snapshotInfo = sync::DeserializeSnapshotInfo(result.Content);
+
+        if (!snapshotInfo) {
+            callback(
+                {}, { SyncResultCode::UnexpectedResponse,
+                      std::move(result.Content) });
+            return;
+        }
+
+        callback(std::move(*snapshotInfo), std::move(result));
+    }, progressCallback, std::move(context));
+}
+
+void GetSnapshotInfo(
+    OAuthService& oAuthService, const ServiceConfig& serviceConfig,
+    std::string projectId, std::string snapshotId,
+    std::function<
+        void(sync::ProjectInfo, sync::SnapshotInfo, ResponseResult result)>
+    callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
+{
+    assert(callback);
+
+    GetProjectInfo(
+        oAuthService, serviceConfig, projectId,
+        [callback   = std::move(callback), projectId,
+         snapshotId = std::move(snapshotId), &oAuthService,
+         &serviceConfig, progressCallback, context](sync::ProjectInfo projectInfo, ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            callback({}, {}, std::move(result));
+            return;
+        }
+
+        const auto id = !snapshotId.empty()
+                        ? snapshotId
+                        : (projectInfo.HeadSnapshot.Synced > 0
+                           ? projectInfo.HeadSnapshot.Id
+                           : projectInfo.LastSyncedSnapshotId);
+
+        if (id.empty()) {
+            callback(
+                std::move(projectInfo), sync::SnapshotInfo {},
+                { SyncResultCode::Success });
+            return;
+        }
+
+        GetSnapshotInfo(
+            oAuthService, serviceConfig, projectId, id,
+            [callback    = std::move(callback),
+             projectInfo = std::move(projectInfo)](
+                sync::SnapshotInfo snapshotInfo, ResponseResult result)
+        {
+            callback(
+                std::move(projectInfo), std::move(snapshotInfo),
+                std::move(result));
+        }, progressCallback, context);
+    }, progressCallback, context);
+}
+
+bool HasAutosave(const std::string& path)
+{
+    auto connection = sqlite::Connection::Open(path, sqlite::OpenMode::ReadOnly);
+
+    if (!connection) {
+        return false;
+    }
+
+    if (!connection->CheckTableExists("autosave")) {
+        return false;
+    }
+
+    auto statement
+        =connection->CreateStatement("SELECT COUNT(1) FROM autosave");
+
+    if (!statement) {
+        return false;
+    }
+
+    auto result = statement->Prepare().Run();
+
+    if (!result.IsOk()) {
+        return false;
+    }
+
+    for (const auto& row : result) {
+        if (row.GetOr(0, 0) > 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool DropAutosave(const std::string& path)
+{
+    auto connection
+        =sqlite::Connection::Open(path, sqlite::OpenMode::ReadWrite);
+
+    if (!connection) {
+        return false;
+    }
+
+    if (!connection->CheckTableExists("autosave")) {
+        return false;
+    }
+
+    auto statement = connection->CreateStatement("DELETE FROM autosave");
+
+    if (!statement) {
+        return false;
+    }
+
+    auto result = statement->Prepare().Run();
+
+    return result.IsOk();
+}
+} // namespace
+
+CloudSyncService& CloudSyncService::Get()
+{
+    static CloudSyncService service;
+    return service;
+}
+
+CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
+    concurrency::CancellationContextPtr context, int page, int pageSize,
+    std::string_view searchString)
+{
+    using namespace audacity::network_manager;
+
+    auto promise = std::make_shared<GetProjectsPromise>();
+
+    auto& serviceConfig = GetServiceConfig();
+    auto& oAuthService  = GetOAuthService();
+
+    auto request
+        =Request(serviceConfig.GetProjectsUrl(page, pageSize, searchString));
+
+    request.setHeader(
+        common_headers::ContentType, common_content_types::ApplicationJson);
+    request.setHeader(
+        common_headers::Accept, common_content_types::ApplicationJson);
+
+    SetCommonHeaders(request);
+    SetOptionalHeaders(request);
+
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    context->OnCancelled(response);
+
+    response->setRequestFinishedCallback(
+        [promise, response](auto)
+    {
+        auto responseResult = GetResponseResult(*response, true);
+
+        if (responseResult.Code != SyncResultCode::Success) {
+            promise->set_value(responseResult);
+            return;
+        }
+
+        auto projects
+            =sync::DeserializePaginatedProjectsResponse(responseResult.Content);
+
+        if (!projects) {
+            promise->set_value(
+                ResponseResult { SyncResultCode::UnexpectedResponse,
+                                 std::move(responseResult.Content) });
+            return;
+        }
+
+        promise->set_value(std::move(*projects));
+    });
+
+    return promise->get_future();
+}
+
+CloudSyncService::SyncFuture CloudSyncService::OpenFromCloud(
+    std::string projectId, std::string snapshotId, SyncMode mode,
+    sync::ProgressCallback callback,
+    concurrency::CancellationContextPtr context)
+{
+    if (mSyncInProcess.exchange(true)) {
+        auto blockedPromise = SyncPromise {};
+
+        blockedPromise.set_value({ sync::ProjectSyncResult::StatusCode::Blocked, {}, {} });
+        return blockedPromise.get_future();
+    }
+
+    // Reset promise
+    mSyncPromise = {};
+
+    if (projectId.empty()) {
+        FailSync({ SyncResultCode::InternalClientError, "Empty projectId" });
+        return mSyncPromise.get_future();
+    }
+
+    if (!callback) {
+        mProgressCallback = [](auto...) { return true; };
+    } else {
+        mProgressCallback = std::move(callback);
+    }
+
+    GetSnapshotInfo(
+        GetOAuthService(), GetServiceConfig(), projectId, snapshotId,
+        [this, mode, context](
+            sync::ProjectInfo projectInfo, sync::SnapshotInfo snapshotInfo,
+            ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            if (context && context->Cancelled()) {
+                CompleteSync({ sync::ProjectSyncResult::StatusCode::Cancelled, {}, {} });
+            } else {
+                FailSync(std::move(result));
+            }
+        } else {
+            SyncCloudSnapshot(projectInfo, snapshotInfo, mode);
+        }
+    }, [this](double) { return mProgressCallback(0.0); }, context);
+
+    return mSyncPromise.get_future();
+}
+
+CloudSyncService::SyncFuture CloudSyncService::SyncProject(
+    AudacityProject& project, const std::string& path, bool forceSync,
+    sync::ProgressCallback callback)
+{
+    ASSERT_MAIN_THREAD();
+
+    // Reset promise
+    mSyncPromise = {};
+
+    if (mSyncInProcess.exchange(true)) {
+        CompleteSync({ sync::ProjectSyncResult::StatusCode::Blocked });
+        return mSyncPromise.get_future();
+    }
+
+    if (!callback) {
+        mProgressCallback = [](auto...) { return true; };
+    } else {
+        mProgressCallback = std::move(callback);
+    }
+
+    auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+
+    auto projectInfo = cloudDatabase.GetProjectDataForPath(path);
+
+    if (!projectInfo) {
+        // We assume, that the project is local
+        CompleteSync(path);
+        return mSyncPromise.get_future();
+    }
+
+    GetProjectInfo(
+        GetOAuthService(), GetServiceConfig(), projectInfo->ProjectId,
+        [projectInfo = *projectInfo, &project, path,
+         mode        = forceSync ? SyncMode::ForceOverwrite : SyncMode::Normal,
+         this](sync::ProjectInfo remoteInfo, ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            FailSync(std::move(result));
+            return;
+        }
+
+        // Do not perform the snapshot request if the project is up to date
+        if (remoteInfo.HeadSnapshot.Id == projectInfo.SnapshotId) {
+            CompleteSync({ sync::ProjectSyncResult::StatusCode::Succeeded });
+            return;
+        }
+
+        const auto snapshotId = remoteInfo.HeadSnapshot.Synced > 0
+                                ? remoteInfo.HeadSnapshot.Id
+                                : remoteInfo.LastSyncedSnapshotId;
+
+        GetSnapshotInfo(
+            GetOAuthService(), GetServiceConfig(), remoteInfo.Id, snapshotId,
+            [this, &project, mode,
+             remoteInfo](sync::SnapshotInfo snapshotInfo, ResponseResult result)
+        {
+            if (result.Code != SyncResultCode::Success) {
+                FailSync(std::move(result));
+            } else {
+                SyncCloudSnapshot(remoteInfo, snapshotInfo, mode);
+            }
+        });
+    });
+
+    return mSyncPromise.get_future();
+}
+
+bool CloudSyncService::IsCloudProject(const std::string& path)
+{
+    auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+    auto projectInfo    = cloudDatabase.GetProjectDataForPath(path);
+
+    return projectInfo.has_value();
+}
+
+CloudSyncService::ProjectState
+CloudSyncService::GetProjectState(const std::string& projectId)
+{
+    auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+
+    auto projectInfo = cloudDatabase.GetProjectData(projectId);
+
+    if (!projectInfo) {
+        return ProjectState::NotAvaliable;
+    }
+
+    if (!wxFileExists(ToWXString(projectInfo->LocalPath.Get()))) {
+        return ProjectState::NotAvaliable;
+    }
+
+    if (projectInfo->SyncStatus == sync::DBProjectData::SyncStatusSynced) {
+        return ProjectState::FullySynced;
+    }
+
+    return ProjectState::PendingSync;
+}
+
+CloudSyncService::GetHeadSnapshotIDFuture
+CloudSyncService::GetHeadSnapshotID(
+    std::string_view projectId, sync::ProgressCallback progressCallback,
+    concurrency::CancellationContextPtr context)
+{
+    auto promise = std::make_shared<GetHeadSnapshotIDPromise>();
+
+    GetProjectInfo(
+        GetOAuthService(), GetServiceConfig(), std::string(projectId),
+        [promise](sync::ProjectInfo projectInfo, ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            promise->set_value(
+                sync::GetHeadSnapshotIDResult { std::move(result) });
+        } else {
+            promise->set_value({ projectInfo.HeadSnapshot.Id });
+        }
+    }, progressCallback, std::move(context));
+
+    return promise->get_future();
+}
+
+void CloudSyncService::FailSync(ResponseResult responseResult)
+{
+    CompleteSync(
+        sync::ProjectSyncResult { sync::ProjectSyncResult::StatusCode::Failed,
+                                  std::move(responseResult),
+                                  {} });
+}
+
+void CloudSyncService::CompleteSync(std::string path)
+{
+    CompleteSync(sync::ProjectSyncResult {
+            sync::ProjectSyncResult::StatusCode::Succeeded, {}, std::move(path) });
+}
+
+void CloudSyncService::CompleteSync(sync::ProjectSyncResult result)
+{
+    if (mRemoteSnapshot) {
+        result.Stats = mRemoteSnapshot->GetTransferStats();
+        ReportUploadStats(mRemoteSnapshot->GetProjectId(), result.Stats);
+    }
+
+    mRemoteSnapshot.reset();
+    mSyncInProcess.store(false);
+    mSyncPromise.set_value(std::move(result));
+}
+
+void CloudSyncService::SyncCloudSnapshot(
+    const sync::ProjectInfo& projectInfo, const sync::SnapshotInfo& snapshotInfo,
+    SyncMode mode)
+{
+    // Get the project location
+    auto localProjectInfo
+        =sync::CloudProjectsDatabase::Get().GetProjectData(projectInfo.Id);
+
+    const auto createNew = !localProjectInfo || mode == SyncMode::ForceNew;
+
+    const auto wxPath = createNew
+                        ? sync::MakeSafeProjectPath(
+        CloudProjectsSavePath.Read(),
+        audacity::ToWXString(projectInfo.Name))
+                        : audacity::ToWXString(localProjectInfo->LocalPath.Get());
+
+    const auto utf8Path = audacity::ToUTF8(wxPath);
+
+    const auto fileExists = wxFileExists(wxPath);
+
+    if (!fileExists) {
+        if (snapshotInfo.Id.empty()) {
+            FailSync({ SyncResultCode::SyncImpossible });
+            return;
+        }
+
+        const auto dir = CloudProjectsSavePath.Read();
+        FileNames::MkDir(dir);
+
+        InvisibleTemporaryProject project;
+        ProjectFileIO::Get(project.Project()).LoadProject(wxPath, true);
+    } else {
+        assert(localProjectInfo.has_value());
+        assert(mode != SyncMode::ForceNew);
+        // The project exists on the disk. Depending on how we got here, we might
+        // different scenarios:
+        // 1. Local snapshot ID matches the remote snapshot ID. Just complete the
+        // sync right away. If the project was modified locally, but not saved,
+        // the user will be prompted about the autosave.
+        if (
+            localProjectInfo->SnapshotId == snapshotInfo.Id
+            && localProjectInfo->SyncStatus != sync::DBProjectData::SyncStatusDownloading) {
+            CompleteSync(
+                { sync::ProjectSyncResult::StatusCode::Succeeded, {}, utf8Path });
+            return;
+        }
+        // 2. Project sync was interrupted.
+        if (
+            mode == SyncMode::Normal
+            && localProjectInfo->SyncStatus == sync::DBProjectData::SyncStatusUploading) {
+            // There is not enough information to decide if the project has
+            // diverged. Just open it, so the sync can resume. If the project has
+            // diverged, the user will be prompted to resolve the conflict on the
+            // next save.
+            CompleteSync(
+                { sync::ProjectSyncResult::StatusCode::Succeeded, {}, utf8Path });
+            return;
+        }
+        // 3. Project was modified locally, but not saved.
+        if (HasAutosave(utf8Path)) {
+            if (mode == SyncMode::Normal) {
+                FailSync({ SyncResultCode::Conflict });
+                return;
+            } else {
+                DropAutosave(utf8Path);
+            }
+        }
+    }
+
+    if (snapshotInfo.Id.empty()) {
+        FailSync({ SyncResultCode::SyncImpossible });
+        return;
+    }
+
+    mRemoteSnapshot = sync::RemoteProjectSnapshot::Sync(
+        projectInfo, snapshotInfo, utf8Path,
+        [this, createNew, path = utf8Path, projectId = projectInfo.Id,
+         snapshotId = snapshotInfo.Id](sync::RemoteProjectSnapshotState state)
+    {
+        UpdateDowloadProgress(
+            (state.ProjectDownloaded + state.BlocksDownloaded)
+            / (state.BlocksTotal + 1.0));
+
+        if (state.IsComplete()) {
+            const auto statusCode
+                =state.Result.Code == SyncResultCode::Success
+                  ? sync::ProjectSyncResult::StatusCode::Succeeded
+                  : state.Result.Code == SyncResultCode::Cancelled
+                  ? sync::ProjectSyncResult::StatusCode::Cancelled
+                  : sync::ProjectSyncResult::StatusCode::Failed;
+
+            CompleteSync({ statusCode, std::move(state.Result), std::move(path) });
+        }
+    },
+        mode == SyncMode::ForceNew);
+}
+
+void CloudSyncService::UpdateDowloadProgress(double downloadProgress)
+{
+    mDownloadProgress.store(downloadProgress);
+
+    if (mProgressUpdateQueued.exchange(true)) {
+        return;
+    }
+
+    BasicUI::CallAfter(
+        [this]
+    {
+        auto remoteSnapshot = mRemoteSnapshot;
+
+        if (remoteSnapshot && !mProgressCallback(mDownloadProgress.load())) {
+            remoteSnapshot->Cancel();
+        }
+
+        mProgressUpdateQueued.store(false);
+    });
+}
+
+void CloudSyncService::ReportUploadStats(
+    std::string_view projectId, const TransferStats& stats)
+{
+    sync::NetworkStats networkStats;
+
+    networkStats.Bytes      = stats.BytesTransferred;
+    networkStats.Blocks     = stats.BlocksTransferred;
+    networkStats.Files      = stats.ProjectFilesTransferred;
+    networkStats.Mixes      = 0;
+    networkStats.IsDownload = true;
+
+    using namespace audacity::network_manager;
+
+    auto request = Request(GetServiceConfig().GetNetworkStatsUrl(projectId));
+
+    request.setHeader(
+        common_headers::ContentType, common_content_types::ApplicationJson);
+
+    SetCommonHeaders(request);
+    SetOptionalHeaders(request);
+
+    auto body = Serialize(networkStats);
+
+    auto response
+        =NetworkManager::GetInstance().doPost(request, body.data(), body.size());
+    // Keep response alive
+    response->setRequestFinishedCallback([response](auto) {});
+}
+
+void GetAudioInfo(
+    OAuthService& oAuthService, const ServiceConfig& serviceConfig,
+    std::string audioId,
+    std::function<void(sync::CloudAudioFullInfo, ResponseResult)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
+{
+    assert(callback);
+
+    PerformProjectGetRequest(
+        oAuthService, serviceConfig.GetAudioInfoUrl(audioId),
+        [callback = std::move(callback)](ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            callback(sync::CloudAudioFullInfo {}, std::move(result));
+            return;
+        }
+
+        auto audioInfo = sync::DeserializeCloudAudioFullInfo(result.Content);
+
+        if (!audioInfo) {
+            callback({}, { SyncResultCode::UnexpectedResponse,
+                           std::move(result.Content) });
+            return;
+        }
+
+        callback(std::move(*audioInfo), std::move(result));
+    }, progressCallback, std::move(context));
+}
+
+void GetAudioDownloadInfo(
+    OAuthService& oAuthService, const ServiceConfig& serviceConfig,
+    std::string audioId,
+    std::function<void(sync::CloudAudioDownloadInfo, ResponseResult)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
+{
+    assert(callback);
+
+    PerformProjectGetRequest(oAuthService, serviceConfig.GetAudioDownloadListUrl(audioId),
+                             [callback = std::move(callback)](ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            callback(sync::CloudAudioDownloadInfo {}, std::move(result));
+            return;
+        }
+
+        auto downloadInfo = sync::DeserializeCloudAudioDownloadInfo(result.Content);
+
+        if (!downloadInfo) {
+            callback({}, {
+                    SyncResultCode::UnexpectedResponse,
+                    std::move(result.Content) });
+            return;
+        }
+
+        callback(std::move(*downloadInfo), std::move(result));
+    }, progressCallback, std::move(context));
+}
+
+CloudSyncService::GetAudioInfoFuture GetAudioInfo(
+    concurrency::CancellationContextPtr context, std::string_view audioId)
+{
+    using namespace audacity::network_manager;
+
+    auto promise = std::make_shared<CloudSyncService::GetAudioInfoPromise>();
+
+    auto& serviceConfig = GetServiceConfig();
+    auto& oAuthService = GetOAuthService();
+
+    auto request
+        =Request(serviceConfig.GetAudioInfoUrl(audioId));
+
+    request.setHeader(
+        common_headers::ContentType, common_content_types::ApplicationJson);
+    request.setHeader(
+        common_headers::Accept, common_content_types::ApplicationJson);
+
+    SetCommonHeaders(request);
+    SetOptionalHeaders(request);
+
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    context->OnCancelled(response);
+
+    response->setRequestFinishedCallback(
+        [promise, response](auto)
+    {
+        auto responseResult = GetResponseResult(*response, true);
+
+        if (responseResult.Code != SyncResultCode::Success) {
+            promise->set_value(responseResult);
+            return;
+        }
+
+        auto audioInfo
+            =sync::DeserializeCloudAudioInfo(responseResult.Content);
+
+        if (!audioInfo) {
+            promise->set_value(
+                ResponseResult { SyncResultCode::UnexpectedResponse,
+                                 std::move(responseResult.Content) });
+            return;
+        }
+
+        promise->set_value(std::move(*audioInfo));
+    });
+
+    return promise->get_future();
+}
+
+CloudSyncService::GetAudioListFuture CloudSyncService::GetAudioList(
+    concurrency::CancellationContextPtr context, int page, int pageSize,
+    std::string_view searchString)
+{
+    using namespace audacity::network_manager;
+
+    auto promise = std::make_shared<GetAudioListPromise>();
+
+    auto& serviceConfig = GetServiceConfig();
+    auto& oAuthService  = GetOAuthService();
+
+    auto request = Request(serviceConfig.GetAudioListUrl(page, pageSize, searchString));
+
+    request.setHeader(
+        common_headers::ContentType, common_content_types::ApplicationJson);
+    request.setHeader(
+        common_headers::Accept, common_content_types::ApplicationJson);
+
+    SetCommonHeaders(request);
+    SetOptionalHeaders(request);
+
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    context->OnCancelled(response);
+
+    response->setRequestFinishedCallback(
+        [promise, response](auto)
+    {
+        auto responseResult = GetResponseResult(*response, true);
+
+        if (responseResult.Code != SyncResultCode::Success) {
+            promise->set_value(responseResult);
+            return;
+        }
+
+        auto audios = sync::DeserializePaginatedAudioResponse(responseResult.Content);
+
+        if (!audios) {
+            promise->set_value(
+                ResponseResult { SyncResultCode::UnexpectedResponse,
+                                 std::move(responseResult.Content) });
+            return;
+        }
+
+        promise->set_value(std::move(*audios));
+    });
+
+    return promise->get_future();
+}
+
+void CloudSyncService::DownloadAudio(const std::string& name, const std::string& format, const std::string& url,
+                                     concurrency::CancellationContextPtr context)
+{
+    using namespace audacity::network_manager;
+    using namespace sync;
+
+    const Request request(url);
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    if (context) {
+        context->OnCancelled(response);
+    }
+
+    const auto filename = sync::MakeSafeFilePath(wxFileName::GetTempDir(), audacity::ToWXString(name), format);
+    auto audioFile = std::make_shared<std::ofstream>(filename.ToStdString(), std::ios::binary);
+
+    response->setRequestFinishedCallback([response, this, filename, name, format, audioFile, context]
+                                         (IResponse*) {
+        if (audioFile && audioFile->is_open()) {
+            audioFile->close();
+        }
+
+        if (response->getError() != NetworkError::NoError) {
+            const auto statusCode = context && context->Cancelled()
+                                    ? DownloadAudioResult::StatusCode::Cancelled
+                                    : DownloadAudioResult::StatusCode::Failed;
+            BasicUI::CallAfter([this, statusCode] {
+                mDownloadAudioPromise.set_value({ statusCode, {}, {} });
+                mDownloadInProcess.store(false);
+            });
+
+            return;
+        }
+
+        BasicUI::CallAfter([this, filename, name, format] {
+            mDownloadAudioPromise.set_value({
+                    DownloadAudioResult::StatusCode::Succeeded,
+                    {},
+                    filename.ToStdString(),
+                    name,
+                    format
+                });
+            mDownloadInProcess.store(false);
+        });
+    }
+                                         );
+
+    // Called each time, since downloading for update progress status.
+    response->setDownloadProgressCallback([this, context]
+                                          (int64_t current, int64_t expected) {
+        const double progress = expected > 0 ? static_cast<double>(current) / expected : 0.0;
+        mDownloadProgress.store(progress);
+
+        if (mAudioProgressUpdateQueued.exchange(true)) {
+            return;
+        }
+
+        BasicUI::CallAfter([this, context] {
+            if (mProgressCallback) {
+                if (!mProgressCallback(mDownloadProgress.load())) {
+                    if (context) {
+                        context->Cancel();
+                    }
+                }
+            }
+            mAudioProgressUpdateQueued.store(false);
+        });
+    }
+                                          );
+
+    // Called each time, since downloading for get data.
+    response->setOnDataReceivedCallback([audioFile]
+                                        (IResponse* response) {
+        if (response->getError() == NetworkError::NoError) {
+            std::vector<char> buffer(response->getBytesAvailable());
+
+            uint64_t bytes = response->readData(buffer.data(), buffer.size());
+
+            if (audioFile && audioFile->is_open()) {
+                audioFile->write(buffer.data(), bytes);
+            }
+        }
+    }
+                                        );
+}
+
+CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
+    std::string_view audioId,
+    sync::ProgressCallback callback,
+    concurrency::CancellationContextPtr context)
+{
+    if (mDownloadInProcess.exchange(true)) {
+        auto blockedPromise = DownloadAudioPromise {};
+
+        blockedPromise.set_value(
+            { sync::DownloadAudioResult::StatusCode::Blocked, {}, {} });
+        return blockedPromise.get_future();
+    }
+
+    mDownloadAudioPromise = {};
+
+    if (audioId.empty()) {
+        mDownloadAudioPromise.set_value(
+            { sync::DownloadAudioResult::StatusCode::Failed,
+              { SyncResultCode::InternalClientError, "Empty audioId" },
+              {} });
+        return mDownloadAudioPromise.get_future();
+    }
+
+    if (!callback) {
+        mProgressCallback = [](auto...) { return true; };
+    } else {
+        mProgressCallback = std::move(callback);
+    }
+
+    GetAudioInfo(GetOAuthService(), GetServiceConfig(), std::string(audioId),
+                 [this, context](sync::CloudAudioFullInfo audioInfo, ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            mDownloadInProcess.store(false);
+            const auto statusCode = context && context->Cancelled()
+                                    ? sync::DownloadAudioResult::StatusCode::Cancelled
+                                    : sync::DownloadAudioResult::StatusCode::Failed;
+            mDownloadAudioPromise.set_value(
+                { statusCode,
+                  std::move(result),
+                  {} });
+            return;
+        }
+
+        if (!audioInfo.IsDownloadable && audioInfo.AuthorId != GetUserService().GetUserId()) {
+            mDownloadInProcess.store(false);
+            mDownloadAudioPromise.set_value(
+                { sync::DownloadAudioResult::StatusCode::Failed,
+                  { SyncResultCode::Forbidden, "You don't have permission to download this audio" },
+                  {} });
+            return;
+        }
+
+        GetAudioDownloadInfo(GetOAuthService(), GetServiceConfig(), audioInfo.Id,
+                             [this, audioInfo, context](sync::CloudAudioDownloadInfo downloadInfo, ResponseResult result)
+        {
+            if (result.Code != SyncResultCode::Success) {
+                mDownloadInProcess.store(false);
+                const auto statusCode = context && context->Cancelled()
+                                        ? sync::DownloadAudioResult::StatusCode::Cancelled
+                                        : sync::DownloadAudioResult::StatusCode::Failed;
+                mDownloadAudioPromise.set_value(
+                    { statusCode,
+                      std::move(result),
+                      {} });
+            } else {
+                if (downloadInfo.Items.empty()) {
+                    mDownloadInProcess.store(false);
+                    mDownloadAudioPromise.set_value(
+                        { sync::DownloadAudioResult::StatusCode::Failed,
+                          { SyncResultCode::UnexpectedResponse,
+                            "Empty download items" },
+                          {} });
+                    return;
+                }
+                // find source file (the one that was uploaded, before any transcodes) url and download file
+                auto item = std::find_if(downloadInfo.Items.begin(), downloadInfo.Items.end(),
+                                         [](const auto& item)
+                {
+                    return item.IsSource;
+                });
+                // If source file not found, download first available format
+                if (item == downloadInfo.Items.end()) {
+                    item = downloadInfo.Items.begin();
+                }
+                DownloadAudio(audioInfo.Title, item->Format, item->Url, context);
+            }
+            //The "real" progress is tracked in DownloadAudio
+            // but we need to update the progress to receive cancellation information
+        }, [this](double) { return mProgressCallback(0.0); }, context);
+    }, [this](double) { return mProgressCallback(0.0); }, context);
+
+    return mDownloadAudioPromise.get_future();
+}
+} // namespace audacity::cloud::audiocom

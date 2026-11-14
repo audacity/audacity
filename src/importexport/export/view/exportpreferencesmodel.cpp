@@ -1,0 +1,903 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+
+#include "exportpreferencesmodel.h"
+
+#include "framework/global/containers.h"
+#include "framework/global/io/fileinfo.h"
+#include "framework/global/stringutils.h"
+#include "framework/global/translation.h"
+#include "framework/global/defer.h"
+
+#include "trackedit/trackeditutils.h"
+#include "importexport/export/exportutils.h"
+#include "project/projectcommands.h"
+
+#include <algorithm>
+#include <optional>
+
+using namespace au::importexport;
+
+namespace {
+QString prepareExtensionsString(const QStringList& extensionList)
+{
+    QString result;
+    QTextStream stream(&result);
+
+    for (const auto& ext : extensionList) {
+        if (ext.isEmpty()) {
+            continue;
+        }
+
+        if (!result.isEmpty()) {
+            stream << " ";
+        }
+
+        stream << "*." << ext;
+    }
+
+    return result;
+}
+
+QString otherSampleRateLabel()
+{
+    return muse::qtrc("export", "Other…");
+}
+
+QString customSampleRateName(int rate)
+{
+    return muse::qtrc("export", "%1 Hz (custom)").arg(QString::number(rate));
+}
+}
+
+const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
+    { ExportProcessType::FULL_PROJECT_AUDIO, QT_TRANSLATE_NOOP("export", "Full project audio") },
+    { ExportProcessType::SELECTED_AUDIO, QT_TRANSLATE_NOOP("export", "Selected audio") },
+    { ExportProcessType::AUDIO_IN_LOOP_REGION, QT_TRANSLATE_NOOP("export", "Audio in loop region") },
+    { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES, QT_TRANSLATE_NOOP("export", "Tracks as separate audio files") },
+    { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, QT_TRANSLATE_NOOP("export", "Labeled regions as separate audio files") },
+    //! NOTE: not implemented yet
+    // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE,
+    //   QT_TRANSLATE_NOOP("export", "Export all labels as a subtitle file") }
+};
+
+QString processName(ExportProcessType type)
+{
+    auto it = EXPORT_PROCESS_MAPPING.find(type);
+    if (it == EXPORT_PROCESS_MAPPING.end()) {
+        return {};
+    }
+    return QString::fromStdString(muse::trc("export", it->second));
+}
+
+const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
+    8000,
+    11025,
+    16000,
+    22050,
+    32000,
+    44100,
+    48000,
+    88200,
+    96000,
+    176400,
+    192000,
+    352800,
+    384000
+};
+
+ExportPreferencesModel::ExportPreferencesModel(QObject* parent)
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+{
+}
+
+ExportPreferencesModel::~ExportPreferencesModel()
+{
+    cancel();
+    if (m_resetSampleRate) {
+        setExportSampleRate("");
+    } else {
+        m_resetSampleRate = true;
+    }
+}
+
+void ExportPreferencesModel::init()
+{
+    configuration()->startEditSettings();
+
+    exportConfiguration()->processTypeChanged().onNotify(this, [this] {
+        emit currentProcessChanged();
+        emit trimBlankSpaceEnabledChanged();
+        emit fileNamePreviewChanged();
+        if (separateFilesExport() && customMappingEnabled()) {
+            updateExportChannels();
+        }
+    });
+
+    exportConfiguration()->trimBlankSpaceChanged().onNotify(this, [this] {
+        emit trimBlankSpaceChanged();
+    });
+
+    exportConfiguration()->includeNumbersChanged().onNotify(this, [this] {
+        emit includeNumbersChanged();
+        emit fileNamePreviewChanged();
+    });
+
+    exportConfiguration()->includeAudioBeforeFirstLabelChanged().onNotify(this, [this] {
+        emit includeAudioBeforeFirstLabelChanged();
+        emit trimBlankSpaceEnabledChanged();
+    });
+    if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
+         && !playbackController()->loopRegion().isValid())
+        || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
+            && selectionController()->timeSelectionIsEmpty())
+        || (exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE
+            && !hasLabelsToExport())) {
+        setCurrentProcess(processName(ExportProcessType::FULL_PROJECT_AUDIO));
+    }
+
+    muse::io::path_t displayName = globalContext()->currentProject()->displayName();
+    if (muse::io::suffix(displayName) == "aup4unsaved") {
+        m_filename = "Untitled";
+    } else {
+        m_filename = globalContext()->currentProject()->displayName();
+    }
+    emit filenameChanged();
+    emit suggestedFilePathChanged();
+
+    exportConfiguration()->directoryPathChanged().onNotify(this, [this] {
+        emit directoryPathChanged();
+        emit suggestedFilePathChanged();
+    });
+
+    exportConfiguration()->currentFormatChanged().onNotify(this, [this] {
+        emit currentFormatChanged();
+        emit fileExtensionChanged();
+        emit suggestedFilePathChanged();
+        emit fileNamePreviewChanged();
+
+        emit exportSampleRateListChanged();
+        emit maxExportChannelsChanged();
+        updateCurrentSampleRate();
+        updateExportChannels();
+    });
+    if (exportConfiguration()->currentFormat().empty()) {
+        const std::vector<std::string> formats = exporter()->formatsList();
+        if (!formats.empty()) {
+            setCurrentFormat(QString::fromStdString(formats.front()));
+        }
+    }
+
+    exportConfiguration()->exportChannelsTypeChanged().onNotify(this, [this] {
+        emit exportChannelsTypeChanged();
+    });
+
+    exportConfiguration()->exportSampleRateChanged().onNotify(this, [this](){
+        emit exportSampleRateChanged();
+    });
+
+    updateExportChannels();
+    updateCurrentSampleRate();
+}
+
+void ExportPreferencesModel::apply()
+{
+    configuration()->applySettings();
+    m_resetSampleRate = false;
+}
+
+void ExportPreferencesModel::cancel()
+{
+    auto defaultMetadata = exportConfiguration()->defaultMetadata();
+    configuration()->rollbackSettings();
+
+    // no matter if user exports audio or cancels - if they edited metadata
+    // it needs to stay
+    if (defaultMetadata != exportConfiguration()->defaultMetadata()) {
+        exportConfiguration()->setDefaultMetadata(defaultMetadata);
+    }
+}
+
+bool ExportPreferencesModel::settingsOnly() const
+{
+    return m_settingsOnly;
+}
+
+void ExportPreferencesModel::setSettingsOnly(bool settingsOnly)
+{
+    if (m_settingsOnly == settingsOnly) {
+        return;
+    }
+
+    m_settingsOnly = settingsOnly;
+    emit settingsOnlyChanged();
+    emit currentProcessChanged();
+}
+
+QString ExportPreferencesModel::currentProcess() const
+{
+    return processName(exportConfiguration()->processType());
+}
+
+void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
+{
+    ExportProcessType type;
+    for (const auto& process : EXPORT_PROCESS_MAPPING) {
+        if (newProcess == processName(process.first)) {
+            type = process.first;
+        }
+    }
+
+    if (newProcess == currentProcess()) {
+        return;
+    }
+
+    if (type == ExportProcessType::AUDIO_IN_LOOP_REGION && !playbackController()->loopRegion().isValid()) {
+        interactive()->error(muse::trc("export", "No loop region"),
+                             muse::trc("export",
+                                       "Export audio in loop region requires a loop in the project. Please go back, create a loop and try again."));
+        return;
+    }
+
+    const bool timeEmpty = selectionController()->timeSelectionIsEmpty();
+    const bool noClips = !selectionController()->hasSelectedClips();
+    const bool moreThanOneClip = selectionController()->selectedClips().size() > 1;
+    if (type == ExportProcessType::SELECTED_AUDIO
+        && timeEmpty
+        && (noClips || moreThanOneClip)) {
+        interactive()->error(muse::trc("export", "No selected audio"),
+                             muse::trc("export",
+                                       "Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again."));
+        return;
+    }
+
+    if (type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE && !hasLabelsToExport()) {
+        interactive()->error(muse::trc("export", "No labels"),
+                             muse::trc("export",
+                                       "Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again."));
+        return;
+    }
+
+    exportConfiguration()->setProcessType(type);
+}
+
+bool ExportPreferencesModel::hasLabelsToExport() const
+{
+    const IExporter::Options options {
+        { IExporter::OptionKey::ProcessType, muse::Val(ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE) },
+    };
+    return exporter()->prepareSeparateFiles(options).success();
+}
+
+bool ExportPreferencesModel::trimBlankSpace() const
+{
+    return exportConfiguration()->trimBlankSpace();
+}
+
+void ExportPreferencesModel::setTrimBlankSpace(bool trim)
+{
+    if (trim == exportConfiguration()->trimBlankSpace()) {
+        return;
+    }
+
+    exportConfiguration()->setTrimBlankSpace(trim);
+}
+
+bool ExportPreferencesModel::trimBlankSpaceEnabled() const
+{
+    return !separateFilesByLabels() || includeAudioBeforeFirstLabel();
+}
+
+bool ExportPreferencesModel::separateFilesExport() const
+{
+    if (m_settingsOnly) {
+        return false;
+    }
+
+    const ExportProcessType type = exportConfiguration()->processType();
+    return type == ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES
+           || type == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
+}
+
+bool ExportPreferencesModel::separateFilesByLabels() const
+{
+    return !m_settingsOnly && exportConfiguration()->processType() == ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE;
+}
+
+QString ExportPreferencesModel::fileNamePrefix() const
+{
+    return m_fileNamePrefix;
+}
+
+void ExportPreferencesModel::setFileNamePrefix(const QString& prefix)
+{
+    if (m_fileNamePrefix == prefix) {
+        return;
+    }
+
+    m_fileNamePrefix = prefix;
+    emit fileNamePrefixChanged();
+    emit fileNamePreviewChanged();
+}
+
+bool ExportPreferencesModel::includeNumbers() const
+{
+    return exportConfiguration()->includeNumbers();
+}
+
+void ExportPreferencesModel::setIncludeNumbers(bool include)
+{
+    if (include == exportConfiguration()->includeNumbers()) {
+        return;
+    }
+
+    exportConfiguration()->setIncludeNumbers(include);
+}
+
+bool ExportPreferencesModel::includeAudioBeforeFirstLabel() const
+{
+    return exportConfiguration()->includeAudioBeforeFirstLabel();
+}
+
+void ExportPreferencesModel::setIncludeAudioBeforeFirstLabel(bool include)
+{
+    if (include == exportConfiguration()->includeAudioBeforeFirstLabel()) {
+        return;
+    }
+
+    exportConfiguration()->setIncludeAudioBeforeFirstLabel(include);
+}
+
+QString ExportPreferencesModel::fileNamePreview() const
+{
+    //: Placeholder for a label's name in the export file name preview
+    const std::string labelName = muse::trc("export", "LabelName");
+    //: Placeholder for a track's name in the export file name preview
+    const std::string trackName = muse::trc("export", "TrackName");
+    const std::optional<int> number = includeNumbers() ? std::optional<int>(1) : std::nullopt;
+    const std::string name = utils::sanitizeFileName(utils::formatFileName(m_fileNamePrefix.toStdString(), number,
+                                                                           separateFilesByLabels() ? labelName : trackName));
+
+    const std::vector<std::string> extensions = exporter()->formatExtensions(currentFormat().toStdString());
+    return QString::fromStdString(extensions.empty() ? name : name + "." + extensions.front());
+}
+
+QVariantList ExportPreferencesModel::processList() const
+{
+    QVariantList result;
+    for (const auto& process : EXPORT_PROCESS_MAPPING) {
+        result << processName(process.first);
+    }
+
+    return result;
+}
+
+QString ExportPreferencesModel::filename() const
+{
+    return m_filename;
+}
+
+muse::io::path_t ExportPreferencesModel::exportFilePath() const
+{
+    std::string name = m_filename.toStdString();
+
+    const std::vector<std::string> extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
+    if (!extensions.empty()) {
+        const std::string suffix = muse::strings::toLower(muse::io::suffix(muse::io::path_t(name)));
+        if (!muse::contains(extensions, suffix)) {
+            name += "." + extensions.front();
+        }
+    }
+
+    return exportConfiguration()->directoryPath().appendingComponent(name);
+}
+
+QString ExportPreferencesModel::suggestedFilePath() const
+{
+    return exportFilePath().toQString();
+}
+
+void ExportPreferencesModel::setFilename(const QString& filename)
+{
+    if (m_filename == filename) {
+        return;
+    }
+
+    m_filename = filename;
+    emit filenameChanged();
+    emit suggestedFilePathChanged();
+}
+
+QStringList ExportPreferencesModel::formatExtensions(const QString& format) const
+{
+    QStringList result;
+    for (const auto& ext : exporter()->formatExtensions(format.toStdString())) {
+        result.append(QString::fromStdString(ext));
+    }
+    return result;
+}
+
+QStringList ExportPreferencesModel::supportedExtensionsList() const
+{
+    QStringList extensions;
+    for (const std::string& format : exporter()->formatsList()) {
+        for (const QString& ext : formatExtensions(QString::fromStdString(format))) {
+            extensions.push_back(ext);
+        }
+    }
+
+    return extensions;
+}
+
+QString ExportPreferencesModel::directoryPath() const
+{
+    return exportConfiguration()->directoryPath().toQString();
+}
+
+void ExportPreferencesModel::setDirectoryPath(const QString& path)
+{
+    if (path == directoryPath()) {
+        return;
+    }
+
+    exportConfiguration()->setDirectoryPath(path);
+}
+
+QString ExportPreferencesModel::currentFormat() const
+{
+    std::string currentFormat = exportConfiguration()->currentFormat();
+
+    if (!currentFormat.empty()) {
+        return QString::fromStdString(currentFormat);
+    } else {
+        if (!exporter()->formatsList().empty()) {
+            return QString::fromStdString(exporter()->formatsList().at(0));
+        }
+    }
+
+    return {};
+}
+
+void ExportPreferencesModel::setCurrentFormat(const QString& format)
+{
+    if (format == QString::fromStdString(exportConfiguration()->currentFormat())) {
+        return;
+    }
+
+    exportConfiguration()->setCurrentFormat(format.toStdString());
+    emit customFFmpegOptionsVisibleChanged();
+    emit hasMetadataChanged();
+}
+
+QStringList ExportPreferencesModel::formatsList() const
+{
+    QStringList result;
+    for (const auto& format : exporter()->formatsList()) {
+        result << QString::fromStdString(format);
+    }
+
+    return result;
+}
+
+void ExportPreferencesModel::setExportChannelsType(ExportChannelsPref::ExportChannels type)
+{
+    if (type == exportChannelsType()) {
+        return;
+    }
+
+    exportConfiguration()->setExportChannelsType(static_cast<int>(type));
+    emit exportChannelsTypeChanged();
+}
+
+ExportChannelsPref::ExportChannels ExportPreferencesModel::exportChannelsType() const
+{
+    return static_cast<ExportChannelsPref::ExportChannels>(exportConfiguration()->exportChannelsType());
+}
+
+int ExportPreferencesModel::maxExportChannels() const
+{
+    return exporter()->maxChannels();
+}
+
+QString ExportPreferencesModel::exportSampleRate() const
+{
+    auto currentSampleRate = exportConfiguration()->exportSampleRate();
+    for (const auto& rate : m_sampleRateMapping) {
+        if (currentSampleRate == rate.first) {
+            return rate.second;
+        }
+    }
+
+    if (currentSampleRate > 0) {
+        return customSampleRateName(currentSampleRate);
+    }
+
+    return {};
+}
+
+QVariantList ExportPreferencesModel::exportSampleRateList()
+{
+    std::vector<int> sampleRateList = exporter()->sampleRateList();
+    const bool anySampleRateAllowed = sampleRateList.empty();
+    if (anySampleRateAllowed) {
+        sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
+    }
+
+    QVariantList result;
+    m_sampleRateMapping.clear();
+    for (const auto& rate : sampleRateList) {
+        QString sampleRateName = QString::number(rate) + " Hz";
+        m_sampleRateMapping.push_back(std::make_pair(rate, sampleRateName));
+        result << QVariant::fromValue(sampleRateName);
+    }
+
+    if (anySampleRateAllowed) {
+        const int currentSampleRate = exportConfiguration()->exportSampleRate();
+        if (currentSampleRate > 0 && !muse::contains(sampleRateList, currentSampleRate)) {
+            const QString sampleRateName = customSampleRateName(currentSampleRate);
+            m_sampleRateMapping.push_back(std::make_pair(currentSampleRate, sampleRateName));
+            result << QVariant::fromValue(sampleRateName);
+        }
+
+        result << QVariant::fromValue(otherSampleRateLabel());
+    }
+
+    return result;
+}
+
+void ExportPreferencesModel::setExportSampleRate(const QString& rateName)
+{
+    if (rateName == otherSampleRateLabel()) {
+        openCustomSampleRateDialog();
+        return;
+    }
+
+    if (rateName == exportSampleRate()) {
+        return;
+    }
+
+    if (rateName.isEmpty()) {
+        // special case, reset sample rate so it gets
+        // calculated based on tracks' sample rates
+        exportConfiguration()->setExportSampleRate(-1);
+    }
+
+    auto it = std::find_if(m_sampleRateMapping.begin(), m_sampleRateMapping.end(),
+                           [&rateName](const auto& rate) { return rateName == rate.second; });
+    if (it != m_sampleRateMapping.end()) {
+        exportConfiguration()->setExportSampleRate(it->first);
+        emit exportSampleRateChanged();
+        return;
+    }
+}
+
+void ExportPreferencesModel::openCustomSampleRateDialog()
+{
+    muse::UriQuery customRateUri("audacity://trackedit/custom_rate");
+    customRateUri.addParam("title", muse::Val(muse::trc("export", "Set sample rate")));
+    customRateUri.addParam("rate", muse::Val(exportConfiguration()->exportSampleRate()));
+
+    interactive()->open(customRateUri)
+    .onResolve(this, [this](const muse::Val& val) {
+        const int customRate = val.toInt();
+        if (customRate > 0) {
+            exportConfiguration()->setExportSampleRate(customRate);
+        }
+
+        emit exportSampleRateListChanged();
+        emit exportSampleRateChanged();
+    })
+    .onReject(this, [this](int, const std::string&) {
+        emit exportSampleRateListChanged();
+        emit exportSampleRateChanged();
+    });
+}
+
+void ExportPreferencesModel::openCustomFFmpegDialog()
+{
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_CUSTOM_FFMPEG_OPTIONS_COMMAND);
+}
+
+void ExportPreferencesModel::openMetadataDialog()
+{
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_METADATA_DIALOG_COMMAND);
+}
+
+void ExportPreferencesModel::openCustomMappingDialog()
+{
+    commandDispatcher()->dispatch(project::PROJECT_OPEN_CUSTOM_MAPPING_COMMAND);
+}
+
+void ExportPreferencesModel::setFilePickerPath(const QString& path)
+{
+    muse::io::FileInfo info(path);
+
+    if (info.entryType() == muse::io::EntryType::File) {
+        setDirectoryPath(info.absolutePath());
+
+        setFilename(info.completeBaseName());
+        return;
+    }
+
+    setDirectoryPath(info.absoluteFilePath());
+}
+
+void ExportPreferencesModel::setFileDialogPath(const QString& path)
+{
+    muse::io::FileInfo info(path);
+
+    if (info.entryType() == muse::io::EntryType::Dir) {
+        setDirectoryPath(info.absoluteFilePath());
+        return;
+    }
+
+    setDirectoryPath(info.absolutePath());
+
+    setFilename(info.completeBaseName());
+}
+
+void ExportPreferencesModel::updateCurrentSampleRate()
+{
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
+    }
+
+    int sampleRate = exportConfiguration()->exportSampleRate();
+
+    std::vector<int> sampleRateList = exporter()->sampleRateList();
+    if (sampleRateList.empty()) {
+        //! NOTE An empty list means the codec accepts any sample rate,
+        //! so a valid current rate (including a custom one) can be kept
+        if (sampleRate > 0) {
+            return;
+        }
+        sampleRateList = DEFAULT_SAMPLE_RATE_LIST;
+    }
+
+    if (!muse::contains(sampleRateList, sampleRate)) {
+        auto trackList = project->trackList();
+        for (const auto& track : trackList) {
+            sampleRate = std::max(sampleRate, static_cast<int>(track.rate));
+        }
+    }
+
+    if (sampleRate <= 0) {
+        sampleRate = exporter()->projectSampleRate();
+    }
+
+    if (sampleRate <= 0) {
+        sampleRate = DEFAULT_EXPORT_SAMPLE_RATE;
+    }
+
+    std::sort(sampleRateList.begin(), sampleRateList.end());
+    auto it = std::find(sampleRateList.begin(), sampleRateList.end(), sampleRate);
+    int index = -1;
+
+    if (it != sampleRateList.end()) {
+        // expected sampleRate is available
+        index = static_cast<int>(std::distance(sampleRateList.begin(), it));
+    } else {
+        // check for sampleRate bigger than the preferred one
+        auto upper = std::upper_bound(sampleRateList.begin(), sampleRateList.end(), sampleRate);
+        if (upper != sampleRateList.end()) {
+            index = static_cast<int>(std::distance(sampleRateList.begin(), upper));
+        } else {
+            // no higher found, fallback to the highest available
+            index = static_cast<int>(sampleRateList.size()) - 1;
+        }
+    }
+
+    QVariantList stringSampleRateList = exportSampleRateList();
+    if (!stringSampleRateList.empty() && index >= 0 && index < stringSampleRateList.size()) {
+        setExportSampleRate(stringSampleRateList[index].toString());
+    }
+}
+
+void ExportPreferencesModel::updateExportChannels()
+{
+    int maxChannels = exporter()->maxChannels();
+
+    const auto project = globalContext()->currentTrackeditProject();
+    if (project) {
+        const bool recordsStereo = m_settingsOnly && audioDriverController()->configuration().inputChannels >= 2;
+        const bool hasStereo = recordsStereo || au::trackedit::utils::hasStereoTrack(project->trackList());
+        ExportChannelsPref::ExportChannels recommended = hasStereo
+                                                         ? ExportChannelsPref::ExportChannels::STEREO
+                                                         : ExportChannelsPref::ExportChannels::MONO;
+
+        if (static_cast<int>(recommended) <= maxChannels) {
+            setExportChannelsType(recommended);
+            return;
+        }
+    }
+
+    const auto fallback = maxChannels >= static_cast<int>(ExportChannelsPref::ExportChannels::STEREO)
+                          ? ExportChannelsPref::ExportChannels::STEREO
+                          : ExportChannelsPref::ExportChannels::MONO;
+
+    setExportChannelsType(fallback);
+}
+
+bool ExportPreferencesModel::verifyExportPossible()
+{
+    muse::Ret directoryCreated = fileSystem()->makePath(directoryPath());
+    if (!directoryCreated || directoryPath().isEmpty()) {
+        interactive()->error(muse::trc("export", "Export audio"),
+                             muse::mtrc("export",
+                                        "Could not export to “%1”: the destination folder could not be created. "
+                                        "Check that the path is valid and that you have permission to write to it.")
+                             .arg(muse::String::fromQString(directoryPath())).toStdString());
+        return false;
+    }
+
+    return true;
+}
+
+QStringList ExportPreferencesModel::fileFilter()
+{
+    QString allExt = prepareExtensionsString(supportedExtensionsList());
+    QStringList filter { muse::qtrc("project", "All supported files") + " (" + allExt + ")" };
+
+    for (const auto& format : formatsList()) {
+        QString extensionString = prepareExtensionsString(formatExtensions(format));
+        if (extensionString.isEmpty()) {
+            filter.append(muse::qtrc("project", format));
+        } else {
+            filter.append(muse::qtrc("project", format + " (" + prepareExtensionsString(formatExtensions(format)) + ")"));
+        }
+    }
+
+    return filter;
+}
+
+void ExportPreferencesModel::exportData()
+{
+    bool needToDisableMasterFx = needToDisableMasterFxBeforeExport();
+    if (needToDisableMasterFx) {
+        if (!warnAndDisableMasterFxBeforeExport()) {
+            return;
+        }
+    }
+
+    bool restoreMasterFx = needToDisableMasterFx;
+    const muse::Defer restoreMasterFxState([this, restoreMasterFx] {
+        if (restoreMasterFx) {
+            enableMasterFx();
+        }
+    });
+
+    const muse::Ret result = separateFilesExport() ? exportSeparateFiles() : exportSingleFile();
+    if (result.code() == static_cast<int>(muse::Ret::Code::Cancel)) {
+        return;
+    }
+
+    if (!result.success()) {
+        const std::string message = result.text().empty() ? muse::trc("export", "Export failed") : result.text();
+        interactive()->error(muse::trc("export", "Export error"), message);
+        return;
+    }
+
+    emit exportCompleted();
+}
+
+muse::Ret ExportPreferencesModel::exportSingleFile()
+{
+    const muse::io::path_t filePath = exportFilePath();
+
+    if (fileSystem()->exists(filePath) && !confirmOverwrite(muse::trc("export", "Do you want to overwrite?"))) {
+        return muse::make_ret(muse::Ret::Code::Cancel);
+    }
+
+    return exporter()->exportData(filePath);
+}
+
+muse::Ret ExportPreferencesModel::exportSeparateFiles()
+{
+    const muse::Ret prepared = exporter()->prepareSeparateFiles(separateFilesOptions());
+    if (!prepared) {
+        return prepared;
+    }
+
+    const muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
+    const std::vector<std::string> fileNames = exporter()->separateFileNames();
+    const bool anyFileExists = std::any_of(fileNames.begin(), fileNames.end(), [this, &directoryPath](const std::string& name) {
+        return fileSystem()->exists(directoryPath.appendingComponent(name));
+    });
+
+    if (anyFileExists
+        && !confirmOverwrite(muse::trc("export", "Some of the files already exist. Do you want to overwrite them?"))) {
+        return muse::make_ret(muse::Ret::Code::Cancel);
+    }
+
+    return exporter()->exportSeparateFiles(directoryPath);
+}
+
+bool ExportPreferencesModel::confirmOverwrite(const std::string& question)
+{
+    const int overwriteBtn = int(muse::IInteractive::Button::CustomButton) + 1;
+    const auto btnText = muse::trc("export", "Overwrite");
+    muse::IInteractive::Result result = interactive()->questionSync("", question,
+                                                                    { muse::IInteractive::ButtonData(overwriteBtn, btnText),
+                                                                      interactive()->buttonData(muse::IInteractive::Button::Cancel)
+                                                                    });
+    return result.button() == overwriteBtn;
+}
+
+IExporter::Options ExportPreferencesModel::separateFilesOptions() const
+{
+    return {
+        { IExporter::OptionKey::FileNamePrefix, muse::Val(m_fileNamePrefix.toStdString()) },
+        { IExporter::OptionKey::IncludeNumbers, muse::Val(includeNumbers()) },
+        { IExporter::OptionKey::IncludeAudioBeforeFirstLabel, muse::Val(includeAudioBeforeFirstLabel()) },
+    };
+}
+
+bool ExportPreferencesModel::customFFmpegOptionsVisible()
+{
+    return exporter()->isCustomFFmpegExportFormat();
+}
+
+bool ExportPreferencesModel::hasMetadata()
+{
+    return exporter()->hasMetadata();
+}
+
+int ExportPreferencesModel::optionsCount()
+{
+    return exporter()->optionsCount();
+}
+
+bool ExportPreferencesModel::needToDisableMasterFxBeforeExport() const
+{
+    return masterFxEnabled() && customMappingEnabled();
+}
+
+void ExportPreferencesModel::enableMasterFx() const
+{
+    realtimeEffectService()->setTrackEffectsActive(effects::IRealtimeEffectService::masterTrackId, true);
+}
+
+bool ExportPreferencesModel::masterFxEnabled() const
+{
+    const auto stack = realtimeEffectService()->effectStack(effects::IRealtimeEffectService::masterTrackId);
+    if (!stack.has_value()
+        || stack->empty()
+        || !realtimeEffectService()->trackEffectsActive(effects::IRealtimeEffectService::masterTrackId)) {
+        return false;
+    }
+
+    return std::any_of(stack->begin(), stack->end(), [this](const auto& state) {
+        return realtimeEffectService()->isActive(state);
+    });
+}
+
+bool ExportPreferencesModel::customMappingEnabled() const
+{
+    return exportChannelsType() == ExportChannelsPref::ExportChannels::CUSTOM;
+}
+
+muse::Ret ExportPreferencesModel::warnAndDisableMasterFxBeforeExport() const
+{
+    auto continueBtn = interactive()->buttonData(muse::IInteractive::Button::Continue);
+    continueBtn.accent = true;
+    auto cancelBtn = interactive()->buttonData(muse::IInteractive::Button::Cancel);
+
+    const auto result = interactive()->questionSync(
+        muse::trc("export", "Export audio"),
+        muse::trc("export",
+                  "To export with custom channel mapping, master effects must be turned off temporarily.\n\n"
+                  "Master effects will be turned back on after export."),
+        { continueBtn, cancelBtn }, continueBtn.btn);
+
+    if (result.button() != continueBtn.btn) {
+        return muse::make_ret(muse::Ret::Code::Cancel);
+    }
+
+    if (masterFxEnabled()) {
+        realtimeEffectService()->setTrackEffectsActive(effects::IRealtimeEffectService::masterTrackId, false);
+    }
+
+    return muse::make_ok();
+}

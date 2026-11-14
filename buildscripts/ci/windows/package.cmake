@@ -1,0 +1,209 @@
+
+message(STATUS "Package")
+
+# Config
+set(ARTIFACTS_DIR "build.artifacts")
+set(BUILD_DIR "build.release")
+set(INSTALL_DIR "build.install")
+
+# Options
+set(BUILD_MODE "" CACHE STRING "Build mode")
+set(PACKARCH "x86_64" CACHE STRING "Package architecture")
+
+set(UPGRADE_UUID "11111111-1111-1111-1111-111111111111" CACHE STRING "WiX Upgrade GUID")
+
+if (NOT BUILD_MODE)
+  file (STRINGS "${ARTIFACTS_DIR}/env/build_mode.env" BUILD_MODE)
+endif()
+
+# Check options
+if (NOT BUILD_MODE)
+  message(FATAL_ERROR "not set BUILD_MODE")
+endif()
+
+include(${CMAKE_CURRENT_LIST_DIR}/../common/audacity_package_name.cmake)
+
+# Setup package type
+set(PACK_TYPE "7z")
+if (BUILD_MODE STREQUAL "devel")
+  set(PACK_TYPE "7z")
+elseif(BUILD_MODE STREQUAL "nightly")
+  set(PACK_TYPE "7z")
+elseif(BUILD_MODE STREQUAL "testing")
+  set(PACK_TYPE "msi")
+  if(DEFINED ENV{WIN_MSI_TESTING_AU4_GUID} AND NOT "$ENV{WIN_MSI_TESTING_AU4_GUID}" STREQUAL "")
+    set(UPGRADE_UUID "$ENV{WIN_MSI_TESTING_AU4_GUID}" CACHE STRING "WiX Upgrade GUID" FORCE)
+  endif()
+elseif(BUILD_MODE STREQUAL "stable")
+  set(PACK_TYPE "msi")
+  if(DEFINED ENV{WIN_MSI_STABLE_AU4_GUID} AND NOT "$ENV{WIN_MSI_STABLE_AU4_GUID}" STREQUAL "")
+    set(UPGRADE_UUID "$ENV{WIN_MSI_STABLE_AU4_GUID}" CACHE STRING "WiX Upgrade GUID" FORCE)
+  endif()
+endif()
+
+# Setup signing
+set(SIGN_KEY    "$ENV{SIGN_KEY}")
+set(SIGN_SECRET "$ENV{SIGN_SECRET}")
+
+if(NOT DEFINED SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
+  set(SIGN_ENABLE ON)
+endif()
+
+set(SIGN_SERVICE_PS "${CMAKE_SOURCE_DIR}/buildscripts/ci/windows/PfxSign.ps1")
+
+function(sign_files)
+  message(STATUS "Signing: ${ARGN}")
+  execute_process(
+    COMMAND "${POWERSHELL_EXECUTABLE}" -NoProfile -NonInteractive -ExecutionPolicy Bypass
+            -File "${SIGN_SERVICE_PS}"
+            ${ARGN}
+    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+    RESULT_VARIABLE _sign_rc
+  )
+  if(NOT _sign_rc EQUAL 0)
+    message(FATAL_ERROR "Code signing failed (exit ${_sign_rc})")
+  endif()
+endfunction()
+
+if(SIGN_ENABLE)
+  if(NOT SIGN_KEY OR NOT SIGN_SECRET)
+    message(FATAL_ERROR "Code signing enabled but credentials are missing")
+  endif()
+  if(NOT EXISTS "${SIGN_SERVICE_PS}")
+    message(FATAL_ERROR "Signing script not found: ${SIGN_SERVICE_PS}")
+  endif()
+  find_program(POWERSHELL_EXECUTABLE NAMES pwsh powershell REQUIRED)
+
+  sign_files(-Directory "${INSTALL_DIR}")
+else()
+  message(STATUS "[sign-prepack] disabled or credentials missing; skipping runtime signing")
+endif()
+
+file(MAKE_DIRECTORY "${ARTIFACTS_DIR}")
+
+# PACK 7z
+message(STATUS "Start 7z packing...")
+audacity_package_name(ARCHIVE_NAME win ${PACKARCH} 7z)
+string(REGEX REPLACE "\\.7z$" "" _archive_name "${ARCHIVE_NAME}") # the folder inside the archive is named like the file
+set(_archive_stage "${BUILD_DIR}/archive")
+set(_archive_root "${_archive_stage}/${_archive_name}")
+file(REMOVE_RECURSE "${_archive_root}")
+file(MAKE_DIRECTORY "${_archive_root}")
+file(COPY "${INSTALL_DIR}/" DESTINATION "${_archive_root}")
+get_filename_component(_archive_path "${ARTIFACTS_DIR}/${ARCHIVE_NAME}" ABSOLUTE)
+execute_process(
+  COMMAND "${CMAKE_COMMAND}" -E tar cf "${_archive_path}" --format=7zip "${_archive_name}"
+  WORKING_DIRECTORY "${_archive_stage}"
+  RESULT_VARIABLE _archive_rc
+)
+if(NOT _archive_rc EQUAL 0)
+  message(FATAL_ERROR "7z packaging failed (exit ${_archive_rc})")
+endif()
+file(REMOVE_RECURSE "${_archive_root}")
+
+message(STATUS "Finished 7z packing")
+set(ARTIFACT_NAME "${ARCHIVE_NAME}")
+
+# PACK MSI
+if(PACK_TYPE STREQUAL "msi")
+  message(STATUS "Start MSI packing...")
+
+  set(PACKAGE_UUID "")
+  if(WIN32)
+    execute_process(
+      COMMAND powershell -NoProfile -Command "[guid]::NewGuid().ToString()"
+      OUTPUT_VARIABLE PACKAGE_UUID
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      ERROR_QUIET
+    )
+  endif()
+  if(NOT PACKAGE_UUID)
+    message(FATAL_ERROR "Could not generate PACKAGE_UUID")
+  endif()
+  message(STATUS "PACKAGE_UUID: ${PACKAGE_UUID}")
+
+  set(_cpack_config "${BUILD_DIR}/CPackConfig.cmake")
+  if(NOT EXISTS "${_cpack_config}")
+    message(FATAL_ERROR "CPackConfig.cmake not found at ${_cpack_config}")
+  endif()
+  get_filename_component(_install_abs "${INSTALL_DIR}" ABSOLUTE)
+  file(APPEND "${_cpack_config}"
+    "set(CPACK_WIX_PRODUCT_GUID \"${PACKAGE_UUID}\")\n"
+    "set(CPACK_WIX_UPGRADE_GUID \"${UPGRADE_UUID}\")\n"
+    "set(CPACK_INSTALL_CMAKE_PROJECTS \"\")\n"
+    "set(CPACK_INSTALLED_DIRECTORIES \"${_install_abs};.\")\n"
+  )
+
+  get_filename_component(_cmake_bin_dir "${CMAKE_COMMAND}" DIRECTORY)
+  find_program(_cpack_cmd cpack HINTS "${_cmake_bin_dir}" REQUIRED)
+  execute_process(
+    COMMAND "${_cpack_cmd}" -C Release
+    WORKING_DIRECTORY "${BUILD_DIR}"
+    RESULT_VARIABLE _rc_pkg
+  )
+  if(NOT _rc_pkg EQUAL 0)
+    set(_wix_log64 "${BUILD_DIR}/_CPack_Packages/win64/WIX/wix.log")
+    set(_wix_log32 "${BUILD_DIR}/_CPack_Packages/win32/WIX/wix.log")
+    foreach(_log "${_wix_log64}" "${_wix_log32}")
+      if(EXISTS "${_log}")
+        message(STATUS "---- wix.log (start) ----")
+        execute_process(COMMAND "${CMAKE_COMMAND}" -E cat "${_log}")
+        message(STATUS "---- wix.log (end) ----")
+      endif()
+    endforeach()
+
+    set(_features "${BUILD_DIR}/_CPack_Packages/win64/WIX/features.wxs")
+
+    if(EXISTS "${_features}")
+      message(STATUS "---- features.wxs (start) ----")
+      execute_process(COMMAND "${CMAKE_COMMAND}" -E cat "${_features}")
+      message(STATUS "---- features.wxs (end) ----")
+    else()
+      message(WARNING "features.wxs not found at ${_features}")
+    endif()
+
+    message(FATAL_ERROR "CPack/WiX packaging failed")
+  endif()
+
+  set(_WIX_PACK_DIR "win64")
+  set(_wix_logs_src "${BUILD_DIR}/_CPack_Packages/${_WIX_PACK_DIR}/WIX")
+  if(EXISTS "${_wix_logs_src}")
+    # Keep only the top-level WiX logs
+    file(GLOB _wix_log_files LIST_DIRECTORIES FALSE "${_wix_logs_src}/*")
+    list(FILTER _wix_log_files EXCLUDE REGEX "[.]msi$")
+    if(_wix_log_files)
+      set(_wix_logs_dst "${ARTIFACTS_DIR}/logs/WIX")
+      file(MAKE_DIRECTORY "${_wix_logs_dst}")
+      file(COPY ${_wix_log_files} DESTINATION "${_wix_logs_dst}")
+      message(STATUS "Copied WiX logs to ${_wix_logs_dst}")
+    endif()
+  endif()
+
+  file(GLOB_RECURSE _msi_candidates "${BUILD_DIR}/*.msi")
+  list(LENGTH _msi_candidates _n)
+  if(NOT _n EQUAL 1)
+    message(WARNING "Expected exactly 1 MSI, found ${_n}")
+  endif()
+  list(GET _msi_candidates 0 MSI_FILE)
+  if(NOT MSI_FILE)
+    message(FATAL_ERROR "No MSI produced in ${BUILD_DIR}")
+  endif()
+
+  audacity_package_name(ARTIFACT_NAME win ${PACKARCH} msi)
+
+  set(ARTIFACT_PATH "${ARTIFACTS_DIR}/${ARTIFACT_NAME}")
+  file(COPY "${MSI_FILE}" DESTINATION "${ARTIFACTS_DIR}")
+  get_filename_component(_copied_name "${MSI_FILE}" NAME)
+  file(RENAME "${ARTIFACTS_DIR}/${_copied_name}" "${ARTIFACT_PATH}")
+  message(STATUS "Copied installer to ${ARTIFACT_PATH}")
+
+  if(SIGN_ENABLE)
+    sign_files(-File "${ARTIFACT_PATH}")
+    message(STATUS "Signing complete: ${ARTIFACT_PATH}")
+  endif()
+
+  message(STATUS "Finished MSI packing")
+endif()
+
+# Package file name, for the later CI steps (checksum, release): the MSI when one is built, else the 7z
+file(WRITE "${ARTIFACTS_DIR}/env/artifact_name.env" "${ARTIFACT_NAME}")

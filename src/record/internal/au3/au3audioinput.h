@@ -1,0 +1,65 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
+#pragma once
+
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "au3wrap/au3types.h"
+#include "au3wrap/internal/au3audiometer.h"
+#include "audio/driver/iaudiodrivercontroller.h"
+#include "audio/iaudioengine.h"
+#include "context/iglobalcontext.h"
+#include "playback/iplaybackcontroller.h"
+#include "record/iaudioinput.h"
+#include "record/irecordconfiguration.h"
+#include "record/irecordcontroller.h"
+#include "record/irecordmetercontroller.h"
+#include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
+
+namespace au::record {
+class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public muse::Contextable
+{
+    muse::GlobalInject<record::IRecordConfiguration> configuration;
+    muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<record::IRecordMeterController> meterController;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<record::IRecordController> controller{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+
+public:
+    Au3AudioInput(const muse::modularity::ContextPtr& ctx);
+
+    float recordVolume() const override;
+    void setRecordVolume(float volume) override;
+    muse::async::Channel<float> recordVolumeChanged() const override;
+
+    muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
+    muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
+
+private:
+    au3::Au3Project* projectRef() const;
+
+    void initMeter();
+    bool isTrackMeterMonitoring() const;
+    int getFocusedTrackChannels() const;
+
+    void updateAudioEngineMonitoring() const;
+    void startAudioEngineMonitoring() const;
+    void stopAudioEngineMonitoring() const;
+    bool canStartAudioEngineMonitoring() const;
+    bool audioEngineShouldBeMonitoring() const;
+
+    mutable muse::async::Channel<float> m_recordVolumeChanged;
+    const std::shared_ptr<au::au3::Au3AudioMeter> m_inputMeter;
+    int m_inputChannelsCount{};
+    int m_focusedTrackChannels{};
+};
+}

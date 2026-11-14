@@ -1,0 +1,53 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#pragma once
+
+#include "internal/irealtimeeffectpaneltrackselection.h"
+#include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include "trackedit/trackedittypes.h"
+#include "effects/effects_base/ieffectviewcontroller.h"
+#include "effects/effects_base/ieffectsmenuprovider.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
+#include "effects/effects_base/effectstypes.h"
+#include <QObject>
+
+namespace au::projectscene {
+class RealtimeEffectMenuModelBase : public muse::uicomponents::AbstractMenuModel, public effects::IEffectMenuItemFactory
+{
+    Q_OBJECT
+    Q_PROPERTY(bool isMasterTrack READ isMasterTrack WRITE prop_setIsMasterTrack NOTIFY isMasterTrackChanged)
+
+    muse::ContextInject<effects::IEffectsMenuProvider> effectsMenuProvider{ this };
+    muse::ContextInject<IRealtimeEffectPanelTrackSelection> trackSelection{ this };
+
+public:
+    explicit RealtimeEffectMenuModelBase(QObject* parent = nullptr);
+
+    Q_INVOKABLE void init();
+    Q_INVOKABLE void load() final override;
+
+protected:
+    std::optional<au::trackedit::TrackId> trackId() const;
+    bool isMasterTrack() const { return m_isMasterTrack; }
+    muse::uicomponents::MenuItemList effectMenus();
+    muse::uicomponents::MenuItem* makeEffectItem(const effects::EffectId& effectId);
+
+    muse::ContextInject<effects::IEffectViewController> effectViewController{ this };
+    muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
+
+signals:
+    void isMasterTrackChanged();
+
+private:
+    void prop_setIsMasterTrack(bool isMasterTrack);
+
+    virtual void doPopulateMenu() { setItems(effectMenus()); }
+    virtual void onSelectedTrackIdChanged() {}
+
+    muse::uicomponents::MenuItem* makeMenuSeparator() final override { return makeSeparator(); }
+
+    bool m_isMasterTrack = false;
+    bool m_menuIsUpToDate = false;
+};
+}

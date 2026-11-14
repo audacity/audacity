@@ -1,0 +1,34 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <string>
+
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/types/retval.h"
+
+#include "cloudtypes.h"
+namespace au::au3cloud {
+class IAuthorization : MODULE_GLOBAL_INTERFACE
+{
+    INTERFACE_ID(IAuthorization)
+
+public:
+    virtual ~IAuthorization() = default;
+
+    virtual void registerWithPassword(const std::string& email, const std::string& password) = 0;
+    virtual void signInWithPassword(const std::string& email, const std::string& password) = 0;
+    virtual void signInWithSocial(const std::string& provider) = 0;
+    virtual void signOut() = 0;
+
+    virtual const AccountInfo& accountInfo() const = 0;
+    virtual muse::async::Notification accountInfoChanged() const = 0;
+
+    virtual muse::ValCh<AuthState> authState() const = 0;
+    virtual bool isAuthorized() const = 0;
+
+    virtual muse::Ret ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode = false) = 0;
+};
+}

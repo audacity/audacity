@@ -1,0 +1,157 @@
+#[[
+A directory containing library targets
+
+This is the master CMakeLists.txt for all AU3 libraries.
+It sets up the AU3_ALL_LIBRARIES cache variable and includes au3defs.cmake
+before processing individual library subdirectories.
+]]
+
+# Create wxBase INTERFACE target for toolkit-neutral wxWidgets usage
+# This is a simple wrapper around wxwidgets::wxwidgets that provides include paths
+# and linking, but does NOT include GUI restrictions as compile definitions.
+#
+# The audacity_library() macro in au3defs.cmake automatically applies wxBase
+# restrictions (wxUSE_GUI=0, etc.) as PRIVATE compile definitions to any library
+# that links to wxBase. This ensures:
+# - Libraries using wxBase get the restrictions applied to their own compilation
+# - The restrictions do NOT propagate to consumers (PRIVATE, not INTERFACE)
+# - Libraries can choose between wxBase (no GUI) or wxwidgets::wxwidgets (full GUI)
+if(NOT TARGET wxBase)
+    add_library(wxBase INTERFACE)
+    target_link_libraries(wxBase INTERFACE wxwidgets::wxwidgets)
+endif()
+
+# The list of modules is ordered so that each library occurs after any others
+# that it depends on
+set( LIBRARIES
+   au3-string-utils
+   au3-strings
+   au3-utility
+#   au3-uuid # not yet used in AU4
+   au3-components
+   au3-basic-ui
+   au3-exceptions
+#   au3-export-ui # not yet used in AU4
+   au3-preferences
+   au3-math
+   au3-files
+   au3-registries
+   au3-ipc
+   au3-import-export
+   au3-xml
+   au3-audio-devices
+   au3-project
+   au3-screen-geometry
+   au3-project-rate
+   au3-file-formats
+#   au3-theme # not yet used in AU4
+#   au3-theme-resources # not yet used in AU4
+   au3-track
+   au3-transactions
+   au3-sample-track
+   au3-module-manager
+   au3-project-history
+   au3-graphics
+   au3-audio-graph
+   au3-tags
+   au3-realtime-effects
+   au3-audio-io
+   au3-wave-track
+   au3-wave-track-settings
+   au3-wave-track-paint
+   au3-track-selection
+   au3-project-file-io
+   au3-command-parameters
+   au3-numeric-formats
+   au3-effects
+   au3-time-frequency-selection
+#   au3-wx-wrappers # not yet used in AU4
+#   au3-shuttlegui # not yet used in AU4
+#   au3-wx-init # not yet used in AU4
+   au3-time-track
+   au3-snapping
+#   au3-vst # not yet used in AU4
+   au3-playable-track
+   au3-time-and-pitch
+   au3-mixer
+   au3-channel
+   au3-clip-processing
+#   au3-menus
+#   au3-note-track # not yet used in AU4
+   au3-viewport
+   au3-crypto
+   au3-fft
+   au3-concurrency
+   au3-sqlite-helpers
+#   au3-preference-pages # not yet used in AU4
+   au3-dynamic-range-processor
+#   au3-audacity-application-logic # not yet used in AU4
+   au3-builtin-effects
+   au3-label-track
+   au3-wave-track-fft
+)
+
+# Conditional libraries based on AU4 build options
+# Note: AU4 uses AU_MODULE_* variables instead of AU3's ${_OPT}* variables
+
+if (AU_MODULE_EFFECTS_VST)
+   list( APPEND LIBRARIES au3-vst3)
+endif()
+
+if (AU_MODULE_EFFECTS_LV2)
+   list( APPEND LIBRARIES au3-lv2)
+endif()
+
+if (AU_MODULE_EFFECTS_AUDIO_UNIT)
+   list( APPEND LIBRARIES au3-audio-unit)
+endif()
+
+if (AU_MODULE_EFFECTS_NYQUIST)
+   list( APPEND LIBRARIES au3-nyquist-effects )
+endif()
+
+# au3-network-manager is a general networking library used by au3-musehub
+# and other modules, so it must be built unconditionally.
+list( APPEND LIBRARIES au3-network-manager)
+
+if (AU_BUILD_CLOUD_AUDIOCOM)
+   list( APPEND LIBRARIES au3-url-schemes au3-cloud-audiocom)
+endif()
+
+if (AU_BUILD_MUSEHUB_MODULE)
+   list( APPEND LIBRARIES au3-musehub)
+endif()
+
+if( DEFINED ${_OPT}has_crashreports AND ${_OPT}has_crashreports )
+   if( ${_OPT}crashreport_backend STREQUAL "breakpad" )
+      list( APPEND LIBRARIES au3-breakpad-configurer )
+   elseif( ${_OPT}crashreport_backend STREQUAL "crashpad" )
+      list( APPEND LIBRARIES au3-crashpad-configurer )
+   endif()
+endif()
+
+if ( DEFINED ${_OPT}use_ladspa AND ${_OPT}use_ladspa )
+   list( APPEND LIBRARIES au3-ladspa )
+endif()
+
+# This library depends on au3-network-manager
+# If Sentry reporting is disabled, an INTERFACE library
+# will be defined
+list( APPEND LIBRARIES au3-sentry-reporting)
+
+# Set a CACHE variable with all AU3 library names so that au3defs.cmake can use it
+# to generate API macros for all libraries
+set(AU3_ALL_LIBRARIES ${LIBRARIES} CACHE INTERNAL "List of all AU3 libraries")
+
+# Include AU3 compatibility macros
+include(${CMAKE_CURRENT_LIST_DIR}/../au3defs.cmake)
+
+# Add subdirectories for all libraries
+foreach( LIBRARY ${LIBRARIES} )
+   add_subdirectory( "${LIBRARY}" )
+endforeach()
+
+set( GRAPH_EDGES "${GRAPH_EDGES}" PARENT_SCOPE )
+
+# Export the list of libraries to parent scope for linking
+set(AU3_LIBRARIES_LIST ${LIBRARIES} PARENT_SCOPE)

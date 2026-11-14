@@ -1,0 +1,185 @@
+[
+    {
+        "scope": "NAVIGATION",
+        "shortcuts": [
+            { "command": "command://navigation/next-section", "sequences": ["F6", "`"] },
+            { "command": "command://navigation/prev-section", "sequences": ["Shift+F6", "Shift+`"] },
+            { "command": "command://navigation/next-panel", "sequences": ["Tab", "Ctrl+Tab"] },
+            { "command": "command://navigation/prev-panel", "sequences": ["Shift+Tab", "Ctrl+Shift+Tab"] },
+            { "command": "command://navigation/right", "sequences": ["Right"] },
+            { "command": "command://navigation/left", "sequences": ["Left"] },
+            { "command": "command://navigation/up", "sequences": ["Up"] },
+            { "command": "command://navigation/down", "sequences": ["Down"] },
+            { "command": "command://navigation/first-control", "sequences": ["Home"] },
+            { "command": "command://navigation/last-control", "sequences": ["End"] },
+            { "command": "command://navigation/nextrow-control", "sequences": ["PgDown"] },
+            { "command": "command://navigation/prevrow-control", "sequences": ["PgUp"] },
+            { "command": "command://navigation/escape", "sequences": ["Esc"] },
+            { "command": "command://navigation/trigger-control", "sequences": ["Space", "Return", "Enter", "Shift+Return", "Shift+Enter"] }
+        ]
+    },
+    {
+        "scope": "APP",
+        "shortcuts": [
+            { "command": "command://app/quit", "sequences": ["Ctrl+Q"] },
+            { "command": "command://app/preferences", "sequences": ["Ctrl+P"] }
+        ]
+    },
+    {
+        "scope": "TIMELINE",
+        "shortcuts": [
+            { "command": "command://trackedit/copy", "sequences": ["Ctrl+C"] },
+            { "command": "command://trackedit/cut", "sequences": ["Ctrl+X"] },
+            { "command": "command://trackedit/delete", "sequences": ["Del", "Backspace"] },
+            { "command": "command://trackedit/cancel", "sequences": ["Esc"] },
+            { "command": "command://track-navigation/next-panel", "sequences": ["Tab"] },
+            { "command": "command://track-navigation/prev-panel", "sequences": ["Shift+Tab"] },
+            { "command": "command://app/context-menu", "sequences": ["Shift+F10", "Ctrl+Shift+F10"] },
+            { "command": "command://track-navigation/above-item", "sequences": ["Up"] },
+            { "command": "command://track-navigation/below-item", "sequences": ["Down"] },
+            { "command": "command://track-navigation/first-track", "sequences": ["Ctrl+Home"] },
+            { "command": "command://track-navigation/last-track", "sequences": ["Ctrl+End"] },
+            { "command": "command://track-navigation/toggle-selection", "sequences": ["Ctrl+Enter", "Ctrl+Return"] },
+            { "command": "command://track-navigation/extend-track-selection-prev", "sequences": ["Shift+Up"] },
+            { "command": "command://track-navigation/extend-track-selection-next", "sequences": ["Shift+Down"] },
+            { "command": "command://projectscene/toggle-split-tool", "sequences": ["S"] },
+            { "command": "command://playback/rewind-start", "sequences": ["Home"] },
+            { "command": "command://playback/rewind-end", "sequences": ["End"] },
+            { "command": "command://projectscene/play-position-decrease", "sequences": ["Left"] },
+            { "command": "command://projectscene/play-position-increase", "sequences": ["Right"] },
+            { "command": "command://record/lead-in-recording", "sequences": ["Shift+D"] },
+            { "command": "command://playback/rescan-devices", "sequences": [] },
+            { "command": "command://projectscene/timeline-page-left", "sequences": ["PgUp"] },
+            { "command": "command://projectscene/timeline-page-right", "sequences": ["PgDown"] },
+            { "command": "command://trackedit/track-view-item-move-left", "sequences": ["Ctrl+Left"] },
+            { "command": "command://trackedit/track-view-item-move-right", "sequences": ["Ctrl+Right"] },
+            { "command": "command://trackedit/track-view-item-extend-left", "sequences": ["Shift+Left"] },
+            { "command": "command://trackedit/track-view-item-extend-right", "sequences": ["Shift+Right"] },
+            { "command": "command://trackedit/track-view-item-reduce-left", "sequences": ["Ctrl+Shift+Left"] },
+            { "command": "command://trackedit/track-view-item-reduce-right", "sequences": ["Ctrl+Shift+Right"] },
+            { "command": "command://trackedit/track-view-item-move-up", "sequences": ["Ctrl+Up"] },
+            { "command": "command://trackedit/track-view-item-move-down", "sequences": ["Ctrl+Down"] }
+        ]
+    },
+    {
+        "scope": "TRACK_NAVIGATION_SECTION",
+        "shortcuts": [
+            { "command": "command://track-navigation/replace-selection", "sequences": ["Return", "Enter"] },
+            { "command": "command://track-navigation/range-selection", "sequences": ["Shift+Return", "Shift+Enter"] }
+        ]
+    },
+    {
+        "scope": "TRACKEDIT",
+        "shortcuts": [
+            { "command": "command://trackedit/undo", "sequences": ["Ctrl+Z"] },
+            { "command": "command://trackedit/redo", "sequences": ["Ctrl+Shift+Z"] },
+            { "command": "command://trackedit/paste-default", "sequences": ["Ctrl+V"] },
+            { "command": "command://trackedit/paste-overlap", "sequences": ["Ctrl+Alt+V"] },
+            { "command": "command://trackedit/paste-insert", "sequences": ["Shift+V"] },
+            { "command": "command://trackedit/paste-insert-all-tracks-ripple", "sequences": ["Ctrl+Alt+Shift+V"] },
+            { "command": "command://trackedit/cut-leave-gap", "sequences": [] },
+            { "command": "command://trackedit/cut-per-clip-ripple", "sequences": [] },
+            { "command": "command://trackedit/cut-per-track-ripple", "sequences": ["Ctrl+Shift+X"] },
+            { "command": "command://trackedit/cut-all-tracks-ripple", "sequences": [] },
+            { "command": "command://trackedit/duplicate", "sequences": ["Ctrl+D"] },
+            { "command": "command://trackedit/silence-audio-selection", "sequences": ["Ctrl+L"] },
+            { "command": "command://trackedit/trim-audio-outside-selection", "sequences": ["Ctrl+T"] },
+            { "command": "command://trackedit/split", "sequences": ["Ctrl+I"] },
+            { "command": "command://trackedit/join", "sequences": ["Ctrl+J"] },
+            { "command": "command://trackedit/disjoin", "sequences": ["Ctrl+Alt+J"] },
+            { "command": "command://trackedit/delete-leave-gap", "sequences": [] },
+            { "command": "command://trackedit/delete-per-clip-ripple", "sequences": [] },
+            { "command": "command://trackedit/delete-per-track-ripple", "sequences": ["Shift+Del", "Shift+Backspace"] },
+            { "command": "command://trackedit/delete-all-tracks-ripple", "sequences": ["Ctrl+Del", "Ctrl+Backspace"] },
+            { "command": "command://trackedit/label-add", "sequences": ["Ctrl+B"] },
+            { "command": "command://trackedit/new-label-track", "sequences": [] },
+            { "command": "command://trackedit/select-all", "sequences": ["Ctrl+A"] },
+            { "command": "command://trackedit/clear-selection", "sequences": ["Ctrl+Shift+A"] },
+            { "command": "command://trackedit/select-all-tracks", "sequences": ["Ctrl+Shift+K"] },
+            { "command": "command://trackedit/select-left-of-playback-position", "sequences": ["["] },
+            { "command": "command://trackedit/select-right-of-playback-position", "sequences": ["]"] },
+            { "command": "command://trackedit/select-track-start-to-cursor", "sequences": ["Shift+J"] },
+            { "command": "command://trackedit/select-cursor-to-track-end", "sequences": ["Shift+K"] },
+            { "command": "command://trackedit/zero-cross", "sequences": ["Z"] },
+            { "command": "command://trackedit/group-items", "sequences": ["Ctrl+G"] },
+            { "command": "command://trackedit/ungroup-items", "sequences": ["Ctrl+Shift+G"] },
+            { "command": "command://trackedit/track-move-up", "sequences": [] },
+            { "command": "command://trackedit/track-move-down", "sequences": [] },
+            { "command": "command://trackedit/track-move-top", "sequences": [] },
+            { "command": "command://trackedit/track-move-bottom", "sequences": [] },
+            { "command": "command://trackedit/rename-item", "sequences": ["F2"] },
+            { "command": "command://trackedit/clip-pitch-speed-open", "sequences": ["Ctrl+Shift+P"] },
+            { "command": "command://trackedit/new-mono-track", "sequences": ["Ctrl+Shift+N"] },
+            { "command": "command://trackedit/new-stereo-track", "sequences": [] }
+        ]
+    },
+    {
+        "scope": "PROJECT",
+        "shortcuts": [
+            { "command": "command://project/new", "sequences": ["Ctrl+N"] },
+            { "command": "command://project/open", "sequences": ["Ctrl+O"] },
+            { "command": "command://project/save", "sequences": ["Ctrl+S"] },
+            { "command": "command://project/save-as", "sequences": [] },
+            { "command": "command://project/close", "sequences": ["Ctrl+W"] },
+            { "command": "command://project/export-labels", "sequences": [] },
+            { "command": "command://project/export-audio", "sequences": ["Ctrl+Shift+E"] },
+            { "command": "command://project/import", "sequences": ["Ctrl+Shift+I"] }
+        ]
+    },
+    {
+        "scope": "PROJECTSCENE",
+        "shortcuts": [
+            { "command": "command://projectscene/toggle-effects-panel", "sequences": ["E"] },
+            { "command": "command://app/toggle-macro-manager-panel", "sequences": ["M"] },
+            { "command": "command://projectscene/selection-extend-left", "sequences": ["Shift+Left"] },
+            { "command": "command://projectscene/selection-extend-right", "sequences": ["Shift+Right"] },
+            { "command": "command://projectscene/selection-contract-left", "sequences": ["Ctrl+Shift+Right"] },
+            { "command": "command://projectscene/selection-contract-right", "sequences": ["Ctrl+Shift+Left"] },
+            { "command": "command://projectscene/cursor-to-selection-start", "sequences": [] },
+            { "command": "command://projectscene/cursor-to-selection-end", "sequences": [] },
+            { "command": "command://projectscene/zoom-in", "sequences": ["Ctrl+=", "Ctrl++", "Ctrl+1"] },
+            { "command": "command://projectscene/zoom-default", "sequences": ["Ctrl+2"] },
+            { "command": "command://projectscene/zoom-out", "sequences": ["Ctrl+-", "Ctrl+3"] },
+            { "command": "command://projectscene/zoom-to-selection", "sequences": ["Ctrl+E"] },
+            { "command": "command://projectscene/zoom-toggle", "sequences": ["Shift+Z"] },
+            { "command": "command://projectscene/zoom-to-fit-project", "sequences": ["Ctrl+F"] },
+            { "command": "command://projectscene/realtime-effect-move-up", "sequences": ["Alt+Up"] },
+            { "command": "command://projectscene/realtime-effect-move-down", "sequences": ["Alt+Down"] }
+        ]
+    },
+    {
+        "scope": "EFFECTS",
+        "shortcuts": [
+            { "command": "command://effects/repeat-last-effect", "sequences": ["Ctrl+R"] }
+        ]
+    },
+    {
+        "scope": "PLAYBACK",
+        "shortcuts": [
+            { "command": "command://playback/mute-all-tracks", "sequences": ["Ctrl+U"] },
+            { "command": "command://playback/unmute-all-tracks", "sequences": ["Ctrl+Shift+U"] },
+            { "command": "command://playback/mute-selected-tracks", "sequences": ["Ctrl+Alt+U"] },
+            { "command": "command://playback/unmute-selected-tracks", "sequences": ["Ctrl+Alt+Shift+U"] },
+            { "command": "command://playback/toggle-mute-focused-track", "sequences": ["Shift+U"] },
+            { "command": "command://playback/toggle-solo-focused-track", "sequences": ["Shift+S"] },
+            { "command": "command://playback/toggle-play-stop-and-set-cursor", "sequences": ["X"] },
+            { "command": "command://playback/play-selection", "sequences": ["Shift+Space"] },
+            { "command": "command://playback/pause", "sequences": [] },
+            { "command": "command://playback/toggle-play-pause", "sequences": ["P"] },
+            { "command": "command://playback/toggle-loop-region", "sequences": ["L"] },
+            { "command": "command://playback/clear-loop-region", "sequences": ["Shift+Alt+L"] },
+            { "command": "command://playback/set-loop-region-to-selection", "sequences": ["Shift+L"] },
+            { "command": "command://playback/set-loop-region-in-out", "sequences": ["I"] },
+            { "command": "command://playback/toggle-play-stop", "sequences": ["Space"] }
+        ]
+    },
+    {
+        "scope": "RECORD",
+        "shortcuts": [
+            { "command": "command://record/start", "sequences": ["R"] },
+            { "command": "command://record/on-new-track", "sequences": ["Shift+R"] },
+            { "command": "command://record/timed-recording", "sequences": ["Shift+T"] },
+            { "command": "command://record/stop", "sequences": ["Space"] }
+        ]
+    }
+]

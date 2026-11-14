@@ -1,0 +1,545 @@
+/**********************************************************************
+
+   Audacity - A Digital Audio Editor
+   Copyright 1999-2010 Audacity Team
+   Michael Chinen
+
+******************************************************************/
+
+#include "DeviceManager.h"
+
+#include <map>
+#include <wx/log.h>
+#include <thread>
+
+#include "portaudio.h"
+#ifdef __WXMSW__
+#include <windows.h>
+#include "pa_asio.h"
+#include "pa_win_wasapi.h"
+#endif
+
+#ifdef USE_PORTMIXER
+#include "portmixer.h"
+#endif
+
+#include "au3-preferences/Prefs.h"
+
+#include "AudioIOBase.h"
+
+#include "DeviceChange.h" // for HAVE_DEVICE_CHANGE
+
+DeviceManager DeviceManager::dm;
+
+/// Gets the singleton instance
+DeviceManager* DeviceManager::Instance()
+{
+    return &dm;
+}
+
+const std::vector<DeviceSourceMap>& DeviceManager::GetInputDeviceMaps()
+{
+    if (!m_inited) {
+        Init();
+    }
+    return mInputDeviceSourceMaps;
+}
+
+const std::vector<DeviceSourceMap>& DeviceManager::GetOutputDeviceMaps()
+{
+    if (!m_inited) {
+        Init();
+    }
+    return mOutputDeviceSourceMaps;
+}
+
+static std::string GetBaseDeviceName(const DeviceSourceMap* map)
+{
+    if (!map) {
+        return {};
+    }
+    std::string ret = map->deviceString.ToStdString(wxConvUTF8);
+    if (map->totalSources > 1) {
+        ret += ": " + map->sourceString.ToStdString(wxConvUTF8);
+    }
+    return ret;
+}
+
+std::string MakeDeviceSourceString(const DeviceSourceMap* map,
+                                   const std::vector<DeviceSourceMap>& deviceMaps)
+{
+    if (!map) {
+        return {};
+    }
+
+    std::string baseName = GetBaseDeviceName(map);
+
+    int occurrence = 0;
+    for (const auto& device : deviceMaps) {
+        if (&device == map) {
+            break;
+        }
+        if (device.hostString == map->hostString && GetBaseDeviceName(&device) == baseName) {
+            occurrence++;
+        }
+    }
+
+    if (occurrence == 0) {
+        return baseName;
+    } else {
+        return baseName + "#" + std::to_string(occurrence + 1);
+    }
+}
+
+static std::pair<std::string, int> ParseDeviceId(const std::string& stableId)
+{
+    size_t hashPos = stableId.rfind('#');
+    if (hashPos == std::string::npos) {
+        return { stableId, 0 };
+    }
+
+    std::string name = stableId.substr(0, hashPos);
+    std::string indexStr = stableId.substr(hashPos + 1);
+
+    try {
+        int occurrence = std::stoi(indexStr) - 1;
+        return { name, occurrence };
+    } catch (...) {
+        return { stableId, 0 };
+    }
+}
+
+static int FindDeviceIndexByDeviceId(const std::vector<DeviceSourceMap>& deviceMaps,
+                                     const std::string& hostName,
+                                     const std::string& deviceId)
+{
+    auto [targetName, targetOccurrence] = ParseDeviceId(deviceId);
+
+    std::map<std::string, int> nameCount;
+    for (const auto& device : deviceMaps) {
+        if (device.hostString != hostName) {
+            continue;
+        }
+        std::string deviceName = GetBaseDeviceName(&device);
+        int occurrence = nameCount[deviceName]++;
+
+        if (deviceName == targetName && occurrence == targetOccurrence) {
+            return device.deviceIndex;
+        }
+    }
+    return -1;
+}
+
+int DeviceManager::GetInputDevicePaIndex(const std::string& hostName, const std::string& deviceId)
+{
+    if (!m_inited) {
+        Init();
+    }
+    return FindDeviceIndexByDeviceId(mInputDeviceSourceMaps, hostName, deviceId);
+}
+
+int DeviceManager::GetOutputDevicePaIndex(const std::string& hostName, const std::string& deviceId)
+{
+    if (!m_inited) {
+        Init();
+    }
+    return FindDeviceIndexByDeviceId(mOutputDeviceSourceMaps, hostName, deviceId);
+}
+
+DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)
+{
+    if (!m_inited) {
+        Init();
+    }
+
+    if (hostIndex < 0 || hostIndex >= Pa_GetHostApiCount()) {
+        return NULL;
+    }
+
+    const struct PaHostApiInfo* apiinfo = Pa_GetHostApiInfo(hostIndex);  // get info on API
+    std::vector<DeviceSourceMap>& maps = isInput ? mInputDeviceSourceMaps : mOutputDeviceSourceMaps;
+    size_t i;
+    int targetDevice = isInput ? apiinfo->defaultInputDevice : apiinfo->defaultOutputDevice;
+
+    for (i = 0; i < maps.size(); i++) {
+        if (maps[i].deviceIndex == targetDevice) {
+            return &maps[i];
+        }
+    }
+
+    wxLogDebug(wxT("GetDefaultDevice() no default device"));
+    return NULL;
+}
+
+DeviceSourceMap* DeviceManager::GetDefaultOutputDevice(int hostIndex)
+{
+    return GetDefaultDevice(hostIndex, 0);
+}
+
+DeviceSourceMap* DeviceManager::GetDefaultInputDevice(int hostIndex)
+{
+    return GetDefaultDevice(hostIndex, 1);
+}
+
+int DeviceManager::GetHostIndex(const std::string& hostName)
+{
+    PaHostApiIndex hostCnt = Pa_GetHostApiCount();
+    for (PaHostApiIndex hostNum = 0; hostNum < hostCnt; hostNum++) {
+        const PaHostApiInfo* hinfo = Pa_GetHostApiInfo(hostNum);
+        if (hinfo && wxString(wxSafeConvertMB2WX(hinfo->name)) == wxString(hostName)) {
+            return hostNum;
+        }
+    }
+    return -1;
+}
+
+//--------------- Device Enumeration --------------------------
+
+//Port Audio requires we open the stream with a callback or a lot of devices will fail
+//as this means open in blocking mode, so we use a dummy one.
+static int DummyPaStreamCallback(
+    const void* WXUNUSED(input), void* WXUNUSED(output),
+    unsigned long WXUNUSED(frameCount),
+    const PaStreamCallbackTimeInfo* WXUNUSED(timeInfo),
+    PaStreamCallbackFlags WXUNUSED(statusFlags),
+    void* WXUNUSED(userData))
+{
+    return 0;
+}
+
+static void FillHostDeviceInfo(DeviceSourceMap* map, const PaDeviceInfo* info, int deviceIndex, int isInput)
+{
+    wxString hostapiName = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
+    wxString infoName = wxSafeConvertMB2WX(info->name);
+
+    map->deviceIndex  = deviceIndex;
+    map->hostIndex    = info->hostApi;
+    map->deviceString = infoName;
+    map->hostString   = hostapiName;
+    map->numChannels  = isInput ? info->maxInputChannels : info->maxOutputChannels;
+}
+
+static void AddSourcesFromStream(int deviceIndex, const PaDeviceInfo* info, std::vector<DeviceSourceMap>* maps, PaStream* stream)
+{
+#ifdef USE_PORTMIXER
+    int i;
+#endif
+    DeviceSourceMap map;
+
+    map.sourceIndex  = -1;
+    map.totalSources = 0;
+    // Only inputs have sources, so we call FillHostDeviceInfo with a 1 to indicate this
+    FillHostDeviceInfo(&map, info, deviceIndex, 1);
+
+#ifdef USE_PORTMIXER
+    PxMixer* portMixer = Px_OpenMixer(stream, deviceIndex, -1, 0);
+    if (!portMixer) {
+        maps->push_back(map);
+        return;
+    }
+
+    //if there is only one source, we don't need to concatenate the source
+    //or enumerate, because it is something meaningless like 'master'
+    //(as opposed to 'mic in' or 'line in'), and the user doesn't have any choice.
+    //note that some devices have no input sources at all but are still valid.
+    //the behavior we do is the same for 0 and 1 source cases.
+    map.totalSources = Px_GetNumInputSources(portMixer);
+#endif
+
+    if (map.totalSources <= 1) {
+        map.sourceIndex = 0;
+        maps->push_back(map);
+    }
+#ifdef USE_PORTMIXER
+    else {
+        //open up a stream with the device so portmixer can get the info out of it.
+        for (i = 0; i < map.totalSources; i++) {
+            map.sourceIndex  = i;
+            map.sourceString = wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(portMixer, i)));
+            maps->push_back(map);
+        }
+    }
+    Px_CloseMixer(portMixer);
+#endif
+}
+
+static bool IsInputDeviceAMapperDevice(const PaDeviceInfo* info)
+{
+    // For Windows only, portaudio returns the default mapper object
+    // as the first index after a NEW hostApi index is detected (true for MME and DS)
+    // this is a bit of a hack, but there's no other way to find out which device is a mapper,
+    // I've looked at string comparisons, but if the system is in a different language this breaks.
+#ifdef __WXMSW__
+    static int lastHostApiTypeId = -1;
+    int hostApiTypeId = Pa_GetHostApiInfo(info->hostApi)->type;
+    if (hostApiTypeId != lastHostApiTypeId
+        && (hostApiTypeId == paMME || hostApiTypeId == paDirectSound)) {
+        lastHostApiTypeId = hostApiTypeId;
+        return true;
+    }
+#endif
+
+    return false;
+}
+
+static void AddSources(int deviceIndex, int rate, std::vector<DeviceSourceMap>* maps, int isInput)
+{
+    int error = 0;
+    DeviceSourceMap map;
+    const PaDeviceInfo* info = Pa_GetDeviceInfo(deviceIndex);
+
+    // This tries to open the device with the samplerate worked out above, which
+    // will be the highest available for play and record on the device, or
+    // 44.1kHz if the info cannot be fetched.
+
+    PaStream* stream = NULL;
+
+    PaStreamParameters parameters;
+
+    parameters.device = deviceIndex;
+    parameters.sampleFormat = paFloat32;
+    parameters.hostApiSpecificStreamInfo = NULL;
+    parameters.channelCount = 1;
+
+    // If the device is for input, open a stream so we can use portmixer to query
+    // the number of inputs.  We skip this for outputs because there are no 'sources'
+    // and some platforms (e.g. XP) have the same device for input and output, (while
+    // Vista/Win7 separate these into two devices with the same names (but different
+    // portaudio indices)
+    // Also, for mapper devices we don't want to keep any sources, so check for it here
+    // ASIO devices must not be opened during a scan
+    if (isInput && !DeviceManager::IsAsioDevice(deviceIndex) && !IsInputDeviceAMapperDevice(info)) {
+        if (info) {
+            parameters.suggestedLatency = info->defaultLowInputLatency;
+        } else {
+            parameters.suggestedLatency = 10.0;
+        }
+
+        error = Pa_OpenStream(&stream,
+                              &parameters,
+                              NULL,
+                              rate, paFramesPerBufferUnspecified,
+                              paClipOff | paDitherOff,
+                              DummyPaStreamCallback, NULL);
+    }
+
+    if (stream && !error) {
+        AddSourcesFromStream(deviceIndex, info, maps, stream);
+        Pa_CloseStream(stream);
+    } else {
+        map.sourceIndex  = -1;
+        map.totalSources = 0;
+        FillHostDeviceInfo(&map, info, deviceIndex, isInput);
+        maps->push_back(map);
+    }
+
+    if (error) {
+        wxLogDebug(wxT("PortAudio stream error creating device list: %s:%s: %s"),
+                   map.hostString, map.deviceString,
+                   wxString(wxSafeConvertMB2WX(Pa_GetErrorText((PaError)error))));
+    }
+}
+
+bool DeviceManager::IsAsioDevice(int paDeviceIndex)
+{
+    const PaDeviceInfo* info = Pa_GetDeviceInfo(paDeviceIndex);
+    if (!info) {
+        return false;
+    }
+
+    const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(info->hostApi);
+    return hostInfo && hostInfo->type == paASIO;
+}
+
+// ASIO devices are enumerated lazily (driver names only)
+// to prevent sound interruptions in other running programs
+#ifdef __WXMSW__
+static wxString AsioCacheKeyRoot(const char* deviceName)
+{
+    wxString escaped = wxSafeConvertMB2WX(deviceName);
+    escaped.Replace(L"/", L"_");
+    return L"/AudioIO/ASIODeviceInfoCache/" + escaped + L"/";
+}
+
+#endif
+
+static void ApplyCachedAsioDeviceInfo()
+{
+#ifdef __WXMSW__
+    const int deviceCount = Pa_GetDeviceCount();
+    for (int i = 0; i < deviceCount; i++) {
+        if (!DeviceManager::IsAsioDevice(i)) {
+            continue;
+        }
+
+        const wxString root = AsioCacheKeyRoot(Pa_GetDeviceInfo(i)->name);
+
+        int maxInputChannels;
+        int maxOutputChannels;
+        double defaultSampleRate;
+        if (!gPrefs->Read(root + L"MaxInputChannels", &maxInputChannels)
+            || !gPrefs->Read(root + L"MaxOutputChannels", &maxOutputChannels)
+            || !gPrefs->Read(root + L"DefaultSampleRate", &defaultSampleRate)) {
+            continue;
+        }
+
+        PaAsio_SetCachedDeviceInfo(i, maxInputChannels, maxOutputChannels, defaultSampleRate);
+    }
+#endif
+}
+
+double DeviceManager::GetAsioDeviceCurrentSampleRate(int paDeviceIndex)
+{
+#ifdef __WXMSW__
+    if (!IsAsioDevice(paDeviceIndex)) {
+        return 0.0;
+    }
+
+    double rate = 0.0;
+    if (PaAsio_GetDeviceCurrentSampleRate(paDeviceIndex, &rate) != paNoError) {
+        return 0.0;
+    }
+
+    const PaDeviceInfo* info = Pa_GetDeviceInfo(paDeviceIndex);
+    const wxString root = AsioCacheKeyRoot(info->name);
+    gPrefs->Write(root + L"MaxInputChannels", info->maxInputChannels);
+    gPrefs->Write(root + L"MaxOutputChannels", info->maxOutputChannels);
+    gPrefs->Write(root + L"DefaultSampleRate", info->defaultSampleRate);
+    gPrefs->Flush();
+
+    return rate;
+#else
+    (void)paDeviceIndex;
+    return 0.0;
+#endif
+}
+
+void DeviceManager::ShowAsioControlPanel(int paDeviceIndex)
+{
+#ifdef __WXMSW__
+    if (IsAsioDevice(paDeviceIndex)) {
+        PaAsio_ShowControlPanel(paDeviceIndex, GetDesktopWindow());
+    }
+#else
+    (void)paDeviceIndex;
+#endif
+}
+
+/// Gets a NEW list of devices by terminating and restarting portaudio
+/// Assumes that DeviceManager is only used on the main thread.
+void DeviceManager::Rescan()
+{
+    // get rid of the previous scan info
+    this->mInputDeviceSourceMaps.clear();
+    this->mOutputDeviceSourceMaps.clear();
+
+    // if we are doing a second scan then restart portaudio to get NEW devices
+    if (m_inited) {
+        // check to see if there is a stream open - can happen if monitoring,
+        // but otherwise Rescan() should not be available to the user.
+        auto gAudioIO = AudioIOBase::Get();
+        gAudioIO->StopMonitoring(); // TODO Inject and use IAudioEngine instead
+
+        // restart portaudio - this updates the device list
+        // FIXME: TRAP_ERR restarting PortAudio
+        Pa_Terminate();
+        Pa_Initialize();
+    }
+
+    ApplyCachedAsioDeviceInfo();
+
+    // FIXME: TRAP_ERR PaErrorCode not handled in ReScan()
+    int nDevices = Pa_GetDeviceCount();
+
+    //The hierarchy for devices is Host/device/source.
+    //Some newer systems aggregate this.
+    //So we need to call port mixer for every device to get the sources
+    for (int i = 0; i < nDevices; i++) {
+        const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
+        if (info->maxOutputChannels > 0) {
+            AddSources(i, info->defaultSampleRate, &mOutputDeviceSourceMaps, 0);
+        }
+
+        if (info->maxInputChannels > 0) {
+            AddSources(i, info->defaultSampleRate, &mInputDeviceSourceMaps, 1);
+        }
+    }
+
+    // If this was not an initial scan update each device toolbar.
+    if (m_inited) {
+        Publish(DeviceChangeMessage::Rescan);
+    }
+
+    m_inited = true;
+    mRescanTime = std::chrono::steady_clock::now();
+}
+
+bool DeviceManager::UpdateAsioDeviceCaps(int paDeviceIndex)
+{
+    if (GetAsioDeviceCurrentSampleRate(paDeviceIndex) <= 0) {
+        return false;
+    }
+
+    const PaDeviceInfo* info = Pa_GetDeviceInfo(paDeviceIndex);
+    if (!info) {
+        return false;
+    }
+
+    for (auto& map : mInputDeviceSourceMaps) {
+        if (map.deviceIndex == paDeviceIndex) {
+            map.numChannels = info->maxInputChannels;
+        }
+    }
+    for (auto& map : mOutputDeviceSourceMaps) {
+        if (map.deviceIndex == paDeviceIndex) {
+            map.numChannels = info->maxOutputChannels;
+        }
+    }
+
+    return true;
+}
+
+std::chrono::duration<float> DeviceManager::GetTimeSinceRescan()
+{
+    auto now = std::chrono::steady_clock::now();
+    auto dur = std::chrono::duration_cast<std::chrono::duration<float> >(now - mRescanTime);
+    return dur;
+}
+
+//private constructor - Singleton.
+DeviceManager::DeviceManager()
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+    :  DeviceChangeHandler()
+#endif
+#endif
+{
+    m_inited = false;
+    mRescanTime = std::chrono::steady_clock::now();
+}
+
+DeviceManager::~DeviceManager()
+{
+}
+
+void DeviceManager::Init()
+{
+    Rescan();
+
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+    DeviceChangeHandler::Enable(true);
+#endif
+#endif
+}
+
+#if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
+#if defined(HAVE_DEVICE_CHANGE)
+void DeviceManager::DeviceChangeNotification()
+{
+    Rescan();
+    return;
+}
+
+#endif
+#endif

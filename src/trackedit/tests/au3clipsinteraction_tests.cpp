@@ -1,0 +1,1719 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#include <gtest/gtest.h>
+#include "global/defer.h"
+
+#include <cmath>
+
+#include "../internal/au3/au3clipsinteraction.h"
+#include "../internal/au3/au3trackdata.h"
+
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-project-history/UndoManager.h"
+#include "au3-project-history/ProjectHistory.h"
+#include "au3-realtime-effects/RealtimeEffectList.h"
+#include "au3-clip-processing/TempoChange.h"
+#include "au3-realtime-effects/RealtimeEffectState.h"
+#include "au3-xml/XMLFileReader.h"
+
+#include "effects/effects_base/internal/realtimeeffectrestorer.h"
+#include "project/tests/mocks/dummyeffectinstancefactory.h"
+
+#include "au3interactiontestbase.h"
+#include "mocks/selectioncontrollermock.h"
+#include "mocks/trackeditconfigurationmock.h"
+#include "mocks/projecthistorymock.h"
+#include "automation/tests/mocks/clipgaininteractionmock.h"
+
+#include "interactive/tests/mocks/interactivemock.h"
+
+using ::testing::Truly;
+using ::testing::_;
+
+namespace au::trackedit {
+class Au3ClipsInteractionTests : public Au3InteractionTestBase
+{
+public:
+    void SetUp() override
+    {
+        m_clipsInteraction = std::make_shared<Au3ClipsInteraction>(muse::modularity::globalCtx());
+
+        m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
+        m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
+        m_interactive = std::make_shared<NiceMock<muse::InteractiveMock> >();
+        m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
+        m_configuration = std::make_shared<NiceMock<TrackeditConfigurationMock> >();
+        m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
+        m_clipGainInteraction = std::make_shared<NiceMock<automation::ClipGainInteractionMock> >();
+
+        m_clipsInteraction->globalContext.set(m_globalContext);
+        m_clipsInteraction->selectionController.set(m_selectionController);
+        m_clipsInteraction->interactive.set(m_interactive);
+        m_clipsInteraction->configuration.set(m_configuration);
+        m_clipsInteraction->projectHistory.set(m_projectHistory);
+        m_clipsInteraction->clipGainInteraction.set(m_clipGainInteraction);
+
+        m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
+        ON_CALL(*m_globalContext, currentTrackeditProject())
+        .WillByDefault(Return(m_trackEditProject));
+
+        m_currentProject = std::make_shared<NiceMock<project::AudacityProjectMock> >();
+        ON_CALL(*m_globalContext, currentProject())
+        .WillByDefault(Return(m_currentProject));
+        ON_CALL(*m_globalContext, playbackState())
+        .WillByDefault(Return(m_playbackState));
+
+        ON_CALL(*m_currentProject, trackeditProject())
+        .WillByDefault(Return(m_trackEditProject));
+
+        initTestProject();
+    }
+
+    std::shared_ptr<Au3ClipsInteraction> m_clipsInteraction;
+    std::shared_ptr<SelectionControllerMock> m_selectionController;
+    std::shared_ptr<TrackeditConfigurationMock> m_configuration;
+    std::shared_ptr<ProjectHistoryMock> m_projectHistory;
+    std::shared_ptr<muse::IInteractive> m_interactive;
+    std::shared_ptr<automation::ClipGainInteractionMock> m_clipGainInteraction;
+};
+
+TEST_F(Au3ClipsInteractionTests, EnablingTempoMatchingWithoutClipTempoPreservesDuration)
+{
+    auto* track = Au3WaveTrack::New(projectRef());
+    DoProjectTempoChange(*track, 120.0);
+    XMLFileReader reader;
+    ASSERT_TRUE(reader.ParseString(track,
+                                   "<wavetrack rate=\"48000\" sampleformat=\"262159\">"
+                                   "<waveclip offset=\"0\" rawAudioTempo=\"240\" clipStretchRatio=\"1\" clipStretchToMatchTempo=\"0\">"
+                                   "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"48000\">"
+                                   "<waveblock start=\"0\" blockid=\"-48000\"/>"
+                                   "</sequence><envelope numpoints=\"0\"/></waveclip></wavetrack>"));
+    track->LinkConsistencyFix(true);
+    const auto clip = track->SortedIntervalArray().front();
+    ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    ASSERT_DOUBLE_EQ(clip->End(), 1.0);
+    TimeSignature timeSignature;
+    timeSignature.tempo = 120.0;
+    ON_CALL(*m_trackEditProject, timeSignature()).WillByDefault(Return(timeSignature));
+
+    ASSERT_TRUE(m_clipsInteraction->toggleStretchToMatchProjectTempo({ track->GetId(), clip->GetId() }));
+    EXPECT_TRUE(clip->GetStretchToMatchProjectTempo());
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    EXPECT_DOUBLE_EQ(clip->End(), 1.0);
+
+    DoProjectTempoChange(*track, 60.0);
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
+    EXPECT_DOUBLE_EQ(clip->End(), 2.0);
+    removeTrack(track->GetId());
+}
+
+TEST_F(Au3ClipsInteractionTests, EnablingTempoMatchingOnATrimmedClipPreservesItsSpeed)
+{
+    auto* track = Au3WaveTrack::New(projectRef());
+    DoProjectTempoChange(*track, 120.0);
+    XMLFileReader reader;
+    ASSERT_TRUE(reader.ParseString(track,
+                                   "<wavetrack rate=\"48000\" sampleformat=\"262159\">"
+                                   "<waveclip offset=\"0\" trimLeft=\"0.2\" trimRight=\"0.3\" "
+                                   "rawAudioTempo=\"240\" clipStretchRatio=\"1\" clipStretchToMatchTempo=\"0\">"
+                                   "<sequence maxsamples=\"262144\" sampleformat=\"262159\" numsamples=\"48000\">"
+                                   "<waveblock start=\"0\" blockid=\"-48000\"/>"
+                                   "</sequence><envelope numpoints=\"0\"/></waveclip></wavetrack>"));
+    track->LinkConsistencyFix(true);
+    const auto clip = track->SortedIntervalArray().front();
+    ASSERT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    ASSERT_DOUBLE_EQ(clip->End() - clip->Start(), 0.5);
+    TimeSignature timeSignature;
+    timeSignature.tempo = 120.0;
+    ON_CALL(*m_trackEditProject, timeSignature()).WillByDefault(Return(timeSignature));
+
+    ASSERT_TRUE(m_clipsInteraction->toggleStretchToMatchProjectTempo({ track->GetId(), clip->GetId() }));
+    // Enabling tempo matching must not change how fast the audio plays, ...
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 1.0);
+    // ... nor how much audio is hidden at either end.
+    EXPECT_DOUBLE_EQ(clip->GetTrimLeft(), 0.2);
+    EXPECT_DOUBLE_EQ(clip->GetTrimRight(), 0.3);
+    EXPECT_DOUBLE_EQ(clip->End() - clip->Start(), 0.5);
+
+    // Halving the project tempo now stretches the clip by two.
+    DoProjectTempoChange(*track, 60.0);
+    EXPECT_DOUBLE_EQ(clip->GetStretchRatio(), 2.0);
+    EXPECT_DOUBLE_EQ(clip->End() - clip->Start(), 1.0);
+    removeTrack(track->GetId());
+}
+
+TEST_F(Au3ClipsInteractionTests, ChangeClipColor)
+{
+    //! [GIVEN] There is a project with a track and a clip
+    const TrackId trackMinSilenceId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackMinSilenceId, INVALID_TRACK) << "Failed to create track";
+
+    Au3Project& project = projectRef();
+    const Au3WaveTrack* au3WaveTrack = DomAccessor::findWaveTrackByIndex(project, 0);
+    const std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(project, au3WaveTrack->GetId(), 0);
+
+    //! [THEN] The track edit project should notify about the clip change
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(Truly([=](const Clip& clip) {
+        return clip.key == ClipKey { au3WaveTrack->GetId(), au3Clip->GetId() };
+    })));
+
+    //! [WHEN] Change the color of the clip
+    m_clipsInteraction->changeClipColor(ClipKey { au3WaveTrack->GetId(), au3Clip->GetId() }, 4);
+
+    //! [THEN] The color index is updated
+    const std::shared_ptr<Au3WaveClip> au3UpdatedClip = DomAccessor::findWaveClip(project, au3WaveTrack->GetId(), 0);
+    EXPECT_EQ(au3UpdatedClip->GetColorIndex(), 4);
+
+    // Cleanup
+    removeTrack(trackMinSilenceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipColorRetainedWhenClipIsCopied)
+{
+    //! [GIVEN] There is a project with a track and a clip with a custom color
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3Project& project = projectRef();
+    const Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(project, track->GetId(), 0);
+
+    m_clipsInteraction->changeClipColor(ClipKey { track->GetId(), clip->GetId() }, 4);
+
+    const Au3Track::Holder trackCopy = track->Copy(clip->GetSequenceStartTime(), clip->GetSequenceEndTime());
+    ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";
+    const ITrackDataPtr trackData = std::make_shared<Au3TrackData>(trackCopy);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, SplitClipsAtSilencesOnValidInterval)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    const TrackId trackMinSilenceId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackMinSilenceId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackMinSilenceId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    m_clipsInteraction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the split range operation is not 2";
+
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_MIN_SILENCE_CLIP_START, TRACK_MIN_SILENCE_CLIP_END, TRACK_MIN_SILENCE_CLIP_START,
+                           TRACK_MIN_SILENCE_CLIP_START + TRACK_MIN_SILENCE_FIRST_SEGMENT_DURATION);
+
+    const WaveTrack::IntervalConstHolder secondClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(secondClip, TRACK_MIN_SILENCE_CLIP_START, TRACK_MIN_SILENCE_CLIP_END,
+                           TRACK_MIN_SILENCE_CLIP_START + TRACK_MIN_SILENCE_FIRST_SEGMENT_DURATION + TRACK_MIN_SILENCE_SILENCE_SEGMENT_DURATION,
+                           TRACK_MIN_SILENCE_CLIP_END);
+
+    // Cleanup
+    removeTrack(trackMinSilenceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, SplitClipsAtSilencesOnIntervalWithShortSilence)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    const TrackId trackSmallSilenceId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackSmallSilenceId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackSmallSilenceId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip with a small silence
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    m_clipsInteraction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 1 once the silence is less than 0.01s
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_SMALL_SILENCE_CLIP_START, TRACK_SMALL_SILENCE_CLIP_END);
+
+    // Cleanup
+    removeTrack(trackSmallSilenceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, SplitClipsAtSilenceWhenSilenceAtStart)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence at the start
+    const TrackId trackSilenceAtStartId = createTrack(TestTrackID::TRACK_SILENCE_AT_START);
+    ASSERT_NE(trackSilenceAtStartId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackSilenceAtStartId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    m_clipsInteraction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 1 once the silence is at the start
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_SILENCE_AT_START_CLIP_START, TRACK_SILENCE_AT_START_CLIP_END,
+                           TRACK_SILENCE_AT_START_CLIP_START + TRACK_SILENCE_AT_START_SILENCE_DURATION,
+                           TRACK_SILENCE_AT_START_CLIP_END);
+
+    // Cleanup
+    removeTrack(trackSilenceAtStartId);
+}
+
+TEST_F(Au3ClipsInteractionTests, SplitClipsAtSilenceWhenSilenceAtEnd)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence at the end
+    const TrackId trackSilenceAtEndId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackSilenceAtEndId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackSilenceAtEndId));
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "Precondition failed: The number of intervals is not 1";
+
+    //! [WHEN] Disjoin the clip
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    m_clipsInteraction->splitClipsAtSilences({ { track->GetId(), clip->GetId() } });
+
+    //! [THEN] The number of intervals is 1 once the silence is at the end
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_SILENCE_AT_START_CLIP_START, TRACK_SILENCE_AT_START_CLIP_END, TRACK_SILENCE_AT_START_CLIP_START,
+                           TRACK_SILENCE_AT_START_CLIP_START + TRACK_SILENCE_AT_START_FIRST_SEGMENT_DURATION);
+
+    // Cleanup
+    removeTrack(trackSilenceAtEndId);
+}
+
+TEST_F(Au3ClipsInteractionTests, SplitRangeClipsIntoNewTracks)
+{
+    //! [GIVEN] There is a project with a track and a clip with silence in the middle
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+
+    //! [THEN] We have 1 tracks
+    const Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 1) << "Precondition failed: The number of tracks is not 1";
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Splitting into new tracks
+    const WaveTrack::IntervalConstHolder clip1 = track->GetSortedClipByIndex(0);
+    const WaveTrack::IntervalConstHolder clip2 = track->GetSortedClipByIndex(1);
+    m_clipsInteraction->splitClipsIntoNewTracks({ { track->GetId(), clip1->GetId() } });
+
+    //! [THEN] The number of intervals now is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split range operation is not 1";
+
+    //! [THEN] Now we have added a new track
+    ASSERT_EQ(projectTracks.Size(),  2) << "The number of tracks after the split range operation is not 2";
+
+    //! [THEN] The original track has only the second clip
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+
+    //! [THEN] The new track has the first clip
+    auto newTrack = projectTracks.rbegin();
+    auto newTrackId = (*newTrack)->GetId();
+    Au3WaveTrack* newTrackWave = DomAccessor::findWaveTrack(projectRef(), newTrackId);
+    ASSERT_EQ(newTrackWave->NIntervals(), 1) << "The number of intervals in the new track is not 1";
+
+    const WaveTrack::IntervalConstHolder newClip = newTrackWave->GetSortedClipByIndex(0);
+    ValidateClipProperties(newClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END);
+
+    // Cleanup
+    removeTrack(newTrackId);
+    removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RemoveSingleClipFromATrack)
+{
+    //! [GIVEN] There is a project with a track and a clip
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Remove the clip
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    m_clipsInteraction->removeClip({ track->GetId(), clip->GetId() });
+
+    //! [THEN] The number of intervals is 1
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the remove operation is not 1";
+
+    //! [THEN] The remaining clip keeps the same properties
+    const WaveTrack::IntervalConstHolder remainingClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(remainingClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RemoveTwoClipsFromATrack)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "Precondition failed: The number of intervals is not 2";
+
+    //! [WHEN] Remove the clips
+    const WaveTrack::IntervalConstHolder clip1 = track->GetSortedClipByIndex(0);
+    const WaveTrack::IntervalConstHolder clip2 = track->GetSortedClipByIndex(1);
+    m_clipsInteraction->removeClips({ { track->GetId(), clip1->GetId() }, { track->GetId(), clip2->GetId() } }, false);
+
+    //! [THEN] The number of intervals is 0
+    ASSERT_EQ(track->NIntervals(), 0) << "The number of intervals after the remove operation is not 0";
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3ClipsInteractionTests, RemoveClipsMovingRemaining)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackThreeClipsId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackThreeClipsId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackThreeClipsId));
+
+    //! [THEN] The number of intervals is 3
+    ASSERT_EQ(track->NIntervals(), 3) << "Precondition failed: The number of intervals is not 3";
+
+    //! [WHEN] Remove the second clip
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(1);
+    m_clipsInteraction->removeClips({ { track->GetId(), clip->GetId() } }, true);
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the remove operation is not 2";
+
+    //! [THEN] The first clip keeps the same properties
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(firstClip, TRACK_THREE_CLIPS_CLIP1_START, TRACK_THREE_CLIPS_CLIP1_END);
+
+    //! [THEN] The third clip is moved forward
+    const WaveTrack::IntervalConstHolder thirdClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(thirdClip, TRACK_THREE_CLIPS_CLIP2_START, TRACK_THREE_CLIPS_CLIP2_START + TRACK_THREE_CLIPS_CLIP3_DURATION,
+                           TRACK_THREE_CLIPS_CLIP2_START,
+                           TRACK_THREE_CLIPS_CLIP2_START + TRACK_THREE_CLIPS_CLIP3_DURATION);
+
+    // Cleanup
+    removeTrack(trackThreeClipsId);
+}
+
+TEST_F(Au3ClipsInteractionTests, CopyClip)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+    const ClipKey clipKey { track->GetId(), clip->GetId() };
+
+    //! [WHEN] Copy the tracks
+    m_clipsInteraction->copyClip(clipKey);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, CutClip)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(1);
+    const double middleClipStart = clip->GetSequenceStartTime();
+
+    //! [GIVEN] Thee number of interval is 3
+    ASSERT_EQ(track->NIntervals(), 3) << "Precondition failed: The number of intervals is not 3";
+
+    const ClipKey clipKey { track->GetId(), clip->GetId() };
+
+    //! [EXPECT] The project is notified about clip removed and track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipRemoved(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(Truly([&](const Track& modifiedTrack) {
+        return modifiedTrack.id == trackId;
+    }))).Times(1);
+
+    //! [WHEN] Cut the tracks into the clipboard
+    m_clipsInteraction->cutClip(clipKey);
+
+    //! [THEN] The number of intervals is 2
+    ASSERT_EQ(track->NIntervals(), 2) << "The number of intervals after the cut operation is not 2";
+
+    //! [THEN] The last clip was moved
+    const WaveTrack::IntervalConstHolder lastClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(lastClip, middleClipStart, middleClipStart + TRACK_THREE_CLIPS_CLIP3_DURATION);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, DuplicateClipsOnEmptyList)
+{
+    //! [GIVEN] A project without tracks
+    const Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 0) << "Precondition failed: The number of tracks is not 0";
+
+    //! [EXPECT] Notify about track inserted is not called
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackInserted(_, _)).Times(0);
+
+    //! [WHEN] Duplicate the clips with an empty list
+    EXPECT_EQ(m_clipsInteraction->duplicateClips({}), false);
+
+    //! [THEN] The number of tracks is still 0
+    ASSERT_EQ(projectTracks.Size(), 0) << "The number of tracks after the duplicate operation is not 0";
+}
+
+TEST_F(Au3ClipsInteractionTests, DuplicateSingleClip)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SMALL_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder clip = track->GetSortedClipByIndex(0);
+
+    //! [EXPECT] The number of tracks is 1
+    const Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 1) << "Precondition failed: The number of tracks is not 1";
+
+    //! [EXPECT] The trackList is requested
+    EXPECT_CALL(*m_trackEditProject, trackIdList()).Times(1).WillOnce(Return(std::vector<trackedit::TrackId> { track->GetId() }));
+
+    //! [EXPECT] Notify about track added
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
+
+    //! [WHEN] Duplicate the clip
+    m_clipsInteraction->duplicateClip({ track->GetId(), clip->GetId() });
+
+    //! [THEN] The number of tracks is 2
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    //Cleanup
+    removeTrack(trackId);
+    const TrackId newTrackId = (*projectTracks.begin())->GetId();
+    removeTrack(newTrackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, DuplicateClipsRemapsClipGroups)
+{
+    //! [GIVEN] A track whose clips form one group
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* origTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(origTrack) << "Precondition failed: original track not found";
+
+    constexpr int64_t originalGroupId = 42;
+    ClipKeyList clipKeys;
+    for (const auto& clip : origTrack->Intervals()) {
+        clip->SetGroupId(originalGroupId);
+        clipKeys.push_back({ origTrack->GetId(), clip->GetId() });
+    }
+
+    constexpr int64_t remappedGroupId = 77;
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(remappedGroupId));
+    ON_CALL(*m_trackEditProject, trackIdList()).WillByDefault(Return(std::vector<trackedit::TrackId> { origTrack->GetId() }));
+
+    //! [WHEN] Duplicate all clips of the track
+    m_clipsInteraction->duplicateClips(clipKeys);
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    Au3WaveTrack* clone = nullptr;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId) {
+            clone = dynamic_cast<Au3WaveTrack*>(track);
+        }
+    }
+    ASSERT_TRUE(clone) << "The duplicated track was not found";
+
+    //! [THEN] The duplicate's clips form their own group, independent of the original
+    for (const auto& clip : clone->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), remappedGroupId);
+    }
+
+    //! [THEN] The original clips keep their group
+    for (const auto& clip : origTrack->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), originalGroupId);
+    }
+
+    //Cleanup
+    removeTrack(trackId);
+    removeTrack(TrackId(clone->GetId()));
+}
+
+TEST_F(Au3ClipsInteractionTests, DuplicateClipsPreservesGroupSpanningTracks)
+{
+    //! [GIVEN] Two tracks whose clips all belong to one group
+    const TrackId trackId1 = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    const TrackId trackId2 = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    Au3WaveTrack* origTrack1 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId1));
+    Au3WaveTrack* origTrack2 = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId2));
+    ASSERT_TRUE(origTrack1 && origTrack2) << "Precondition failed: original tracks not found";
+
+    constexpr int64_t originalGroupId = 42;
+    ClipKeyList clipKeys;
+    for (Au3WaveTrack* origTrack : { origTrack1, origTrack2 }) {
+        for (const auto& clip : origTrack->Intervals()) {
+            clip->SetGroupId(originalGroupId);
+            clipKeys.push_back({ origTrack->GetId(), clip->GetId() });
+        }
+    }
+
+    int64_t nextGroupId = 100;
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault([&nextGroupId](int64_t) { return nextGroupId++; });
+    ON_CALL(*m_trackEditProject, trackIdList()).WillByDefault(Return(std::vector<trackedit::TrackId> { origTrack1->GetId(),
+                                                                                                       origTrack2->GetId() }));
+
+    //! [WHEN] Duplicate all clips of both tracks in one pass
+    m_clipsInteraction->duplicateClips(clipKeys);
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 4) << "The number of tracks after the duplicate operation is not 4";
+
+    std::vector<Au3WaveTrack*> clones;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId1 && TrackId(track->GetId()) != trackId2) {
+            clones.push_back(dynamic_cast<Au3WaveTrack*>(track));
+        }
+    }
+    ASSERT_EQ(clones.size(), 2) << "The duplicated tracks were not found";
+
+    //! [THEN] All copied clips share one new group id, since the whole group was duplicated
+    for (Au3WaveTrack* clone : clones) {
+        ASSERT_TRUE(clone);
+        for (const auto& clip : clone->Intervals()) {
+            EXPECT_EQ(clip->GetGroupId(), 100);
+        }
+    }
+
+    //Cleanup
+    removeTrack(trackId1);
+    removeTrack(trackId2);
+    for (Au3WaveTrack* clone : clones) {
+        removeTrack(TrackId(clone->GetId()));
+    }
+}
+
+TEST_F(Au3ClipsInteractionTests, DuplicateClipsDissolvesPartiallyIncludedGroup)
+{
+    //! [GIVEN] A track whose three clips form one group
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+    Au3WaveTrack* origTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_TRUE(origTrack) << "Precondition failed: original track not found";
+
+    constexpr int64_t originalGroupId = 42;
+    for (const auto& clip : origTrack->Intervals()) {
+        clip->SetGroupId(originalGroupId);
+    }
+
+    //! [GIVEN] Only two of the three clips are selected
+    ClipKeyList clipKeys {
+        { origTrack->GetId(), origTrack->GetSortedClipByIndex(0)->GetId() },
+        { origTrack->GetId(), origTrack->GetSortedClipByIndex(1)->GetId() }
+    };
+
+    ON_CALL(*m_trackEditProject, trackIdList()).WillByDefault(Return(std::vector<trackedit::TrackId> { origTrack->GetId() }));
+
+    //! [WHEN] Duplicate the selected clips
+    m_clipsInteraction->duplicateClips(clipKeys);
+
+    Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
+    ASSERT_EQ(projectTracks.Size(), 2) << "The number of tracks after the duplicate operation is not 2";
+
+    Au3WaveTrack* clone = nullptr;
+    for (Au3Track* track : projectTracks) {
+        if (TrackId(track->GetId()) != trackId) {
+            clone = dynamic_cast<Au3WaveTrack*>(track);
+        }
+    }
+    ASSERT_TRUE(clone) << "The duplicated track was not found";
+    ASSERT_EQ(clone->NIntervals(), 2) << "The number of intervals in the new track is not 2";
+
+    //! [THEN] The copies are ungrouped, since only part of the group was duplicated
+    for (const auto& clip : clone->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), -1);
+    }
+
+    //! [THEN] The original clips keep their group
+    for (const auto& clip : origTrack->Intervals()) {
+        EXPECT_EQ(clip->GetGroupId(), originalGroupId);
+    }
+
+    //Cleanup
+    removeTrack(trackId);
+    removeTrack(TrackId(clone->GetId()));
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipsRight)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    const double secondsToMove = 500 * SAMPLE_INTERVAL;
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    const double firstClipStart = firstClip->GetSequenceStartTime();
+    const double firstClipEnd = firstClip->GetSequenceEndTime();
+
+    const WaveTrack::IntervalConstHolder middleClip = track->GetSortedClipByIndex(1);
+    const double middleClipStart = middleClip->GetSequenceStartTime();
+    const double middleClipEnd = middleClip->GetSequenceEndTime();
+
+    const WaveTrack::IntervalConstHolder lastClip = track->GetSortedClipByIndex(2);
+    const double lastClipStart = lastClip->GetSequenceStartTime();
+    const double lastClipEnd = lastClip->GetSequenceEndTime();
+
+    ClipKeyList selectedClipsKeys = {
+        ClipKey { trackId, firstClip->GetId() },
+        ClipKey { trackId, middleClip->GetId() },
+        ClipKey { trackId, lastClip->GetId() }
+    };
+
+    //! [WHEN] Move the clips right
+    m_clipsInteraction->moveClips(selectedClipsKeys, secondsToMove, 0);
+
+    //! [THEN] All clips are moved
+    const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(modifiedFirstClip, firstClipStart + secondsToMove, firstClipEnd + secondsToMove);
+    const WaveTrack::IntervalConstHolder modifiedMiddleClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(modifiedMiddleClip, middleClipStart + secondsToMove, middleClipEnd + secondsToMove);
+    const WaveTrack::IntervalConstHolder modifiedLastClip = track->GetSortedClipByIndex(2);
+    ValidateClipProperties(modifiedLastClip, lastClipStart + secondsToMove, lastClipEnd + secondsToMove);
+
+    //Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipLeftWhenClipIsAtZero)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip = track->GetSortedClipByIndex(0);
+    const double firstClipStart = firstClip->GetSequenceStartTime();
+    const double firstClipEnd = firstClip->GetSequenceEndTime();
+
+    const WaveTrack::IntervalConstHolder middleClip = track->GetSortedClipByIndex(1);
+    const double middleClipStart = middleClip->GetSequenceStartTime();
+    const double middleClipEnd = middleClip->GetSequenceEndTime();
+
+    const WaveTrack::IntervalConstHolder lastClip = track->GetSortedClipByIndex(2);
+    const double lastClipStart = lastClip->GetSequenceStartTime();
+    const double lastClipEnd = lastClip->GetSequenceEndTime();
+
+    ClipKeyList selectedClipsKeys = {
+        ClipKey { trackId, firstClip->GetId() },
+        ClipKey { trackId, middleClip->GetId() },
+        ClipKey { trackId, lastClip->GetId() }
+    };
+
+    //! [WHEN] Move the clips left
+    m_clipsInteraction->moveClips(selectedClipsKeys, -1.0, 0);
+
+    //! [THEN] No clip is moved
+    const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(modifiedFirstClip, firstClipStart, firstClipEnd);
+    const WaveTrack::IntervalConstHolder modifiedMiddleClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(modifiedMiddleClip, middleClipStart, middleClipEnd);
+    const WaveTrack::IntervalConstHolder modifiedLastClip = track->GetSortedClipByIndex(2);
+    ValidateClipProperties(modifiedLastClip, lastClipStart, lastClipEnd);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveAcrossTracksPreservesIntermediateAndEmptyTrackFormats)
+{
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    source = source->MonoToStereo();
+    const auto intermediate = factory.createTrackFromTemplate("intermediate", {});
+    const auto destination = factory.createTrackFromTemplate("destination", {});
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const TrackId intermediateId = factory.addTrackToProject(intermediate);
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const TrackId trailingId = factory.addTrackFromTemplate("trailing", {});
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+
+    const auto moved = m_clipsInteraction->moveClips({ sourceKey }, 0.0, 2);
+    ASSERT_TRUE(moved.ret);
+    ASSERT_EQ(moved.val, (ClipKeyList { { destinationId, sourceKey.itemId } }));
+    auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    EXPECT_EQ(destinationTrack->NChannels(), 2u);
+    EXPECT_EQ(destinationTrack->NIntervals(), 1u);
+    auto sourceTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId));
+    ASSERT_NE(sourceTrack, nullptr);
+    EXPECT_EQ(sourceTrack->NChannels(), 2u);
+    EXPECT_TRUE(sourceTrack->IsEmpty());
+    EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(intermediateId)), intermediate.get());
+    EXPECT_EQ(intermediate->NChannels(), 1u);
+    EXPECT_TRUE(intermediate->IsEmpty());
+
+    const auto returned = m_clipsInteraction->moveClips(moved.val, 0.0, -2);
+    ASSERT_TRUE(returned.ret);
+    EXPECT_EQ(returned.val, (ClipKeyList { sourceKey }));
+    destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(destinationTrack, nullptr);
+    EXPECT_EQ(destinationTrack->NChannels(), 2u);
+    EXPECT_TRUE(destinationTrack->IsEmpty());
+    EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(intermediateId)), intermediate.get());
+    EXPECT_EQ(intermediate->NChannels(), 1u);
+    EXPECT_TRUE(intermediate->IsEmpty());
+    EXPECT_NE(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trailingId)), nullptr);
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Size(), 4u);
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveStereoClipsUpIntoOccupiedMonoTrackReturnsExistingClips)
+{
+    //! [GIVEN] A mono track holding a clip above a stereo track holding two clips
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto upper = factory.createTrackFromTemplate("upper", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto lower = factory.createTrackFromTemplate("lower", {
+            { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } },
+            { 1.0, { { 0.1, TrackTemplateFactory::createNoise } } }
+        });
+    lower = lower->MonoToStereo();
+    const TrackId upperId = factory.addTrackToProject(upper);
+    const TrackId lowerId = factory.addTrackToProject(lower);
+    const ClipKeyList keys {
+        { lowerId, lower->GetSortedClipByIndex(0)->GetId() },
+        { lowerId, lower->GetSortedClipByIndex(1)->GetId() }
+    };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { lowerId }));
+
+    //! [WHEN] Both stereo clips are moved up, which mixes them down to mono
+    const auto result = m_clipsInteraction->moveClips(keys, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 2u);
+
+    //! [THEN] Every returned key names a clip that exists on the upper track
+    const Au3WaveTrack* upperTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(upperId));
+    ASSERT_NE(upperTrack, nullptr);
+    EXPECT_EQ(upperTrack->NChannels(), 1u);
+    EXPECT_EQ(upperTrack->NIntervals(), 3u);
+    for (const ClipKey& key : result.val) {
+        EXPECT_EQ(key.trackId, upperId);
+        EXPECT_NE(DomAccessor::findWaveClip(const_cast<Au3WaveTrack*>(upperTrack), key.itemId), nullptr) << "clip " << key.itemId;
+    }
+}
+
+class Au3ClipsDropTests : public Au3ClipsInteractionTests, public testing::WithParamInterface<std::tuple<bool, bool> >
+{
+};
+
+TEST_P(Au3ClipsDropTests, ConvertsDestinationChannelsBeforeAutosave)
+{
+    const auto [sourceIsStereo, overlap] = GetParam();
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto destination = factory.createTrackFromTemplate("destination", { { 1.0, { { 0.3, TrackTemplateFactory::createNoise } } } });
+    if (sourceIsStereo) {
+        source = source->MonoToStereo();
+    } else {
+        destination = destination->MonoToStereo();
+    }
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const ClipKey sourceKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+
+    // A preview-only drag keeps the original selection until the completed move returns.
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { sourceId }));
+    const auto result = m_clipsInteraction->moveClips({ sourceKey }, overlap ? 1.1 : 2.0, 1);
+
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val, (ClipKeyList { { destinationId, sourceKey.itemId } }));
+    const auto movedTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(movedTrack, nullptr);
+    EXPECT_EQ(movedTrack->NChannels(), sourceIsStereo ? 1u : 2u);
+    EXPECT_EQ(movedTrack->NIntervals(), overlap ? 3u : 2u);
+    for (const auto& clip : movedTrack->Intervals()) {
+        // A stereo track containing a mono clip crashes while serializing its second channel.
+        ASSERT_EQ(clip->NChannels(), movedTrack->NChannels());
+    }
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
+INSTANTIATE_TEST_SUITE_P(CompletedMove, Au3ClipsDropTests, testing::Combine(testing::Bool(), testing::Bool()));
+
+TEST_F(Au3ClipsInteractionTests, CompletedMoveKeepsTrackWhenChannelsAlreadyMatch)
+{
+    const TrackId trackId = createTrack(TestTrackID::TRACK_THREE_CLIPS);
+    const auto track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(track, nullptr);
+    const ClipKey key { trackId, track->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { trackId }));
+    EXPECT_CALL(*std::static_pointer_cast<muse::InteractiveMock>(m_interactive), showProgress(_, _)).Times(0);
+
+    const auto result = m_clipsInteraction->moveClips({ key }, 1.0, 0);
+
+    ASSERT_TRUE(result.ret);
+    EXPECT_EQ(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId)), track);
+    EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+}
+
+TEST_P(Au3ClipsDropTests, PreservesEffectsThroughUndoRedo)
+{
+    class CountingEffectFactory final : public project::DummyEffectInstanceFactory
+    {
+    public:
+        std::shared_ptr<EffectInstance> MakeInstance() const override
+        {
+            ++instanceCreations;
+            return nullptr;
+        }
+
+        mutable int instanceCreations = 0;
+    } factory;
+    RealtimeEffectState::EffectFactory::Scope factoryScope {
+        [&](const PluginID&) -> const EffectInstanceFactory* { return &factory; }
+    };
+    const muse::Defer cleanup([&] {
+        Au3TrackList::Get(projectRef()).Clear();
+        ::UndoManager::Get(projectRef()).ClearStates();
+    });
+    // Include the real settings restorer used by the application's undo/redo path.
+    effects::setRealtimeEffectRestorerSignals(projectRef(), {});
+
+    const auto [sourceIsStereo, overlap] = GetParam();
+    TrackTemplateFactory trackFactory(projectRef(), DEFAULT_SAMPLE_RATE);
+    auto source = trackFactory.createTrackFromTemplate("source", { { 0.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    auto destination = trackFactory.createTrackFromTemplate("destination", { { 1.0, { { 0.3, TrackTemplateFactory::createNoise } } } });
+    if (sourceIsStereo) {
+        source = source->MonoToStereo();
+    } else {
+        destination = destination->MonoToStereo();
+    }
+    const TrackId sourceId = trackFactory.addTrackToProject(source);
+    const TrackId destinationId = trackFactory.addTrackToProject(destination);
+    const ClipKey key { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_selectionController, selectedTracks()).WillByDefault(Return(TrackIdList { destinationId }));
+    const auto sourceEffect = RealtimeEffectState::make_shared("au-test:source");
+    const auto destinationEffect = RealtimeEffectState::make_shared("au-test:destination");
+    ASSERT_TRUE(RealtimeEffectList::Get(*source).AddState(sourceEffect));
+    ASSERT_TRUE(RealtimeEffectList::Get(*destination).AddState(destinationEffect));
+    RealtimeEffectList::Get(*source).SetActive(false);
+    // Loaded effects may never have been played or opened before this edit.
+    ASSERT_EQ(factory.instanceCreations, 0);
+
+    auto& history = ::ProjectHistory::Get(projectRef());
+    auto& undoManager = ::UndoManager::Get(projectRef());
+    const auto restore = [&](const UndoStackElem& elem) { history.PopState(elem.state); };
+    history.InitialState();
+    history.ModifyState(false);
+
+    const auto result = m_clipsInteraction->moveClips({ key }, overlap ? 1.1 : 2.0, 1);
+    ASSERT_TRUE(result.ret);
+    history.PushState({}, {});
+
+    const auto checkEffects = [&] {
+        const auto sourceTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId));
+        const auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+        ASSERT_NE(sourceTrack, nullptr);
+        ASSERT_NE(destinationTrack, nullptr);
+        EXPECT_EQ(RealtimeEffectList::Get(*sourceTrack).GetStateAt(0), sourceEffect);
+        EXPECT_EQ(RealtimeEffectList::Get(*destinationTrack).GetStateAt(0), destinationEffect);
+        EXPECT_FALSE(RealtimeEffectList::Get(*sourceTrack).IsActive());
+        EXPECT_EQ(factory.instanceCreations, 0);
+        EXPECT_TRUE(ProjectFileIO::Get(projectRef()).AutoSave());
+    };
+    checkEffects();
+
+    for (int i = 0; i < 2; ++i) {
+        ASSERT_TRUE(undoManager.UndoAvailable());
+        undoManager.Undo(restore);
+        EXPECT_NE(DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(sourceId)), key.itemId), nullptr);
+        checkEffects();
+        ASSERT_TRUE(undoManager.RedoAvailable());
+        undoManager.Redo(restore);
+        EXPECT_NE(DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId)), key.itemId), nullptr);
+        checkEffects();
+    }
+
+    destinationEffect->SetActive(false);
+    history.PushState({}, {});
+    undoManager.Undo(restore);
+    EXPECT_TRUE(destinationEffect->IsEnabled());
+    undoManager.Redo(restore);
+    EXPECT_FALSE(destinationEffect->IsEnabled());
+    undoManager.Undo(restore);
+    EXPECT_TRUE(destinationEffect->IsEnabled());
+
+    auto destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    RealtimeEffectList::Get(*destinationTrack).RemoveState(destinationEffect);
+    history.PushState({}, {});
+    undoManager.Undo(restore);
+    checkEffects();
+    undoManager.Redo(restore);
+    destinationTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    EXPECT_EQ(RealtimeEffectList::Get(*destinationTrack).GetStatesCount(), 0u);
+}
+
+TEST_F(Au3ClipsInteractionTests, SplitDeteleByClipId)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Split and delete the whole clip
+    m_clipsInteraction->clipSplitDelete({ trackTwoClipsId, firstClip->GetId() });
+
+    //! [THEN] Clip was removed there is ony one left
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split delete operation is not 1";
+
+    //! [THEN] The remaining clip stays unchanged
+    const WaveTrack::IntervalConstHolder remainingClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(remainingClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3ClipsInteractionTests, SplitCutByClipId)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about track changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Split and cut the whole clip
+    m_clipsInteraction->clipSplitCut({ trackTwoClipsId, firstClip->GetId() });
+
+    //! [THEN] Clip was removed there is ony one left
+    ASSERT_EQ(track->NIntervals(), 1) << "The number of intervals after the split delete operation is not 1";
+
+    //! [THEN] The remaining clip stays unchanged
+    const WaveTrack::IntervalConstHolder remainingClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(remainingClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimSingleClipLeft)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Trim the clip from the left
+    const secs_t deltaSec = 2 * SAMPLE_INTERVAL;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    m_clipsInteraction->trimClipsLeft({ { trackId, firstClip->GetId() } }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clip is trimmed
+    const WaveTrack::IntervalConstHolder trimmedClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(trimmedClip, TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END,
+                           TRACK_SILENCE_AT_END_CLIP_START + deltaSec, TRACK_SILENCE_AT_END_CLIP_END);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimSingleClipRight)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Trim the clip from the right
+    const secs_t deltaSec = 2 * SAMPLE_INTERVAL;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    m_clipsInteraction->trimClipsRight({ { trackId, firstClip->GetId() } }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clip is trimmed
+    const WaveTrack::IntervalConstHolder trimmedClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(trimmedClip, TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END, TRACK_SILENCE_AT_END_CLIP_START,
+                           TRACK_SILENCE_AT_END_CLIP_END - deltaSec);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimTwoClipsLeftShouldConsiderMinClipDuration)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+    const WaveTrack::IntervalConstHolder secondClip =  track->GetSortedClipByIndex(1);
+
+    //! [GIVEN] Both clips are selected
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
+            ClipKey { trackId, firstClip->GetId() },
+            ClipKey { trackId, secondClip->GetId() }
+        }));
+
+    //! [WHEN] Trim the clips from the left
+    const secs_t deltaSec = TRACK_TWO_CLIPS_CLIP1_DURATION;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    m_clipsInteraction->trimClipsLeft(ClipKeyList {
+            ClipKey { trackId, firstClip->GetId() },
+            ClipKey { trackId, secondClip->GetId() }
+        }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clips are trimmed
+    const WaveTrack::IntervalConstHolder trimmedFirstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(trimmedFirstClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END,
+                           TRACK_TWO_CLIPS_CLIP1_END - minClipDuration, TRACK_TWO_CLIPS_CLIP1_END);
+
+    const WaveTrack::IntervalConstHolder trimmedSecondClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(trimmedSecondClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END,
+                           TRACK_TWO_CLIPS_CLIP2_END - minClipDuration, TRACK_TWO_CLIPS_CLIP2_END);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimTwoClipsRightShouldConsiderMinClipDuration)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+    const WaveTrack::IntervalConstHolder secondClip =  track->GetSortedClipByIndex(1);
+
+    //! [GIVEN] Both clips are selected
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
+            ClipKey { trackId, firstClip->GetId() },
+            ClipKey { trackId, secondClip->GetId() }
+        }));
+
+    //! [WHEN] Trim the clips from the right
+    const secs_t deltaSec = TRACK_TWO_CLIPS_CLIP1_DURATION;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    m_clipsInteraction->trimClipsRight(ClipKeyList {
+            ClipKey { trackId, firstClip->GetId() },
+            ClipKey { trackId, secondClip->GetId() }
+        }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clips are trimmed
+    const WaveTrack::IntervalConstHolder trimmedFirstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(trimmedFirstClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END, TRACK_TWO_CLIPS_CLIP1_START,
+                           TRACK_TWO_CLIPS_CLIP1_START + minClipDuration);
+
+    const WaveTrack::IntervalConstHolder trimmedSecondClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(trimmedSecondClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END, TRACK_TWO_CLIPS_CLIP2_START,
+                           TRACK_TWO_CLIPS_CLIP2_START + minClipDuration);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchSingleClipLeft)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Stretch the clip from the left
+    //! NOTE: In order to avoid rounding problems while comparing clip properties we stretch the clip by half
+    const secs_t deltaSec = TRACK_SILENCE_AT_END_CLIP_DURATION / 2;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    m_clipsInteraction->stretchClipsLeft({ { trackId, firstClip->GetId() } }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clip is stretched
+    const WaveTrack::IntervalConstHolder stretchedClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(stretchedClip, TRACK_SILENCE_AT_END_CLIP_START + deltaSec, TRACK_SILENCE_AT_END_CLIP_END);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchSingleClipRight)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Stretch the clip from the right
+    //! NOTE: In order to avoid rounding problems while comparing clip properties we stretch the clip by half
+    const secs_t deltaSec = TRACK_SILENCE_AT_END_CLIP_DURATION / 2;
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+    m_clipsInteraction->stretchClipsRight({ { trackId, firstClip->GetId() } }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clip is stretched
+    const WaveTrack::IntervalConstHolder stretchedClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(stretchedClip, TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END - deltaSec);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchTwoClipsLeftShouldConsiderMinClipDuration)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+    const WaveTrack::IntervalConstHolder secondClip =  track->GetSortedClipByIndex(1);
+
+    //! [GIVEN] Both clips are selected
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
+            ClipKey { trackId, firstClip->GetId() },
+            ClipKey { trackId, secondClip->GetId() }
+        }));
+
+    //! [WHEN] Stretch the clips from the left
+    //! NOTE: In order to avoid rounding problems while comparing clip properties we stretch the clip by half
+    const secs_t deltaSec = TRACK_TWO_CLIPS_CLIP1_DURATION;
+    const secs_t minClipDuration = TRACK_TWO_CLIPS_CLIP1_DURATION / 2;
+
+    m_clipsInteraction->stretchClipsLeft({ { trackId, firstClip->GetId() },
+                                             { trackId, secondClip->GetId() } }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clips are stretched considering the minimum clip duration
+    const WaveTrack::IntervalConstHolder stretchedFirstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(stretchedFirstClip, TRACK_TWO_CLIPS_CLIP1_START + minClipDuration, TRACK_TWO_CLIPS_CLIP1_END);
+
+    const WaveTrack::IntervalConstHolder stretchedSecondClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(stretchedSecondClip, TRACK_TWO_CLIPS_CLIP2_START + minClipDuration, TRACK_TWO_CLIPS_CLIP2_END);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchTwoClipsRightShouldConsiderMinClipDuration)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed twice
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(2);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+    const WaveTrack::IntervalConstHolder secondClip =  track->GetSortedClipByIndex(1);
+
+    //! [GIVEN] Both clips are selected
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
+            ClipKey { trackId, firstClip->GetId() },
+            ClipKey { trackId, secondClip->GetId() }
+        }));
+
+    //! [WHEN] Stretch the clips from the right
+    //! NOTE: In order to avoid rounding problems while comparing clip properties we stretch the clip by half
+    const secs_t deltaSec = TRACK_TWO_CLIPS_CLIP1_DURATION;
+    const secs_t minClipDuration = TRACK_TWO_CLIPS_CLIP1_DURATION / 2;
+
+    m_clipsInteraction->stretchClipsRight({ { trackId, firstClip->GetId() },
+                                              { trackId, secondClip->GetId() } }, deltaSec, minClipDuration, true);
+
+    //! [THEN] The clips are stretched considering the minimum clip duration
+    const WaveTrack::IntervalConstHolder stretchedFirstClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(stretchedFirstClip, TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END - minClipDuration);
+
+    const WaveTrack::IntervalConstHolder stretchedSecondClip = track->GetSortedClipByIndex(1);
+    ValidateClipProperties(stretchedSecondClip, TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END - minClipDuration);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, IncreaseClipSpeed)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Increase the clip speed
+    //! TODO: We should rename the parameter from changeClipSpeed once a value of
+    //! 2.0 makes the clip expand and not shrink
+    const double speedFactor = 2.0;
+    m_clipsInteraction->changeClipSpeed({ trackId, firstClip->GetId() }, speedFactor);
+
+    //! [THEN] The clip change the start and end times
+    const WaveTrack::IntervalConstHolder modifiedClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(modifiedClip, TRACK_SILENCE_AT_END_CLIP_START,
+                           TRACK_SILENCE_AT_END_CLIP_START + TRACK_SILENCE_AT_END_CLIP_DURATION * speedFactor);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, DecreaseClipSpeed)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [WHEN] Decrease the clip speed
+    //! TODO: We should rename the parameter from changeClipSpeed once a value of
+    //! 0.5 makes the clip shrink and not expand
+    const double speedFactor = 0.5;
+    m_clipsInteraction->changeClipSpeed({ trackId, firstClip->GetId() }, speedFactor);
+
+    //! [THEN] The clip change the start and end times
+    const WaveTrack::IntervalConstHolder modifiedClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(modifiedClip, TRACK_SILENCE_AT_END_CLIP_START,
+                           TRACK_SILENCE_AT_END_CLIP_START + TRACK_SILENCE_AT_END_CLIP_DURATION * speedFactor);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ResetClipSpeed)
+{
+    //! [GIVEN] There is a project with a track and a single clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_SILENCE_AT_END);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const WaveTrack::IntervalConstHolder firstClip =  track->GetSortedClipByIndex(0);
+
+    //! [GIVEN] The clip speed is not the default
+    const double speedFactor = 2.0;
+    m_clipsInteraction->changeClipSpeed({ trackId, firstClip->GetId() }, speedFactor);
+
+    //! [EXPECT] The project is notified about clip changed
+    EXPECT_CALL(*m_trackEditProject, notifyAboutClipChanged(_)).Times(1);
+
+    //! [WHEN] Reseting the clip speed
+    m_clipsInteraction->resetClipSpeed({ trackId, firstClip->GetId() });
+
+    //! [THEN] The clip start and end time are the same as the original clip
+    const WaveTrack::IntervalConstHolder modifiedClip = track->GetSortedClipByIndex(0);
+    ValidateClipProperties(modifiedClip, TRACK_SILENCE_AT_END_CLIP_START, TRACK_SILENCE_AT_END_CLIP_END);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+
+//==============================================================================
+// Overlap-resolution regression tests
+//
+// Each test drives a clip-editing interaction into a state where the edited clip
+// grows/moves onto a neighbour, then asserts that the completed interaction left
+// no overlapping play regions. They characterise the bug that the
+// `makeRoomForClip` calls fix: with those calls removed, every test below fails
+// because the neighbour is left overlapping.
+//==============================================================================
+
+namespace {
+// A time strictly inside a clip's [start, end) play region: its midpoint. Landing
+// an edited edge here guarantees a play-region overlap with that clip.
+constexpr double midpointOf(double start, double end)
+{
+    return start + (end - start) / 2.0;
+}
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourStartTrimsPastItsEnd)
+{
+    //! [GIVEN] A 44.1 kHz track with a clip, and below it a 48 kHz track with a clip whose end
+    //! falls just above a 44.1 kHz sample, so a trim by the exact overlap would round back into it
+    TrackTemplateFactory factory44(projectRef(), DEFAULT_SAMPLE_RATE);
+    TrackTemplateFactory factory48(projectRef(), 48000.0);
+    const auto destination = factory44.createTrackFromTemplate("destination", { { 0.9, { { 1.1, TrackTemplateFactory::createNoise } } } });
+    const auto source = factory48.createTrackFromTemplate("source", { { 0.5, { { 24007.5 / 48000.0,
+                                                                  TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory44.addTrackToProject(destination);
+    const TrackId sourceId = factory48.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double movedEnd = source->GetSortedClipByIndex(0)->GetPlayEndTime();
+    ASSERT_LT(std::fmod(movedEnd * DEFAULT_SAMPLE_RATE, 1.0), 0.5) << "the layout must round the neighbour's edge down";
+
+    //! [WHEN] The 48 kHz clip is moved up onto the neighbour's start
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour was trimmed past the moved clip's end and nothing overlaps
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_GE(neighbour->GetPlayStartTime(), moved->GetPlayEndTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOntoNeighbourAtExactSampleBoundaryLeavesNoGap)
+{
+    //! [GIVEN] Two same-rate clips whose overlap, 12 samples, computes to a hair above 12 in floating point
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto destination = factory.createTrackFromTemplate("destination", { { 1.0 / DEFAULT_SAMPLE_RATE, { { 0.1,
+                                                                     TrackTemplateFactory::createNoise } } } });
+    const auto source = factory.createTrackFromTemplate("source", { { 0.0, { { 13.5 / DEFAULT_SAMPLE_RATE,
+                                                                TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory.addTrackToProject(destination);
+    const TrackId sourceId = factory.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double overlap = (source->GetSortedClipByIndex(0)->GetPlayEndTime() - destination->GetSortedClipByIndex(0)->GetPlayStartTime())
+                           * DEFAULT_SAMPLE_RATE;
+    ASSERT_GT(overlap, 12.0) << "the layout must compute the overlap just above a whole sample count";
+    ASSERT_LT(overlap, 12.0001);
+
+    //! [WHEN] The clip is moved up onto the neighbour's start
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour starts exactly where the moved clip ends, with neither an overlap nor a gap
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_DOUBLE_EQ(neighbour->GetPlayStartTime(), moved->GetPlayEndTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourEndTrimsBeforeItsStart)
+{
+    //! [GIVEN] A 44.1 kHz track with a clip, and below it a 48 kHz clip whose start falls just
+    //! below a 44.1 kHz sample and which reaches past the neighbour's end, so a trim by the
+    //! exact overlap would round forward into it
+    TrackTemplateFactory factory44(projectRef(), DEFAULT_SAMPLE_RATE);
+    TrackTemplateFactory factory48(projectRef(), 48000.0);
+    const auto destination = factory44.createTrackFromTemplate("destination", { { 0.2, { { 0.8, TrackTemplateFactory::createNoise } } } });
+    const auto source = factory48.createTrackFromTemplate("source", { { 24013.0 / 48000.0, { { 1.0,
+                                                                  TrackTemplateFactory::createNoise } } } });
+    const TrackId destinationId = factory44.addTrackToProject(destination);
+    const TrackId sourceId = factory48.addTrackToProject(source);
+    const ClipKey movedKey { sourceId, source->GetSortedClipByIndex(0)->GetId() };
+    const auto neighbourId = destination->GetSortedClipByIndex(0)->GetId();
+    const double movedStart = source->GetSortedClipByIndex(0)->GetPlayStartTime();
+    ASSERT_GT(std::fmod(movedStart * DEFAULT_SAMPLE_RATE, 1.0), 0.5) << "the layout must round the neighbour's edge up";
+
+    //! [WHEN] The 48 kHz clip is moved up onto the neighbour's end
+    const auto result = m_clipsInteraction->moveClips({ movedKey }, 0.0, -1);
+    ASSERT_TRUE(result.ret);
+
+    //! [THEN] The neighbour was trimmed before the moved clip's start and nothing overlaps
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(destinationId));
+    ASSERT_NE(track, nullptr);
+    const auto neighbour = DomAccessor::findWaveClip(track, neighbourId);
+    const auto moved = DomAccessor::findWaveClip(track, movedKey.itemId);
+    ASSERT_NE(neighbour, nullptr);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_LE(neighbour->GetPlayEndTime(), moved->GetPlayStartTime());
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(destinationId);
+    removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ChangeClipStartTimeOntoNeighbourResolvesOverlap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+
+    //! [WHEN] The first clip is moved to start halfway inside the second clip's
+    //! play region [20,30) - the two clips now overlap
+    const double startInsideSecondClip = midpointOf(TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+    m_clipsInteraction->changeClipStartTime({ trackId, firstClipId }, startInsideSecondClip, true);
+
+    //! [THEN] The first clip indeed starts inside the second clip's original region ...
+    const auto firstClip = DomAccessor::findWaveClip(track, firstClipId);
+    EXPECT_GT(firstClip->GetPlayStartTime(), TRACK_TWO_CLIPS_CLIP2_START);
+    EXPECT_LT(firstClip->GetPlayStartTime(), TRACK_TWO_CLIPS_CLIP2_END);
+    //! [THEN] ... but the overlap was resolved
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchClipRightOntoNeighbourResolvesOverlap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [WHEN] The first clip's right edge is stretched until it ends halfway inside
+    //! the second clip's play region [20,30) - the two clips now overlap.
+    //! (stretchClipsRight grows the clip when the delta is negative.)
+    const double endInsideSecondClip = midpointOf(TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+    const double delta = TRACK_TWO_CLIPS_CLIP1_END - endInsideSecondClip;
+    m_clipsInteraction->stretchClipsRight({ { trackId, firstClipId } }, delta, minClipDuration, true);
+
+    //! [THEN] The first clip's end indeed reached inside the second clip's region ...
+    const auto firstClip = DomAccessor::findWaveClip(track, firstClipId);
+    EXPECT_GT(firstClip->GetPlayEndTime(), TRACK_TWO_CLIPS_CLIP2_START);
+    //! [THEN] ... but the overlap was resolved
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, StretchClipLeftOntoNeighbourResolvesOverlap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [WHEN] The second clip's left edge is stretched until it starts halfway inside
+    //! the first clip's play region [0,10) - the two clips now overlap.
+    //! (stretchClipsLeft grows the clip when the delta is negative.)
+    const double startInsideFirstClip = midpointOf(TRACK_TWO_CLIPS_CLIP1_START, TRACK_TWO_CLIPS_CLIP1_END);
+    const double delta = startInsideFirstClip - TRACK_TWO_CLIPS_CLIP2_START;
+    m_clipsInteraction->stretchClipsLeft({ { trackId, secondClipId } }, delta, minClipDuration, true);
+
+    //! [THEN] The second clip's start indeed reached inside the first clip's region ...
+    const auto secondClip = DomAccessor::findWaveClip(track, secondClipId);
+    EXPECT_LT(secondClip->GetPlayStartTime(), TRACK_TWO_CLIPS_CLIP1_END);
+    //! [THEN] ... but the overlap was resolved
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ChangeClipSpeedOntoNeighbourResolvesOverlap)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+
+    //! [WHEN] The first clip is slowed down until its end (duration x speed, since it
+    //! starts at 0) reaches halfway inside the second clip's region [20,30) - overlap
+    const double endInsideSecondClip = midpointOf(TRACK_TWO_CLIPS_CLIP2_START, TRACK_TWO_CLIPS_CLIP2_END);
+    const double speed = endInsideSecondClip / TRACK_TWO_CLIPS_CLIP1_DURATION;
+    m_clipsInteraction->changeClipSpeed({ trackId, firstClipId }, speed);
+
+    //! [THEN] The first clip's end indeed reached inside the second clip's region ...
+    const auto firstClip = DomAccessor::findWaveClip(track, firstClipId);
+    EXPECT_GT(firstClip->GetPlayEndTime(), TRACK_TWO_CLIPS_CLIP2_START);
+    //! [THEN] ... but the overlap was resolved
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimClipRightOntoNeighbourResolvesOverlap)
+{
+    //! [GIVEN] A long clip [0,30] and a well-separated short clip [40,50] (samples)
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const TrackId trackId = factory.addTrackFromTemplate("trimRightOverlap", {
+            { 0.0, { { 30 * SAMPLE_INTERVAL, TrackTemplateFactory::createNoise } } },
+            { 40 * SAMPLE_INTERVAL, { { 10 * SAMPLE_INTERVAL, TrackTemplateFactory::createNoise } } }
+        });
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [GIVEN] The first clip is trimmed down to [0,5], keeping hidden audio up to 30
+    m_clipsInteraction->trimClipsRight({ { trackId, firstClipId } }, 25 * SAMPLE_INTERVAL, minClipDuration, true);
+    //! [GIVEN] The second clip is moved to [10,20] - inside the first clip's hidden
+    //! (sequence-only) region, but not yet overlapping any play region
+    const double secondClipStart = 10 * SAMPLE_INTERVAL;
+    const double secondClipEnd = secondClipStart + 10 * SAMPLE_INTERVAL;
+    m_clipsInteraction->changeClipStartTime({ trackId, secondClipId }, secondClipStart, true);
+    ASSERT_TRUE(track->NoPlayRegionsOverlap()) << "Setup should not overlap play regions";
+
+    //! [WHEN] The first clip's right edge is untrimmed until it ends halfway inside
+    //! the second clip [10,20) - revealing hidden audio there makes them overlap
+    const auto firstClipBefore = DomAccessor::findWaveClip(track, firstClipId);
+    const double delta = firstClipBefore->GetPlayEndTime() - midpointOf(secondClipStart, secondClipEnd);
+    m_clipsInteraction->trimClipsRight({ { trackId, firstClipId } }, delta, minClipDuration, true);
+
+    //! [THEN] The first clip's end indeed reached inside the second clip's region ...
+    const auto firstClip = DomAccessor::findWaveClip(track, firstClipId);
+    EXPECT_GT(firstClip->GetPlayEndTime(), secondClipStart);
+    //! [THEN] ... but the overlap was resolved
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, TrimClipLeftOntoNeighbourResolvesOverlap)
+{
+    //! [GIVEN] A short clip [0,10] and a well-separated long clip [40,70] (samples)
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const double firstClipStart = 0.0;
+    const double firstClipEnd = 10 * SAMPLE_INTERVAL;
+    const TrackId trackId = factory.addTrackFromTemplate("trimLeftOverlap", {
+            { firstClipStart, { { firstClipEnd, TrackTemplateFactory::createNoise } } },
+            { 40 * SAMPLE_INTERVAL, { { 30 * SAMPLE_INTERVAL, TrackTemplateFactory::createNoise } } }
+        });
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+    const secs_t minClipDuration = 2 * SAMPLE_INTERVAL;
+
+    //! [GIVEN] The second clip is trimmed from the left, keeping hidden audio there
+    m_clipsInteraction->trimClipsLeft({ { trackId, secondClipId } }, 25 * SAMPLE_INTERVAL, minClipDuration, true);
+    //! [GIVEN] ... and moved so its hidden left audio (sequence start = 5) lies inside
+    //! the first clip [0,10), while its play region stays clear of it
+    m_clipsInteraction->changeClipStartTime({ trackId, secondClipId }, 30 * SAMPLE_INTERVAL, true);
+    ASSERT_TRUE(track->NoPlayRegionsOverlap()) << "Setup should not overlap play regions";
+
+    //! [WHEN] The second clip's left edge is fully untrimmed, revealing that hidden
+    //! audio (back to 5) inside the first clip [0,10) - the two clips now overlap
+    const auto secondClipBefore = DomAccessor::findWaveClip(track, secondClipId);
+    const double delta = -secondClipBefore->GetTrimLeft();
+    m_clipsInteraction->trimClipsLeft({ { trackId, secondClipId } }, delta, minClipDuration, true);
+
+    //! [THEN] The second clip's start indeed reached inside the first clip's region ...
+    const auto secondClip = DomAccessor::findWaveClip(track, secondClipId);
+    EXPECT_LT(secondClip->GetPlayStartTime(), firstClipEnd);
+    //! [THEN] ... but the overlap was resolved
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+
+    removeTrack(trackId);
+}
+
+// The load-time sanitizer for projects that are already in the overlapping state
+// (the originally reported bug). WaveTrackUtilities::RemoveOverlaps is run on load,
+// before the trackedit project/UI exist.
+TEST_F(Au3ClipsInteractionTests, RemoveOverlapsClearsAlreadyOverlappingTrack)
+{
+    //! [GIVEN] A track with two separated clips ([0,10] and [20,30] samples)
+    const TrackId trackId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    const auto firstClipId = track->GetSortedClipByIndex(0)->GetId();
+    const auto secondClipId = track->GetSortedClipByIndex(1)->GetId();
+
+    //! [GIVEN] The first clip is moved via the raw clip API (bypassing the
+    //! interaction's own de-overlapping) so its play region [15,25] overlaps the
+    //! second clip [20,30] - the corrupt state a legacy project can be loaded in
+    const auto firstClip = DomAccessor::findWaveClip(track, firstClipId);
+    firstClip->SetPlayStartTime(15 * SAMPLE_INTERVAL);
+    ASSERT_FALSE(track->NoPlayRegionsOverlap()) << "Precondition: the track should overlap";
+
+    //! [WHEN] The track is de-overlapped
+    WaveTrackUtilities::RemoveOverlaps(*track);
+
+    //! [THEN] No play regions overlap ...
+    EXPECT_TRUE(track->NoPlayRegionsOverlap());
+    //! [THEN] ... the earlier clip yielded its tail (trimmed back to the later clip's start) ...
+    EXPECT_DOUBLE_EQ(firstClip->GetPlayEndTime(), TRACK_TWO_CLIPS_CLIP2_START);
+    //! [THEN] ... and the later clip is untouched
+    const auto secondClip = DomAccessor::findWaveClip(track, secondClipId);
+    EXPECT_DOUBLE_EQ(secondClip->GetPlayStartTime(), TRACK_TWO_CLIPS_CLIP2_START);
+    EXPECT_DOUBLE_EQ(secondClip->GetPlayEndTime(), TRACK_TWO_CLIPS_CLIP2_END);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipGroupIdOfAMissingClipIsNone)
+{
+    //! [GIVEN] A track with a clip
+    const TrackId trackId = createTrack(TestTrackID::TRACK_MIN_SILENCE);
+    ASSERT_NE(trackId, INVALID_TRACK) << "Failed to create track";
+
+    Au3Project& project = projectRef();
+    const Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
+    const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(project, track->GetId(), 0);
+    ASSERT_NE(clip, nullptr);
+
+    //! [THEN] Stale keys, e.g. a clip's key from before it moved to another track, are in no group
+    EXPECT_EQ(m_clipsInteraction->clipGroupId(ClipKey { track->GetId(), clip->GetId() + 1000 }), -1);
+    EXPECT_EQ(m_clipsInteraction->clipGroupId(ClipKey { trackId + 1000, clip->GetId() }), -1);
+
+    // Cleanup
+    removeTrack(trackId);
+}
+}
