@@ -7169,7 +7169,7 @@ msgstr "ljud- eller projektfilnamn"
 #. i18n-hint: This option is used to handle custom URLs in Audacity
 #: src/AudacityApp.cpp
 msgid "Handle 'audacity://' url"
-msgstr "hantera webbadressen 'audacity://'"
+msgstr "Hantera webbadressen 'audacity://'"
 
 #: src/AudacityApp.cpp
 msgid ""
@@ -12565,7 +12565,7 @@ msgstr "Visa &rutnätslinjer"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Requested curve not found, using 'unnamed'"
-msgstr "Den begärda kurvan hittades inte. ”Namnlös” används i stället."
+msgstr "Den begärda kurvan hittades inte. ”namnlös” används i stället."
 
 #: src/effects/EqualizationUI.cpp
 msgid "Curve not found"
