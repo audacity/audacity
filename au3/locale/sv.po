@@ -9886,7 +9886,7 @@ msgstr "Spara projekt s&om:"
 
 #: src/TimerRecordDialog.cpp src/commands/SelectCommand.cpp
 msgid "Select..."
-msgstr "Bläddra..."
+msgstr "Välj..."
 
 #: src/TimerRecordDialog.cpp
 msgid "Automatic Export"
