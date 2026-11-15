@@ -761,7 +761,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <source>Left of playback position</source>
         <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Till vänster om uppspelningsposition</translation>
+        <translation>Vänster om uppspelningsposition</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="216"/>
@@ -2578,7 +2578,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="210"/>
         <source>Left of playback position</source>
         <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Till vänster om uppspelningsposition</translation>
+        <translation>Vänster om uppspelningsposition</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="218"/>
@@ -4349,7 +4349,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
-        <translation>gjord av Lars &quot;musselasse&quot; Karlsson (200X-2014, 2019 -) och A. Regnander (2018) för översättning till svenska</translation>
+        <translation>Svensk översättning: Lars &quot;musselasse&quot; Karlsson (200X-2014, 2019–), A. Regnander (2018) och Daniel Nylander (2026, översättning och granskning)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>

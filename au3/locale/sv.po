@@ -2,15 +2,16 @@
 #
 # Lars "musselasse" Carlsson <musselasse@gmail.com>, 200X-2014
 # A. Regnander <anton_r_3@hotmail.com>, 2018
+# Daniel Nylander <github@danielnylander.se>, 2026
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.6.0\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2024-08-01 14:17+0300\n"
-"PO-Revision-Date: 2024-07-03 15:35+0200\n"
-"Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
-"Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
+"PO-Revision-Date: 2026-11-15 08:25+0100\n"
+"Last-Translator: Daniel Nylander <github@danielnylander.se>\n"
+"Language-Team: Swedish\n"
 "Language: sv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -6560,7 +6561,7 @@ msgstr "Om %s"
 #. *  For example:  "English translation by Dominic Mazzoni."
 #: src/AboutDialog.cpp
 msgid "translator_credits"
-msgstr "gjord av Lars \"musselasse\" Karlsson (200X-2014, 2019 -) och A. Regnander (2018) för översättning till svenska"
+msgstr "Svensk översättning: Lars \"musselasse\" Karlsson (200X-2014, 2019–), A. Regnander (2018) och Daniel Nylander (2026, översättning och granskning)"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
