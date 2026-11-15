@@ -9,7 +9,7 @@ using namespace au::macromanager;
 using namespace muse;
 
 namespace {
-// Stopgap: CommandInfo::availabilities defaults to All, so the Availability::API check below
+// Stopgap: CommandInfo::availabilities defaults to All, so the Availability::Extension check below
 // does not filter anything yet. Remove this list when commands set their availabilities properly.
 const std::vector<std::string> EXCLUDED_PATH_PREFIXES {
     "effects/open/",
@@ -29,7 +29,7 @@ const std::vector<std::string> EXCLUDED_PATH_PREFIXES {
 
 bool isMacroEligible(const rcommand::CommandInfo& info)
 {
-    if (!info.availabilities.testFlag(rcommand::Availability::API)) {
+    if (!info.availabilities.testFlag(rcommand::Availability::Extension)) {
         return false;
     }
 
