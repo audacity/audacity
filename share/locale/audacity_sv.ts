@@ -23297,4 +23297,34 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Kunde inte analysera XML</translation>
     </message>
 </context>
+<context>
+    <name>command</name>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="406"/>
+        <source>Left of playback position</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Vänster om uppspelningsposition</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="415"/>
+        <source>Right of playback position</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Höger om uppspelningsposition</translation>
+    </message>
+</context>
+<context>
+    <name>command_description</name>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
+        <source>Select from a chosen time to the playback position</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Markera från en vald tid till uppspelningspositionen</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="417"/>
+        <source>Select from the playback position to a chosen time</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Markera från uppspelningspositionen till en vald tid</translation>
+    </message>
+</context>
 </TS>
