@@ -23027,7 +23027,7 @@ Trunkerar till maximal längd.</translation>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="38"/>
         <source>Rendering Clip</source>
-        <translation>Rendering Klipp</translation>
+        <translation>Renderar klipp</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveChannelViewConstants.cpp" line="111"/>

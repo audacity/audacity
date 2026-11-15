@@ -2905,7 +2905,7 @@ msgstr "Förbearbetning"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
-msgstr "Återger klipp"
+msgstr "Renderar klipp"
 
 #: libraries/lib-wave-track/WaveClip.cpp
 msgid "Resampling failed."
@@ -10975,7 +10975,7 @@ msgstr "Automatisk duckning behöver ett kontrollspår som måste placeras under
 
 #: src/effects/AutoDuck.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr "Återger tidsutsträckt ljud från kontrollspåret"
+msgstr "Renderar tidsutsträckt ljud för kontrollspår"
 
 #: src/effects/AutoDuck.cpp src/effects/TruncSilence.cpp
 msgid "db"
@@ -18862,7 +18862,7 @@ msgstr "Tonhöjd och hastighet..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
-msgstr "Återge tonhöjd och hastighet"
+msgstr "Rendera tonhöjd och hastighet"
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
@@ -18896,7 +18896,7 @@ msgstr "Ändra klippnamn"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Rendered time-stretched audio"
-msgstr "Återgav tidsutsträckt ljud"
+msgstr "Renderat tidsutsträckt ljud"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch Shift"
@@ -18916,7 +18916,7 @@ msgstr "&Tonhöjd och hastighet..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
-msgstr "Återge tonhöjd och &hastighet"
+msgstr "Rendera tonhöjd och &hastighet"
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch &Up"
@@ -19055,7 +19055,7 @@ msgid ""
 msgstr ""
 "Spåren du försöker slå samman till stereo innehåller klipp på\n"
 "olika positioner eller klipp som inte matchar på annat sätt.\n"
-"Om du slår ihop dem återges spåren.\n"
+"Om du slår ihop dem renderas spåren.\n"
 "\n"
 "Detta gör att alla realtidseffekter tillämpas på vågformen och\n"
 "dolda data tas bort.\n"
