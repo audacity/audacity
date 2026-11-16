@@ -110,7 +110,7 @@ std::string_view au::importexport::extensionOf(const ExportFormatSettings& setti
 }
 
 ExportFormatCommand au::importexport::formatCommand(const ExportFormatSettings& settings, const std::string& sampleRate,
-                                                   ExportChannelLayout channels, const std::string& folder, const std::string& fileName)
+                                                    ExportChannelLayout channels, const std::string& folder, const std::string& fileName)
 {
     if (const std::optional<Mp3Quality> quality = mp3QualityOf(settings)) {
         auto command = commandWithOutput<ExportMp3Command>(sampleRate, Mp3SampleRateContract::def, channels, folder, fileName);

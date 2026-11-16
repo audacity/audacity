@@ -24,7 +24,8 @@ QString au::importexport::stepOutputPreview(const io::path_t& exportDir, const p
     const OutputPathContext context = macroOutputPathContext(exportDir, projectPath, projectName);
     const RetVal<io::path_t> path = exportOutputPath(folder, fileName, context, extension);
     if (!path.ret) {
-        return qtrc("export", "The output path is not valid. Use a full folder path. It can start with {ProjectDir} when the project is saved.");
+        return qtrc("export",
+                    "The output path is not valid. Use a full folder path. It can start with {ProjectDir} when the project is saved.");
     }
 
     return path.val.toQString();

@@ -454,7 +454,8 @@ struct ExportAsWavCommand {
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportAsWavCommand::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportAsWavCommand::fileName,
                                //: Command param label: shown next to the field in the command params dialog
@@ -480,7 +481,8 @@ struct ExportAsMp3Command {
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportAsMp3Command::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportAsMp3Command::fileName,
                                //: Command param label: shown next to the field in the command params dialog
@@ -506,7 +508,8 @@ struct ExportAsFlacCommand {
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportAsFlacCommand::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportAsFlacCommand::fileName,
                                //: Command param label: shown next to the field in the command params dialog
@@ -532,7 +535,8 @@ struct ExportAsOggCommand {
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportAsOggCommand::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportAsOggCommand::fileName,
                                //: Command param label: shown next to the field in the command params dialog
@@ -560,7 +564,8 @@ struct ExportWavCommand {
         muse::rcommand::Field{ WavEncodingContract::key, &ExportWavCommand::encoding,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Encoding"),
-                               muse::TranslatableString::untranslatable("Sample format of the WAV file. Default: signed 16-bit PCM"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Sample format of the WAV file. Default: signed 16-bit PCM"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ ExportSampleRateContract::key, &ExportWavCommand::sampleRate,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Sample rate"),
@@ -569,16 +574,19 @@ struct ExportWavCommand {
         muse::rcommand::Field{ ExportChannelLayoutContract::key, &ExportWavCommand::channels,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Channels"),
-                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportWavCommand::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportWavCommand::fileName,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "File name"),
-                               muse::TranslatableString::untranslatable("Can use {ProjectName}. Default: {ProjectName}"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Can use {ProjectName}. Default: {ProjectName}"),
+                               muse::rcommand::Presence::Optional },
     };
 };
 
@@ -600,20 +608,24 @@ struct ExportMp3Command {
         muse::rcommand::Field{ Mp3QualityContract::key, &ExportMp3Command::quality,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Quality"),
-                               muse::TranslatableString::untranslatable("Bit rate mode and quality. Default: preset Standard"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Bit rate mode and quality. Default: preset Standard"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ Mp3SampleRateContract::key, &ExportMp3Command::sampleRate,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Sample rate"),
-                               muse::TranslatableString::untranslatable("Default: the project sample rate, or the nearest rate that MP3 supports"),
+                               muse::TranslatableString::untranslatable(
+                                   "Default: the project sample rate, or the nearest rate that MP3 supports"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ ExportChannelLayoutContract::key, &ExportMp3Command::channels,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Channels"),
-                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportMp3Command::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportMp3Command::fileName,
                                //: Command param label: shown next to the field in the command params dialog
@@ -642,11 +654,13 @@ struct ExportFlacCommand {
         muse::rcommand::Field{ FlacBitDepthContract::key, &ExportFlacCommand::bitDepth,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Bit depth"),
-                               muse::TranslatableString::untranslatable("Bits per sample. Default: 16 bit"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Bits per sample. Default: 16 bit"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ FlacLevelContract::key, &ExportFlacCommand::level,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Level"),
-                               muse::TranslatableString::untranslatable("Compression level, 0 (fastest) to 8 (smallest). Default: 5"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Compression level, 0 (fastest) to 8 (smallest). Default: 5"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ ExportSampleRateContract::key, &ExportFlacCommand::sampleRate,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Sample rate"),
@@ -655,16 +669,19 @@ struct ExportFlacCommand {
         muse::rcommand::Field{ ExportChannelLayoutContract::key, &ExportFlacCommand::channels,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Channels"),
-                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportFlacCommand::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportFlacCommand::fileName,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "File name"),
-                               muse::TranslatableString::untranslatable("Can use {ProjectName}. Default: {ProjectName}"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Can use {ProjectName}. Default: {ProjectName}"),
+                               muse::rcommand::Presence::Optional },
     };
 };
 
@@ -686,7 +703,8 @@ struct ExportOggCommand {
         muse::rcommand::Field{ OggQualityContract::key, &ExportOggCommand::quality,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Quality"),
-                               muse::TranslatableString::untranslatable("0 (smallest) to 10 (best). Default: 6"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("0 (smallest) to 10 (best). Default: 6"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ ExportSampleRateContract::key, &ExportOggCommand::sampleRate,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Sample rate"),
@@ -695,16 +713,19 @@ struct ExportOggCommand {
         muse::rcommand::Field{ ExportChannelLayoutContract::key, &ExportOggCommand::channels,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Channels"),
-                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Default: auto, mono when no track is stereo"),
+                               muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FOLDER_PARAM, &ExportOggCommand::folder,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "Folder"),
-                               muse::TranslatableString::untranslatable("Output folder; can use {ProjectDir}. Default: the macro-output folder"),
+                               muse::TranslatableString::untranslatable(
+                                   "Output folder; can use {ProjectDir}. Default: the macro-output folder"),
                                muse::rcommand::Presence::Optional },
         muse::rcommand::Field{ EXPORT_FILE_NAME_PARAM, &ExportOggCommand::fileName,
                                //: Command param label: shown next to the field in the command params dialog
                                muse::TranslatableString("command_param", "File name"),
-                               muse::TranslatableString::untranslatable("Can use {ProjectName}. Default: {ProjectName}"), muse::rcommand::Presence::Optional },
+                               muse::TranslatableString::untranslatable("Can use {ProjectName}. Default: {ProjectName}"),
+                               muse::rcommand::Presence::Optional },
     };
 };
 }

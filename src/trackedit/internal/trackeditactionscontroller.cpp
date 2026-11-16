@@ -1673,7 +1673,8 @@ muse::RetVal<TrackIdList> TrackeditActionsController::resolveTrackSelection(int 
         return RetVal<TrackIdList>::make_ret(Ret::Code::BadArgs);
     }
 
-    const TrackIdList inRange(ids.begin() + first, ids.begin() + std::min<size_t>(first + count, ids.size()));
+    const size_t end = std::min(static_cast<size_t>(first) + static_cast<size_t>(count), ids.size());
+    const TrackIdList inRange(ids.begin() + first, ids.begin() + end);
     const TrackIdList current = selectionController()->selectedTracks();
     const auto isInRange = [&inRange](const TrackId& id) { return muse::contains(inRange, id); };
     const auto isCurrent = [&current](const TrackId& id) { return muse::contains(current, id); };
@@ -1692,6 +1693,16 @@ muse::RetVal<TrackIdList> TrackeditActionsController::resolveTrackSelection(int 
     }
 
     return RetVal<TrackIdList>::make_ok(selected);
+}
+
+void TrackeditActionsController::applyTrackSelection(const TrackIdList& tracks, SelectTracksMode mode)
+{
+    if (mode == SelectTracksMode::Set) {
+        selectionController()->resetSelectedClips();
+        selectionController()->resetSelectedLabels();
+    }
+
+    selectionController()->setSelectedTracks(tracks, true);
 }
 
 void TrackeditActionsController::applyTimeSelection(const TimeRange& range)
@@ -1718,7 +1729,7 @@ muse::Ret TrackeditActionsController::selectTracks(const SelectTracksCommand& co
         return tracks.ret;
     }
 
-    selectionController()->setSelectedTracks(tracks.val, true);
+    applyTrackSelection(tracks.val, command.mode);
     return make_ok();
 }
 
@@ -1734,7 +1745,7 @@ muse::Ret TrackeditActionsController::select(const SelectCommand& command)
         return range.ret;
     }
 
-    selectionController()->setSelectedTracks(tracks.val, true);
+    applyTrackSelection(tracks.val, command.mode);
     applyTimeSelection(range.val);
     return make_ok();
 }
@@ -1775,6 +1786,7 @@ muse::Ret TrackeditActionsController::selectAdjacentClip(ClipStep step)
         return make_ret(Ret::Code::NotSupported);
     }
 
+    selectionController()->resetDataSelection();
     selectionController()->resetSelectedLabels();
     selectionController()->setSelectedClips({ *target }, true);
     return make_ok();
