@@ -11,6 +11,7 @@ namespace au::macromanager {
 class MacrosRepository;
 class RunOnFilesRequests;
 class MacroRunner;
+class MacroStepTypesRegister;
 class RunOnFilesStarter;
 
 class MacroManagerModule : public muse::modularity::IModuleSetup
@@ -40,6 +41,7 @@ public:
 
 private:
     std::shared_ptr<MacroRunner> m_runner;
+    std::shared_ptr<MacroStepTypesRegister> m_stepTypesRegister;
     std::shared_ptr<RunOnFilesStarter> m_runOnFilesStarter;
 };
 }

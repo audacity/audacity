@@ -14,9 +14,10 @@
 #include "framework/rcommand/icommandsregister.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "macromanager/imacrosrepository.h"
+#include "macromanager/imacrosteptypesregister.h"
 
 namespace au::macromanager {
-class AvailableCommandsModel : public QAbstractListModel, public muse::async::Asyncable
+class AvailableCommandsModel : public QAbstractListModel, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     QML_ELEMENT;
@@ -26,6 +27,8 @@ class AvailableCommandsModel : public QAbstractListModel, public muse::async::As
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
     muse::GlobalInject<IMacrosRepository> repository;
     muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
+
+    muse::ContextInject<IMacroStepTypesRegister> stepTypesRegister = { this };
 
 public:
     explicit AvailableCommandsModel(QObject* parent = nullptr);
@@ -62,6 +65,7 @@ private:
 
     void reload();
     void appendCommands();
+    void appendStepTypes();
     void appendMacros();
     bool matchesSearch(const Item& item) const;
 

@@ -32,7 +32,7 @@ bool isMacroEligible(const rcommand::CommandInfo& info)
 }
 
 AvailableCommandsModel::AvailableCommandsModel(QObject* parent)
-    : QAbstractListModel(parent)
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -121,6 +121,7 @@ void AvailableCommandsModel::reload()
 {
     m_allItems.clear();
     appendCommands();
+    appendStepTypes();
     appendMacros();
 
     std::ranges::sort(m_allItems, [](const Item& a, const Item& b) {
@@ -153,6 +154,13 @@ void AvailableCommandsModel::appendCommands()
 
         const CommandDisplay display = commandDisplay(info, *effectsProvider());
         m_allItems.append({ QString::fromStdString(info.command.toString()), display.title, display.subtitle, false });
+    }
+}
+
+void AvailableCommandsModel::appendStepTypes()
+{
+    for (const IMacroStepTypePtr& type : stepTypesRegister()->types()) {
+        m_allItems.append({ QString::fromStdString(type->id()), type->title().qTranslated(), QString(), false });
     }
 }
 

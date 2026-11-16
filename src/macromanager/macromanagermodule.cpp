@@ -7,6 +7,7 @@
 #include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/macrorunner.h"
+#include "internal/macrosteptypesregister.h"
 #include "internal/macrosrepository.h"
 #include "internal/runonfilesrequests.h"
 #include "internal/runonfilesstarter.h"
@@ -59,8 +60,10 @@ IContextSetup* MacroManagerModule::newContext(const ContextPtr& ctx) const
 void MacroManagerContext::registerExports()
 {
     m_runner = std::make_shared<MacroRunner>(iocContext());
+    m_stepTypesRegister = std::make_shared<MacroStepTypesRegister>();
 
     ioc()->registerExport<IMacroRunner>(mname, m_runner);
+    ioc()->registerExport<IMacroStepTypesRegister>(mname, m_stepTypesRegister);
 }
 
 void MacroManagerContext::onAllInited(const IApplication::RunMode& mode)

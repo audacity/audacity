@@ -19,6 +19,7 @@
 
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
+#include "macromanager/imacrosteptypesregister.h"
 
 namespace au::macromanager {
 class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::async::Asyncable
@@ -36,6 +37,7 @@ class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
+    muse::ContextInject<IMacroStepTypesRegister> stepTypesRegister{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
@@ -68,6 +70,8 @@ private:
     muse::async::Promise<muse::Ret> runFile(const Macro& macro, const muse::io::path_t& file);
     muse::async::Promise<muse::Ret> runSteps(const std::vector<MacroItem>& items);
     muse::async::Promise<muse::Ret> runItem(const MacroItem& item);
+    muse::async::Promise<muse::Ret> runCommand(const MacroStep& step);
+    muse::async::Promise<muse::Ret> runCustomStep(const CustomStep& step);
     muse::async::Promise<muse::Ret> runMacro(const MacroReference& reference);
     muse::async::Promise<muse::Ret> resetProject();
 

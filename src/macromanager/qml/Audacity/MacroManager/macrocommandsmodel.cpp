@@ -42,6 +42,21 @@ QVariant MacroCommandsModel::data(const QModelIndex& index, int role) const
     }
 
     const MacroItem& item = m_macro.steps.at(index.row());
+
+    if (const CustomStep* custom = std::get_if<CustomStep>(&item)) {
+        const IMacroStepTypePtr type = stepTypesRegister()->type(custom->type);
+
+        switch (role) {
+        case StepRole: return index.row() + 1;
+        case CodeRole: return QString::fromStdString(custom->type);
+        case TitleRole: return displayOf(*custom).title;
+        case SubtitleRole: return displayOf(*custom).subtitle;
+        case HasParamsRole: return type && type->editUri().has_value();
+        case IsMacroRole: return false;
+        default: return QVariant();
+        }
+    }
+
     const MacroStep* step = std::get_if<MacroStep>(&item);
     const QString macroName = step ? QString() : QString::fromStdString(std::get<MacroReference>(item).name);
 
@@ -125,6 +140,19 @@ void MacroCommandsModel::add(const QString& code)
 
 void MacroCommandsModel::insert(int row, const QString& code)
 {
+    if (const IMacroStepTypePtr type = stepTypesRegister()->type(code.toStdString())) {
+        const std::string typeId = type->id();
+        if (!type->editUri()) {
+            insertStep(row, CustomStep { typeId, type->defaultData() });
+            return;
+        }
+
+        requestStepData(*type, type->defaultData(), [this, row, typeId](const Val& data) {
+            insertStep(row, CustomStep { typeId, data });
+        });
+        return;
+    }
+
     const Command command(code.toStdString());
     if (!command.isValid()) {
         return;
@@ -193,6 +221,15 @@ void MacroCommandsModel::editParams(int row)
         return;
     }
 
+    if (const CustomStep* custom = std::get_if<CustomStep>(&m_macro.steps.at(row))) {
+        if (const IMacroStepTypePtr type = stepTypesRegister()->type(custom->type)) {
+            requestStepData(*type, custom->data, [this, row](const Val& data) {
+                setStepData(row, data);
+            });
+        }
+        return;
+    }
+
     const MacroStep* step = std::get_if<MacroStep>(&m_macro.steps.at(row));
     if (!step) {
         return;
@@ -255,6 +292,16 @@ CommandDisplay MacroCommandsModel::displayOf(const Command& command) const
     }
 
     return commandDisplay(info, *effectsProvider());
+}
+
+CommandDisplay MacroCommandsModel::displayOf(const CustomStep& step) const
+{
+    const IMacroStepTypePtr type = stepTypesRegister()->type(step.type);
+    if (!type) {
+        return { QString::fromStdString(step.type), QString() };
+    }
+
+    return { type->title().qTranslated(), type->summary(step.data).toQString() };
 }
 
 bool MacroCommandsModel::hasParams(const Command& command) const
@@ -330,6 +377,22 @@ void MacroCommandsModel::setStepParams(int row, const Params& params)
     persist();
 }
 
+void MacroCommandsModel::setStepData(int row, const Val& data)
+{
+    if (!isRowValid(row)) {
+        return;
+    }
+
+    CustomStep* custom = std::get_if<CustomStep>(&m_macro.steps[row]);
+    if (!custom) {
+        return;
+    }
+
+    custom->data = data;
+    emit dataChanged(index(row), index(row), { SubtitleRole });
+    persist();
+}
+
 void MacroCommandsModel::persist()
 {
     m_saving = true;
@@ -375,5 +438,15 @@ void MacroCommandsModel::requestSchemaParams(const Command& command, const Param
         }
 
         onParams(params);
+    });
+}
+
+void MacroCommandsModel::requestStepData(const IMacroStepType& type, const Val& current, const OnData& onData)
+{
+    UriQuery uri = *type.editUri();
+    uri.addParam("stepData", current);
+
+    interactive()->open(uri).onResolve(this, [onData](const Val& result) {
+        onData(result);
     });
 }

@@ -10,6 +10,7 @@
 #include <vector>
 
 #include "framework/global/types/datetime.h"
+#include "framework/global/types/val.h"
 #include "framework/rcommand/commandtypes.h"
 
 namespace au::macromanager {
@@ -36,7 +37,12 @@ struct MacroReference {
     std::string name;
 };
 
-using MacroItem = std::variant<MacroStep, MacroReference>;
+struct CustomStep {
+    std::string type;
+    muse::Val data;
+};
+
+using MacroItem = std::variant<MacroStep, MacroReference, CustomStep>;
 
 struct MacroMetadata {
     muse::DateTime created;
