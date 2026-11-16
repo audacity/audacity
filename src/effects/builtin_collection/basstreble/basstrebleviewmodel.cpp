@@ -3,9 +3,25 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
+#include <algorithm>
+
 #include "basstrebleeffect.h"
 
 using namespace au::effects;
+
+namespace {
+// AU3 loudness compensation: boosts count at half weight, cuts at quarter weight.
+// With "auto-adjust volume" on, `Gain + toneWeight(Bass) + toneWeight(Treble)` is kept constant.
+double toneWeight(double v)
+{
+    return v > 0 ? v / 2.0 : v / 4.0;
+}
+
+double toneFromWeight(double w)
+{
+    return w > 0 ? w * 2.0 : w * 4.0;
+}
+}
 
 BassTrebleViewModel::BassTrebleViewModel(QObject* parent, int instanceId)
     : BuiltinEffectModel(parent, instanceId)
@@ -46,7 +62,7 @@ void BassTrebleViewModel::doReload()
             return;
         }
         if (settings.mLink) {
-            settings.mGain = this->compensateGain(settings.mGain, settings.mBass, v);
+            settings.mGain = compensateGain(settings.mGain, settings.mBass, v);
             m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, true);
         }
         settings.mBass = v;
@@ -65,7 +81,7 @@ void BassTrebleViewModel::doReload()
             return;
         }
         if (settings.mLink) {
-            settings.mGain = this->compensateGain(settings.mGain, settings.mTreble, v);
+            settings.mGain = compensateGain(settings.mGain, settings.mTreble, v);
             m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, true);
         }
         settings.mTreble = v;
@@ -84,16 +100,19 @@ void BassTrebleViewModel::doReload()
             return;
         }
         if (settings.mLink) {
-            double delta = v - settings.mGain;
-            double treble = settings.mTreble - delta;
-            double clampedTreble = std::clamp(treble, BassTrebleEffect::Treble.min, BassTrebleEffect::Treble.max);
-            double bass = settings.mBass - delta;
-            double clampedBass = std::clamp(bass, BassTrebleEffect::Bass.min, BassTrebleEffect::Bass.max);
-            // If the delta cannot be split equally between treble and bass, apply the remaning delta to the other tone.
-            settings.mTreble
-                = std::clamp(settings.mTreble - delta + (bass - clampedBass), BassTrebleEffect::Treble.min, BassTrebleEffect::Treble.max);
-            settings.mBass
-                = std::clamp(settings.mBass - delta + (treble - clampedTreble), BassTrebleEffect::Bass.min, BassTrebleEffect::Bass.max);
+            // Split the gain delta evenly between bass and treble in weighted (compensated) space.
+            // If one tone hits its limit, the remainder goes to the other.
+            const double delta = v - settings.mGain;
+            const double bassMin = toneWeight(BassTrebleEffect::Bass.min);
+            const double bassMax = toneWeight(BassTrebleEffect::Bass.max);
+            const double trebleMin = toneWeight(BassTrebleEffect::Treble.min);
+            const double trebleMax = toneWeight(BassTrebleEffect::Treble.max);
+            const double bass = toneWeight(settings.mBass) - delta / 2;
+            const double treble = toneWeight(settings.mTreble) - delta / 2;
+            const double clampedBass = std::clamp(bass, bassMin, bassMax);
+            const double clampedTreble = std::clamp(treble, trebleMin, trebleMax);
+            settings.mTreble = toneFromWeight(std::clamp(treble + (bass - clampedBass), trebleMin, trebleMax));
+            settings.mBass = toneFromWeight(std::clamp(bass + (treble - clampedTreble), bassMin, bassMax));
             m_ignores.insert((QString)(char*)BassTrebleEffect::Treble.key, true);
             m_ignores.insert((QString)(char*)BassTrebleEffect::Bass.key, true);
         }
@@ -134,7 +153,7 @@ void BassTrebleViewModel::setLink(bool newLink)
         BassTrebleSettings* s = settings.cast<BassTrebleSettings>();
         s->mLink = newLink;
         if (s->mLink) {
-            s->mGain = std::clamp(-(s->mBass + s->mTreble) / 2, BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
+            s->mGain = std::clamp(-(toneWeight(s->mBass) + toneWeight(s->mTreble)), BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
         }
     });
     emit linkChanged();
@@ -142,5 +161,5 @@ void BassTrebleViewModel::setLink(bool newLink)
 
 double BassTrebleViewModel::compensateGain(const double currentGain, double currentValue, double newValue)
 {
-    return std::clamp(currentGain - (newValue - currentValue) / 2, BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
+    return std::clamp(currentGain - (toneWeight(newValue) - toneWeight(currentValue)), BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
 }
