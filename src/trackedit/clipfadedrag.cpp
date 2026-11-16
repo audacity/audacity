@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cassert>
 
+#include "global/realfn.h"
 #include "log.h"
 
 namespace au::trackedit {
@@ -87,6 +88,10 @@ bool ClipFadeDrag::commit()
 {
     assert(!m_committed);
     if (!m_leadFadeLength || m_committed) {
+        return false;
+    }
+    if (muse::RealIsEqual(*m_leadFadeLength, fadeLength(m_clips.back()))) {
+        // E.g. a click without a drag, which must not make an undo step
         return false;
     }
     // Only one completed change, so that one state is pushed for all the clips

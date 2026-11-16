@@ -101,6 +101,10 @@ Item {
 
         //! From the boundary to where the handle was grabbed, so that the boundary doesn't jump to the mouse
         property real grabOffset: 0
+        //! Until it moves from where it was pressed, the mouse changes nothing: e.g. snapping would otherwise move an
+        //! off-grid fade on a mere click
+        property real pressX: 0
+        property bool moved: false
         property bool cursorOverridden: false
 
         anchors.fill: parent
@@ -133,8 +137,10 @@ Item {
                 return
             }
             dragging = true
+            moved = false
             // in parent coordinates: the handle itself moves while dragging
-            grabOffset = mapToItem(root.parent, e.x, e.y).x - prv.boundaryX
+            pressX = mapToItem(root.parent, e.x, e.y).x
+            grabOffset = pressX - prv.boundaryX
             root.fadeEditStarted()
             overrideCursor()
         }
@@ -160,7 +166,10 @@ Item {
             root.mousePositionChanged(pos.x, pos.y)
 
             if (dragging) {
-                requestFadeWidth(e, false)
+                moved = moved || pos.x !== pressX
+                if (moved) {
+                    requestFadeWidth(e, false)
+                }
             }
         }
 
@@ -175,7 +184,11 @@ Item {
                 return
             }
             dragging = false
-            requestFadeWidth(e, true)
+            if (moved) {
+                requestFadeWidth(e, true)
+            } else {
+                root.fadeEditCanceled()
+            }
             restoreCursor()
         }
     }
