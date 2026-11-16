@@ -10,6 +10,8 @@ qt_add_qml_module(macromanager_qml
         commandparamsmodel.h
         commanddisplay.cpp
         commanddisplay.h
+        commandsearch.cpp
+        commandsearch.h
         macroactions.cpp
         macroactions.h
         macrocommandsmodel.cpp
