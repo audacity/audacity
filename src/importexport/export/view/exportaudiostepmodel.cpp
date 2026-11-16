@@ -292,7 +292,8 @@ std::vector<ExportAudioStepModel::Row> ExportAudioStepModel::formatRows() const
     return std::visit(Overloaded {
         [](const WavSettings& s) {
             return std::vector<Row> {
-                { Field::WavEncoding, Section::Format, qtrc("export", "Encoding"), contractOptions<WavEncodingContract>(), keyOf(s.encoding) },
+                { Field::WavEncoding, Section::Format, qtrc("export", "Encoding"), contractOptions<WavEncodingContract>(), keyOf(
+                      s.encoding) },
             };
         },
         [&mp3Mode](const Mp3PresetSettings& s) {
