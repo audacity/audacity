@@ -534,7 +534,7 @@ DockPage {
 
             contextMenuModel: videoPanelMenuModel
 
-            groupName: root.verticalPanelsGroup
+            groupName: root.toolPanelsGroup
             location: Location.Right
 
             //! NOTE: hidden by default
