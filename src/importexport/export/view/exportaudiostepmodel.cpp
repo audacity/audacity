@@ -200,12 +200,6 @@ QString ExportAudioStepModel::fileNameWarning() const
     return stepFileNameWarning(m_fileName);
 }
 
-QStringList ExportAudioStepModel::fileFilter() const
-{
-    const QString extension = toQString(extensionOf(m_settings));
-    return { qtrc("export", "%1 files (*.%2)").arg(extension.toUpper(), extension) };
-}
-
 void ExportAudioStepModel::load(const QVariantMap& data)
 {
     const RetVal<ExportFormatCommand> command = formatCommandFromVal(stepDataFromMap(data));
@@ -235,13 +229,6 @@ void ExportAudioStepModel::setValue(int row, const QVariant& value)
 
     apply(m_rows.at(row).field, value.toString().toStdString());
     rebuild();
-}
-
-void ExportAudioStepModel::setPickedFile(const QString& path)
-{
-    const io::path_t picked(path);
-    setFolder(io::dirpath(picked).toQString());
-    setFileName(io::completeBasename(picked).toQString());
 }
 
 QVariantMap ExportAudioStepModel::stepData() const

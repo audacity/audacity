@@ -7,7 +7,6 @@
 
 #include <QObject>
 #include <QString>
-#include <QStringList>
 #include <QVariantList>
 #include <QVariantMap>
 
@@ -31,7 +30,6 @@ class ExportSimpleStepModel : public QObject, public muse::Contextable
     Q_PROPERTY(QString defaultFolder READ defaultFolder CONSTANT FINAL)
     Q_PROPERTY(QString preview READ preview NOTIFY outputChanged FINAL)
     Q_PROPERTY(QString fileNameWarning READ fileNameWarning NOTIFY fileNameChanged FINAL)
-    Q_PROPERTY(QStringList fileFilter READ fileFilter NOTIFY outputChanged FINAL)
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
@@ -50,11 +48,9 @@ public:
     QString defaultFolder() const;
     QString preview() const;
     QString fileNameWarning() const;
-    QStringList fileFilter() const;
 
     Q_INVOKABLE void load(const QVariantMap& data);
     Q_INVOKABLE void setPreset(const QString& preset);
-    Q_INVOKABLE void setPickedFile(const QString& path);
     Q_INVOKABLE QVariantMap stepData() const;
 
 signals:

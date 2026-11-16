@@ -99,13 +99,6 @@ QString ExportSimpleStepModel::fileNameWarning() const
     return stepFileNameWarning(m_fileName);
 }
 
-QStringList ExportSimpleStepModel::fileFilter() const
-{
-    const std::string_view extension = extensionOf(presetSettings(m_preset).settings);
-    const QString text = QString::fromUtf8(extension.data(), static_cast<qsizetype>(extension.size()));
-    return { qtrc("export", "%1 files (*.%2)").arg(text.toUpper(), text) };
-}
-
 void ExportSimpleStepModel::load(const QVariantMap& data)
 {
     const RetVal<ExportSimpleStep> step = simpleStepFromVal(stepDataFromMap(data));
@@ -130,13 +123,6 @@ void ExportSimpleStepModel::setPreset(const QString& preset)
     m_preset = *value;
     emit presetChanged();
     emit outputChanged();
-}
-
-void ExportSimpleStepModel::setPickedFile(const QString& path)
-{
-    const io::path_t picked(path);
-    setFolder(io::dirpath(picked).toQString());
-    setFileName(io::completeBasename(picked).toQString());
 }
 
 QVariantMap ExportSimpleStepModel::stepData() const

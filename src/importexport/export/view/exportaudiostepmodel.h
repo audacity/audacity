@@ -29,7 +29,6 @@ class ExportAudioStepModel : public QAbstractListModel, public muse::Contextable
     Q_PROPERTY(QString defaultFolder READ defaultFolder CONSTANT FINAL)
     Q_PROPERTY(QString preview READ preview NOTIFY outputChanged FINAL)
     Q_PROPERTY(QString fileNameWarning READ fileNameWarning NOTIFY fileNameChanged FINAL)
-    Q_PROPERTY(QStringList fileFilter READ fileFilter NOTIFY outputChanged FINAL)
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
@@ -58,11 +57,9 @@ public:
     QString defaultFolder() const;
     QString preview() const;
     QString fileNameWarning() const;
-    QStringList fileFilter() const;
 
     Q_INVOKABLE void load(const QVariantMap& data);
     Q_INVOKABLE void setValue(int row, const QVariant& value);
-    Q_INVOKABLE void setPickedFile(const QString& path);
     Q_INVOKABLE QVariantMap stepData() const;
 
     int rowCount(const QModelIndex& parent = {}) const override;
