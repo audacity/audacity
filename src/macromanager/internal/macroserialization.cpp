@@ -20,6 +20,8 @@ const std::string STEPS_KEY("steps");
 const std::string COMMAND_KEY("command");
 const std::string PARAMS_KEY("params");
 const std::string MACRO_KEY("macro");
+const std::string CUSTOM_KEY("custom");
+const std::string DATA_KEY("data");
 
 const std::string FILE_VERSION("1.0");
 
@@ -63,6 +65,9 @@ JsonObject au::macromanager::toJson(const Macro& macro)
         if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
             stepObject.set(COMMAND_KEY, step->command.toString());
             stepObject.set(PARAMS_KEY, JsonValue::fromVal(Val(ValMap(step->params))));
+        } else if (const CustomStep* custom = std::get_if<CustomStep>(&item)) {
+            stepObject.set(CUSTOM_KEY, custom->type);
+            stepObject.set(DATA_KEY, JsonValue::fromVal(custom->data));
         } else {
             stepObject.set(MACRO_KEY, std::get<MacroReference>(item).name);
         }
@@ -100,6 +105,16 @@ RetVal<Macro> au::macromanager::macroFromJson(const JsonObject& object)
             }
 
             macro.steps.push_back(MacroReference { macroName });
+            continue;
+        }
+
+        if (stepObject.contains(CUSTOM_KEY)) {
+            const std::string type = stepObject.value(CUSTOM_KEY).toStdString();
+            if (type.empty()) {
+                return RetVal<Macro>(make_ret(Ret::Code::UnknownError, trc("macromanager", "custom macro step has no id")));
+            }
+
+            macro.steps.push_back(CustomStep { type, stepObject.value(DATA_KEY).toVal() });
             continue;
         }
 

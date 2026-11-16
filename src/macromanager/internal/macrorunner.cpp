@@ -171,6 +171,13 @@ void MacroRunner::collectMissingSteps(const Macro& macro, std::vector<MissingSte
             continue;
         }
 
+        if (const CustomStep* custom = std::get_if<CustomStep>(&item)) {
+            if (!stepTypesRegister()->type(custom->type)) {
+                addMissing({ macro.name, index + 1, QString::fromStdString(custom->type) });
+            }
+            continue;
+        }
+
         const std::string& name = std::get<MacroReference>(item).name;
         const std::optional<Macro> referenced = repository()->macro(name);
         if (!referenced) {
@@ -262,19 +269,41 @@ async::Promise<Ret> MacroRunner::runSteps(const std::vector<MacroItem>& items)
 
 async::Promise<Ret> MacroRunner::runItem(const MacroItem& item)
 {
-    const MacroStep* step = std::get_if<MacroStep>(&item);
-    if (!step) {
-        return runMacro(std::get<MacroReference>(item));
+    if (const MacroReference* reference = std::get_if<MacroReference>(&item)) {
+        return runMacro(*reference);
     }
 
-    return commandDispatcher()->dispatch(step->command, stepParams(*step))
-           .then<Ret>(this, [this](const Response& response, auto resolve) {
-        if (response.ret) {
+    async::Promise<Ret> applied = std::holds_alternative<MacroStep>(item)
+                                  ? runCommand(std::get<MacroStep>(item))
+                                  : runCustomStep(std::get<CustomStep>(item));
+
+    return applied.then<Ret>(this, [this](const Ret& ret, auto resolve) {
+        if (ret) {
             ++m_appliedStepCount;
         }
 
+        return resolve(ret);
+    });
+}
+
+async::Promise<Ret> MacroRunner::runCommand(const MacroStep& step)
+{
+    return commandDispatcher()->dispatch(step.command, stepParams(step))
+           .then<Ret>(this, [](const Response& response, auto resolve) {
         return resolve(response.ret);
     });
+}
+
+async::Promise<Ret> MacroRunner::runCustomStep(const CustomStep& step)
+{
+    const IMacroStepTypePtr type = stepTypesRegister()->type(step.type);
+    if (!type) {
+        const QString name = QString::fromStdString(step.type);
+        return resolved(make_ret(Ret::Code::NotSupported,
+                                 qtrc("macromanager", "The step type “%1” is not available").arg(name).toStdString()));
+    }
+
+    return type->execute(step.data);
 }
 
 async::Promise<Ret> MacroRunner::runMacro(const MacroReference& reference)

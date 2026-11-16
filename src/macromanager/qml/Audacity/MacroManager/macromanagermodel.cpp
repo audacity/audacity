@@ -168,6 +168,10 @@ std::vector<std::string> MacroManagerModel::unknownCommands(const Macro& macro) 
             if (!commandsRegister()->commandInfo(step->command).isValid()) {
                 unknown.push_back(step->command.toString());
             }
+        } else if (const CustomStep* custom = std::get_if<CustomStep>(&item)) {
+            if (!stepTypesRegister()->type(custom->type)) {
+                unknown.push_back(custom->type);
+            }
         } else if (const std::string& name = std::get<MacroReference>(item).name; !repository()->macro(name)) {
             unknown.push_back(name);
         }

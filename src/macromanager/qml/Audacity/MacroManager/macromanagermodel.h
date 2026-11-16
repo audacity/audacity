@@ -13,6 +13,7 @@
 #include "framework/rcommand/icommandsregister.h"
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
+#include "macromanager/imacrosteptypesregister.h"
 
 #include "macroactions.h"
 #include "runonfileslauncher.h"
@@ -29,6 +30,7 @@ class MacroManagerModel : public QAbstractListModel, public muse::Contextable, p
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
 
     muse::ContextInject<IMacroRunner> runner = { this };
+    muse::ContextInject<IMacroStepTypesRegister> stepTypesRegister = { this };
     muse::ContextInject<muse::IInteractive> interactive = { this };
 
 public:
