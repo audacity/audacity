@@ -1325,7 +1325,7 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
 bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Left);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Left);
         return clip.TrimLeft(deltaSec);
     });
 }
@@ -1333,7 +1333,7 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
 bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Right);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Right);
         return clip.TrimRight(deltaSec);
     });
 }
@@ -1342,7 +1342,7 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
 {
     const secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Left);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Left);
         clip.StretchLeftTo(clip.GetPlayStartTime() + adjustedDelta);
         return true;
     });
@@ -1352,7 +1352,7 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
 {
     const secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Right);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Right);
         clip.StretchRightTo(clip.GetPlayEndTime() - adjustedDelta);
         return true;
     });

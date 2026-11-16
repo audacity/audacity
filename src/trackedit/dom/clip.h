@@ -22,6 +22,11 @@ enum class FadeType {
 
 constexpr FadeType defaultFadeType = FadeType::SCurve;
 
+enum class ClipSide {
+    Left,
+    Right,
+};
+
 struct Clip {
     ClipKey key;
     ClipVersion clipVersion = -1;

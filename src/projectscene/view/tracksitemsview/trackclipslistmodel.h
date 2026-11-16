@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include <functional>
+#include <memory>
 #include <optional>
 
 #include "framework/global/modularity/ioc.h"
@@ -17,6 +17,7 @@
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
+#include "trackedit/clipfadedrag.h"
 
 namespace au::projectscene {
 class TrackClipsListModel : public TrackItemsListModel
@@ -37,6 +38,8 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
     muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
 
+    friend class TrackClipsFadeEditTests;
+
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);
 
@@ -55,9 +58,8 @@ public:
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
     Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
 
-    Q_INVOKABLE void startClipFadeEdit(const ClipKey& key);
-    Q_INVOKABLE bool changeClipFadeIn(const ClipKey& key, double duration, bool completed);
-    Q_INVOKABLE bool changeClipFadeOut(const ClipKey& key, double duration, bool completed);
+    Q_INVOKABLE void startClipFadeEdit(const ClipKey& key, ClipSides::Side side);
+    Q_INVOKABLE bool changeClipFade(const ClipKey& key, double duration, bool completed);
     Q_INVOKABLE void cancelClipFadeEdit();
     Q_INVOKABLE bool changeClipFadeInType(const ClipKey& key, FadeTypes::Type type);
     Q_INVOKABLE bool changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type);
@@ -103,14 +105,12 @@ private:
 
     bool isKeyboardTriggered() const;
 
-    bool changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change);
-    bool removeClipFades(const ClipKey& key, ClipSides::Side side);
+    bool removeClipFades(const ClipKey& key, trackedit::ClipSide side);
 
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
-    //! As it was before the fade edit
-    std::optional<trackedit::Clip> m_fadeEditedClip;
+    std::unique_ptr<trackedit::ClipFadeDrag> m_fadeDrag;
     trackedit::ClipKeyList m_clipsMovingWithSelection;
 };
 }

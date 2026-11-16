@@ -95,9 +95,8 @@ Rectangle {
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
 
-    signal fadeEditStarted
-    signal fadeInDurationChangeRequested(real duration, bool completed)
-    signal fadeOutDurationChangeRequested(real duration, bool completed)
+    signal fadeEditStarted(int side)
+    signal fadeDurationChangeRequested(real duration, bool completed)
     signal fadeEditCanceled
     signal fadeInTypeChangeRequested(int type)
     signal fadeOutTypeChangeRequested(int type)
@@ -1234,14 +1233,12 @@ Rectangle {
         fadeInType: root.fadeInType
         fadeOutType: root.fadeOutType
 
-        onFadeEditStarted: root.fadeEditStarted()
-
-        onFadeInWidthChangeRequested: function (width, completed) {
-            root.fadeInDurationChangeRequested(width / root.context.zoom, completed)
+        onFadeEditStarted: function (side) {
+            root.fadeEditStarted(side)
         }
 
-        onFadeOutWidthChangeRequested: function (width, completed) {
-            root.fadeOutDurationChangeRequested(width / root.context.zoom, completed)
+        onFadeWidthChangeRequested: function (width, completed) {
+            root.fadeDurationChangeRequested(width / root.context.zoom, completed)
         }
 
         onFadeEditCanceled: root.fadeEditCanceled()

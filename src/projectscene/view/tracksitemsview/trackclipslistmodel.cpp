@@ -3,6 +3,9 @@
 */
 #include "trackclipslistmodel.h"
 
+#include <algorithm>
+#include <iterator>
+
 #include "fadetypeconversion.h"
 #include "global/realfn.h"
 #include "global/async/async.h"
@@ -358,69 +361,49 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
     return trackeditInteraction()->changeClipTitle(key.key, newTitle);
 }
 
-void TrackClipsListModel::startClipFadeEdit(const ClipKey& key)
+void TrackClipsListModel::startClipFadeEdit(const ClipKey& key, ClipSides::Side side)
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
+    if (!prj || !prj->clip(key.key).isValid()) {
         return;
     }
-    trackedit::Clip clip = prj->clip(key.key);
-    if (!clip.isValid()) {
-        return;
-    }
-    // So that nothing writes the ongoing edit into the undo state it should leave as it was
-    projectHistory()->startUserInteraction();
-    m_fadeEditedClip = std::move(clip);
+
+    // The previous drag, if any, gives the clips their fades back and ends its user interaction before this one reads
+    // the clips and starts its own
+    m_fadeDrag.reset();
+    trackedit::Clips clips;
+    std::ranges::transform(clipsForInteraction(key), std::back_inserter(clips),
+                           [&](const trackedit::ClipKey& clipKey) { return prj->clip(clipKey); });
+    m_fadeDrag = ClipFadeDrag::start(*trackeditInteraction(), *projectHistory(), prj, std::move(clips), key.key, toTrackeditClipSide(side));
 }
 
-bool TrackClipsListModel::changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change)
+bool TrackClipsListModel::changeClipFade(const ClipKey& key, double duration, bool completed)
 {
-    // E.g., the rest of a canceled drag
-    if (!m_fadeEditedClip || m_fadeEditedClip->key != key.key) {
+    ClipFadeDrag* const drag = m_fadeDrag && m_fadeDrag->leadClip() == key.key ? m_fadeDrag.get() : nullptr;
+    if (!drag) {
         return false;
     }
-    const bool changed = change();
-    if (completed) {
-        m_fadeEditedClip.reset();
-        // In case the change failed and so pushed no state
-        projectHistory()->endUserInteraction();
-    }
-    return changed;
-}
-
-bool TrackClipsListModel::changeClipFadeIn(const ClipKey& key, double duration, bool completed)
-{
-    return changeClipFade(key, completed, [&] {
-        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+    if (const TrackClipItem* item = clipItemByKey(key.key)) {
+        if (drag->side() == ClipSide::Left) {
             const double start = item->time().startTime;
             duration = m_context->applyDetectedSnap(start + duration) - start;
-        }
-        return trackeditInteraction()->changeClipFadeIn(key.key, duration, completed);
-    });
-}
-
-bool TrackClipsListModel::changeClipFadeOut(const ClipKey& key, double duration, bool completed)
-{
-    return changeClipFade(key, completed, [&] {
-        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+        } else {
             const double end = item->time().endTime;
             duration = end - m_context->applyDetectedSnap(end - duration);
         }
-        return trackeditInteraction()->changeClipFadeOut(key.key, duration, completed);
-    });
+    }
+    const bool changed = drag->changeFade(duration);
+    if (!completed) {
+        return changed;
+    }
+    const bool committed = drag->commit();
+    m_fadeDrag.reset();
+    return committed;
 }
 
 void TrackClipsListModel::cancelClipFadeEdit()
 {
-    if (!m_fadeEditedClip) {
-        return;
-    }
-
-    constexpr auto completed = false;
-    trackeditInteraction()->changeClipFadeIn(m_fadeEditedClip->key, m_fadeEditedClip->fadeInDuration, completed);
-    trackeditInteraction()->changeClipFadeOut(m_fadeEditedClip->key, m_fadeEditedClip->fadeOutDuration, completed);
-    m_fadeEditedClip.reset();
-    projectHistory()->endUserInteraction();
+    m_fadeDrag.reset();
 }
 
 bool TrackClipsListModel::changeClipFadeInType(const ClipKey& key, FadeTypes::Type type)
@@ -445,23 +428,23 @@ void TrackClipsListModel::openClipFadeOutLengthEdit(const ClipKey& key)
 
 bool TrackClipsListModel::removeClipFadeIn(const ClipKey& key)
 {
-    return removeClipFades(key, ClipSides::Side::Left);
+    return removeClipFades(key, ClipSide::Left);
 }
 
 bool TrackClipsListModel::removeClipFadeOut(const ClipKey& key)
 {
-    return removeClipFades(key, ClipSides::Side::Right);
+    return removeClipFades(key, ClipSide::Right);
 }
 
-bool TrackClipsListModel::removeClipFades(const ClipKey& key, ClipSides::Side side)
+bool TrackClipsListModel::removeClipFades(const ClipKey& key, ClipSide side)
 {
-    // Like trimming and stretching, for all the selected clips if this one is
+    // Like the fade drags, for all the selected clips if this one is
     const ClipKeyList keys = clipsForInteraction(key);
     bool removed = false;
     for (const trackedit::ClipKey& clipKey : keys) {
         // Only the last change completes, so that one state is pushed for all the clips
         const bool completed = &clipKey == &keys.back();
-        removed = side == ClipSides::Side::Left ? trackeditInteraction()->changeClipFadeIn(clipKey, 0.0, completed)
+        removed = side == ClipSide::Left ? trackeditInteraction()->changeClipFadeIn(clipKey, 0.0, completed)
                   : trackeditInteraction()->changeClipFadeOut(clipKey, 0.0, completed);
     }
     // That of the last clip, whose change pushes the state

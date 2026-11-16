@@ -48,4 +48,9 @@ constexpr trackedit::FadeType toTrackeditFadeType(FadeTypes::Type type)
         return trackedit::FadeType::Linear;
     }
 }
+
+constexpr trackedit::ClipSide toTrackeditClipSide(ClipSides::Side side)
+{
+    return side == ClipSides::Side::Left ? trackedit::ClipSide::Left : trackedit::ClipSide::Right;
+}
 }

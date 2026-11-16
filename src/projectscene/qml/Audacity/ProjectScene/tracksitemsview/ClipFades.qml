@@ -25,9 +25,8 @@ Item {
     //! Above it, the fades aren't drawn
     property real drawingTop: 0
 
-    signal fadeEditStarted
-    signal fadeInWidthChangeRequested(real width, bool completed)
-    signal fadeOutWidthChangeRequested(real width, bool completed)
+    signal fadeEditStarted(int side)
+    signal fadeWidthChangeRequested(real width, bool completed)
     signal fadeEditCanceled
     signal fadeInTypeChangeRequested(int type)
     signal fadeOutTypeChangeRequested(int type)
@@ -82,10 +81,10 @@ Item {
         handleSize: prv.handleSize
         handleVisible: root.clipSelected || (root.clipHovered && root.fadeInWidth > 0)
 
-        onFadeEditStarted: root.fadeEditStarted()
+        onFadeEditStarted: root.fadeEditStarted(ClipSide.Left)
 
         onFadeWidthChangeRequested: function (width, completed) {
-            root.fadeInWidthChangeRequested(width, completed)
+            root.fadeWidthChangeRequested(width, completed)
         }
 
         onFadeEditCanceled: root.fadeEditCanceled()
@@ -119,10 +118,10 @@ Item {
         handleSize: prv.handleSize
         handleVisible: root.clipSelected || (root.clipHovered && root.fadeOutWidth > 0)
 
-        onFadeEditStarted: root.fadeEditStarted()
+        onFadeEditStarted: root.fadeEditStarted(ClipSide.Right)
 
         onFadeWidthChangeRequested: function (width, completed) {
-            root.fadeOutWidthChangeRequested(width, completed)
+            root.fadeWidthChangeRequested(width, completed)
         }
 
         onFadeEditCanceled: root.fadeEditCanceled()
