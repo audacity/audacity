@@ -139,9 +139,4 @@ void ClipFadeCurveItem::drawCurve(QPainter& painter) const
     painter.setBrush(Qt::NoBrush);
     painter.setPen(QPen(lineColor, 1, Qt::SolidLine, Qt::FlatCap));
     painter.drawPolyline(line);
-
-    if (m_highlighted) {
-        painter.setPen(QPen(highlightColor, 1.5, Qt::SolidLine, Qt::FlatCap));
-        painter.drawPolyline(line);
-    }
 }
