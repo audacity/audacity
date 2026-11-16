@@ -78,8 +78,9 @@ Item {
             // Optional soft limits narrower than the knob range.
             const limitMin = root.parameter["limitMin"]
             const limitMax = root.parameter["limitMax"]
-            const limited = Math.min(limitMax !== undefined ? limitMax : Infinity,
-                                     Math.max(limitMin !== undefined ? limitMin : -Infinity, warper.value))
+            const lower = limitMin !== undefined ? limitMin : -Infinity
+            const upper = limitMax !== undefined ? limitMax : Infinity
+            const limited = Math.min(upper, Math.max(lower, warper.value))
             if (limited !== warper.value) {
                 warper.value = limited
                 return
