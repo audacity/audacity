@@ -27,6 +27,8 @@ class VideoPanelMenuModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
+    Q_PROPERTY(bool detached READ detached WRITE setDetached NOTIFY detachedChanged FINAL)
+
 public:
     explicit VideoPanelMenuModel(QObject* parent = nullptr);
 
@@ -36,6 +38,13 @@ public:
     Q_INVOKABLE void load() override;
     void handleMenuItem(const QString& itemId) override;
 
+    bool detached() const;
+    void setDetached(bool detached);
+
+signals:
+    void detachedChanged();
+    void fullScreenToggleRequested();
+
 private:
     muse::ContextInject<IVideoService> videoService { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
@@ -43,6 +52,7 @@ private:
     void attach();
 
     bool m_subscribed = false;
+    bool m_detached = false;
 };
 }
 

@@ -3,6 +3,7 @@
 */
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Window
 
 import Muse.Ui
 import Muse.UiComponents
@@ -14,6 +15,34 @@ Item {
 
     property alias navigationSection: navPanel.section
     property alias navigationOrderStart: navPanel.order
+
+    property bool detached: false
+    readonly property bool fullScreen: root.detached && Window.window !== null && Window.window.visibility === Window.FullScreen
+
+    function toggleFullScreen() {
+        const window = root.Window.window
+        if (!window || !root.detached) {
+            return
+        }
+
+        if (root.fullScreen) {
+            window.showNormal()
+        } else {
+            window.showFullScreen()
+            root.forceActiveFocus()
+        }
+    }
+
+    Keys.onShortcutOverride: function(event) {
+        event.accepted = root.fullScreen && event.key === Qt.Key_Escape
+    }
+
+    Keys.onEscapePressed: function(event) {
+        if (root.fullScreen) {
+            root.toggleFullScreen()
+            event.accepted = true
+        }
+    }
 
     //! Every readout in the bottom row is a number that changes many times a
     //! second, and in a proportional face each digit is a different width, so
@@ -52,7 +81,7 @@ Item {
 
     ColumnLayout {
         anchors.fill: parent
-        anchors.margins: 8
+        anchors.margins: root.fullScreen ? 0 : 8
         spacing: 8
 
         VideoSurfaceItem {
@@ -60,6 +89,12 @@ Item {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            MouseArea {
+                anchors.fill: parent
+                enabled: root.detached
+                onDoubleClicked: root.toggleFullScreen()
+            }
 
             StyledTextLabel {
                 anchors.centerIn: parent
@@ -73,7 +108,7 @@ Item {
 
         StyledTextLabel {
             Layout.fillWidth: true
-            visible: model.sourceMismatch
+            visible: model.sourceMismatch && !root.fullScreen
             text: model.warningText
             wrapMode: Text.WordWrap
             horizontalAlignment: Text.AlignLeft
@@ -82,6 +117,7 @@ Item {
         RowLayout {
             Layout.fillWidth: true
             spacing: 8
+            visible: !root.fullScreen
 
             //! The frame on screen and how far it is from the playhead. The
             //! drift is the only place a sync error becomes a number the user

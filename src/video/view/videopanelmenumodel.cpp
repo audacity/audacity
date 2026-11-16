@@ -13,6 +13,7 @@ using namespace muse::uicomponents;
 static const QString ATTACH_ITEM_ID("video-attach");
 static const QString DETACH_ITEM_ID("video-detach");
 static const QString SET_OFFSET_ITEM_ID("video-set-offset");
+static const QString FULL_SCREEN_ITEM_ID("video-full-screen");
 
 VideoPanelMenuModel::VideoPanelMenuModel(QObject* parent)
     : AbstractMenuModel(parent)
@@ -57,11 +58,38 @@ void VideoPanelMenuModel::load()
     detachItem->setEnabled(hasVideo);
     items << detachItem;
 
+    MenuItem* fullScreenItem = new MenuItem(this);
+    fullScreenItem->setId(FULL_SCREEN_ITEM_ID);
+    fullScreenItem->setTitle(muse::TranslatableString("video", "Full screen"));
+    fullScreenItem->setEnabled(m_detached);
+    items << fullScreenItem;
+
     setItems(items);
+}
+
+bool VideoPanelMenuModel::detached() const
+{
+    return m_detached;
+}
+
+void VideoPanelMenuModel::setDetached(bool detached)
+{
+    if (m_detached == detached) {
+        return;
+    }
+
+    m_detached = detached;
+    emit detachedChanged();
+    load();
 }
 
 void VideoPanelMenuModel::handleMenuItem(const QString& itemId)
 {
+    if (itemId == FULL_SCREEN_ITEM_ID) {
+        emit fullScreenToggleRequested();
+        return;
+    }
+
     if (videoService() == nullptr) {
         return;
     }

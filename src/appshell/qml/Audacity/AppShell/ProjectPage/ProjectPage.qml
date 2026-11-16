@@ -53,6 +53,8 @@ DockPage {
     VideoPanelMenuModel {
         id: videoPanelMenuModel
 
+        detached: videoPanel.floating
+
         Component.onCompleted: {
             videoPanelMenuModel.load()
         }
@@ -547,8 +549,19 @@ DockPage {
             dropDestinations: root.verticalPanelDropDestinations.concat(root.horizontalPanelDropDestinations)
 
             VideoPanel {
+                id: videoPanelContent
+
                 navigationSection: videoPanel.navigationSection
                 navigationOrderStart: videoPanel.contentNavigationPanelOrderStart
+                detached: videoPanel.floating
+
+                Connections {
+                    target: videoPanelMenuModel
+
+                    function onFullScreenToggleRequested() {
+                        videoPanelContent.toggleFullScreen()
+                    }
+                }
             }
         }
     ]
