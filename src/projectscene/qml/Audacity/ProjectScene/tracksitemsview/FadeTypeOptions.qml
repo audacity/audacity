@@ -10,6 +10,10 @@ import Audacity.ProjectScene
 QtObject {
     readonly property var all: [
         {
+            value: FadeType.S_CURVE,
+            text: qsTrc("projectscene", "S-curve")
+        },
+        {
             value: FadeType.LINEAR,
             text: qsTrc("projectscene", "Linear")
         },
@@ -28,10 +32,6 @@ QtObject {
         {
             value: FadeType.EQUAL_POWER,
             text: qsTrc("projectscene", "Equal power")
-        },
-        {
-            value: FadeType.S_CURVE,
-            text: qsTrc("projectscene", "S-curve")
         }
     ]
 }

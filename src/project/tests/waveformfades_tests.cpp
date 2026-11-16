@@ -105,6 +105,7 @@ protected:
         m_track->InsertInterval(m_clip, true);
 
         m_clip->SetTrimLeft(TEST_TRIM_LEFT);
+        ClipFades::Get(*m_clip).setFadeInType(FadeType::Linear);
         ClipFades::Get(*m_clip).setFadeIn(TEST_FADE_IN);
     }
 

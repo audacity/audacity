@@ -7,6 +7,7 @@
 #include <QQuickPaintedItem>
 
 #include "types/projectscenetypes.h"
+#include "../fadetypeconversion.h"
 
 class QPainter;
 
@@ -54,7 +55,7 @@ private:
     bool m_isFadeIn = true;
     qreal m_fadeX = 0;
     qreal m_fadeWidth = 0;
-    FadeTypes::Type m_fadeType = FadeTypes::Type::LINEAR;
+    FadeTypes::Type m_fadeType = toFadeTypesType(trackedit::defaultFadeType);
     qreal m_drawingTop = 0;
     bool m_highlighted = false;
 };
