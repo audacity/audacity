@@ -28,8 +28,7 @@ BaseSection {
     FilePickerModel {
         id: filePickerModel
 
-        title: qsTrc("export", "Choose the output file")
-        filter: root.stepModel.fileFilter
+        title: qsTrc("export", "Choose the output folder")
         dir: root.stepModel.folder !== "" ? root.stepModel.folder : root.stepModel.defaultFolder
     }
 
@@ -116,9 +115,9 @@ BaseSection {
             navigation.order: 3
 
             onClicked: {
-                const selectedFile = filePickerModel.selectAny()
-                if (Boolean(selectedFile)) {
-                    root.stepModel.setPickedFile(selectedFile)
+                const selectedFolder = filePickerModel.selectDirectory()
+                if (Boolean(selectedFolder)) {
+                    root.stepModel.folder = selectedFolder
                 }
             }
         }
