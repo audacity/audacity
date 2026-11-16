@@ -371,8 +371,10 @@ void TrackClipsListModel::startClipFadeEdit(const ClipKey& key, ClipSides::Side 
     // The previous drag, if any, gives the clips their fades back and ends its user interaction before this one reads
     // the clips and starts its own
     m_fadeDrag.reset();
+    // With Ctrl, only the dragged clip's fade
+    const ClipKeyList keys = keyboardModifiers().testFlag(Qt::ControlModifier) ? ClipKeyList { key.key } : clipsForInteraction(key);
     trackedit::Clips clips;
-    std::ranges::transform(clipsForInteraction(key), std::back_inserter(clips),
+    std::ranges::transform(keys, std::back_inserter(clips),
                            [&](const trackedit::ClipKey& clipKey) { return prj->clip(clipKey); });
     m_fadeDrag = ClipFadeDrag::start(*trackeditInteraction(), *projectHistory(), prj, std::move(clips), key.key, toTrackeditClipSide(side));
 }
