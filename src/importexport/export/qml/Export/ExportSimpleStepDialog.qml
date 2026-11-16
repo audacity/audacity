@@ -154,6 +154,11 @@ StyledDialogView {
             }
         }
 
+        SeparatorLine {
+            Layout.leftMargin: -prv.margins
+            Layout.rightMargin: -prv.margins
+        }
+
         ButtonBox {
             Layout.fillWidth: true
 
