@@ -63,6 +63,7 @@ StyledListView {
         required property int index
         required property string code
         required property string title
+        required property string highlightedTitle
         required property string subtitle
         required property bool isMacro
 
@@ -86,6 +87,7 @@ StyledListView {
         }
 
         mouseArea.drag.target: dragTarget
+        mouseArea.z: 1000
 
         Drag.dragType: Drag.Automatic
         Drag.supportedActions: Qt.CopyAction
@@ -149,7 +151,8 @@ StyledListView {
                 StyledTextLabel {
                     Layout.fillWidth: true
 
-                    text: item.title
+                    text: item.highlightedTitle
+                    textFormat: Text.StyledText
                     horizontalAlignment: Qt.AlignLeft
                     elide: Text.ElideRight
                 }

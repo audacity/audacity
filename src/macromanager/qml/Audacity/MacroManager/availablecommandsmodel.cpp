@@ -4,8 +4,11 @@
 #include "availablecommandsmodel.h"
 
 #include <algorithm>
+#include <utility>
+#include <vector>
 
 #include "commanddisplay.h"
+#include "commandsearch.h"
 
 using namespace au::macromanager;
 using namespace muse;
@@ -47,6 +50,7 @@ QVariant AvailableCommandsModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case CodeRole: return item.code;
     case TitleRole: return item.title;
+    case HighlightedTitleRole: return item.highlightedTitle;
     case SubtitleRole: return item.subtitle;
     case IsMacroRole: return item.isMacro;
     default: return QVariant();
@@ -63,6 +67,7 @@ QHash<int, QByteArray> AvailableCommandsModel::roleNames() const
     static const QHash<int, QByteArray> roles {
         { CodeRole, "code" },
         { TitleRole, "title" },
+        { HighlightedTitleRole, "highlightedTitle" },
         { SubtitleRole, "subtitle" },
         { IsMacroRole, "isMacro" }
     };
@@ -131,10 +136,19 @@ void AvailableCommandsModel::reload()
         return QString::localeAwareCompare(a.title, b.title) < 0;
     });
 
+    std::vector<std::pair<double, Item> > matches;
+    for (const Item& item : m_allItems) {
+        if (const std::optional<CommandSearchResult> result = searchCommand(m_searchText, item.title, item.subtitle)) {
+            Item match = item;
+            match.highlightedTitle = result->highlightedTitle;
+            matches.emplace_back(result->score, std::move(match));
+        }
+    }
+
+    std::ranges::stable_sort(matches, std::ranges::greater {}, &std::pair<double, Item>::first);
+
     QList<Item> items;
-    std::ranges::copy_if(m_allItems, std::back_inserter(items), [this](const Item& item) {
-        return matchesSearch(item);
-    });
+    std::ranges::transform(matches, std::back_inserter(items), &std::pair<double, Item>::second);
 
     if (items == m_items) {
         return;
@@ -153,14 +167,14 @@ void AvailableCommandsModel::appendCommands()
         }
 
         const CommandDisplay display = commandDisplay(info, *effectsProvider());
-        m_allItems.append({ QString::fromStdString(info.command.toString()), display.title, display.subtitle, false });
+        m_allItems.append({ QString::fromStdString(info.command.toString()), display.title, display.subtitle, QString(), false });
     }
 }
 
 void AvailableCommandsModel::appendStepTypes()
 {
     for (const IMacroStepTypePtr& type : stepTypesRegister()->types()) {
-        m_allItems.append({ QString::fromStdString(type->id()), type->title().qTranslated(), QString(), false });
+        m_allItems.append({ QString::fromStdString(type->id()), type->title().qTranslated(), QString(), QString(), false });
     }
 }
 
@@ -176,14 +190,6 @@ void AvailableCommandsModel::appendMacros()
         }
 
         const QString name = QString::fromStdString(macro.name);
-        m_allItems.append({ name, name, QString(), true });
+        m_allItems.append({ name, name, QString(), QString(), true });
     }
-}
-
-bool AvailableCommandsModel::matchesSearch(const Item& item) const
-{
-    const QStringList words = m_searchText.simplified().split(u' ', Qt::SkipEmptyParts);
-    return std::ranges::all_of(words, [&item](const QString& word) {
-        return item.title.contains(word, Qt::CaseInsensitive) || item.subtitle.contains(word, Qt::CaseInsensitive);
-    });
 }

@@ -50,6 +50,7 @@ private:
     enum Roles {
         CodeRole = Qt::UserRole + 1,
         TitleRole,
+        HighlightedTitleRole,
         SubtitleRole,
         IsMacroRole
     };
@@ -58,6 +59,7 @@ private:
         QString code;
         QString title;
         QString subtitle;
+        QString highlightedTitle;
         bool isMacro = false;
 
         bool operator==(const Item&) const = default;
@@ -67,7 +69,6 @@ private:
     void appendCommands();
     void appendStepTypes();
     void appendMacros();
-    bool matchesSearch(const Item& item) const;
 
     std::optional<MacroId> m_editedMacroId;
     QString m_searchText;
