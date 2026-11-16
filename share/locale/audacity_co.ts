@@ -56,7 +56,7 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="238"/>
         <source>Shift+&amp;Enter</source>
-        <translation>Maiusc+&amp;Entrée</translation>
+        <translation>Maiusc+&amp;Entre</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
@@ -1031,7 +1031,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Show in File Manager</source>
-        <translation>Show in u ghjestiunariu di schedariu</translation>
+        <translation>Affissà in u ghjestiunariu di schedarii</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
@@ -20222,7 +20222,7 @@ Ci vole à lancià sta versione d’Audacity per ricuperà u prughjettu.</transl
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="236"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
         <source>Press Enter to select or deselect</source>
-        <translation>Appughjà nant’à Entrée per selezziunà o diselezziunà</translation>
+        <translation>Appughjà nant’à Entre per selezziunà o diselezziunà</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
