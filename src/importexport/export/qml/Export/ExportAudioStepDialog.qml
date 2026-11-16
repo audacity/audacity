@@ -89,7 +89,6 @@ StyledDialogView {
         property NavigationPanel navigationPanel: null
 
         visible: choiceRow.section === choiceRow.shownSection
-        width: parent ? parent.width : 0
         spacing: prv.itemSpacing
 
         RowLabel {
@@ -180,6 +179,11 @@ StyledDialogView {
                     navigationPanel: audioSection.navigation
                 }
             }
+        }
+
+        SeparatorLine {
+            Layout.leftMargin: -prv.margins
+            Layout.rightMargin: -prv.margins
         }
 
         ButtonBox {
