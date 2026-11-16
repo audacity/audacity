@@ -34,7 +34,7 @@ export LD_LIBRARY_PATH="${APPDIR}/lib:${APPDIR}/lib/audacity:${LD_LIBRARY_PATH}$
 # (e.g. *-le64.cache-9 -> *-le64.cache-12 created by rogue fc-cache runs) crash host libfontconfig
 fc_cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/fontconfig"
 if [[ -d "${fc_cache_dir}" ]]; then
-  find "${fc_cache_dir}" -maxdepth 1 -type l -name "*-le64.cache-9" -exec rm -f {} + 2>/dev/null
+  find -H "${fc_cache_dir}" -maxdepth 1 -type l -name "*-le64.cache-9" -exec rm -f {} + 2>/dev/null
 fi
 
 # Launch Audacity or an accompanying script
