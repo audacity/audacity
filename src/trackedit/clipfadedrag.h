@@ -29,6 +29,7 @@ public:
     bool changeFade(double duration);
 
     // Drag gets canceled if destroyed without commit()
+    //! False if the lead clip's fade is as it was
     bool commit();
 
 private:

@@ -194,6 +194,22 @@ TEST_F(ClipFadeDragTests, NothingToCommitWithoutAChange)
     EXPECT_FALSE(committed);
 }
 
+TEST_F(ClipFadeDragTests, NothingToCommitWhenTheFadeEndsAsItWas)
+{
+    //! [GIVEN] CLIP_A's fade-in has been dragged back to its length, as with a click without a drag
+    ClipFadeDrag& drag = startDrag(CLIP_A, ClipSide::Left);
+    drag.changeFade(CLIP_A_FADE_IN);
+
+    //! [THEN] no change completes, which would make an undo step
+    EXPECT_CALL(m_interaction, changeClipFadeIn(_, _, true)).Times(0);
+
+    //! [WHEN] the drag is committed
+    const bool committed = drag.commit();
+
+    //! [THEN] there was nothing to commit
+    EXPECT_FALSE(committed);
+}
+
 TEST_F(ClipFadeDragTests, TheResultIsThatOfTheDraggedClip)
 {
     //! [GIVEN] a drag of CLIP_A's fade-in, where CLIP_B's change succeeds but CLIP_A's fails
