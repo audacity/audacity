@@ -20,15 +20,21 @@ set(MODULE_SRC
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exportparameters.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exportparameters.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3ffmpegoptionsaccessor.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3ffmpegoptionsaccessor.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandoptions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandoptions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportsteptypes.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportsteptypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.h
@@ -42,8 +48,15 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/custommappingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/channelmappingtableviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/channelmappingtableviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportaudiostepmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportaudiostepmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportsimplestepmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportsimplestepmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportstepoutput.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/exportstepoutput.h
 
     #types
+    ${CMAKE_CURRENT_LIST_DIR}/types/exportformatsettings.h
     ${CMAKE_CURRENT_LIST_DIR}/types/exporttypes.h
 
 )
@@ -63,6 +76,8 @@ set(MODULE_LINK
         au3-tags
         au3-track
         au3-wave-track
+        SndFile::sndfile
+        shared
 )
 
 set(MODULE_USE_UNITY OFF)

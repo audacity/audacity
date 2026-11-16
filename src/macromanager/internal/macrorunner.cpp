@@ -13,7 +13,6 @@
 #include "framework/global/io/path.h"
 #include "framework/global/log.h"
 
-#include "importexport/export/exportcommands.h"
 #include "trackedit/trackeditcommands.h"
 
 #include "macrooutputnames.h"
@@ -95,6 +94,15 @@ async::Notification MacroRunner::isRunningChanged() const
 size_t MacroRunner::currentFileIndex() const
 {
     return m_fileResults.size();
+}
+
+std::optional<std::string> MacroRunner::currentFileName() const
+{
+    if (m_fileResults.size() >= m_outputNames.size()) {
+        return std::nullopt;
+    }
+
+    return m_outputNames.at(m_fileResults.size());
 }
 
 std::vector<Ret> MacroRunner::fileResults() const
@@ -288,7 +296,7 @@ async::Promise<Ret> MacroRunner::runItem(const MacroItem& item)
 
 async::Promise<Ret> MacroRunner::runCommand(const MacroStep& step)
 {
-    return commandDispatcher()->dispatch(step.command, stepParams(step))
+    return commandDispatcher()->dispatch(step.command, step.params)
            .then<Ret>(this, [](const Response& response, auto resolve) {
         return resolve(response.ret);
     });
@@ -336,17 +344,6 @@ async::Promise<Ret> MacroRunner::resetProject()
 
         return async::Promise<Ret>::dummy_result();
     });
-}
-
-Params MacroRunner::stepParams(const MacroStep& step) const
-{
-    Params params = step.params;
-
-    if (!m_outputNames.empty() && importexport::isExportCommand(step.command)) {
-        params[importexport::EXPORT_NAME_PARAM] = Val(m_outputNames.at(m_fileResults.size()));
-    }
-
-    return params;
 }
 
 void MacroRunner::undoToState(size_t stateIndex)

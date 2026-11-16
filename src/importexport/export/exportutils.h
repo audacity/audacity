@@ -4,28 +4,20 @@
 #pragma once
 
 #include <optional>
-#include <set>
 #include <string>
 #include <vector>
 
 #include "types/val.h"
 
+#include "shared/io/uniquefilenames.h"
+
 namespace au::importexport::utils {
 muse::Val matrixToVal(const std::vector<std::vector<bool> >& matrix);
 std::vector<std::vector<bool> > valToMatrix(const muse::Val& val);
 
-class UniqueFileNames
-{
-public:
-    std::string registerName(const std::string& name);
-
-private:
-    std::set<std::string> m_foldedNames;
-};
-
 std::string formatFileName(const std::string& prefix, std::optional<int> number, const std::string& name);
 std::string sanitizeFileName(const std::string& name);
-std::string makeFileName(const std::string& prefix, std::optional<int> number, const std::string& name, UniqueFileNames& usedNames);
+std::string makeFileName(const std::string& prefix, std::optional<int> number, const std::string& name, shared::UniqueFileNames& usedNames);
 
 struct TimeRange {
     double start = 0.0;

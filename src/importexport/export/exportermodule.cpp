@@ -6,11 +6,13 @@
 
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/rcommand/icommandsregister.h"
+#include "macromanager/imacrosteptypesregister.h"
 
 #include "internal/au3/au3exporter.h"
 #include "internal/au3/au3ffmpegoptionsaccessor.h"
 #include "internal/exportcommandscontroller.h"
 #include "internal/exportcommandsregister.h"
+#include "internal/exportsteptypes.h"
 
 #include "view/exportpreferencesmodel.h"
 #include "view/dynamicexportoptionsmodel.h"
@@ -18,6 +20,8 @@
 #include "view/metadatamodel.h"
 #include "view/custommappingmodel.h"
 #include "view/channelmappingtableviewmodel.h"
+#include "view/exportaudiostepmodel.h"
+#include "view/exportsimplestepmodel.h"
 
 #include "exportermodule.h"
 
@@ -57,6 +61,8 @@ void ExporterModule::resolveImports()
         ir->registerQmlUri(Uri("audacity://project/export/ffmpeg"), "Export/CustomFFmpegDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/metadata"), "Export/MetadataDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/mapping"), "Export/CustomMappingDialog.qml");
+        ir->registerQmlUri(EXPORT_AUDIO_STEP_DIALOG_URI, "Export/ExportAudioStepDialog.qml");
+        ir->registerQmlUri(EXPORT_SIMPLE_STEP_DIALOG_URI, "Export/ExportSimpleStepDialog.qml");
     }
 
     auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
@@ -78,6 +84,8 @@ void ExporterModule::registerUiTypes()
     qmlRegisterType<MetadataModel>("Audacity.Export", 1, 0, "MetadataModel");
     qmlRegisterType<CustomMappingModel>("Audacity.Export", 1, 0, "CustomMappingModel");
     qmlRegisterType<ChannelMappingTableViewModel>("Audacity.Export", 1, 0, "ChannelMappingTableViewModel");
+    qmlRegisterType<ExportAudioStepModel>("Audacity.Export", 1, 0, "ExportAudioStepModel");
+    qmlRegisterType<ExportSimpleStepModel>("Audacity.Export", 1, 0, "ExportSimpleStepModel");
     qmlRegisterUncreatableMetaObject(ChannelMappingTableViewCellType::staticMetaObject,
                                      "Audacity.Export", 1, 0, "ChannelMappingTableViewCellType", "");
 
@@ -106,6 +114,15 @@ void ExporterContext::registerExports()
     m_commandsController = std::make_shared<ExportCommandsController>(iocContext());
 
     ioc()->registerExport<IExporter>(mname, m_exporter);
+}
+
+void ExporterContext::resolveImports()
+{
+    auto sr = ioc()->resolve<macromanager::IMacroStepTypesRegister>(mname);
+    if (sr) {
+        sr->reg(std::make_shared<ExportAudioStepType>(iocContext()));
+        sr->reg(std::make_shared<ExportSimpleStepType>(iocContext()));
+    }
 }
 
 void ExporterContext::onInit(const muse::IApplication::RunMode&)

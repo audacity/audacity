@@ -30,7 +30,7 @@ target_sources(macromanager PRIVATE
     internal/runonfilesstarter.h
 )
 
-target_link_libraries(macromanager PRIVATE exporter)
+target_link_libraries(macromanager PRIVATE shared)
 
 add_subdirectory(qml/Audacity/MacroManager)
 

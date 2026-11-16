@@ -57,6 +57,7 @@ public:
     muse::async::Notification isRunningChanged() const override;
 
     size_t currentFileIndex() const override;
+    std::optional<std::string> currentFileName() const override;
     std::vector<muse::Ret> fileResults() const override;
     muse::async::Notification currentFileChanged() const override;
 
@@ -75,7 +76,6 @@ private:
     muse::async::Promise<muse::Ret> runMacro(const MacroReference& reference);
     muse::async::Promise<muse::Ret> resetProject();
 
-    muse::rcommand::Params stepParams(const MacroStep& step) const;
     void undoToState(size_t stateIndex);
     void showCompleted(const std::string& macroName);
     void showError(const muse::Ret& ret, const std::string& macroName);
