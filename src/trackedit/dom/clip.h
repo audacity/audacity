@@ -20,6 +20,8 @@ enum class FadeType {
     SCurve,
 };
 
+constexpr FadeType defaultFadeType = FadeType::SCurve;
+
 struct Clip {
     ClipKey key;
     ClipVersion clipVersion = -1;
@@ -40,8 +42,8 @@ struct Clip {
 
     double fadeInDuration = 0.0;
     double fadeOutDuration = 0.0;
-    FadeType fadeInType = FadeType::Linear;
-    FadeType fadeOutType = FadeType::Linear;
+    FadeType fadeInType = defaultFadeType;
+    FadeType fadeOutType = defaultFadeType;
 
     inline bool isValid() const { return key.isValid(); }
 };

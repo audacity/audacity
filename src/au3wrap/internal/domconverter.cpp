@@ -90,7 +90,7 @@ bool trackMute(const Au3Track* track)
 }
 
 namespace {
-au::trackedit::FadeType fadeType(::FadeType type)
+constexpr au::trackedit::FadeType fadeType(::FadeType type)
 {
     switch (type) {
     case ::FadeType::Exponential:
@@ -108,6 +108,9 @@ au::trackedit::FadeType fadeType(::FadeType type)
         return au::trackedit::FadeType::Linear;
     }
 }
+
+static_assert(fadeType(ClipFades::defaultFadeType) == au::trackedit::defaultFadeType,
+              "The trackedit default fade type must mirror the au3 one");
 }
 
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)

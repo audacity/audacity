@@ -33,6 +33,7 @@ public:
     //! but more the chosen range of the log function we use to shape our fade. -60dB makes
     //! the fades probably too abrupt.
     static constexpr double fadeLogRangeDb = -40.0;
+    static constexpr FadeType defaultFadeType = FadeType::SCurve;
 
     //! `t` from 0 (silent end) to 1 (unfaded end)
     static double fadeGain(FadeType type, double t);
@@ -42,8 +43,8 @@ public:
         double playDuration = 0.0;
         double fadeIn = 0.0;
         double fadeOut = 0.0;
-        FadeType fadeInType = FadeType::Linear;
-        FadeType fadeOutType = FadeType::Linear;
+        FadeType fadeInType = defaultFadeType;
+        FadeType fadeOutType = defaultFadeType;
 
         //! The gain of the fades at `timeFromPlayStart`, in seconds from the clip's play start
         double gainAt(double timeFromPlayStart) const;
@@ -93,8 +94,8 @@ private:
     std::atomic<double> m_fadeIn = 0.0;
     std::atomic<double> m_fadeOut = 0.0;
     std::atomic<ClipSide> m_draggingSide = static_cast<ClipSide>(0);
-    std::atomic<FadeType> m_fadeInType = FadeType::Linear;
-    std::atomic<FadeType> m_fadeOutType = FadeType::Linear;
+    std::atomic<FadeType> m_fadeInType = defaultFadeType;
+    std::atomic<FadeType> m_fadeOutType = defaultFadeType;
 
     Observer::Subscription mStretchChangedSubscription;
 };
