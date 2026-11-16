@@ -371,8 +371,7 @@ void TrackClipsListModel::startClipFadeEdit(const ClipKey& key, ClipSides::Side 
     // The previous drag, if any, gives the clips their fades back and ends its user interaction before this one reads
     // the clips and starts its own
     m_fadeDrag.reset();
-    // With Ctrl, only the dragged clip's fade
-    const ClipKeyList keys = keyboardModifiers().testFlag(Qt::ControlModifier) ? ClipKeyList { key.key } : clipsForInteraction(key);
+    const ClipKeyList keys = clipsForFadeEdit(key);
     trackedit::Clips clips;
     std::ranges::transform(keys, std::back_inserter(clips),
                            [&](const trackedit::ClipKey& clipKey) { return prj->clip(clipKey); });
@@ -440,8 +439,8 @@ bool TrackClipsListModel::removeClipFadeOut(const ClipKey& key)
 
 bool TrackClipsListModel::removeClipFades(const ClipKey& key, ClipSide side)
 {
-    // Like the fade drags, for all the selected clips if this one is
-    const ClipKeyList keys = clipsForInteraction(key);
+    // Like the fade drags
+    const ClipKeyList keys = clipsForFadeEdit(key);
     bool removed = false;
     for (const trackedit::ClipKey& clipKey : keys) {
         // Only the last change completes, so that one state is pushed for all the clips
@@ -539,6 +538,11 @@ bool TrackClipsListModel::asymmetricStereoHeightsPossible() const
 bool TrackClipsListModel::isContrastFocusBorderEnabled() const
 {
     return !uiConfiguration()->isDarkMode();
+}
+
+ClipKeyList TrackClipsListModel::clipsForFadeEdit(const ClipKey& key) const
+{
+    return keyboardModifiers().testFlag(Qt::ControlModifier) ? ClipKeyList { key.key } : clipsForInteraction(key);
 }
 
 ClipKeyList TrackClipsListModel::clipsForInteraction(const ClipKey& key) const

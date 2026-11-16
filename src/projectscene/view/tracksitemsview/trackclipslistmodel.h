@@ -100,6 +100,7 @@ private:
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
+    trackedit::ClipKeyList clipsForFadeEdit(const ClipKey& key) const;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
 

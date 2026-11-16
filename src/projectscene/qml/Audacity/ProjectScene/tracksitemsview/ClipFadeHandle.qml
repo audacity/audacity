@@ -191,5 +191,20 @@ Item {
             }
             restoreCursor()
         }
+
+        onDoubleClicked: function (e) {
+            if (e.button !== Qt.LeftButton) {
+                return
+            }
+            // The second press started a drag, whose release would otherwise set the fade back
+            if (dragging) {
+                dragging = false
+                root.fadeEditCanceled()
+                restoreCursor()
+            }
+            if (root.fadeWidth > 0) {
+                root.fadeRemoveRequested()
+            }
+        }
     }
 }
