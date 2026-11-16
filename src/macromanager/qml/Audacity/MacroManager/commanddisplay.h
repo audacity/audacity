@@ -15,4 +15,5 @@ struct CommandDisplay {
 };
 
 CommandDisplay commandDisplay(const muse::rcommand::CommandInfo& info, const effects::IEffectsProvider& effectsProvider);
+QString paramsSummary(const muse::rcommand::InputSchema& schema, const muse::rcommand::Params& params);
 }
