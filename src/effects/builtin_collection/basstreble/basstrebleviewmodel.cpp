@@ -21,6 +21,23 @@ double toneFromWeight(double w)
 {
     return w > 0 ? w * 2.0 : w * 4.0;
 }
+
+// With auto-adjust volume on, Gain is limited to what Bass and Treble can compensate for.
+double gainMin(bool link)
+{
+    using au::effects::BassTrebleEffect;
+    return link
+           ? std::max(-(toneWeight(BassTrebleEffect::Bass.max) + toneWeight(BassTrebleEffect::Treble.max)), BassTrebleEffect::Gain.min)
+           : BassTrebleEffect::Gain.min;
+}
+
+double gainMax(bool link)
+{
+    using au::effects::BassTrebleEffect;
+    return link
+           ? std::min(-(toneWeight(BassTrebleEffect::Bass.min) + toneWeight(BassTrebleEffect::Treble.min)), BassTrebleEffect::Gain.max)
+           : BassTrebleEffect::Gain.max;
+}
 }
 
 BassTrebleViewModel::BassTrebleViewModel(QObject* parent, int instanceId)
@@ -104,9 +121,7 @@ void BassTrebleViewModel::doReload()
             // If one tone hits its limit, the remainder goes to the other.
             // Gain is limited to what Bass and Treble can compensate for, otherwise the
             // Gain + weight(Bass) + weight(Treble) relation would be lost once the tones saturate.
-            const double gainMin = -(toneWeight(BassTrebleEffect::Bass.max) + toneWeight(BassTrebleEffect::Treble.max));
-            const double gainMax = -(toneWeight(BassTrebleEffect::Bass.min) + toneWeight(BassTrebleEffect::Treble.min));
-            v = std::clamp(v, std::max(gainMin, BassTrebleEffect::Gain.min), std::min(gainMax, BassTrebleEffect::Gain.max));
+            v = std::clamp(v, gainMin(true), gainMax(true));
             const double delta = v - settings.mGain;
             const double bassMin = toneWeight(BassTrebleEffect::Bass.min);
             const double bassMax = toneWeight(BassTrebleEffect::Bass.max);
@@ -124,6 +139,12 @@ void BassTrebleViewModel::doReload()
         settings.mGain = v;
     }
                                     );
+
+    // The knob keeps one fixed scale, but can't be moved past what Bass and Treble can compensate for.
+    QVariantMap gainItem = m_paramsList["Gain"].toMap();
+    gainItem["limitMin"] = gainMin(bs.mLink);
+    gainItem["limitMax"] = gainMax(bs.mLink);
+    m_paramsList["Gain"] = gainItem;
 
     emit paramsListChanged();
     emit linkChanged();
