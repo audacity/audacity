@@ -19,7 +19,7 @@ double toneWeight(double v)
 
 double toneFromWeight(double w)
 {
-    return w > 0 ? w * 2.0 : w * 4.0;
+    return w > 0 ? 2.0 * w : 4.0 * w;
 }
 
 // With auto-adjust volume on, Gain is limited to what Bass and Treble can compensate for.
@@ -187,5 +187,6 @@ void BassTrebleViewModel::setLink(bool newLink)
 
 double BassTrebleViewModel::compensateGain(const double currentGain, double currentValue, double newValue)
 {
-    return std::clamp(currentGain - (toneWeight(newValue) - toneWeight(currentValue)), BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
+    const double gain = currentGain - (toneWeight(newValue) - toneWeight(currentValue));
+    return std::clamp(gain, BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
 }
