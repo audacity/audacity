@@ -14,7 +14,7 @@ namespace au::au3audio {
 class Au3AudioEngine final : public au::audio::IAudioEngine
 {
 public:
-    Au3AudioEngine() = default;
+    Au3AudioEngine();
 
     muse::GlobalInject<au::record::IRecordConfiguration> recordConfiguration;
 
@@ -42,8 +42,14 @@ public:
     std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group, size_t effectListIndex,
                                                                     const std::string& newEffectId) override;
 
+    void setPlaybackMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter) override;
+    void setCaptureMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter) override;
+    void stopMeters(AudacityProject& project) override;
+
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
+    //! AudioIO monitors the input as it comes
+    void setMonitoredTrack(std::optional<int64_t>) override {}
 
     void setInputVolume(float newInputVolume) override;
     float getInputVolume() const override;
@@ -63,10 +69,17 @@ public:
     muse::async::Notification recordingCommitRequested() const override;
     muse::async::Notification recordingFinished() const override;
     muse::async::Notification streamStopped() const override;
+    std::optional<audio::DeviceLatency> deviceLatency() const override;
+    muse::async::Notification deviceLatencyChanged() const override;
     muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const override;
 
 private:
+    void updateDeviceLatency();
+
     Observer::Subscription m_streamStatusSubscription;
     muse::async::Notification m_streamStopped;
+    //! As AudioIO took it from PortAudio, at the stream's start
+    std::optional<audio::DeviceLatency> m_deviceLatency;
+    muse::async::Notification m_deviceLatencyChanged;
 };
 }

@@ -55,6 +55,7 @@ set( LIBRARIES
    au3-audio-graph
    au3-tags
    au3-realtime-effects
+   au3-recording
    au3-audio-io
    au3-wave-track
    au3-wave-track-settings

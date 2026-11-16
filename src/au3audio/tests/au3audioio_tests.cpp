@@ -11,7 +11,7 @@
 
 #include <portaudio.h>
 
-#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-audio-io/AudioIOBase.h"
 #include "au3-audio-io/AudioIO.h"
 #include "au3-project/Project.h"
 

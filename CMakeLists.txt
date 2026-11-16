@@ -68,6 +68,8 @@ set(AU4_REVISION "" CACHE STRING "Build revision")
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
 option(AU_BUILD_APPSHELL_TESTS "Build appshell tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_AU3AUDIO_TESTS "Build au3audio tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_AU4AUDIO_TESTS "Build au4audio tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_JUCEDEVICES_TESTS "Build jucedevices tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_AUTOMATION_TESTS "Build automation tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_CLOUD_AUDIOCOM "Build cloud audiocom module" ON)
 option(AU_BUILD_CONTEXT_TESTS "Build context tests" ${MUSE_ENABLE_UNIT_TESTS})
@@ -114,6 +116,9 @@ option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
 
 # Port mixer
 option(AU_USE_PORTMIXER "Use PortMixer for audio device management" ON)
+
+# JUCE, for its audio devices (experimental). On by default on this branch, so that CI builds it.
+option(AU_USE_JUCE "Build JUCE, for its audio devices" ON)
 
 set(MUSE_MODULE_ACCESSIBILITY ON)
 set(MUSE_MODULE_ACTIONS ON)

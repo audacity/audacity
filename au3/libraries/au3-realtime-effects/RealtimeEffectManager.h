@@ -136,11 +136,15 @@ private:
     friend RealtimeEffects::ProcessingScope;
 
     void ProcessStart(bool suspended);
+    //! Of the states of `groups` only, the master's for a null group: those of other groups may be processed in other
+    //! threads meanwhile
+    void ProcessStart(bool suspended, const std::vector<const ChannelGroup*>& groups);
 
     /*! @copydoc ProcessScope::Process */
     size_t Process(bool suspended, const ChannelGroup* group, float* const* buffers, float* const* scratch, float* dummy, unsigned nBuffers,
                    size_t numSamples);
     void ProcessEnd(bool suspended) noexcept;
+    void ProcessEnd(bool suspended, const std::vector<const ChannelGroup*>& groups) noexcept;
 
     RealtimeEffectManager(const RealtimeEffectManager&) = delete;
     RealtimeEffectManager& operator=(const RealtimeEffectManager&) = delete;
@@ -256,12 +260,26 @@ public:
         }
     }
 
+    //! Processes the effects of `groups` only, the master's for a null group: those of other groups may be processed
+    //! in other threads meanwhile, in scopes of their own
+    ProcessingScope(InitializationScope&, std::weak_ptr<AudacityProject> wProject, std::vector<const ChannelGroup*> groups)
+        : mwProject{move(wProject)}, mGroups{move(groups)}
+    {
+        if (auto pProject = mwProject.lock()) {
+            RealtimeEffectManager::Get(*pProject).ProcessStart(mSuspended, *mGroups);
+        }
+    }
+
     ProcessingScope(ProcessingScope&& other) = default;
     ProcessingScope& operator=(ProcessingScope&& other) = default;
     ~ProcessingScope()
     {
         if (auto pProject = mwProject.lock()) {
-            RealtimeEffectManager::Get(*pProject).ProcessEnd(mSuspended);
+            if (mGroups) {
+                RealtimeEffectManager::Get(*pProject).ProcessEnd(mSuspended, *mGroups);
+            } else {
+                RealtimeEffectManager::Get(*pProject).ProcessEnd(mSuspended);
+            }
         }
     }
 
@@ -284,6 +302,8 @@ public:
 
 private:
     std::weak_ptr<AudacityProject> mwProject;
+    //! If not all
+    std::optional<std::vector<const ChannelGroup*> > mGroups;
     bool mSuspended{};
 };
 }

@@ -1,0 +1,501 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#include "au4audioengine.h"
+
+#include <algorithm>
+#include <optional>
+
+#include "framework/global/containers.h"
+#include "framework/global/log.h"
+
+#include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
+#include "au3-project-rate/ProjectRate.h"
+#include "au3-realtime-effects/RealtimeEffectManager.h"
+#include "au3-time-frequency-selection/ViewInfo.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
+
+#include "au3wrap/internal/wxtypes_convert.h"
+
+#include "audio/idevice.h"
+#include "iocallback.h"
+#include "monitoringcallback.h"
+#include "recordingcapture.h"
+
+using namespace au::au4audio;
+
+namespace {
+//! Where a stream that plays or records until stopped ends
+constexpr double maxStreamTime = 1e7;
+//! How far right of the loop region the playhead may be for loop play to still capture it (as in DefaultPlaybackPolicy)
+constexpr double loopCaptureAllowance = 0.5;
+}
+
+Au4AudioEngine::Au4AudioEngine(std::shared_ptr<audio::IDeviceOpener> deviceOpener)
+    : m_deviceOpener{std::move(deviceOpener)}
+{
+}
+
+Au4AudioEngine::~Au4AudioEngine() = default;
+
+void Au4AudioEngine::setDriverController(const audio::IAudioDriverController* driverController)
+{
+    m_driverController = driverController;
+}
+
+bool Au4AudioEngine::isBusy() const
+{
+    return m_stream != nullptr;
+}
+
+bool Au4AudioEngine::isCapturing() const
+{
+    // As AudioIO, once past the lead-in
+    return m_stream && !m_stream->isFinished() && m_stream->capture() && m_stream->capture()->isCapturing(m_stream->position());
+}
+
+bool Au4AudioEngine::isMonitoring() const
+{
+    return m_monitoring != nullptr;
+}
+
+std::optional<au::audio::AudioStreamDescriptor> Au4AudioEngine::currentStream() const
+{
+    if (m_monitoring) {
+        return audio::AudioStreamDescriptor { audio::AudioStreamKind::Monitoring, &m_monitoring->project, m_monitoring->sampleRate() };
+    }
+    if (!m_stream) {
+        return std::nullopt;
+    }
+    const auto kind = m_stream->capture() ? audio::AudioStreamKind::Recording : audio::AudioStreamKind::Playback;
+    return audio::AudioStreamDescriptor { kind, &m_stream->project, m_stream->sampleRate() };
+}
+
+bool Au4AudioEngine::isStreamActive(AudacityProject& project) const
+{
+    return m_stream && &m_stream->project == &project && !m_stream->isFinished();
+}
+
+double Au4AudioEngine::transportTime() const
+{
+    return m_transportTime;
+}
+
+int Au4AudioEngine::startTransport(const TransportSequences& sequences, double startTime, double endTime,
+                                   double /*mixerEndTime*/, AudacityProject& project, const StartTransportOptions& options)
+{
+    if (m_stream) {
+        return 0;
+    }
+    const bool recording = !sequences.captureSequences.empty();
+    if (sequences.playbackSequences.empty() && !recording) {
+        m_lastError = u"Nothing to play";
+        return 0;
+    }
+    IF_ASSERT_FAILED(m_driverController) {
+        return 0;
+    }
+    // As AudioIO, playing stops monitoring
+    stopMonitoring();
+    const auto configuration = m_driverController->configuration();
+    auto device = openDevice(recording ? configuration.inputChannels : 0, numChannels, options.sampleRate);
+    if (!device) {
+        return 0;
+    }
+
+    // As AudioIO, recording plays from before where it starts by the lead-in, and to after where it ends by the latency
+    // it compensates
+    std::optional<RecordingCapture::Settings> capture;
+    double rangeStart = startTime;
+    double rangeEnd = endTime;
+    if (recording) {
+        RecordingCapture::Settings settings;
+        settings.sequences = sequences.captureSequences;
+        settings.startTime = startTime;
+        settings.endTime = endTime;
+        settings.leadInTime = std::max(0.0, std::min(startTime, options.leadInTime));
+        const auto rate = device->sampleRate();
+        settings.latencyCompensation = configuration.automaticLatencyCompensation
+                                       ? -(device->inputLatency() + device->outputLatency())
+                                       : configuration.latencyCompensation / 1000.0;
+        settings.crossfadeData = options.crossfadeData;
+        settings.detectDropouts = gPrefs->Read(WarningDialogKey(wxT("DropoutDetected")), true) != 0;
+        settings.numInputChannels = device->numInputChannels();
+        settings.deviceRate = rate;
+        settings.maxFrames = device->blockSize();
+        if (settings.numInputChannels == 0) {
+            m_lastError = u"The input device has no channels";
+            return 0;
+        }
+        rangeStart = startTime - settings.leadInTime;
+        // Recording until stopped ends very far away
+        rangeEnd = std::min(endTime - settings.latencyCompensation, maxStreamTime);
+        capture = std::move(settings);
+    }
+
+    // As AudioIO: the default policy plays from the play region start, and loops it if it is active
+    const auto& playRegion = ViewInfo::Get(project).playRegion;
+    std::optional<double> streamStartTime = options.streamStartTime;
+    if (!streamStartTime && options.isDefaultPolicy) {
+        streamStartTime = std::max(0.0, playRegion.GetStart());
+    }
+    const double playStartTime = streamStartTime.value_or(rangeStart);
+
+    // In ms in the settings
+    const double softwareBufferLength = m_driverController->configuration().softwareBufferLength / 1000.0;
+    auto stream = std::make_unique<IoCallback>(project, m_nextStreamToken, std::move(device), options.isDefaultPolicy,
+                                               m_callbackInfoQueue, m_playedRanges, m_playbackVolume, softwareBufferLength);
+    stream->trackEndTime = TrackList::Get(project).GetEndTime();
+    // Monitored through the effects
+    const bool monitors = capture && recordConfiguration()->isInputMonitoringOn();
+    if (monitors) {
+        stream->monitorThrough(monitoredTrack(project), capture->numInputChannels, m_inputVolume);
+    }
+    std::optional<IoCallback::RecordingRange> recordingRange;
+    if (recording) {
+        recordingRange = IoCallback::RecordingRange { startTime, endTime };
+    }
+    stream->build(sequences, muse::value(m_playbackMeters, &project), recordingRange);
+    if (capture) {
+        auto recordingCapture = std::make_unique<RecordingCapture>(project, std::move(*capture), m_listener,
+                                                                   muse::value(m_captureMeters, &project), m_inputGain,
+                                                                   [this] { stopTransport(); });
+        if (!recordingCapture->start()) {
+            m_lastError = u"Cannot allocate the recording buffers";
+            return 0;
+        }
+        stream->setCapture(std::move(recordingCapture));
+    }
+
+    std::optional<std::pair<double, double> > loopRange;
+    if (options.isDefaultPolicy && playRegion.Active() && startTime < endTime
+        && playStartTime <= endTime + loopCaptureAllowance) {
+        loopRange.emplace(startTime, endTime);
+    }
+    stream->setPlayRange(playStartTime, rangeEnd, loopRange);
+
+    m_callbackInfoQueue.Clear();
+    m_playedRanges.Clear();
+    m_currentPlayedRange = { playStartTime, 0 };
+    m_consumedInCurrentRange = 0;
+    m_transportTime = playStartTime;
+    m_lastSampleRate = stream->sampleRate();
+
+    m_stream = std::move(stream);
+    if (m_stream->followsPlayRegion) {
+        m_playRegionSubscription = ViewInfo::Get(project).playRegion.Subscribe([this](auto&) { onPlayRegionChanged(); });
+    }
+    m_stream->start();
+
+    LOGI() << m_deviceOpener->name() << " engine " << (recording ? "recording" : "playing") << " at " << m_lastSampleRate << " Hz";
+    return m_nextStreamToken++;
+}
+
+void Au4AudioEngine::onPlayRegionChanged()
+{
+    if (!m_stream) {
+        return;
+    }
+    const auto& playRegion = ViewInfo::Get(m_stream->project).playRegion;
+    const double t0 = playRegion.GetStart();
+    const double t1 = playRegion.GetEnd();
+    std::optional<std::pair<double, double> > loopRange;
+    if (playRegion.Active() && t0 < t1 && m_stream->position() <= t1 + loopCaptureAllowance) {
+        loopRange.emplace(t0, t1);
+    }
+    // Without a loop, play on to the end of the tracks
+    m_stream->updateLoop(loopRange, std::max(t0, m_stream->trackEndTime));
+}
+
+void Au4AudioEngine::stopTransport()
+{
+    if (!m_stream) {
+        return;
+    }
+    m_playRegionSubscription.Reset();
+    m_stream->stop();
+    m_stream.reset();
+    m_streamStopped.notify();
+}
+
+void Au4AudioEngine::pauseTransport(bool pause)
+{
+    if (m_stream) {
+        m_stream->setPaused(pause);
+    }
+}
+
+void Au4AudioEngine::seek(double time)
+{
+    if (m_stream) {
+        m_stream->seek(time);
+    }
+}
+
+std::shared_ptr<RealtimeEffectState> Au4AudioEngine::addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                            const std::string& effectId)
+{
+    return RealtimeEffectManager::Get(project).AddState(effectsInitialization(project), group, au3::wxFromStdString(effectId));
+}
+
+void Au4AudioEngine::removeRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                               const std::shared_ptr<RealtimeEffectState>& state)
+{
+    RealtimeEffectManager::Get(project).RemoveState(effectsInitialization(project), group, state);
+}
+
+std::shared_ptr<RealtimeEffectState> Au4AudioEngine::replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
+                                                                                size_t effectListIndex,
+                                                                                const std::string& newEffectId)
+{
+    return RealtimeEffectManager::Get(project).ReplaceState(effectsInitialization(project), group, effectListIndex,
+                                                            au3::wxFromStdString(newEffectId));
+}
+
+RealtimeEffects::InitializationScope* Au4AudioEngine::effectsInitialization(AudacityProject& project) const
+{
+    if (m_stream && &m_stream->project == &project) {
+        return m_stream->effectsInitialization();
+    }
+    // Or the input monitored through them
+    if (m_monitoring && &m_monitoring->project == &project) {
+        return m_monitoring->effectsInitialization();
+    }
+    return nullptr;
+}
+
+void Au4AudioEngine::setPlaybackMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter)
+{
+    m_playbackMeters[&project] = meter;
+}
+
+void Au4AudioEngine::setCaptureMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter)
+{
+    m_captureMeters[&project] = meter;
+}
+
+void Au4AudioEngine::stopMeters(AudacityProject& project)
+{
+    for (const auto* meters : { &m_playbackMeters, &m_captureMeters }) {
+        if (const auto meter = muse::value(*meters, &project)) {
+            meter->stop();
+        }
+    }
+}
+
+void Au4AudioEngine::startMonitoring(AudacityProject& project)
+{
+    if (m_stream) {
+        return;
+    }
+    const bool playThrough = recordConfiguration()->isInputMonitoringOn();
+    std::optional<MonitoringCallback::Effects> effects;
+    if (playThrough) {
+        effects = MonitoringCallback::Effects { monitoredTrack(project) };
+    }
+    if (m_monitoring) {
+        const auto& current = m_monitoring->effects;
+        const bool sameEffects = current.has_value() == effects.has_value() && (!current || current->track == effects->track);
+        if (&m_monitoring->project == &project && m_monitoring->playThrough == playThrough && sameEffects) {
+            return;
+        }
+        stopMonitoring();
+    }
+    IF_ASSERT_FAILED(m_driverController) {
+        return;
+    }
+    // As AudioIO, at the rate of the project, with the output if it plays the input through
+    auto device = openDevice(m_driverController->configuration().inputChannels, playThrough ? numChannels : 0,
+                             ProjectRate::Get(project).GetRate());
+    if (!device) {
+        LOGE() << "cannot monitor the input: " << m_lastError;
+        return;
+    }
+    m_monitoring = std::make_unique<MonitoringCallback>(project, std::move(device), playThrough,
+                                                        muse::value(m_captureMeters, &project), m_inputGain, std::move(effects));
+    m_monitoring->start();
+}
+
+void Au4AudioEngine::stopMonitoring()
+{
+    if (m_monitoring) {
+        m_monitoring->stop();
+        m_monitoring.reset();
+    }
+}
+
+void Au4AudioEngine::setMonitoredTrack(std::optional<int64_t> track)
+{
+    if (track == m_monitoredTrack) {
+        return;
+    }
+    m_monitoredTrack = track;
+    // Monitoring follows; a stream keeps the track it started with
+    if (m_monitoring) {
+        auto& project = m_monitoring->project;
+        startMonitoring(project);
+    }
+}
+
+std::shared_ptr<const PlayableSequence> Au4AudioEngine::monitoredTrack(AudacityProject& project) const
+{
+    if (!m_monitoredTrack) {
+        return nullptr;
+    }
+    const auto track = dynamic_cast<WaveTrack*>(TrackList::Get(project).FindById(TrackId { *m_monitoredTrack }));
+    return track ? track->SharedPointer<const WaveTrack>() : nullptr;
+}
+
+std::unique_ptr<au::audio::IDevice> Au4AudioEngine::openDevice(int numInputChannels, int numOutputChannels, double sampleRate)
+{
+    IF_ASSERT_FAILED(m_driverController) {
+        return nullptr;
+    }
+    std::string error;
+    auto device = m_deviceOpener->open(m_driverController->configuration(), numInputChannels, numOutputChannels, sampleRate, error);
+    if (!device) {
+        m_lastError = muse::String::fromStdString(error);
+        return nullptr;
+    }
+    audio::DeviceLatency latency;
+    if (device->numInputChannels() > 0) {
+        latency.input = device->inputLatency();
+    }
+    if (device->numOutputChannels() > 0) {
+        latency.output = device->outputLatency();
+    }
+    if (latency != m_deviceLatency) {
+        m_deviceLatency = latency;
+        m_deviceLatencyChanged.notify();
+    }
+    return device;
+}
+
+void Au4AudioEngine::setInputVolume(float newInputVolume)
+{
+    m_inputVolume = newInputVolume;
+    // As AudioIO: on the device where its hardware volume can, else applied to the input
+    const auto hardwareVolume = m_deviceOpener->hardwareVolume();
+    if (hardwareVolume && hardwareVolume->inputVolumeWorks() && hardwareVolume->inputVolume() != newInputVolume) {
+        hardwareVolume->setInputVolume(newInputVolume);
+    }
+    updateInputGain();
+}
+
+float Au4AudioEngine::getInputVolume() const
+{
+    const auto hardwareVolume = m_deviceOpener->hardwareVolume();
+    return hardwareVolume && hardwareVolume->inputVolumeWorks() ? hardwareVolume->inputVolume() : m_inputVolume;
+}
+
+void Au4AudioEngine::updateInputGain()
+{
+    const auto hardwareVolume = m_deviceOpener->hardwareVolume();
+    m_inputGain = hardwareVolume && hardwareVolume->inputVolumeWorks() ? 1.f : m_inputVolume;
+}
+
+void Au4AudioEngine::setPlaybackVolume(float newPlaybackVolume)
+{
+    m_playbackVolume = newPlaybackVolume;
+}
+
+float Au4AudioEngine::getPlaybackVolume() const
+{
+    return m_playbackVolume;
+}
+
+bool Au4AudioEngine::canStopTransport(AudacityProject& project) const
+{
+    return !m_stream || &m_stream->project == &project;
+}
+
+void Au4AudioEngine::handleDeviceChange()
+{
+    // The device is opened for each stream, and the driver controller suspends streams before changing it; its mixer is
+    // that of the selected devices
+    if (const auto hardwareVolume = m_deviceOpener->hardwareVolume()) {
+        hardwareVolume->reopen();
+    }
+    updateInputGain();
+}
+
+muse::String Au4AudioEngine::lastErrorString() const
+{
+    return m_lastError;
+}
+
+double Au4AudioEngine::getPlaybackSampleRate() const
+{
+    return m_lastSampleRate;
+}
+
+void Au4AudioEngine::updateTimePosition(unsigned long newlyConsumedSamples)
+{
+    while (newlyConsumedSamples > 0) {
+        if (m_consumedInCurrentRange == m_currentPlayedRange.frames) {
+            PlayedRange next;
+            if (!m_playedRanges.Get(next)) {
+                break;
+            }
+            m_currentPlayedRange = next;
+            m_consumedInCurrentRange = 0;
+        }
+        const auto consumed = std::min(newlyConsumedSamples, m_currentPlayedRange.frames - m_consumedInCurrentRange);
+        m_consumedInCurrentRange += consumed;
+        newlyConsumedSamples -= consumed;
+    }
+    if (m_lastSampleRate > 0) {
+        m_transportTime = m_currentPlayedRange.time + m_consumedInCurrentRange / m_lastSampleRate;
+    }
+}
+
+std::optional<au::audio::AudioCallbackInfo> Au4AudioEngine::consumeNextCallbackInfo()
+{
+    audio::AudioCallbackInfo info;
+    if (m_callbackInfoQueue.Get(info)) {
+        return info;
+    }
+    return std::nullopt;
+}
+
+muse::async::Notification Au4AudioEngine::recordingUpdateRequested() const
+{
+    return m_listener->recordingUpdateRequested();
+}
+
+muse::async::Notification Au4AudioEngine::recordingNewBlocks() const
+{
+    return m_listener->recordingNewBlocks();
+}
+
+muse::async::Notification Au4AudioEngine::recordingCommitRequested() const
+{
+    return m_listener->recordingCommitRequested();
+}
+
+muse::async::Notification Au4AudioEngine::recordingFinished() const
+{
+    return m_listener->recordingFinished();
+}
+
+muse::async::Notification Au4AudioEngine::streamStopped() const
+{
+    return m_streamStopped;
+}
+
+std::optional<au::audio::DeviceLatency> Au4AudioEngine::deviceLatency() const
+{
+    return m_deviceLatency;
+}
+
+muse::async::Notification Au4AudioEngine::deviceLatencyChanged() const
+{
+    return m_deviceLatencyChanged;
+}
+
+muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> Au4AudioEngine::recordingClipChanged() const
+{
+    return m_listener->recordingClipChanged();
+}

@@ -6,10 +6,7 @@
 
 #include "global/async/async.h"
 
-#include "au3-audio-io/ProjectAudioIO.h"
-
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/au3audiometerfactory.h"
 
 #include "audio/audiotypes.h"
 #include "types/ratio.h"
@@ -21,8 +18,13 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
-    : muse::Contextable(ctx), m_inputMeter{au::au3::createAudioMeter()}
+    : muse::Contextable(ctx), m_inputMeter{audio::IAudioMeter::create()}
 {
+    // The meter is the backend's
+    audioBackendSelector()->activeBackendChanged().onNotify(this, [this]() {
+        initMeter();
+    });
+
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
         if (!currentProject) {
@@ -34,6 +36,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
 
         initMeter();
 
+        updateMonitoredTrack();
         updateAudioEngineMonitoring();
 
         // register all callbacks for monitoring change reasons
@@ -59,6 +62,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
         audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta& delta) {
             if (delta.contains(audio::AudioConfigurationField::InputChannels)) {
                 m_inputChannelsCount = audioDriverController()->configuration().inputChannels;
+                updateMonitoredTrack();
                 updateAudioEngineMonitoring();
             }
         }, muse::async::Asyncable::Mode::SetReplace);
@@ -66,6 +70,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
         trackNavigationController()->focusedTrackChanged().onReceive(this,
                                                                      [this](const trackedit::TrackId& /*trackId*/, bool /*highlight*/) {
             const int focusedTrackChannels = getFocusedTrackChannels();
+            updateMonitoredTrack();
             if (focusedTrackChannels != m_focusedTrackChannels) {
                 m_focusedTrackChannels = focusedTrackChannels;
                 updateAudioEngineMonitoring();
@@ -88,8 +93,7 @@ void Au3AudioInput::initMeter()
         return;
     }
 
-    auto& projectAudioIO = ProjectAudioIO::Get(*project);
-    projectAudioIO.SetCaptureMeter(m_inputMeter);
+    audioEngine()->setCaptureMeter(*project, m_inputMeter);
 }
 
 float Au3AudioInput::recordVolume() const
@@ -215,6 +219,16 @@ int Au3AudioInput::getFocusedTrackChannels() const
 bool Au3AudioInput::isTrackMeterMonitoring() const
 {
     return m_inputChannelsCount == m_focusedTrackChannels;
+}
+
+void Au3AudioInput::updateMonitoredTrack() const
+{
+    // As the mic meter: the focused track, if it has as many channels as the input
+    std::optional<int64_t> track;
+    if (const auto channels = getFocusedTrackChannels(); channels > 0 && channels == m_inputChannelsCount) {
+        track = trackNavigationController()->focusedTrack();
+    }
+    audioEngine()->setMonitoredTrack(track);
 }
 
 Au3Project* Au3AudioInput::projectRef() const

@@ -8,8 +8,9 @@
 #include "framework/global/modularity/ioc.h"
 
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/au3audiometer.h"
+#include "audio/iaudiometer.h"
 #include "audio/driver/iaudiodrivercontroller.h"
+#include "audio/iaudiobackendselector.h"
 #include "audio/iaudioengine.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
@@ -25,6 +26,7 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<au::audio::IAudioBackendSelector> audioBackendSelector;
     muse::GlobalInject<record::IRecordMeterController> meterController;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
@@ -50,6 +52,8 @@ private:
     void initMeter();
     bool isTrackMeterMonitoring() const;
     int getFocusedTrackChannels() const;
+    //! The track the mic meter shows on, if any, is the one whose effects the input is monitored through
+    void updateMonitoredTrack() const;
 
     void updateAudioEngineMonitoring() const;
     void startAudioEngineMonitoring() const;
@@ -58,7 +62,7 @@ private:
     bool audioEngineShouldBeMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
-    const std::shared_ptr<au::au3::Au3AudioMeter> m_inputMeter;
+    const audio::IAudioMeterPtr m_inputMeter;
     int m_inputChannelsCount{};
     int m_focusedTrackChannels{};
 };
