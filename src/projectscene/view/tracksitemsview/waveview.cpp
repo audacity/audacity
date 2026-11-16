@@ -50,8 +50,8 @@ static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
 
 // ============================================================
 // PaintedFallback — internal QQuickPaintedItem child for
-// QPainter-based rendering (ConnectingDots, Samples, and
-// MinMaxRMS until scene graph path is complete)
+// QPainter-based rendering, while the scene graph has nothing
+// to draw or the old renderer is switched on
 // ============================================================
 class WaveView::PaintedFallback : public QQuickPaintedItem
 {
@@ -409,13 +409,8 @@ void WaveView::prepareSceneGraphData()
 
     WaveSceneGraph::Input input;
     input.params = getWavePainterParams();
-    const IWavePainter::PlotType pType = wavepainterutils::getPlotType(
-        globalContext()->currentProject(), m_clipKey.key, input.params.zoom);
-
-    if (pType != IWavePainter::PlotType::MinMaxRMS) {
-        m_sceneGraph.reset();
-        return;
-    }
+    input.plotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, input.params.zoom);
+    setIsStemPlot(input.plotType == IWavePainter::PlotType::Stem);
 
     input.clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
     if (!input.clipData.valid) {
@@ -425,7 +420,8 @@ void WaveView::prepareSceneGraphData()
 
     input.clipKey = m_clipKey.key;
     input.clipTime = m_clipTime;
-    input.metrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), m_clipKey.key, input.params);
+    input.metrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), m_clipKey.key, input.params,
+                                                     input.plotType == IWavePainter::PlotType::Stem);
     input.containerExactX = m_context->timeToPosition(m_clipTime.itemStartTime);
     input.dragGhost = m_dragGhost;
     input.recording = globalContext()->isRecording();

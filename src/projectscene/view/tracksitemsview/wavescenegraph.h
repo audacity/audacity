@@ -18,7 +18,7 @@ class QSGGeometry;
 class QSGNode;
 
 namespace au::projectscene {
-//! The MinMaxRMS waveform of one clip view as Qt Quick scene graph geometry:
+//! The waveform of one clip view as Qt Quick scene graph geometry:
 //! prepares it from the clip's column data (GUI thread) and builds the node from it (render thread)
 class WaveSceneGraph
 {
@@ -30,6 +30,7 @@ public:
         IWavePainter::Params params;
         WaveMetrics metrics;
         IMinMaxRMSPainter::ClipData clipData;
+        IWavePainter::PlotType plotType = IWavePainter::PlotType::MinMaxRMS;
         double containerExactX = 0.0;
         bool dragGhost = false;
         bool recording = false;
@@ -48,10 +49,20 @@ public:
         uint8_t rmsR, rmsG, rmsB, rmsA;
     };
 
+    struct ColoredPoint
+    {
+        float x;
+        float y;
+        uint8_t r, g, b, a;
+    };
+
     //! What the scene graph node is built from
     struct Frame
     {
         std::vector<Vertex> vertices;
+        //! Triangles of the sample plots, under the zero line and above it
+        std::vector<ColoredPoint> sampleTriangles;
+        std::vector<ColoredPoint> sampleHeadTriangles;
         size_t channelSplitIndex = 0;
         std::vector<float> zeroLineYs;
         float height = 0.0f;
@@ -62,6 +73,8 @@ public:
         QColor backgroundColor;
         QColor selectedBackgroundColor;
         QColor zeroLineColor;
+
+        bool empty() const { return vertices.empty() && sampleTriangles.empty(); }
     };
 
     //! Everything the prepared vertex data depends on. When a repaint request
@@ -72,6 +85,7 @@ public:
         long trackId = -1;
         long itemId = -1;
         uint64_t dataVersion = 0;
+        IWavePainter::PlotType plotType = IWavePainter::PlotType::MinMaxRMS;
         size_t channelCount = 0;
         double fromTime = 0.0;
         double toTime = 0.0;
@@ -97,11 +111,15 @@ public:
         QRgb rmsPen = 0;
         QRgb rmsSelectedPen = 0;
         QRgb clippedPen = 0;
+        QRgb sampleBrush = 0;
+        QRgb sampleHead = 0;
+        QRgb sampleHeadSelection = 0;
+        QRgb sampleStalk = 0;
 
         bool operator==(const InputSignature& o) const
         {
             return trackId == o.trackId && itemId == o.itemId
-                   && dataVersion == o.dataVersion && channelCount == o.channelCount
+                   && dataVersion == o.dataVersion && plotType == o.plotType && channelCount == o.channelCount
                    && fromTime == o.fromTime && toTime == o.toTime
                    && placeholderToTime == o.placeholderToTime && zoom == o.zoom
                    && height == o.height
@@ -116,7 +134,9 @@ public:
                    && background == o.background && selectedBackground == o.selectedBackground
                    && centerLine == o.centerLine && samplePen == o.samplePen
                    && selectedSamplePen == o.selectedSamplePen && rmsPen == o.rmsPen
-                   && rmsSelectedPen == o.rmsSelectedPen && clippedPen == o.clippedPen;
+                   && rmsSelectedPen == o.rmsSelectedPen && clippedPen == o.clippedPen
+                   && sampleBrush == o.sampleBrush && sampleHead == o.sampleHead
+                   && sampleHeadSelection == o.sampleHeadSelection && sampleStalk == o.sampleStalk;
         }
     };
 
@@ -152,7 +172,14 @@ public:
                                 bool dragGhost, bool recording);
     static InputSignature makeSignature(const trackedit::ClipKey& clipKey, const IMinMaxRMSPainter::ClipData& clipData,
                                         const IWavePainter::Params& params, const WaveMetrics& metrics, const Window& window,
-                                        float cornerRadius, bool roundTopCorners);
+                                        float cornerRadius, bool roundTopCorners,
+                                        IWavePainter::PlotType plotType = IWavePainter::PlotType::MinMaxRMS);
+
+    //! The sample plots of one channel, whose sample y is relative to channelTop
+    static void appendConnectedDots(Frame& frame, const std::vector<WaveSamplePoint>& samples, float channelTop, float channelHeight,
+                                    const IWavePainter::Style& style, bool showClipping);
+    static void appendStems(Frame& frame, const std::vector<WaveSamplePoint>& samples, float channelTop, float channelHeight,
+                            float zeroLineY, const IWavePainter::Style& style, bool showClipping);
 
     struct Rgb {
         uint8_t r, g, b;
@@ -176,6 +203,7 @@ private:
     bool reusePreparedFrame(const trackedit::ClipKey& clipKey, const InputSignature& sig, double contentOffset);
     //! Builds the frame's vertices; returns false while some of the data is still being computed
     bool buildFrame(const Input& input, WaveMetrics waveMetrics, const Window& window, IMinMaxRMSPainter& painter);
+    void buildSampleFrame(const Input& input, WaveMetrics waveMetrics, const Window& window, IMinMaxRMSPainter& painter);
     //! Keeps the previous frame if the new one came out empty mid-gesture; returns whether to retry
     bool acceptFrame(Frame previous, bool prevActive, const Input& input, const InputSignature& sig, const Window& window, bool complete);
     void fillSelectionGeometry(QSGGeometry* geometry, float itemWidth) const;

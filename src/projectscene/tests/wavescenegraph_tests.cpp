@@ -3,6 +3,8 @@
 */
 #include <gtest/gtest.h>
 
+#include <algorithm>
+
 #include "projectscene/view/tracksitemsview/wavedisplaybounds.h"
 #include "projectscene/view/tracksitemsview/wavescenegraph.h"
 
@@ -25,6 +27,23 @@ IMinMaxRMSPainter::ClipData makeClipData(double playStartTime, double playEndTim
     data.samplesPerSecond = 44100.0;
     data.tileWidth = TILE_WIDTH;
     return data;
+}
+
+WaveSamplePoint makeSample(float x, float y, bool selected = false, bool clipping = false)
+{
+    return WaveSamplePoint { x, y, selected, clipping };
+}
+
+std::pair<float, float> xRange(const std::vector<WaveSceneGraph::ColoredPoint>& points)
+{
+    const auto [minIt, maxIt] = std::minmax_element(points.begin(), points.end(), [](const auto& a, const auto& b) { return a.x < b.x; });
+    return { minIt->x, maxIt->x };
+}
+
+std::pair<float, float> yRange(const std::vector<WaveSceneGraph::ColoredPoint>& points)
+{
+    const auto [minIt, maxIt] = std::minmax_element(points.begin(), points.end(), [](const auto& a, const auto& b) { return a.y < b.y; });
+    return { minIt->y, maxIt->y };
 }
 
 ClipTime makeClipTime(double startTime, double endTime, double itemStartTime, double itemEndTime)
@@ -155,6 +174,96 @@ TEST(ProjectScene_WaveSceneGraphTests, SignatureChangesWithTheDataVersion)
     //! [THEN] Only the changed version makes the signature differ
     EXPECT_TRUE(first == same);
     EXPECT_FALSE(first == changed);
+}
+
+TEST(ProjectScene_WaveSceneGraphTests, SignatureChangesWithThePlotType)
+{
+    //! [GIVEN] Two otherwise identical inputs drawn as different plots
+    const auto data = makeClipData(0.0, 2.0);
+    const auto time = makeClipTime(0.0, 2.0, 0.0, 2.0);
+    const auto window = WaveSceneGraph::computeWindow(time, data, ZOOM, 0.0, false, false);
+    IWavePainter::Params params;
+    params.zoom = ZOOM;
+    const WaveMetrics metrics;
+    const trackedit::ClipKey key { 1, 2 };
+
+    //! [WHEN] Their signatures are made
+    const auto minMax = WaveSceneGraph::makeSignature(key, data, params, metrics, window, 4.0f, true, IWavePainter::PlotType::MinMaxRMS);
+    const auto dots = WaveSceneGraph::makeSignature(key, data, params, metrics, window, 4.0f, true, IWavePainter::PlotType::ConnectingDots);
+
+    //! [THEN] They differ
+    EXPECT_FALSE(minMax == dots);
+}
+
+TEST(ProjectScene_WaveSceneGraphTests, ConnectedDotsKeepSubpixelPositions)
+{
+    //! [GIVEN] Two samples between whole pixels, in a channel 2 pixels from the top
+    const std::vector<WaveSamplePoint> samples { makeSample(10.25f, 5.5f), makeSample(11.75f, 6.0f) };
+    WaveSceneGraph::Frame frame;
+
+    //! [WHEN] They are drawn as connected dots
+    WaveSceneGraph::appendConnectedDots(frame, samples, 2.0f, 100.0f, IWavePainter::Style {}, false);
+
+    //! [THEN] The line is centred on them, one pixel thick
+    ASSERT_FALSE(frame.sampleTriangles.empty());
+    const auto [left, right] = xRange(frame.sampleTriangles);
+    const auto [top, bottom] = yRange(frame.sampleTriangles);
+    EXPECT_FLOAT_EQ(left, 9.75f);
+    EXPECT_FLOAT_EQ(right, 12.25f);
+    EXPECT_FLOAT_EQ(top, 7.0f);
+    EXPECT_FLOAT_EQ(bottom, 8.5f);
+    EXPECT_TRUE(frame.sampleHeadTriangles.empty());
+}
+
+TEST(ProjectScene_WaveSceneGraphTests, ClippedConnectedDotsGetAFullHeightBar)
+{
+    //! [GIVEN] A clipping sample
+    const std::vector<WaveSamplePoint> samples { makeSample(4.5f, 20.0f, false, true) };
+    WaveSceneGraph::Frame withClipping;
+    WaveSceneGraph::Frame withoutClipping;
+
+    //! [WHEN] It is drawn with and without showing clipping
+    WaveSceneGraph::appendConnectedDots(withClipping, samples, 10.0f, 50.0f, IWavePainter::Style {}, true);
+    WaveSceneGraph::appendConnectedDots(withoutClipping, samples, 10.0f, 50.0f, IWavePainter::Style {}, false);
+
+    //! [THEN] Only when showing clipping, a bar covers the whole channel
+    const auto [top, bottom] = yRange(withClipping.sampleTriangles);
+    EXPECT_FLOAT_EQ(top, 10.0f);
+    EXPECT_FLOAT_EQ(bottom, 60.0f);
+    EXPECT_FLOAT_EQ(yRange(withoutClipping.sampleTriangles).first, 29.5f);
+    EXPECT_FLOAT_EQ(yRange(withoutClipping.sampleTriangles).second, 30.5f);
+}
+
+TEST(ProjectScene_WaveSceneGraphTests, StemsReachTheZeroLine)
+{
+    //! [GIVEN] A sample 10 pixels into a channel starting at 3, above a zero line at 50
+    const std::vector<WaveSamplePoint> samples { makeSample(20.25f, 10.0f) };
+    WaveSceneGraph::Frame frame;
+
+    //! [WHEN] It is drawn as a stem
+    WaveSceneGraph::appendStems(frame, samples, 3.0f, 94.0f, 50.0f, IWavePainter::Style {}, false);
+
+    //! [THEN] The stalk runs from the sample through the zero line, and the head is centred on the sample
+    const auto [stalkTop, stalkBottom] = yRange(frame.sampleTriangles);
+    EXPECT_FLOAT_EQ(stalkTop, 12.5f);
+    EXPECT_FLOAT_EQ(stalkBottom, 50.5f);
+    ASSERT_FALSE(frame.sampleHeadTriangles.empty());
+    const auto [headLeft, headRight] = xRange(frame.sampleHeadTriangles);
+    EXPECT_FLOAT_EQ((headLeft + headRight) / 2.0f, 20.25f);
+}
+
+TEST(ProjectScene_WaveSceneGraphTests, StemHeadsOutsideTheChannelAreSkipped)
+{
+    //! [GIVEN] A sample above its channel
+    const std::vector<WaveSamplePoint> samples { makeSample(5.0f, -1.0f) };
+    WaveSceneGraph::Frame frame;
+
+    //! [WHEN] It is drawn as a stem
+    WaveSceneGraph::appendStems(frame, samples, 3.0f, 94.0f, 50.0f, IWavePainter::Style {}, false);
+
+    //! [THEN] Its stalk is drawn, its head isn't
+    EXPECT_FALSE(frame.sampleTriangles.empty());
+    EXPECT_TRUE(frame.sampleHeadTriangles.empty());
 }
 
 TEST(ProjectScene_WaveSceneGraphTests, DisplayBoundsAreDBScaledInADBView)

@@ -15,4 +15,13 @@ struct WaveColumnVertex
     bool selected;     //!< Whether this column is in the selection range
     bool clipping;     //!< Whether this column clips
 };
+
+//! One sample ready for vertex generation
+struct WaveSamplePoint
+{
+    float x;           //!< Pixel x-coordinate within the clip
+    float y;           //!< Pixel y-coordinate within the channel
+    bool selected;     //!< Whether the sample is in the selection range
+    bool clipping;     //!< Whether the sample clips
+};
 }
