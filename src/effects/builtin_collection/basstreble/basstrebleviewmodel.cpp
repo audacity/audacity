@@ -3,9 +3,42 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
+#include <algorithm>
+
 #include "basstrebleeffect.h"
 
 using namespace au::effects;
+
+namespace {
+// AU3 loudness compensation: boosts count at half weight, cuts at quarter weight.
+// With "auto-adjust volume" on, `Gain + toneWeight(Bass) + toneWeight(Treble)` is kept constant.
+double toneWeight(double v)
+{
+    return v > 0 ? v / 2.0 : v / 4.0;
+}
+
+double toneFromWeight(double w)
+{
+    return w > 0 ? 2.0 * w : 4.0 * w;
+}
+
+// With auto-adjust volume on, Gain is limited to what Bass and Treble can compensate for.
+double gainMin(bool link)
+{
+    using au::effects::BassTrebleEffect;
+    return link
+           ? std::max(-(toneWeight(BassTrebleEffect::Bass.max) + toneWeight(BassTrebleEffect::Treble.max)), BassTrebleEffect::Gain.min)
+           : BassTrebleEffect::Gain.min;
+}
+
+double gainMax(bool link)
+{
+    using au::effects::BassTrebleEffect;
+    return link
+           ? std::min(-(toneWeight(BassTrebleEffect::Bass.min) + toneWeight(BassTrebleEffect::Treble.min)), BassTrebleEffect::Gain.max)
+           : BassTrebleEffect::Gain.max;
+}
+}
 
 BassTrebleViewModel::BassTrebleViewModel(QObject* parent, int instanceId)
     : BuiltinEffectModel(parent, instanceId)
@@ -39,7 +72,18 @@ void BassTrebleViewModel::doReload()
                                     bs.mBass,
                                     BassTrebleEffect::Bass.min,
                                     BassTrebleEffect::Bass.max,
-                                    [](BassTrebleSettings& settings, double v) { settings.mBass = v; }
+                                    [this](BassTrebleSettings& settings, double v) {
+        // Changes ignored to avoid parameter set loop when values are linked.
+        if (m_ignores.value((QString)(char*)BassTrebleEffect::Bass.key, false)) {
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Bass.key, false);
+            return;
+        }
+        if (settings.mLink) {
+            settings.mGain = compensateGain(settings.mGain, settings.mBass, v);
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, true);
+        }
+        settings.mBass = v;
+    }
                                     );
 
     m_paramsList["Treble"] = makeItem("Treble",
@@ -48,7 +92,17 @@ void BassTrebleViewModel::doReload()
                                       bs.mTreble,
                                       BassTrebleEffect::Treble.min,
                                       BassTrebleEffect::Treble.max,
-                                      [](BassTrebleSettings& settings, double v) { settings.mTreble = v; }
+                                      [this](BassTrebleSettings& settings, double v) {
+        if (m_ignores.value((QString)(char*)BassTrebleEffect::Treble.key, false)) {
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Treble.key, false);
+            return;
+        }
+        if (settings.mLink) {
+            settings.mGain = compensateGain(settings.mGain, settings.mTreble, v);
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, true);
+        }
+        settings.mTreble = v;
+    }
                                       );
 
     m_paramsList["Gain"] = makeItem("Gain",
@@ -57,8 +111,40 @@ void BassTrebleViewModel::doReload()
                                     bs.mGain,
                                     BassTrebleEffect::Gain.min,
                                     BassTrebleEffect::Gain.max,
-                                    [](BassTrebleSettings& settings, double v) { settings.mGain = v; }
+                                    [this](BassTrebleSettings& settings, double v) {
+        if (m_ignores.value((QString)(char*)BassTrebleEffect::Gain.key, false)) {
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Gain.key, false);
+            return;
+        }
+        if (settings.mLink) {
+            // Split the gain delta evenly between bass and treble in weighted (compensated) space.
+            // If one tone hits its limit, the remainder goes to the other.
+            // Gain is limited to what Bass and Treble can compensate for, otherwise the
+            // Gain + weight(Bass) + weight(Treble) relation would be lost once the tones saturate.
+            v = std::clamp(v, gainMin(true), gainMax(true));
+            const double delta = v - settings.mGain;
+            const double bassMin = toneWeight(BassTrebleEffect::Bass.min);
+            const double bassMax = toneWeight(BassTrebleEffect::Bass.max);
+            const double trebleMin = toneWeight(BassTrebleEffect::Treble.min);
+            const double trebleMax = toneWeight(BassTrebleEffect::Treble.max);
+            const double bass = toneWeight(settings.mBass) - delta / 2;
+            const double treble = toneWeight(settings.mTreble) - delta / 2;
+            const double clampedBass = std::clamp(bass, bassMin, bassMax);
+            const double clampedTreble = std::clamp(treble, trebleMin, trebleMax);
+            settings.mTreble = toneFromWeight(std::clamp(treble + (bass - clampedBass), trebleMin, trebleMax));
+            settings.mBass = toneFromWeight(std::clamp(bass + (treble - clampedTreble), bassMin, bassMax));
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Treble.key, true);
+            m_ignores.insert((QString)(char*)BassTrebleEffect::Bass.key, true);
+        }
+        settings.mGain = v;
+    }
                                     );
+
+    // The knob keeps one fixed scale, but can't be moved past what Bass and Treble can compensate for.
+    QVariantMap gainItem = m_paramsList["Gain"].toMap();
+    gainItem["limitMin"] = gainMin(bs.mLink);
+    gainItem["limitMax"] = gainMax(bs.mLink);
+    m_paramsList["Gain"] = gainItem;
 
     emit paramsListChanged();
     emit linkChanged();
@@ -90,7 +176,17 @@ void BassTrebleViewModel::setLink(bool newLink)
 {
     modifySettings<BassTrebleSettings>([newLink](EffectSettings& settings)
     {
-        settings.cast<BassTrebleSettings>()->mLink = newLink;
+        BassTrebleSettings* s = settings.cast<BassTrebleSettings>();
+        s->mLink = newLink;
+        if (s->mLink) {
+            s->mGain = std::clamp(-(toneWeight(s->mBass) + toneWeight(s->mTreble)), BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
+        }
     });
     emit linkChanged();
+}
+
+double BassTrebleViewModel::compensateGain(const double currentGain, double currentValue, double newValue)
+{
+    const double gain = currentGain - (toneWeight(newValue) - toneWeight(currentValue));
+    return std::clamp(gain, BassTrebleEffect::Gain.min, BassTrebleEffect::Gain.max);
 }
