@@ -1429,6 +1429,98 @@ TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourStartTrimsPas
     removeTrack(sourceId);
 }
 
+TEST_F(Au3ClipsInteractionTests, ClipLandingWithinAFadeInLeavesNoFadeInAfterIt)
+{
+    //! [GIVEN] A clip with a fade-in and a fade-out, and after it, a short clip
+    constexpr double clipDuration = 2.0;
+    constexpr double fadeIn = 1.0;
+    constexpr double fadeOut = 0.5;
+    constexpr double shortClipStart = 3.0;
+    constexpr double shortClipDuration = 0.1;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", {
+            { 0.0, { { clipDuration, TrackTemplateFactory::createNoise } } },
+            { shortClipStart, { { shortClipDuration, TrackTemplateFactory::createNoise } } } });
+    ClipFades& fades = ClipFades::Get(*track->GetClip(0));
+    fades.setFadeIn(fadeIn);
+    fades.setFadeOut(fadeOut);
+    const TrackId trackId = factory.addTrackToProject(track);
+    const ClipKey shortClipKey { trackId, track->GetClip(1)->GetId() };
+
+    //! [WHEN] The short clip is moved within the fade-in, as when recording there (https://github.com/audacity/audacity/issues/12783)
+    constexpr double landingStart = fadeIn / 2;
+    static_assert(landingStart + shortClipDuration < fadeIn);
+    ASSERT_TRUE(m_clipsInteraction->changeClipStartTime(shortClipKey, landingStart, true));
+
+    //! [THEN] The clip is cut in two: the left part keeps the fade-in but not the fade-out,
+    //! and the right part, after the short clip, keeps the fade-out but has no fade-in
+    const Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    ASSERT_EQ(projectTrack->NIntervals(), 3);
+    const ClipFades& leftFades = ClipFades::Get(*projectTrack->GetSortedClipByIndex(0));
+    const ClipFades& rightFades = ClipFades::Get(*projectTrack->GetSortedClipByIndex(2));
+    EXPECT_GT(leftFades.fadeIn(), 0.0);
+    EXPECT_EQ(leftFades.fadeOut(), 0.0);
+    EXPECT_EQ(rightFades.fadeIn(), 0.0);
+    EXPECT_DOUBLE_EQ(rightFades.fadeOut(), fadeOut);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipLandingRightAfterAnotherPreservesFadeOut)
+{
+    //! [GIVEN] clip A with a fade-out, and after it, clip B, with some space between the two
+    constexpr double clipDuration = 2.0;
+    constexpr double clipAStart = 0.0;
+    constexpr double clipAFadeOut = 0.5;
+    constexpr double clipBStart = clipAStart + clipDuration + 1;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", {
+            { clipAStart, { { clipDuration, TrackTemplateFactory::createNoise } } },
+            { clipBStart, { { clipDuration, TrackTemplateFactory::createNoise } } } });
+    ClipFades::Get(*track->GetClip(0)).setFadeOut(clipAFadeOut);
+    const TrackId trackId = factory.addTrackToProject(track);
+    const ClipKey clipB { trackId, track->GetClip(1)->GetId() };
+
+    //! [WHEN] The short clip is moved to start where the clip ends, touching it without overlapping
+    ASSERT_TRUE(m_clipsInteraction->changeClipStartTime(clipB, clipAStart + clipDuration, true));
+
+    //! [THEN] The clip, which lost no edge, keeps its fade-out
+    const Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    ASSERT_EQ(projectTrack->NIntervals(), 2);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*projectTrack->GetSortedClipByIndex(0)).fadeOut(), clipAFadeOut);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipLandingRightBeforeAnotherPreservesFadeIn)
+{
+    //! [GIVEN] A clip clip, and after it, a clip with a fade-in
+    constexpr double clipDuration = 2.0;
+    constexpr double clipAStart = 1.0;
+    constexpr double clipBStart = 10.0;
+    constexpr double clipBFadeIn = 0.5;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", {
+            { clipAStart, { { clipDuration, TrackTemplateFactory::createNoise } } },
+            { clipBStart, { { clipDuration, TrackTemplateFactory::createNoise } } } });
+    ClipFades::Get(*track->GetClip(1)).setFadeIn(clipBFadeIn);
+    const TrackId trackId = factory.addTrackToProject(track);
+    const ClipKey clipA { trackId, track->GetClip(0)->GetId() };
+
+    //! [WHEN] The short clip is moved to end where the clip starts, touching it without overlapping
+    ASSERT_TRUE(m_clipsInteraction->changeClipStartTime(clipA, clipBStart - clipDuration, true));
+
+    //! [THEN] The clip, which lost no edge, keeps its fade-in
+    const Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    ASSERT_EQ(projectTrack->NIntervals(), 2);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*projectTrack->GetSortedClipByIndex(1)).fadeIn(), clipBFadeIn);
+
+    removeTrack(trackId);
+}
+
 TEST_F(Au3ClipsInteractionTests, CanceledFadeDragKeepsTheFadeStoredBeyondATrimmedClip)
 {
     //! [GIVEN] A clip with a fade-in, trimmed shorter than the fade: the fade is stored whole but takes effect only
