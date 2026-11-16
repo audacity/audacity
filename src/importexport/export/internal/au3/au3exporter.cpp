@@ -3,6 +3,7 @@
 */
 
 #include "au3exporter.h"
+#include "au3exportparameters.h"
 
 #include <algorithm>
 #include <optional>
@@ -457,7 +458,7 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::trackFiles(Au3Project& proje
     auto waveTracks = tracks.Any<WaveTrack>() - (anySolo ? &WaveTrack::GetNotSolo : &WaveTrack::GetMute);
 
     std::vector<SeparateFile> files;
-    utils::UniqueFileNames usedNames;
+    shared::UniqueFileNames usedNames;
     int number = 1;
     for (WaveTrack* track : waveTracks) {
         if (track->IsEmpty()) {
@@ -511,7 +512,7 @@ std::vector<Au3Exporter::SeparateFile> Au3Exporter::labelFiles(Au3Project& proje
     const std::vector<utils::TimeRange> ranges = utils::labelExportRanges(labelRanges, trackeditProject->totalTime().to_double());
 
     std::vector<SeparateFile> files;
-    utils::UniqueFileNames usedNames;
+    shared::UniqueFileNames usedNames;
 
     if (includeAudioBeforeFirstLabel && !labels.empty()) {
         double start = 0.0;
@@ -797,6 +798,16 @@ ExportParameters Au3Exporter::cloudExportParameters(const std::string& format) c
     }
 
     return {};
+}
+
+muse::RetVal<ExportParameters> Au3Exporter::exportParameters(const ExportFormatSettings& settings, int sampleRate) const
+{
+    return au3ExportParameters(settings, sampleRate);
+}
+
+int Au3Exporter::defaultSampleRate(const ExportFormatSettings& settings) const
+{
+    return au3DefaultSampleRate(settings, projectSampleRate());
 }
 
 bool Au3Exporter::isCustomFFmpegExportFormat() const
