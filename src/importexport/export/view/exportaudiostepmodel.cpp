@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <array>
 #include <ranges>
+#include <type_traits>
 #include <utility>
 
 #include "framework/global/translation.h"
@@ -72,6 +73,13 @@ QVariantList contractOptions()
         list << option(toQString(entry.description), entry.sval);
     }
     return list;
+}
+
+template<typename C>
+std::string supportedOrDefault(const std::string& value)
+{
+    using E = std::remove_cv_t<decltype(C::def)>;
+    return EnumContract<E>::enum_val(value) ? value : EnumContract<E>::str_val(C::def);
 }
 
 template<typename E>
@@ -337,13 +345,8 @@ std::vector<ExportAudioStepModel::Row> ExportAudioStepModel::formatRows() const
 
 ExportAudioStepModel::Row ExportAudioStepModel::sampleRateRow() const
 {
-    QVariantList options;
-    const bool mp3 = isMp3(m_settings);
-    for (const auto& entry : ExportSampleRateContract::table) {
-        if (!mp3 || EnumContract<Mp3SampleRate>::enum_val(std::string(entry.sval))) {
-            options << option(toQString(entry.description), entry.sval);
-        }
-    }
+    const QVariantList options = isMp3(m_settings) ? contractOptions<Mp3SampleRateContract>()
+                                 : contractOptions<ExportSampleRateContract>();
 
     return { Field::SampleRate, Section::Audio, qtrc("export", "Sample rate"), options, QString::fromStdString(m_sampleRate) };
 }
@@ -353,9 +356,8 @@ void ExportAudioStepModel::apply(Field field, const std::string& value)
     switch (field) {
     case Field::Format:
         m_settings = formatDefaults(value);
-        if (isMp3(m_settings) && !EnumContract<Mp3SampleRate>::enum_val(m_sampleRate)) {
-            m_sampleRate = EnumContract<Mp3SampleRate>::str_val(Mp3SampleRateContract::def);
-        }
+        m_sampleRate = isMp3(m_settings) ? supportedOrDefault<Mp3SampleRateContract>(m_sampleRate)
+                       : supportedOrDefault<ExportSampleRateContract>(m_sampleRate);
         break;
     case Field::Mp3Mode:
         m_settings = mp3ModeDefaults(value);
@@ -405,7 +407,7 @@ void ExportAudioStepModel::rebuild()
         endResetModel();
     } else {
         m_rows = std::move(rows);
-        emit dataChanged(index(0), index(rowCount() - 1), { OptionsRole, ValueRole });
+        emit dataChanged(index(0), index(rowCount() - 1), { TitleRole, OptionsRole, ValueRole });
     }
 
     emit outputChanged();
