@@ -41,7 +41,7 @@ void VideoPanelMenuModel::load()
     // thing to want and is one click to undo with Detach.
     MenuItem* attachItem = new MenuItem(this);
     attachItem->setId(ATTACH_ITEM_ID);
-    attachItem->setTitle(muse::TranslatableString("video", "Attach video…"));
+    attachItem->setTitle(muse::TranslatableString("video", "Load video…"));
     attachItem->setEnabled(true);
     items << attachItem;
 
@@ -53,7 +53,7 @@ void VideoPanelMenuModel::load()
 
     MenuItem* detachItem = new MenuItem(this);
     detachItem->setId(DETACH_ITEM_ID);
-    detachItem->setTitle(muse::TranslatableString("video", "Detach video"));
+    detachItem->setTitle(muse::TranslatableString("video", "Remove video"));
     detachItem->setEnabled(hasVideo);
     items << detachItem;
 
@@ -97,7 +97,7 @@ void VideoPanelMenuModel::attach()
     };
 
     const muse::io::path_t path = interactive()->selectOpeningFileSync(
-        muse::trc("video", "Attach video"), muse::io::path_t(), filter);
+        muse::trc("video", "Load video"), muse::io::path_t(), filter);
 
     if (path.empty()) {
         return;

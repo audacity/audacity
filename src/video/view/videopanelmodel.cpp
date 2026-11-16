@@ -180,7 +180,7 @@ QString VideoPanelModel::statusText() const
     }
 
     if (!videoService()->isAttached()) {
-        return muse::qtrc("video", "No video attached");
+        return muse::qtrc("video", "No video loaded");
     }
 
     const VideoStreamInfo& info = videoService()->streamInfo();
