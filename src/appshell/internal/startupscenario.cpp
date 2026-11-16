@@ -39,7 +39,7 @@ using namespace au::project;
 
 static const muse::Settings::Key LAST_UPDATE_CHECK_DAY_KEY("appshell", "application/lastUpdateCheckRequestDay");
 
-static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("audacity://firstLaunchSetup?floating=true");
+static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("audacity://firstLaunchSetup");
 static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
 static const muse::UriQuery WELCOME_DIALOG_URI("audacity://welcomedialog");
 static const muse::Uri HOME_URI("audacity://home");
