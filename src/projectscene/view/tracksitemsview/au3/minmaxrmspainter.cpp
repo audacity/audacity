@@ -1,9 +1,12 @@
 #include "minmaxrmspainter.h"
 
+#include <algorithm>
+#include <cmath>
 #include <cstring>
 
 #include "au3-clip-processing/ClipFades.h"
 #include "au3-mixer/Envelope.h"
+#include "au3-utility/MemoryX.h"
 #include "au3-wave-track-paint/GraphicsDataCache.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "wavepainterutils.h"
@@ -144,6 +147,64 @@ bool MinMaxRMSPainter::columns(const trackedit::ClipKey& clipKey, size_t channel
     bool complete = true;
     WaveformPainter::Get(*waveClip).GetColumnData(channelIndex, paintParams, metrics, columns, &complete);
     return complete;
+}
+
+void MinMaxRMSPainter::samples(const trackedit::ClipKey& clipKey, size_t channelIndex, const IWavePainter::Params& params,
+                               const WaveMetrics& metrics, std::vector<WaveSamplePoint>& samples)
+{
+    samples.clear();
+
+    const std::shared_ptr<WaveClip> waveClip = findClip(clipKey);
+    if (!waveClip || channelIndex >= waveClip->NChannels() || metrics.zoom <= 0.0 || metrics.height <= 0.0) {
+        return;
+    }
+
+    const double rate = waveClip->GetRate() / waveClip->GetStretchRatio();
+    const double trimLeft = waveClip->GetTrimLeft();
+    const sampleCount trimSamples = waveClip->TimeToSamples(trimLeft);
+    const sampleCount visibleSamples = waveClip->GetVisibleSampleCount();
+
+    // Sample indices from the untrimmed sequence start
+    const sampleCount first = std::max(trimSamples, sampleCount(std::floor(metrics.fromTime * rate)) - 1);
+    const sampleCount last = std::min(trimSamples + visibleSamples - 1, sampleCount(std::ceil(metrics.toTime * rate)) + 1);
+    if (last < first) {
+        return;
+    }
+    const size_t count = (last - first + 1).as_size_t();
+
+    //! NOTE: All callers run on the GUI thread; sharing the buffer keeps its capacity
+    static std::vector<float> buffer;
+    buffer.resize(count);
+    waveClip->GetSamples(channelIndex, reinterpret_cast<samplePtr>(buffer.data()), floatSample, first - trimSamples, count, false);
+
+    const Envelope& envelope = waveClip->GetEnvelope();
+    const auto fades = ClipFades::Get(*waveClip).snapshot();
+    const bool dB = !params.isLinear;
+    const float dBRange = std::abs(params.dbRange);
+    const auto [displayMin, displayMax] = waveDisplayBounds(params);
+    const auto height = static_cast<float>(metrics.height);
+    const bool hasSelection = metrics.selectionEndTime > metrics.selectionStartTime;
+
+    samples.reserve(count);
+    for (size_t i = 0; i < count; ++i) {
+        const double time = (first + i).as_double() / rate;
+        const double gain = envelope.GetValue(time + envelope.GetOffset(), 1.0 / rate) * fades.gainAt(time - trimLeft);
+        float value = static_cast<float>(buffer[i] * gain);
+
+        WaveSamplePoint point;
+        point.x = static_cast<float>(metrics.left + (time - metrics.fromTime) * metrics.zoom);
+        point.clipping = value <= -MAX_AUDIO || value >= MAX_AUDIO;
+        point.selected = hasSelection && time >= metrics.selectionStartTime && time <= metrics.selectionEndTime;
+
+        if (dB) {
+            value = getDBValue(value, dBRange);
+        }
+        const float y = displayMax == displayMin ? height * 0.5f
+                        : (displayMax - value) / (displayMax - displayMin) * (height - 1.0f);
+        point.y = std::clamp(y, -1.0f, height);
+
+        samples.push_back(point);
+    }
 }
 
 void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params)

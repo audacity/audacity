@@ -36,5 +36,10 @@ public:
     //! untrimmed sequence start. Returns false while some of the data is still being computed.
     virtual bool columns(const trackedit::ClipKey& clipKey, size_t channelIndex, const IWavePainter::Params& params,
                          const WaveMetrics& metrics, std::vector<WaveColumnVertex>& columns) = 0;
+
+    //! Fills the samples of one channel of the window in metrics, in the coordinates of columns(),
+    //! with one more past each end of the window where the clip has one
+    virtual void samples(const trackedit::ClipKey& clipKey, size_t channelIndex, const IWavePainter::Params& params,
+                         const WaveMetrics& metrics, std::vector<WaveSamplePoint>& samples) = 0;
 };
 }

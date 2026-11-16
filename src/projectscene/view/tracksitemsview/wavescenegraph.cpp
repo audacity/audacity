@@ -16,6 +16,7 @@
 #include <cmath>
 #include <cstring>
 #include <limits>
+#include <numbers>
 #include <utility>
 
 using namespace au::projectscene;
@@ -138,6 +139,67 @@ void fillRoundedSpan(QSGGeometry* geometry, float x0, float x1, float itemWidth,
     }
 }
 
+//! Leaves room for the sample heads at the top and bottom of a stem plot channel, as the hit testing expects
+constexpr float SAMPLE_HEAD_PADDING = 3.0f;
+constexpr float SAMPLE_HEAD_RADIUS = 2.5f;
+constexpr float SAMPLE_HEAD_FILL_RADIUS = 1.5f;
+
+using ColoredPoint = WaveSceneGraph::ColoredPoint;
+
+struct Rgba {
+    uint8_t r, g, b, a;
+};
+
+//! Vertex colors are premultiplied
+Rgba toRgba(const QColor& color)
+{
+    const QRgb rgb = qPremultiply(color.rgba());
+    return Rgba { static_cast<uint8_t>(qRed(rgb)), static_cast<uint8_t>(qGreen(rgb)), static_cast<uint8_t>(qBlue(rgb)),
+                  static_cast<uint8_t>(qAlpha(rgb)) };
+}
+
+void appendTriangle(std::vector<ColoredPoint>& out, float x0, float y0, float x1, float y1, float x2, float y2, Rgba c)
+{
+    out.push_back({ x0, y0, c.r, c.g, c.b, c.a });
+    out.push_back({ x1, y1, c.r, c.g, c.b, c.a });
+    out.push_back({ x2, y2, c.r, c.g, c.b, c.a });
+}
+
+//! A convex quad given by its corners in order
+void appendQuad(std::vector<ColoredPoint>& out, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3, Rgba c)
+{
+    appendTriangle(out, x0, y0, x1, y1, x2, y2, c);
+    appendTriangle(out, x0, y0, x2, y2, x3, y3, c);
+}
+
+void appendRect(std::vector<ColoredPoint>& out, float left, float top, float right, float bottom, Rgba c)
+{
+    appendQuad(out, left, top, right, top, right, bottom, left, bottom, c);
+}
+
+void appendDisk(std::vector<ColoredPoint>& out, float cx, float cy, float radius, Rgba c)
+{
+    constexpr int SEGMENTS = 12;
+    constexpr float STEP = 2.0f * std::numbers::pi_v<float> / SEGMENTS;
+    for (int i = 0; i < SEGMENTS; ++i) {
+        appendTriangle(out, cx, cy,
+                       cx + radius * std::cos(i * STEP), cy + radius * std::sin(i * STEP),
+                       cx + radius * std::cos((i + 1) * STEP), cy + radius * std::sin((i + 1) * STEP), c);
+    }
+}
+
+void fillTriangles(QSGGeometryNode* node, const std::vector<ColoredPoint>& points)
+{
+    QSGGeometry* geometry = node->geometry();
+    geometry->allocate(static_cast<int>(points.size()));
+    QSGGeometry::ColoredPoint2D* vertices = geometry->vertexDataAsColoredPoint2D();
+    for (size_t i = 0; i < points.size(); ++i) {
+        const ColoredPoint& p = points[i];
+        vertices[i].set(p.x, p.y, p.r, p.g, p.b, p.a);
+    }
+    node->markDirty(QSGNode::DirtyGeometry);
+}
+
 void updateClipRect(QSGClipNode* clipNode, float width, float height)
 {
     const QRectF rect(0.0, 0.0, width, height);
@@ -151,6 +213,8 @@ void updateClipRect(QSGClipNode* clipNode, float width, float height)
 void WaveSceneGraph::reset()
 {
     m_frame.vertices.clear();
+    m_frame.sampleTriangles.clear();
+    m_frame.sampleHeadTriangles.clear();
     m_active = false;
     m_lastSignatureValid = false;
 }
@@ -159,7 +223,7 @@ void WaveSceneGraph::storeForReuse(const trackedit::ClipKey& clipKey)
 {
     //! NOTE: Only complete data can be reused: its signature is all the next
     //! view checks.
-    if (!m_lastSignatureValid || !m_lastComplete || m_frame.vertices.empty()) {
+    if (!m_lastSignatureValid || !m_lastComplete || m_frame.empty()) {
         return;
     }
 
@@ -203,7 +267,7 @@ bool WaveSceneGraph::prepare(const Input& input, IMinMaxRMSPainter& painter)
     metrics.left = 0.0;
 
     const InputSignature sig = makeSignature(input.clipKey, input.clipData, params, metrics, window, input.cornerRadius,
-                                             input.roundTopCorners);
+                                             input.roundTopCorners, input.plotType);
     m_cornerRadius = sig.cornerRadius;
     m_roundTopCorners = sig.roundTopCorners;
 
@@ -215,7 +279,12 @@ bool WaveSceneGraph::prepare(const Input& input, IMinMaxRMSPainter& painter)
     const bool prevActive = m_active;
     m_active = false;
 
-    const bool complete = buildFrame(input, metrics, window, painter);
+    bool complete = true;
+    if (input.plotType == IWavePainter::PlotType::MinMaxRMS) {
+        complete = buildFrame(input, metrics, window, painter);
+    } else {
+        buildSampleFrame(input, metrics, window, painter);
+    }
     return acceptFrame(std::move(previous), prevActive, input, sig, window, complete);
 }
 
@@ -282,12 +351,14 @@ WaveSceneGraph::Window WaveSceneGraph::computeWindow(const ClipTime& clipTime, c
 
 WaveSceneGraph::InputSignature WaveSceneGraph::makeSignature(const trackedit::ClipKey& clipKey, const IMinMaxRMSPainter::ClipData& clipData,
                                                              const IWavePainter::Params& params, const WaveMetrics& metrics,
-                                                             const Window& window, float cornerRadius, bool roundTopCorners)
+                                                             const Window& window, float cornerRadius, bool roundTopCorners,
+                                                             IWavePainter::PlotType plotType)
 {
     InputSignature sig;
     sig.trackId = clipKey.trackId;
     sig.itemId = clipKey.itemId;
     sig.dataVersion = clipData.dataVersion;
+    sig.plotType = plotType;
     sig.channelCount = clipData.channelCount;
     sig.fromTime = metrics.fromTime;
     sig.toTime = metrics.toTime;
@@ -313,6 +384,10 @@ WaveSceneGraph::InputSignature WaveSceneGraph::makeSignature(const trackedit::Cl
     sig.rmsPen = params.style.rmsPen.rgba();
     sig.rmsSelectedPen = params.style.rmsSelectedPen.rgba();
     sig.clippedPen = params.style.clippedPen.rgba();
+    sig.sampleBrush = params.style.sampleBrush.rgba();
+    sig.sampleHead = params.style.sampleHead.rgba();
+    sig.sampleHeadSelection = params.style.sampleHeadSelection.rgba();
+    sig.sampleStalk = params.style.sampleStalk.rgba();
     return sig;
 }
 
@@ -322,7 +397,7 @@ bool WaveSceneGraph::reusePreparedFrame(const trackedit::ClipKey& clipKey, const
     //! depend on has changed.
     const bool canSkip = m_lastSignatureValid && m_lastComplete
                          && m_staleRetainCount == 0
-                         && !m_frame.vertices.empty() && sig == m_lastSignature;
+                         && !m_frame.empty() && sig == m_lastSignature;
     if (canSkip) {
         m_contentOffset = contentOffset;
         m_active = true;
@@ -331,7 +406,7 @@ bool WaveSceneGraph::reusePreparedFrame(const trackedit::ClipKey& clipKey, const
 
     // A view created for this clip again starts empty: take over what the
     // previous one prepared, if it was prepared from the same inputs
-    if (!m_frame.vertices.empty()) {
+    if (!m_frame.empty()) {
         return false;
     }
 
@@ -535,6 +610,147 @@ bool WaveSceneGraph::buildFrame(const Input& input, WaveMetrics waveMetrics, con
     return allDataComplete;
 }
 
+void WaveSceneGraph::buildSampleFrame(const Input& input, WaveMetrics waveMetrics, const Window& window, IMinMaxRMSPainter& painter)
+{
+    const IWavePainter::Params& params = input.params;
+    const std::array<double, 2> channelHeight {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+
+    m_frame.backgroundColor = params.style.normalBackground;
+    m_frame.selectedBackgroundColor = params.style.selectedBackground;
+    m_frame.zeroLineColor = params.style.centerLine;
+    m_frame.height = static_cast<float>(params.geometry.height);
+
+    if (waveMetrics.selectionEndTime > waveMetrics.selectionStartTime) {
+        m_frame.hasSelection = true;
+        m_frame.selectionLeft = static_cast<float>((waveMetrics.selectionStartTime - waveMetrics.fromTime) * params.zoom);
+        m_frame.selectionRight = static_cast<float>((waveMetrics.selectionEndTime - waveMetrics.fromTime) * params.zoom);
+    }
+
+    const bool stems = input.plotType == IWavePainter::PlotType::Stem;
+    const float padding = stems ? SAMPLE_HEAD_PADDING : 0.0f;
+
+    const float viewHeight = static_cast<float>(params.geometry.height);
+    const float cornerRadius = std::min(m_cornerRadius, viewHeight * 0.5f);
+    const double clipLeftEdge = (input.clipTime.startTime - input.clipTime.itemStartTime) * params.zoom + window.subpixelResidual;
+    const double clipRightEdge = (input.clipTime.endTime - input.clipTime.itemStartTime) * params.zoom + window.subpixelResidual;
+
+    //! NOTE: All views run on the GUI thread; sharing the buffer keeps its capacity
+    static std::vector<WaveSamplePoint> samples;
+
+    const size_t channelCount = std::min<size_t>(input.clipData.channelCount, channelHeight.size());
+    double topOffset = 0.0;
+    for (size_t ch = 0; ch < channelCount; ++ch) {
+        const float channelTop = static_cast<float>(topOffset) + padding;
+        const float height = std::max(static_cast<float>(channelHeight[ch]) - 2.0f * padding, 0.0f);
+        waveMetrics.top = channelTop;
+        waveMetrics.height = height;
+
+        painter.samples(input.clipKey, ch, params, waveMetrics, samples);
+
+        // Samples stay inside the rounded corners of the clip's real edges, like the columns
+        if (cornerRadius > 0.0f) {
+            for (WaveSamplePoint& sample : samples) {
+                const double center = sample.x + window.contentOffset + 0.5;
+                const float inset = std::max(cornerInset(static_cast<float>(center - clipLeftEdge), cornerRadius),
+                                             cornerInset(static_cast<float>(clipRightEdge - center), cornerRadius));
+                if (inset > 0.0f) {
+                    const float top = (m_roundTopCorners ? inset : 0.0f) + 0.5f - channelTop;
+                    const float bottom = viewHeight - inset - 0.5f - channelTop;
+                    sample.y = std::clamp(sample.y, top, std::max(top, bottom));
+                }
+            }
+        }
+
+        const auto [displayMin, displayMax] = waveDisplayBounds(params);
+        const bool zeroLineVisible = displayMin <= 0.0f && displayMax >= 0.0f && displayMax > displayMin;
+        const float zeroLineY = channelTop + (displayMax == displayMin ? height * 0.5f
+                                              : std::clamp(displayMax / (displayMax - displayMin) * (height - 1.0f), -1.0f, height));
+
+        if (stems) {
+            appendStems(m_frame, samples, channelTop, height, zeroLineY, params.style, params.showClipping);
+        } else {
+            appendConnectedDots(m_frame, samples, channelTop, height, params.style, params.showClipping);
+        }
+
+        if (window.hasPlaceholder) {
+            const auto from = static_cast<float>(window.placeholderFromPixel - window.fromPixelSnapped);
+            const auto to = static_cast<float>(window.toPixelExact - window.fromPixelSnapped);
+            appendRect(m_frame.sampleTriangles, from, zeroLineY - 0.5f, to, zeroLineY + 0.5f, toRgba(params.style.samplePen));
+        }
+
+        if (zeroLineVisible) {
+            m_frame.zeroLineYs.push_back(zeroLineY);
+        }
+        topOffset += channelHeight[ch];
+    }
+}
+
+void WaveSceneGraph::appendConnectedDots(Frame& frame, const std::vector<WaveSamplePoint>& samples, float channelTop,
+                                         float channelHeight, const IWavePainter::Style& style, bool showClipping)
+{
+    const Rgba line = toRgba(style.samplePen);
+    const Rgba selectedLine = toRgba(style.selectedSamplePen);
+    const Rgba clipped = toRgba(style.clippedPen);
+    auto& out = frame.sampleTriangles;
+
+    if (showClipping) {
+        for (const WaveSamplePoint& sample : samples) {
+            if (sample.clipping) {
+                appendRect(out, sample.x - 0.5f, channelTop, sample.x + 0.5f, channelTop + channelHeight, clipped);
+            }
+        }
+    }
+
+    // A segment between two samples is a band one pixel thick along its shorter
+    // extent, centred on them like the columns' band, so that it covers one pixel
+    // per row or column, as a line without antialiasing would
+    for (size_t i = 0; i + 1 < samples.size(); ++i) {
+        const WaveSamplePoint& a = samples[i];
+        const WaveSamplePoint& b = samples[i + 1];
+        const Rgba color = a.selected && b.selected ? selectedLine : line;
+        const float ya = channelTop + a.y;
+        const float yb = channelTop + b.y;
+        if (std::abs(b.x - a.x) >= std::abs(yb - ya)) {
+            appendQuad(out, a.x, ya - 0.5f, b.x, yb - 0.5f, b.x, yb + 0.5f, a.x, ya + 0.5f, color);
+        } else {
+            appendQuad(out, a.x - 0.5f, ya, a.x + 0.5f, ya, b.x + 0.5f, yb, b.x - 0.5f, yb, color);
+        }
+    }
+
+    for (const WaveSamplePoint& sample : samples) {
+        const float y = channelTop + sample.y;
+        appendRect(out, sample.x - 0.5f, y - 0.5f, sample.x + 0.5f, y + 0.5f, sample.selected ? selectedLine : line);
+    }
+}
+
+void WaveSceneGraph::appendStems(Frame& frame, const std::vector<WaveSamplePoint>& samples, float channelTop, float channelHeight,
+                                 float zeroLineY, const IWavePainter::Style& style, bool showClipping)
+{
+    const Rgba stalk = toRgba(style.sampleStalk);
+    const Rgba head = toRgba(style.sampleHead);
+    const Rgba selectedHead = toRgba(style.sampleHeadSelection);
+    const Rgba fill = toRgba(style.sampleBrush);
+    const Rgba clipped = toRgba(style.clippedPen);
+
+    for (const WaveSamplePoint& sample : samples) {
+        const bool clipping = showClipping && sample.clipping;
+        const float y = channelTop + sample.y;
+        appendRect(frame.sampleTriangles, sample.x - 0.5f, std::min(y, zeroLineY) - 0.5f, sample.x + 0.5f, std::max(y, zeroLineY) + 0.5f,
+                   clipping ? clipped : stalk);
+
+        if (sample.y < 0.0f || sample.y >= channelHeight) {
+            continue;
+        }
+
+        appendDisk(frame.sampleHeadTriangles, sample.x, y, SAMPLE_HEAD_RADIUS,
+                   sample.selected ? selectedHead : (clipping ? clipped : head));
+        appendDisk(frame.sampleHeadTriangles, sample.x, y, SAMPLE_HEAD_FILL_RADIUS, clipping ? clipped : fill);
+    }
+}
+
 bool WaveSceneGraph::acceptFrame(Frame previous, bool prevActive, const Input& input, const InputSignature& sig, const Window& window,
                                  bool complete)
 {
@@ -549,16 +765,18 @@ bool WaveSceneGraph::acceptFrame(Frame previous, bool prevActive, const Input& i
     // A clip outside the view has an empty window: there is nothing to retain for
     const bool geometryValid = params.geometry.width > 0.0 && params.geometry.height > 0.0
                                && input.clipTime.itemEndTime > input.clipTime.itemStartTime;
-    const bool retainedStale = m_frame.vertices.empty() && prevActive && !previous.vertices.empty()
+    const bool retainedStale = m_frame.empty() && prevActive && !previous.empty()
                                && m_staleRetainCount < 1 && geometryValid;
     if (retainedStale) {
         m_frame.vertices = std::move(previous.vertices);
+        m_frame.sampleTriangles = std::move(previous.sampleTriangles);
+        m_frame.sampleHeadTriangles = std::move(previous.sampleHeadTriangles);
         m_frame.channelSplitIndex = previous.channelSplitIndex;
         m_frame.hasSelection = previous.hasSelection;
         m_frame.selectionLeft = previous.selectionLeft;
         m_frame.selectionRight = previous.selectionRight;
         ++m_staleRetainCount;
-    } else if (!m_frame.vertices.empty()) {
+    } else if (!m_frame.empty()) {
         m_staleRetainCount = 0;
     }
 
@@ -582,7 +800,7 @@ bool WaveSceneGraph::acceptFrame(Frame previous, bool prevActive, const Input& i
     m_lastSignatureValid = !retainedStale;
     m_lastComplete = complete;
 
-    m_active = !m_frame.vertices.empty();
+    m_active = !m_frame.empty();
     m_dirty = true;
 
     return retry;
@@ -628,15 +846,21 @@ QSGNode* WaveSceneGraph::updatePaintNode(QSGNode* oldNode, float itemWidth)
     //   ├── [1] content          (QSGTransformNode: snap correction + sub-pixel offset)
     //   │       ├── [0] selection bg  (flat color rect, empty when no selection)
     //   │       ├── [1] waveform body (vertex-colored triangle strip)
-    //   │       └── [2] rms band      (vertex-colored triangle strip, empty when showRMS=false)
-    //   └── [2] zero line        (flat color rect, item space)
+    //   │       ├── [2] rms band      (vertex-colored triangle strip, empty when showRMS=false)
+    //   │       └── [3] samples       (vertex-colored triangles: sample lines and stalks)
+    //   ├── [2] zero line        (flat color rect, item space)
+    //   └── [3] foreground       (QSGTransformNode: as content)
+    //           └── [0] sample heads  (vertex-colored triangles)
 
     constexpr int IDX_BG = 0;
     constexpr int IDX_CONTENT = 1;
     constexpr int IDX_ZERO = 2;
+    constexpr int IDX_FOREGROUND = 3;
     constexpr int IDX_SEL_BG = 0;
     constexpr int IDX_WAVE = 1;
     constexpr int IDX_RMS = 2;
+    constexpr int IDX_SAMPLES = 3;
+    constexpr int IDX_SAMPLE_HEADS = 0;
 
     QSGNode* root = oldNode;
 
@@ -645,15 +869,20 @@ QSGNode* WaveSceneGraph::updatePaintNode(QSGNode* oldNode, float itemWidth)
     // the item-space quads (it changes while scrolling viewport-clamped clips
     // and is deliberately not part of the input signature), and leave the
     // wave geometry alone.
-    if (!m_dirty && root && root->childCount() == 3) {
+    auto applyContentOffset = [this](QSGNode* node) {
+        QMatrix4x4 matrix;
+        matrix.translate(static_cast<float>(m_contentOffset), 0.0f);
+        auto* transformNode = static_cast<QSGTransformNode*>(node);
+        transformNode->setMatrix(matrix);
+        transformNode->markDirty(QSGNode::DirtyMatrix);
+    };
+
+    if (!m_dirty && root && root->childCount() == 4) {
         // Only what changed is marked dirty
         const bool offsetChanged = m_appliedContentOffset != m_contentOffset;
         if (offsetChanged) {
-            auto* contentNode = static_cast<QSGTransformNode*>(root->childAtIndex(IDX_CONTENT));
-            QMatrix4x4 matrix;
-            matrix.translate(static_cast<float>(m_contentOffset), 0.0f);
-            contentNode->setMatrix(matrix);
-            contentNode->markDirty(QSGNode::DirtyMatrix);
+            applyContentOffset(root->childAtIndex(IDX_CONTENT));
+            applyContentOffset(root->childAtIndex(IDX_FOREGROUND));
             m_appliedContentOffset = m_contentOffset;
         }
 
@@ -719,6 +948,12 @@ QSGNode* WaveSceneGraph::updatePaintNode(QSGNode* oldNode, float itemWidth)
         return node;
     };
 
+    auto makeColoredTrianglesNode = [&makeColoredNode]() {
+        auto* node = makeColoredNode();
+        node->geometry()->setDrawingMode(QSGGeometry::DrawTriangles);
+        return node;
+    };
+
     if (!root) {
         //! NOTE: The content may extend past the item: the window is snapped out
         //! to whole cache tiles at viewport-clamped edges. The rectangular clip
@@ -733,8 +968,12 @@ QSGNode* WaveSceneGraph::updatePaintNode(QSGNode* oldNode, float itemWidth)
         content->appendChildNode(makeFlatNode(4));       // selection background
         content->appendChildNode(makeColoredNode());     // waveform
         content->appendChildNode(makeColoredNode());     // rms
+        content->appendChildNode(makeColoredTrianglesNode()); // samples
         root->appendChildNode(content);                  // content
         root->appendChildNode(makeFlatNode(4));          // zero line
+        auto* foreground = new QSGTransformNode();
+        foreground->appendChildNode(makeColoredTrianglesNode()); // sample heads
+        root->appendChildNode(foreground);               // foreground
     }
 
     auto* bgNode = static_cast<QSGGeometryNode*>(root->childAtIndex(IDX_BG));
@@ -743,13 +982,11 @@ QSGNode* WaveSceneGraph::updatePaintNode(QSGNode* oldNode, float itemWidth)
     auto* selBgNode = static_cast<QSGGeometryNode*>(contentNode->childAtIndex(IDX_SEL_BG));
     auto* waveformNode = static_cast<QSGGeometryNode*>(contentNode->childAtIndex(IDX_WAVE));
     auto* rmsNode = static_cast<QSGGeometryNode*>(contentNode->childAtIndex(IDX_RMS));
+    auto* samplesNode = static_cast<QSGGeometryNode*>(contentNode->childAtIndex(IDX_SAMPLES));
+    auto* sampleHeadsNode = static_cast<QSGGeometryNode*>(root->childAtIndex(IDX_FOREGROUND)->childAtIndex(IDX_SAMPLE_HEADS));
 
-    {
-        QMatrix4x4 matrix;
-        matrix.translate(static_cast<float>(m_contentOffset), 0.0f);
-        contentNode->setMatrix(matrix);
-        contentNode->markDirty(QSGNode::DirtyMatrix);
-    }
+    applyContentOffset(contentNode);
+    applyContentOffset(root->childAtIndex(IDX_FOREGROUND));
 
     const int N = static_cast<int>(m_frame.vertices.size());
     const float w = itemWidth;
@@ -814,6 +1051,9 @@ QSGNode* WaveSceneGraph::updatePaintNode(QSGNode* oldNode, float itemWidth)
         }
         rmsNode->markDirty(QSGNode::DirtyGeometry);
     }
+
+    fillTriangles(samplesNode, m_frame.sampleTriangles);
+    fillTriangles(sampleHeadsNode, m_frame.sampleHeadTriangles);
 
     // Zero line — one 1px line per channel
     {
