@@ -102,6 +102,11 @@ void BassTrebleViewModel::doReload()
         if (settings.mLink) {
             // Split the gain delta evenly between bass and treble in weighted (compensated) space.
             // If one tone hits its limit, the remainder goes to the other.
+            // Gain is limited to what Bass and Treble can compensate for, otherwise the
+            // Gain + weight(Bass) + weight(Treble) relation would be lost once the tones saturate.
+            const double gainMin = -(toneWeight(BassTrebleEffect::Bass.max) + toneWeight(BassTrebleEffect::Treble.max));
+            const double gainMax = -(toneWeight(BassTrebleEffect::Bass.min) + toneWeight(BassTrebleEffect::Treble.min));
+            v = std::clamp(v, std::max(gainMin, BassTrebleEffect::Gain.min), std::min(gainMax, BassTrebleEffect::Gain.max));
             const double delta = v - settings.mGain;
             const double bassMin = toneWeight(BassTrebleEffect::Bass.min);
             const double bassMax = toneWeight(BassTrebleEffect::Bass.max);
