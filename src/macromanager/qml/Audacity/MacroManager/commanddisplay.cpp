@@ -3,6 +3,10 @@
 */
 #include "commanddisplay.h"
 
+#include <algorithm>
+#include <utility>
+#include <vector>
+
 #include <QStringList>
 
 #include "effects/effects_base/effectscommands.h"
@@ -20,6 +24,19 @@ std::optional<au::effects::EffectDisplayInfo> appliedEffect(const Command& comma
 
     return effectsProvider.effectDisplayInfo(effectId);
 }
+
+QString valueText(const muse::Val& value)
+{
+    if (value.type() != muse::Val::Type::List) {
+        return QString::fromStdString(value.toString());
+    }
+
+    QStringList items;
+    for (const muse::Val& item : value.toList()) {
+        items << QString::fromStdString(item.toString());
+    }
+    return items.join(u", ");
+}
 }
 
 CommandDisplay au::macromanager::commandDisplay(const CommandInfo& info, const effects::IEffectsProvider& effectsProvider)
@@ -34,4 +51,25 @@ CommandDisplay au::macromanager::commandDisplay(const CommandInfo& info, const e
     origin.removeDuplicates();
 
     return { effect->title.toQString(), origin.join(u" · ") };
+}
+
+QString au::macromanager::paramsSummary(const InputSchema& schema, const Params& params)
+{
+    std::vector<std::pair<std::string, Arg> > args(schema.args.begin(), schema.args.end());
+    std::ranges::stable_sort(args, {}, [](const std::pair<std::string, Arg>& entry) {
+        return entry.second.uiHints.order;
+    });
+
+    QStringList parts;
+    for (const auto& [key, arg] : args) {
+        const auto value = params.find(key);
+        if (value == params.end()) {
+            continue;
+        }
+
+        const QString label = arg.label.isEmpty() ? QString::fromStdString(key) : arg.label.qTranslated();
+        parts << label + ": " + valueText(value->second);
+    }
+
+    return parts.join(u" · ");
 }

@@ -64,7 +64,7 @@ QVariant MacroCommandsModel::data(const QModelIndex& index, int role) const
     case StepRole: return index.row() + 1;
     case CodeRole: return step ? QString::fromStdString(step->command.toString()) : macroName;
     case TitleRole: return step ? displayOf(step->command).title : macroName;
-    case SubtitleRole: return step ? displayOf(step->command).subtitle : QString();
+    case SubtitleRole: return step ? subtitleOf(*step) : QString();
     case HasParamsRole: return step && hasParams(step->command);
     case IsMacroRole: return !step;
     default: return QVariant();
@@ -304,6 +304,15 @@ CommandDisplay MacroCommandsModel::displayOf(const CustomStep& step) const
     return { type->title().qTranslated(), type->summary(step.data).toQString() };
 }
 
+QString MacroCommandsModel::subtitleOf(const MacroStep& step) const
+{
+    if (step.params.empty() || isEffectApplyCommand(step.command)) {
+        return displayOf(step.command).subtitle;
+    }
+
+    return paramsSummary(commandsRegister()->commandInfo(step.command).inputSchema, step.params);
+}
+
 bool MacroCommandsModel::hasParams(const Command& command) const
 {
     if (isEffectApplyCommand(command)) {
@@ -374,6 +383,7 @@ void MacroCommandsModel::setStepParams(int row, const Params& params)
     }
 
     step->params = params;
+    emit dataChanged(index(row), index(row), { SubtitleRole });
     persist();
 }
 

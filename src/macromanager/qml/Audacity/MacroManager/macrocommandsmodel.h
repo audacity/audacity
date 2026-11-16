@@ -92,6 +92,7 @@ private:
     bool isRowValid(int row) const;
     CommandDisplay displayOf(const muse::rcommand::Command& command) const;
     CommandDisplay displayOf(const CustomStep& step) const;
+    QString subtitleOf(const MacroStep& step) const;
     bool hasParams(const muse::rcommand::Command& command) const;
     void notifyStepsChanged(int fromRow, int toRow);
     void syncFromRepository();
