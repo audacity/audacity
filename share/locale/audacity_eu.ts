@@ -5515,7 +5515,7 @@ Osoitz Elkorobarrutia
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
         <source>Get it on MuseHub</source>
-        <translation type="unfinished"/>
+        <translation>Eskuratu MuseHub-en</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="59"/>
@@ -19590,7 +19590,7 @@ Audacityren bertsio hori exekutatu behar duzu proiektua berreskuratzeko.</transl
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml" line="133"/>
         <source>Get it on MuseHub</source>
-        <translation type="unfinished"/>
+        <translation>Eskuratu MuseHub-en</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
