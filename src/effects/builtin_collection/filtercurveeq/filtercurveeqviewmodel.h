@@ -3,7 +3,7 @@
  */
 #pragma once
 
-#include "effects/builtin/view/builtineffectmodel.h"
+#include "effects/builtin/qml/Audacity/BuiltinEffects/builtineffectmodel.h"
 
 #include "filtercurvemodel.h"
 
@@ -65,6 +65,7 @@ signals:
     void labelWidthChanged();
     void axisWidthChanged();
     void xTicksChanged();
+    void escapePressed();
 
 private:
     struct LabelAndPos {
@@ -73,6 +74,7 @@ private:
     };
 
     void doReload() override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
     std::vector<LabelAndPos> xTicksLin() const;
     std::vector<LabelAndPos> xTicksLog() const;
 

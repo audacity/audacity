@@ -16,9 +16,9 @@
 #include "au3-utility/CRTPBase.h"
 #include "au3-math/SampleFormat.h"
 #include "au3-math/SampleCount.h"
-#include "au3-stretching-sequence/ClipInterface.h"
+#include "au3-clip-processing/ClipInterface.h"
 #include "au3-xml/XMLTagHandler.h"
-#include "au3-stretching-sequence/AudioSegmentSampleView.h"
+#include "au3-clip-processing/AudioSegmentSampleView.h"
 
 #include <wx/longlong.h>
 
@@ -209,11 +209,12 @@ struct PitchAndSpeedPresetChange
 
 struct StretchRatioChange
 {
-    explicit StretchRatioChange(double newValue)
-        : newValue(newValue)
+    explicit StretchRatioChange(double oldValue, double newValue)
+        : oldValue(oldValue), newValue(newValue)
     {
     }
 
+    const double oldValue;
     const double newValue;
 };
 
@@ -250,12 +251,11 @@ private:
     //! from one project to another
     /*!
      @post `NChannels() == orig.NChannels()`
-     @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
      */
     WaveClip(const WaveClip& orig,
              const SampleBlockFactoryPtr& factory,
-             bool copyCutlines)
-        : WaveClip{orig, factory, copyCutlines, {}}
+             bool copyGroupId)
+        : WaveClip{orig, factory, copyGroupId, {}}
     {}
 
     //! @brief Copy only a range from the given WaveClip
@@ -263,11 +263,11 @@ private:
      @pre CountSamples(t1, t0) > 0
      @post `NChannels() == orig.NChannels()`
      */
-    WaveClip(const WaveClip& orig, const SampleBlockFactoryPtr& factory, bool copyCutlines, double t0, double t1);
-
-    static int64_t NewID();
+    WaveClip(const WaveClip& orig, const SampleBlockFactoryPtr& factory, bool copyGroupId, double t0, double t1);
 
 public:
+    static int64_t NewID();
+
     static const char* WaveClip_tag;
 
     using Attachments = Site<WaveClip, WaveClipListener, ClientData::DeepCopying>;
@@ -294,13 +294,12 @@ public:
     //! Create a new clip as copy origin
     /*!
      @post `NChannels() == orig.NChannels()`
-     @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
      */
     static WaveClip* NewFrom(
         const WaveClip& orig, const SampleBlockFactoryPtr& factory,
-        bool copyCutlines, bool backup)
+        bool copyGroupId, bool backup)
     {
-        WaveClip* clip = new WaveClip(orig, factory, copyCutlines);
+        WaveClip* clip = new WaveClip(orig, factory, copyGroupId);
         if (!backup) {
             clip->mId = NewID();
         }
@@ -309,17 +308,17 @@ public:
 
     static std::shared_ptr<WaveClip> NewSharedFrom(
         const WaveClip& orig, const SampleBlockFactoryPtr& factory,
-        bool copyCutlines, bool backup)
+        bool copyGroupId, bool backup)
     {
         return std::shared_ptr<WaveClip>(
-            NewFrom(orig, factory, copyCutlines, backup));
+            NewFrom(orig, factory, copyGroupId, backup));
     }
 
     static WaveClip* NewFromRange(
         const WaveClip& orig, const SampleBlockFactoryPtr& factory,
-        bool copyCutlines, bool backup, double t0, double t1)
+        bool copyGroupId, bool backup, double t0, double t1)
     {
-        WaveClip* clip = new WaveClip(orig, factory, copyCutlines, t0, t1);
+        WaveClip* clip = new WaveClip(orig, factory, copyGroupId, t0, t1);
         if (!backup) {
             clip->mId = NewID();
         }
@@ -328,10 +327,10 @@ public:
 
     static std::shared_ptr<WaveClip> NewSharedFromRange(
         const WaveClip& orig, const SampleBlockFactoryPtr& factory,
-        bool copyCutlines, bool backup, double t0, double t1)
+        bool copyGroupId, bool backup, double t0, double t1)
     {
         return std::shared_ptr<WaveClip>(
-            NewFromRange(orig, factory, copyCutlines, backup, t0, t1));
+            NewFromRange(orig, factory, copyGroupId, backup, t0, t1));
     }
 
     ~WaveClip() override;
@@ -360,13 +359,12 @@ public:
             WideChannelGroupInterval::Channels<const Channel>();
     }
 
-    //! Check weak invariant conditions on mSequences and mCutlines
+    //! Check weak invariant conditions on mSequences
     /*! Conditions are
      `mSequences.size() > 0`
      all sequences are non-null
      all sequences have the same sample formats
         and sample block factory
-     all cutlines satisfy the strong invariant
      */
     bool CheckInvariants() const;
 
@@ -402,8 +400,11 @@ public:
 
     // Set rate without resampling. This will change the length of the clip
     void SetRate(int rate);
-    void SetRawAudioTempo(double tempo);
-    void SetClipTempo(double tempo);
+
+    //! The audio was recorded at `rawAudioTempo`; stretch it so that it plays
+    //! at `projectTempo`. Replaces whatever stretch the clip had. Boundaries
+    //! follow from the new ratio; trims and the envelope are left alone.
+    void StretchToProjectTempo(double rawAudioTempo, double projectTempo);
 
     PitchAndSpeedPreset GetPitchAndSpeedPreset() const override;
 
@@ -425,6 +426,11 @@ public:
     bool GetStretchToMatchProjectTempo() const;
     void SetStretchToMatchProjectTempo(bool enabled);
 
+    //! In AU3 (until 3.7.9 at least) the final stretch ratio of a clip depended on
+    //! its detected tempo, the project's tempo and the stretch applied by the user manually.
+    //! When importing an AU3 project,
+    void SetProjectTempoForDeserialization(double);
+
     /*
      * @post `true` if `TimeAndPitchInterface::MinCent <= cents && cents <=
      * TimeAndPitchInterface::MaxCent`
@@ -439,6 +445,9 @@ public:
     SubscribeToPitchAndSpeedPresetChange(
         std::function<void(PitchAndSpeedPreset)> cb) const override;
 
+    [[nodiscard]] Observer::Subscription SubscribeToStretchRatioChange(
+        std::function<void(double oldRatio, double newRatio)> cb) const override;
+
     // Resample clip. This also will set the rate, but without changing
     // the length of the clip
     void Resample(int rate, const std::function<void(size_t)>& progressReport = {});
@@ -449,7 +458,6 @@ public:
     //! Returns the index of the first sample of the underlying sequence
     sampleCount GetSequenceStartSample() const;
     //! Returns the total number of samples in all underlying sequences
-    //! (but not counting the cutlines)
     sampleCount GetSequenceSamplesCount() const;
 
     //! Closed-begin of play region. Always a multiple of the track's sample
@@ -496,8 +504,6 @@ public:
     bool TrimLeft(double deltaTime);
     //! Moves play end position by deltaTime
     bool TrimRight(double deltaTime);
-    //! Same as `TrimRight`, but expressed as quarter notes
-    void TrimQuarternotesFromRight(double quarters);
 
     //! Sets the left trimming to the absolute time (if that is in bounds)
     void TrimLeftTo(double to);
@@ -546,6 +552,11 @@ public:
      * @pre t0 <= t1
      */
     bool IntersectsPlayRegion(double t0, double t1) const;
+    /*!
+     * @brief [t0, t1] ∩ [...] != ∅
+     * @pre t0 <= t1
+     */
+    bool TouchesPlayRegion(double t0, double t1) const;
     /*!
      * @brief t0 <= [ and ) <= t1, such that removing [t0, t1) from the track
      * deletes this clip.
@@ -752,17 +763,6 @@ public:
     /// data, if present. Destructive operation.
     void ClearRight(double t);
 
-    //! Clear, and add cut line that starts at t0 and contains everything until t1
-    //! if there is at least one clip sample between t0 and t1, noop otherwise.
-    /*!
-     @pre `StrongInvariant()`
-     @post `StrongInvariant()`
-     */
-    void ClearAndAddCutLine(double t0, double t1);
-
-    //! @pre `NChannels() == pClip->NChannels()`
-    void AddCutLine(WaveClipHolder pClip);
-
     /*!
      * @return true and succeed if and only if `this->NChannels() ==
      * other.NChannels()` and either this is empty or `this->GetStretchRatio() ==
@@ -789,28 +789,6 @@ public:
     /** Insert silence at the end, and causes the envelope to ramp
         linearly to the given value */
     void AppendSilence(double len, double envelopeValue);
-
-    /// Get access to cut lines list
-    const WaveClipHolders& GetCutLines() { return mCutLines; }
-    const WaveClipConstHolders& GetCutLines() const
-    { return reinterpret_cast< const WaveClipConstHolders& >(mCutLines); }
-    size_t NumCutLines() const { return mCutLines.size(); }
-
-    /** Find cut line at (approximately) this position. Returns true and fills
-     * in cutLineStart and cutLineEnd (if specified) if a cut line at this
-     * position could be found. Return false otherwise. */
-    bool FindCutLine(double cutLinePosition, double* cutLineStart = nullptr, double* cutLineEnd = nullptr) const;
-
-    /** Expand cut line (that is, re-insert audio, then DELETE audio saved in
-     * cut line). Returns true if a cut line could be found and successfully
-     * expanded, false otherwise */
-    void ExpandCutLine(double cutLinePosition);
-
-    /// Remove cut line, without expanding the audio in it
-    bool RemoveCutLine(double cutLinePosition);
-
-    /// Offset cutlines right to time 't0' by time amount 'len'
-    void OffsetCutLines(double t0, double len);
 
     //! Should be called upon project close.  Not balanced by unlocking calls.
     /*! @excsafety{No-fail} */
@@ -899,7 +877,6 @@ public:
     std::shared_ptr<WaveClip> SplitChannels();
 
     //! Steal the right side data from other
-    //! All cutlines are lost in `this`!  Cutlines are not copied from other.
     /*!
      Stating sufficient preconditions for the postondition.  Even stronger
      preconditions on matching offset, trims, and rates could be stated.
@@ -937,9 +914,8 @@ public:
      @param emptyCopy if true, don't make sequences
 
      @post `NChannels() == (token.emptyCopy ? 0 : orig.NChannels())`
-     @post `!copyCutlines || NumCutLines() == orig.NumCutLines()`
      */
-    WaveClip(const WaveClip& orig, const SampleBlockFactoryPtr& factory, bool copyCutlines, CreateToken token);
+    WaveClip(const WaveClip& orig, const SampleBlockFactoryPtr& factory, bool copyGroupId, CreateToken token);
 
     void LinkToOtherSource(WaveClip& newClip);
 
@@ -950,8 +926,6 @@ public:
 
 private:
     static void TransferSequence(WaveClip& origClip, WaveClip& newClip);
-    static void FixSplitCutlines(
-        WaveClipHolders& myCutlines, WaveClipHolders& newCutlines);
 
     size_t GreatestAppendBufferLen() const;
 
@@ -963,10 +937,9 @@ private:
     const SampleBlockFactoryPtr& GetFactory() const;
 
     std::vector<std::shared_ptr<Sequence> > GetEmptySequenceCopies() const;
-    void StretchCutLines(double ratioChange);
     double SnapToTrackSample(double time) const noexcept;
 
-    //! Fix consistency of cutlines and envelope after deleting from Sequences
+    //! Fix consistency of envelope after deleting from Sequences
     /*!
      This is like a finally object
      */
@@ -977,13 +950,10 @@ private:
         /*
          @param t0 start of deleted range
          @param t1 end of deleted range
-         @param clip_t0 t0 clamped to previous play region
-         @param clip_t1 t1 clamped to previous play region
          */
-        ClearSequenceFinisher(WaveClip* pClip,
-                              double t0, double t1, double clip_t0, double clip_t1) noexcept
+        ClearSequenceFinisher(WaveClip* pClip, double t0, double t1) noexcept
             : pClip{pClip}
-            , t0{t0}, t1{t1}, clip_t0{clip_t0}, clip_t1{clip_t1}
+            , t0{t0}, t1{t1}
         {}
         ClearSequenceFinisher& operator =(ClearSequenceFinisher&& other)
         {
@@ -999,7 +969,7 @@ private:
         ClearSequenceFinisher&
         operator =(const ClearSequenceFinisher& other) = default;
         WaveClip* pClip{};
-        double t0{}, t1{}, clip_t0{}, clip_t1{};
+        double t0{}, t1{};
         bool committed = false;
     };
 
@@ -1037,12 +1007,10 @@ private:
     PitchAndSpeedPreset mPitchAndSpeedPreset { PitchAndSpeedPreset::Default };
     int mCentShift { 0 };
 
-    // Used in GetStretchRatio which computes the factor, by which the sample
-    // interval is multiplied, to get a realtime duration.
     double mClipStretchRatio = 1.;
-    std::optional<double> mRawAudioTempo;
-    std::optional<double> mClipTempo;
     bool mStretchToMatchProjectTempo = true;
+
+    std::optional<double> mProjectTempoForDeserialization;
 
     //! Sample rate of the raw audio, i.e., before stretching.
     int mRate;
@@ -1053,13 +1021,6 @@ private:
     std::vector<std::shared_ptr<Sequence> > mSequences;
     //! Envelope is unique, not per-sequence, and always non-null
     std::unique_ptr<Envelope> mEnvelope;
-
-    //! Cut Lines are nothing more than ordinary wave clips, with the
-    //! offset relative to the start of the clip.
-    /*!
-     @invariant all are non-null
-     */
-    WaveClipHolders mCutLines {};
 
     // AWD, Oct. 2009: for whitespace-at-end-of-selection pasting
     bool mIsPlaceholder { false };

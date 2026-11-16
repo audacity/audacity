@@ -20,7 +20,7 @@ void AddEffectMenuModel::handleMenuItem(const QString& itemId)
         return;
     }
 
-    const auto effectId = effects::effectIdFromAction(menuItem.id());
+    const effects::EffectId effectId = effects::EffectId::fromQString(menuItem.id());
     if (const auto state = realtimeEffectService()->addRealtimeEffect(*tId, effectId)) {
         effectViewController()->showEffect(state);
     }
@@ -28,7 +28,7 @@ void AddEffectMenuModel::handleMenuItem(const QString& itemId)
 
 muse::uicomponents::MenuItem* AddEffectMenuModel::makeMenuEffectItem(const effects::EffectId& effectId)
 {
-    return makeMenuItem(effects::makeEffectAction(effects::REALTIME_EFFECT_ADD_ACTION, effectId));
+    return makeEffectItem(effectId);
 }
 
 muse::uicomponents::MenuItem* AddEffectMenuModel::makeMenuEffect(const muse::String& title,

@@ -14,6 +14,7 @@
 #include "framework/global/io/ifilesystem.h"
 #include "framework/global/io/path.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/cloud/icloudconfiguration.h"
 #include "framework/network/inetworkmanagercreator.h"
 
 #include "au3cloud/cloudtypes.h"
@@ -22,6 +23,7 @@ namespace au::au3cloud {
 class DownloadManager : public muse::async::Asyncable
 {
     muse::GlobalInject<muse::network::INetworkManagerCreator> networkManagerCreator;
+    muse::GlobalInject<muse::cloud::ICloudConfiguration> cloudConfiguration;
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
 
 public:

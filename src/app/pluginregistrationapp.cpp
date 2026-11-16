@@ -21,6 +21,30 @@ PluginRegistrationApp::PluginRegistrationApp(const std::shared_ptr<AudacityCmdOp
     makeProcessBackground();
 }
 
+void PluginRegistrationApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& options)
+{
+    BaseApplication::applyCommandLineOptions(options);
+
+    diagnosticsConfiguration()->setSystemCrashReporterForwardingEnabled(false);
+
+    const auto audacityOptions = std::dynamic_pointer_cast<AudacityCmdOptions>(options);
+    IF_ASSERT_FAILED(audacityOptions) {
+        return;
+    }
+
+    if (!audacityOptions->diagnostics.crashDumpConfig) {
+        return;
+    }
+
+    diagnosticsConfiguration()->setCrashDumpConfig(*audacityOptions->diagnostics.crashDumpConfig);
+
+    const muse::io::path_t& pluginPath = audacityOptions->audioPluginRegistration.pluginPath;
+    if (!pluginPath.empty()) {
+        diagnosticsConfiguration()->setCrashReportTags({ { muse::String { "plugin-validation" },
+                                                           io::filename(pluginPath).toString() } });
+    }
+}
+
 void PluginRegistrationApp::startupScenario(const muse::modularity::ContextPtr& ctxId)
 {
     std::shared_ptr<AudacityCmdOptions> options = std::dynamic_pointer_cast<AudacityCmdOptions>(m_appOptions);

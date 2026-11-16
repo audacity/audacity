@@ -192,6 +192,32 @@ TEST_F(ProjectViewStateTests, tracksInRange_InputIntervalIsClosedOpen)
     EXPECT_EQ(TrackIdList({ }), m_projectViewState->tracksInRange(tracksBottom, tracksBottom + 1));
 }
 
+TEST_F(ProjectViewStateTests, isBelowAllTracks_StartsAtTheBottomOfTheLastTrack)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
+    // Minimum track height is 44, so use values >= 44
+    m_projectViewState->setTrackHeight(tracks[0], 50);
+    m_projectViewState->setTrackHeight(tracks[1], 50);
+
+    const auto tracksTop = m_projectViewState->trackVerticalPosition(tracks[0]);
+    const auto tracksBottom = m_projectViewState->trackVerticalPosition(tracks[1]) + m_projectViewState->trackHeight(tracks[1]).val;
+
+    EXPECT_FALSE(m_projectViewState->isBelowAllTracks(tracksTop));
+    EXPECT_FALSE(m_projectViewState->isBelowAllTracks(tracksBottom - 1));
+    EXPECT_TRUE(m_projectViewState->isBelowAllTracks(tracksBottom));
+    EXPECT_TRUE(m_projectViewState->isBelowAllTracks(tracksBottom + 100));
+}
+
+TEST_F(ProjectViewStateTests, isBelowAllTracks_IsFalseWithoutTracks)
+{
+    ON_CALL(*m_trackeditProjectMock, trackIdList())
+    .WillByDefault(Return(trackedit::TrackIdList {}));
+
+    EXPECT_FALSE(m_projectViewState->isBelowAllTracks(0.0));
+    EXPECT_FALSE(m_projectViewState->isBelowAllTracks(1000.0));
+}
+
 TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesAllClipsWhenNothingSelected)
 {
     using namespace trackedit;

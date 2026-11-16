@@ -5,6 +5,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include <optional>
 
 #include "au3-track/Track.h"
 
@@ -35,6 +36,8 @@ public:
     void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete) override;
     muse::async::Channel<TrackIdList> selectedTracksChanged() const override;
     muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
+    std::optional<secs_t> selectedTracksStartTime() const override;
+    std::optional<secs_t> selectedTracksEndTime() const override;
 
     // clip selection
     void resetSelectedClips() override;
@@ -47,6 +50,7 @@ public:
     muse::async::Channel<ClipKeyList> clipsSelected() const override;
     std::optional<secs_t> selectedClipStartTime() const override;
     std::optional<secs_t> selectedClipEndTime() const override;
+
     std::optional<secs_t> leftMostSelectedClipStartTime() const override;
     std::optional<secs_t> rightMostSelectedClipEndTime() const override;
 
@@ -64,11 +68,14 @@ public:
     std::optional<secs_t> leftMostSelectedLabelStartTime() const override;
     std::optional<secs_t> rightMostSelectedLabelEndTime() const override;
 
+    // item selection
+    void setSelectedItems(const ItemKeys& items, bool complete = true) override;
+    ItemKeys itemsWithinBoxFromAnchorTo(const TrackItemKey& target) const override;
+    void setItemSelectionAnchor(secs_t time, const TrackItemKey& itemKey) override;
+    ItemKeys itemsTouchingBoxFromAnchor(secs_t time, const TrackId& trackId) const override;
+    ItemKeys itemsTouchingRange(const TrackIdList& trackIds, secs_t startTime, secs_t endTime) const override;
     std::optional<secs_t> leftMostSelectedItemStartTime() const override;
     std::optional<secs_t> rightMostSelectedItemEndTime() const override;
-
-    std::optional<secs_t> selectedTracksStartTime() const override;
-    std::optional<secs_t> selectedTracksEndTime() const override;
 
     // data selection
     void setSelectedTrackAudioData(trackedit::TrackId trackId) override;
@@ -99,23 +106,29 @@ public:
 
     void initSelectionAtPlayhead() override;
 
-    // grouping
-    bool selectionContainsGroup() const override;
-    bool isSelectionGrouped() const override;
-
     void resetTimeSelection() override;
 
     int trackDistance(const TrackId previous, const TrackId next) const override;
     TrackIdList orderedTrackList() const override;
 
 private:
+    struct ItemSelectionAnchor {
+        secs_t time = 0.0;
+        TrackItemKey itemKey;
+    };
+    std::optional<ItemSelectionAnchor> m_itemSelectionAnchor;
+    void resetItemSelectionAnchorIfNoSelection();
     void addSelectedTrack(const trackedit::TrackId& trackId);
-    void updateSelectionController();
     void onHistoryEvent(const trackedit::HistoryEvent& event);
     ClipKeyList findClipsIntersectingRangeSelection() const;
     LabelKeyList findLabelsIntersectingRangeSelection() const;
 
+    ClipKeyList clipKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const;
+    LabelKeyList labelKeysIntersecting(const TrackId& trackId, double startTime, double endTime) const;
+
     au3::Au3Project& projectRef() const;
+
+    friend class Au3SelectionControllerTests;
     Observer::Subscription m_tracksSubc;
 
     template<typename T>
@@ -130,13 +143,25 @@ private:
 
         void set(const T& v, bool complete)
         {
+            if (assign(v)) {
+                publish(complete);
+            }
+        }
+
+        bool assign(const T& v)
+        {
             if (val == v) {
-                return;
+                return false;
             }
             val = v;
-            changed.send(v);
+            return true;
+        }
+
+        void publish(bool complete)
+        {
+            changed.send(val);
             if (complete) {
-                selected.send(v);
+                selected.send(val);
             }
         }
     };

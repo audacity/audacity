@@ -3,33 +3,25 @@
 */
 #include "recordmodule.h"
 
-#include <QQmlEngine>
-#include <QtQml>
-
 #include "modularity/ioc.h"
 
-#include "ui/iuiactionsregister.h"
+#include "framework/interactive/iinteractiveuriregister.h"
+#include "rcommand/icommandsregister.h"
+#include "rcommand/icommandsstate.h"
 
+#include "internal/recordcommandsregister.h"
+#include "internal/recordcommandsstate.h"
 #include "internal/recordconfiguration.h"
 #include "internal/recordcontroller.h"
 #include "internal/recordmetercontroller.h"
-#include "internal/recorduiactions.h"
+#include "internal/timedrecordingscenario.h"
 #include "internal/au3/au3record.h"
-#include "view/common/recordmetermodel.h"
-#include "view/common/leadinrecordingindicatormodel.h"
 
 using namespace au::record;
 using namespace muse;
 using namespace muse::modularity;
-using namespace muse::ui;
-using namespace muse::actions;
 
 static const std::string mname("record");
-
-static void record_init_qrc()
-{
-    Q_INIT_RESOURCE(record);
-}
 
 std::string RecordModule::moduleName() const
 {
@@ -45,15 +37,18 @@ void RecordModule::registerExports()
     globalIoc()->registerExport<IRecordMeterController>(mname, m_meterController);
 }
 
-void RecordModule::registerResources()
+void RecordModule::resolveImports()
 {
-    record_init_qrc();
-}
+    auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
+    if (ir) {
+        ir->registerQmlUri(muse::Uri("audacity://record/timedrecording"), "Audacity.Record", "TimedRecordingDialog");
+        ir->registerQmlUri(muse::Uri("audacity://record/timedrecording/progress"), "Audacity.Record", "TimedRecordingProgressDialog");
+    }
 
-void RecordModule::registerUiTypes()
-{
-    qmlRegisterType<RecordMeterModel>("Audacity.Record", 1, 0, "RecordMeterModel");
-    qmlRegisterType<LeadInRecordingIndicatorModel>("Audacity.Record", 1, 0, "LeadInRecordingIndicatorModel");
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<RecordCommandsRegister>());
+    }
 }
 
 void RecordModule::onInit(const IApplication::RunMode& mode)
@@ -77,15 +72,20 @@ IContextSetup* RecordModule::newContext(const muse::modularity::ContextPtr& ctx)
 void RecordContext::registerExports()
 {
     m_controller = std::make_shared<RecordController>(iocContext());
-    m_uiActions = std::make_shared<RecordUiActions>(iocContext(), m_controller);
     m_record = std::make_shared<Au3Record>(iocContext());
+    m_timedRecordingScenario = std::make_shared<TimedRecordingScenario>(iocContext());
 
     ioc()->registerExport<IRecordController>(mname, m_controller);
     ioc()->registerExport<IRecord>(mname, m_record);
+    ioc()->registerExport<ITimedRecordingScenario>(mname, m_timedRecordingScenario);
 }
 
 void RecordContext::resolveImports()
 {
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<RecordCommandsState>(iocContext()));
+    }
 }
 
 void RecordContext::onInit(const IApplication::RunMode& mode)
@@ -95,13 +95,8 @@ void RecordContext::onInit(const IApplication::RunMode& mode)
     }
 
     m_controller->init();
-    m_uiActions->init();
     m_record->init();
-
-    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
+    m_timedRecordingScenario->init();
 }
 
 void RecordContext::onDeinit()

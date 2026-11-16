@@ -13,17 +13,17 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   wavpack::wavpack
    au3-import-export
-   au3-math
-   au3-mixer
 PRIVATE
    au3-files
+   au3-math
+   au3-mixer
    au3-string-utils
    au3-tags
    au3-track
    au3-wave-track
    rapidjson::rapidjson
+   wavpack::wavpack
    wxBase
 )
 

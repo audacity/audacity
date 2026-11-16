@@ -6,6 +6,7 @@
 #include <string>
 
 #include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/modularity/ioc.h"
 #include "framework/global/types/retval.h"
 
 #include "cloudtypes.h"
@@ -27,5 +28,7 @@ public:
 
     virtual muse::ValCh<AuthState> authState() const = 0;
     virtual bool isAuthorized() const = 0;
+
+    virtual muse::Ret ensureAuthorized(const muse::modularity::ContextPtr& ctx, bool createAccountMode = false) = 0;
 };
 }

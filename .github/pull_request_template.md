@@ -5,6 +5,8 @@ Resolves: *(direct link to the issue)*
 <!-- Use "x" to fill the checkboxes below like [x] -->
 
 - [ ] I signed [CLA](https://www.audacityteam.org/cla/)
+- [ ] This PR includes AI assistance
+- [ ] If the PR is AI-assisted, I have read, understood and complied with the [guidelines for AI-assisted contributions](https://github.com/audacity/audacity/blob/master/AI_POLICY.md)
 - [ ] The title of the pull request describes an issue it addresses
 - [ ] If changes are extensive, then there is a sequence of easily reviewable commits
 - [ ] Each commit's message describes its purpose and effects
@@ -12,7 +14,3 @@ Resolves: *(direct link to the issue)*
 
 Recommended:
 - [ ] Each commit compiles and runs on my machine without known undesirable changes of behavior
-
-QA:
-
-- [ ] Testflow test cases have been run

@@ -884,7 +884,7 @@ bool ProjectFileManager::IsAlreadyOpen(const FilePath& projPathName)
         auto errMsg
             =XO("%s is already open in another window.")
               .Format(newProjPathName.GetName());
-        wxLogError(errMsg.Translation()); //Debug?
+        wxLogError("%s", errMsg.Translation()); //Debug?
         AudacityMessageBox(
             errMsg,
             XO("Error Opening Project"),

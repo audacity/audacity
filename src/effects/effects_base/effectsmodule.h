@@ -11,7 +11,6 @@ class EffectsProvider;
 class EffectsMenuProvider;
 class EffectsConfiguration;
 class EffectsActionsController;
-class EffectsUiActions;
 class RealtimeEffectService;
 
 class EffectsModule : public muse::modularity::IModuleSetup
@@ -41,6 +40,7 @@ public:
         : muse::modularity::IContextSetup(ctx) {}
 
     void registerExports() override;
+    void resolveImports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onAllInited(const muse::IApplication::RunMode& mode) override;
 

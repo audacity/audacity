@@ -12,6 +12,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playbackmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/playbacktypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/playbackcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/iplayback.h
     ${CMAKE_CURRENT_LIST_DIR}/iplayer.h
     ${CMAKE_CURRENT_LIST_DIR}/iaudiooutput.h
@@ -25,14 +26,16 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iplaybackuistate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuistate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcommandsstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/playbackmetercontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/playbackuiactions.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3playback.h
@@ -84,12 +87,14 @@ set(MODULE_LINK
         au3wrap
         au3-audio-io
         au3-project-rate
-        au3-stretching-sequence
+        au3-clip-processing
         au3-time-frequency-selection
         au3-track
         au3-utility
         au3-wave-track
         uicomponents
+        uicomponents_qml
+        Qt::Quick
 )
 
 set(MODULE_USE_UNITY OFF)

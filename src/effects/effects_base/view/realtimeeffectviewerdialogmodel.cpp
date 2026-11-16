@@ -79,8 +79,7 @@ EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
     if (!m_effectState) {
         return EffectFamily::Unknown;
     }
-    const auto effectId = m_effectState->GetID().ToStdString();
-    return effectsProvider()->meta(muse::String::fromStdString(effectId)).family;
+    return effectsProvider()->meta(au::au3::wxToString(m_effectState->GetID())).family;
 }
 
 bool RealtimeEffectViewerDialogModel::prop_isActive() const
@@ -114,9 +113,9 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
     }
 
     m_effectState = reinterpret_cast<RealtimeEffectState*>(effectState.toULongLong())->shared_from_this();
-    const auto effectId = m_effectState->GetID().ToStdString();
+    const auto effectId = au::au3::wxToString(m_effectState->GetID());
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
-    instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
+    instancesRegister()->regInstance(effectId, instance, m_effectState->GetAccess());
 
     emit isActiveChanged();
     emit trackNameChanged();
@@ -182,7 +181,7 @@ bool RealtimeEffectViewerDialogModel::useVendorUI() const
         return true; // Default to vendor UI
     }
 
-    const auto effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    const auto effectId = au::au3::wxToString(m_effectState->GetID());
     if (effectId.empty()) {
         return true; // Default to vendor UI
     }
@@ -203,7 +202,7 @@ void RealtimeEffectViewerDialogModel::notifyVendorUiFailed()
         return;
     }
 
-    const EffectId effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    const EffectId effectId = au::au3::wxToString(m_effectState->GetID());
     const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(prop_effectFamily());
     if (!launcher) {
         return;
@@ -253,7 +252,7 @@ bool RealtimeEffectViewerDialogModel::vendorUiSupported() const
         return true;
     }
 
-    const EffectId effectId = muse::String::fromStdString(m_effectState->GetID().ToStdString());
+    const EffectId effectId = au::au3::wxToString(m_effectState->GetID());
     const IEffectViewLauncherPtr launcher = viewLaunchRegister()->launcher(prop_effectFamily());
     return launcher ? launcher->vendorUiSupported(effectId) : true;
 }

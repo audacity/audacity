@@ -65,13 +65,13 @@ Canvas {
     onPaint: {
         var ctx = getContext("2d")
         ctx.clearRect(0, 0, width, height)
-        ctx.lineWidth = root.lineWidth;
+        ctx.lineWidth = root.lineWidth
 
         // Draw black dashes
         ctx.strokeStyle = "black"
         ctx.setLineDash([4, 4])
         ctx.lineDashOffset = 0
-        ctx.strokeRect(0.5, 0.5, width - 1, height - 1);
+        ctx.strokeRect(0.5, 0.5, width - 1, height - 1)
 
         // Draw white dashes offset by 4px
         ctx.strokeStyle = root.color

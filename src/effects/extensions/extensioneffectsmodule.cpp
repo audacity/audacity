@@ -6,7 +6,6 @@
 #include <memory>
 #include <string>
 
-#include "framework/extensions/internal/extensionsprovider.h"
 #include "framework/audioplugins/iaudiopluginmetareaderregister.h"
 #include "framework/audioplugins/iaudiopluginsscannerregister.h"
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
@@ -31,9 +30,8 @@ const std::string mname = "effects_extensions";
 }
 
 ExtensionEffectsModule::ExtensionEffectsModule()
-    : m_extensionsProvider(std::make_shared<muse::extensions::ExtensionsProvider>(muse::modularity::globalCtx())),
-    m_repository(std::make_shared<ExtensionEffectsRepository>()), m_effectLoader(std::make_shared<ExtensionEffectLoader>(m_repository)),
-    m_scanner(std::make_shared<ExtensionEffectsScanner>(m_extensionsProvider, m_repository, m_effectLoader))
+    : m_repository(std::make_shared<ExtensionEffectsRepository>()), m_effectLoader(std::make_shared<ExtensionEffectLoader>(m_repository)),
+    m_scanner(std::make_shared<ExtensionEffectsScanner>(m_repository))
 {
 }
 
@@ -60,8 +58,7 @@ void ExtensionEffectsModule::resolveImports()
 
 void ExtensionEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    m_extensionsProvider->reloadExtensions();
-    m_repository->initialize(m_extensionsProvider->manifestList(muse::extensions::Filter::Enabled));
+    m_repository->init();
 }
 
 void ExtensionEffectsModule::onDeinit()

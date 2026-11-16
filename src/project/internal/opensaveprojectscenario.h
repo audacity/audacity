@@ -28,6 +28,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/multiwindows/imultiwindowsprovider.h"
 
 #include "framework/cloud/musescorecom/imusescorecomservice.h"
 #include "framework/cloud/audiocom/iaudiocomservice.h"
@@ -45,6 +46,7 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Co
     muse::GlobalInject<muse::cloud::IMuseScoreComService> museScoreComService;
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
     muse::GlobalInject<au::au3cloud::IAu3CloudConfiguration> cloudConfiguration;
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
     muse::ContextInject<IProjectFilesController> projectFilesController { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
@@ -59,7 +61,6 @@ public:
     muse::RetVal<muse::io::path_t> askLocalPath(IAudacityProjectPtr project, SaveMode mode) const override;
     muse::RetVal<CloudProjectInfo> askCloudLocation(IAudacityProjectPtr project, SaveMode mode) const override;
     muse::RetVal<CloudProjectInfo> askPublishLocation(IAudacityProjectPtr project) const override;
-    muse::RetVal<CloudAudioInfo> askShareAudioLocation(IAudacityProjectPtr project) const override;
 
     muse::RetVal<muse::io::path_t> resolveLegacyProjectFormat(const muse::io::path_t& path) const override;
 

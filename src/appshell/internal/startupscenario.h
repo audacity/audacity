@@ -29,7 +29,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
 #include "update/iappupdatescenario.h"
 #include "record/irecordcontroller.h"
@@ -42,11 +42,12 @@
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Contextable
 {
+protected:
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<ISessionsManager> sessionsManager { this };
     muse::ContextInject<effects::IEffectsProviderInitializer> effectsProviderInitializer { this };
     muse::ContextInject<muse::update::IAppUpdateScenario> appUpdateScenario { this };
@@ -56,6 +57,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
+    virtual ~StartupScenario() = default;
 
     void setStartupType(const std::optional<std::string>& type) override;
 
@@ -73,12 +75,17 @@ public:
     void runAfterSplashScreen() override;
     bool startupCompleted() const override;
 
-private:
-    void onStartupPageOpened(StartupModeType modeType);
-    void showStartupDialogsIfNeed(StartupModeType modeType);
+protected:
+    virtual StartupModeType resolveStartupModeType() const;
+    virtual bool allowsFirstLaunchOverride() const;
+    virtual bool allowsRecoveryOverride() const;
+    virtual void showStartupDialogsIfNeed(StartupModeType modeType);
 
     bool hasExplicitStartupTarget() const;
-    StartupModeType resolveStartupModeType() const;
+
+private:
+    void onStartupPageOpened(StartupModeType modeType);
+
     muse::Uri startupPageUri(StartupModeType modeType) const;
 
     void openProject(const au::project::ProjectFile& file);

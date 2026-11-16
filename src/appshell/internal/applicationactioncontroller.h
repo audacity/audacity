@@ -29,13 +29,12 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/iapplicationeventcontroller.h"
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/commandable.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iplatforminteractive.h"
-#include "framework/ui/iuiactionsregister.h"
 #include "framework/ui/imainwindow.h"
 #include "framework/ui/inavigationcontroller.h"
+#include "framework/update/iappupdateservice.h"
 
 #include "iappshellconfiguration.h"
 #include "iapplication.h"
@@ -54,7 +53,7 @@
 class QFileOpenEvent;
 
 namespace au::appshell {
-class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
+class ApplicationActionController : public QObject, public IApplicationActionController, public muse::rcommand::Commandable,
     public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IApplication> application;
@@ -63,12 +62,11 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
     muse::GlobalInject<muse::IApplicationEventController> applicationEventController;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
-    muse::ContextInject<muse::ui::IUiActionsRegister> actionsRegister { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::update::IAppUpdateService> appUpdateService { this };
     muse::ContextInject<appshell::IStartupScenario> startupScenario { this };
     muse::ContextInject<project::IProjectFilesController> projectFilesController { this };
     muse::ContextInject<record::IRecordController> recordController { this };
@@ -86,7 +84,6 @@ public:
     void preInit();
     void init();
     void processPendingEvents();
-    const std::vector<muse::actions::ActionCode>& prohibitedActionsWhileRecording() const;
 
     muse::ValCh<bool> isFullScreen() const;
 
@@ -94,7 +91,7 @@ public:
     void onDragMoveEvent(QDragMoveEvent* event) override;
     void onDropEvent(QDropEvent* event) override;
 
-    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
+    muse::async::Channel<DockName> dockToggleRequested() const override;
 
 private:
     bool eventFilter(QObject* watched, QEvent* event) override;
@@ -104,38 +101,29 @@ private:
     void setupConnections();
 
     bool quit(const muse::io::path_t& installerPath = "");
-    void restart();
+    muse::Ret restart();
 
-    void toggleFullScreen();
-    void openAboutDialog();
-    void openAboutQtDialog();
+    muse::Ret toggleFullScreen();
+    muse::Ret openAboutDialog();
+    muse::Ret openAboutQtDialog();
 
-    void openOnlineHandbookPage();
-    void openAskForHelpPage();
-    void openPreferencesDialog();
-    void openAudioSettingsDialog();
-    void openShortcutsPreferencesDialog();
-    void openEditingPreferencesDialog();
-    void openSpectrogramPreferencesDialog();
+    muse::Ret openOnlineHandbookPage();
+    muse::Ret openAskForHelpPage();
+    muse::Ret openPreferencesDialog();
+    muse::Ret openAudioSettingsDialog();
+    muse::Ret openShortcutsPreferencesDialog();
+    muse::Ret openEditingPreferencesDialog();
+    muse::Ret openSpectrogramPreferencesDialog();
 
-    void revertToFactorySettings();
+    muse::Ret revertToFactorySettings();
 
     bool isProjectOpened() const;
-    bool isProjectOpenedAndFocused() const;
 
-    void doGlobalCopy();
-    void doGlobalCut();
-    void doGlobalPaste();
-    void doGlobalUndo();
-    void doGlobalRedo();
-    void doGlobalDelete();
-    void doGlobalCancel();
-    void doGlobalTrigger();
-    void doGlobalEnter();
+    muse::Ret doGlobalContextMenu();
 
     bool m_quiting = false;
 
-    muse::async::Channel<muse::actions::ActionCodeList> m_actionsReceiveAvailableChanged;
+    muse::async::Channel<DockName> m_dockToggleRequested;
 };
 }
 

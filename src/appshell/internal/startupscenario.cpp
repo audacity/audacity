@@ -28,10 +28,13 @@
 #include "framework/global/settings.h"
 #include "framework/global/types/uri.h"
 
+#include "appshell/appshellcommands.h"
 #include "appshell/appshelltypes.h"
+#include "au3cloud/cloudcommands.h"
+#include "project/projectcommands.h"
 
 using namespace au::appshell;
-using namespace muse::actions;
+using namespace muse;
 using namespace au::project;
 
 static const muse::Settings::Key LAST_UPDATE_CHECK_DAY_KEY("appshell", "application/lastUpdateCheckRequestDay");
@@ -41,6 +44,7 @@ static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
 static const muse::UriQuery WELCOME_DIALOG_URI("audacity://welcomedialog");
 static const muse::Uri HOME_URI("audacity://home");
 static const muse::Uri PROJECT_URI("audacity://project");
+static const muse::Uri AUTO_RECOVERY_URI("audacity://autorecovery");
 
 static StartupModeType modeTypeFromString(const std::string& str)
 {
@@ -114,7 +118,7 @@ void StartupScenario::setRemoveMediaFilesAfterImport(bool remove)
 void StartupScenario::setStartupUrl(const QString& url)
 {
     if (m_startupCompleted && !url.isEmpty()) {
-        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(url));
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(url) } });
         return;
     }
     m_startupUrl = url;
@@ -144,12 +148,11 @@ void StartupScenario::runAfterSplashScreen()
     m_startupCompleted = true;
 
     StartupModeType modeType = resolveStartupModeType();
-    const bool canOverrideStartupMode = multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
-    if (canOverrideStartupMode && sessionsManager()->hasProjectsForRestore()) {
-        modeType = StartupModeType::Recovery;
-    }
-    if (canOverrideStartupMode && !configuration()->hasCompletedFirstLaunchSetup()) {
+
+    if (allowsFirstLaunchOverride() && !configuration()->hasCompletedFirstLaunchSetup()) {
         modeType = StartupModeType::FirstLaunch;
+    } else if (allowsRecoveryOverride() && sessionsManager()->hasProjectsForRestore()) {
+        modeType = StartupModeType::Recovery;
     }
 
     const muse::Uri startupUri = startupPageUri(modeType);
@@ -165,6 +168,16 @@ void StartupScenario::runAfterSplashScreen()
 bool StartupScenario::startupCompleted() const
 {
     return m_startupCompleted;
+}
+
+bool StartupScenario::allowsFirstLaunchOverride() const
+{
+    return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
+}
+
+bool StartupScenario::allowsRecoveryOverride() const
+{
+    return multiwindowsProvider()->isFirstWindow() && !hasExplicitStartupTarget();
 }
 
 bool StartupScenario::hasExplicitStartupTarget() const
@@ -193,39 +206,32 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
-    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
-        appUpdateScenario()->checkInProgressChanged().onNotify(this, [this, modeType]() {
-            appUpdateScenario()->checkInProgressChanged().disconnect(this);
-            showStartupDialogsIfNeed(modeType);
-        }, muse::async::Asyncable::Mode::SetReplace);
-    }
-
     showStartupDialogsIfNeed(modeType);
 
     if (!m_startupMediaFiles.empty()) {
-        QStringList files;
+        ValList files;
         for (const auto& file : m_startupMediaFiles) {
-            files << file.toQString();
+            files.emplace_back(file.toQString());
         }
 
-        dispatcher()->dispatch("project-import-startup-media",
-                               ActionData::make_arg2<QStringList, bool>(files, m_removeMediaFilesAfterImport));
+        commandDispatcher()->dispatch(PROJECT_IMPORT_STARTUP_MEDIA_COMMAND, {
+            { PROJECT_FILES_PARAM, Val(files) },
+            { PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(m_removeMediaFilesAfterImport) },
+        });
         return;
     }
 
     if (!m_startupUrl.isEmpty()) {
-        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(m_startupUrl));
+        commandDispatcher()->dispatch(au3cloud::CLOUD_OPEN_URL_COMMAND, { { au3cloud::CLOUD_OPEN_URL_URL_PARAM, Val(m_startupUrl) } });
         return;
     }
 
     switch (modeType) {
     case StartupModeType::StartEmpty:
+    case StartupModeType::ContinueLastSession:
         break;
     case StartupModeType::StartWithNewProject:
-        dispatcher()->dispatch("file-new");
-        break;
-    case StartupModeType::ContinueLastSession:
-        dispatcher()->dispatch("continue-last-session");
+        commandDispatcher()->dispatch(PROJECT_NEW_COMMAND);
         break;
     case StartupModeType::Recovery:
         restoreLastSession();
@@ -237,7 +243,7 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
         openProject(file);
     } break;
     case StartupModeType::FirstLaunch: {
-        dispatcher()->dispatch("file-new");
+        commandDispatcher()->dispatch(PROJECT_NEW_COMMAND);
     } break;
     }
 }
@@ -245,11 +251,6 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
 {
     if (!multiwindowsProvider()->isFirstWindow()) {
-        return;
-    }
-
-    // Delay popups until update check finished
-    if (appUpdateScenario() && appUpdateScenario()->checkInProgress()) {
         return;
     }
 
@@ -276,7 +277,7 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
         };
 
         if (!configuration()->hasCompletedFirstLaunchSetup()) {
-            interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
+            interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [](const muse::Val&, auto resolve) {
                 return resolve();
             });
         } else {
@@ -284,19 +285,7 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
         }
     };
 
-    if (!appUpdateScenario() || !appUpdateScenario()->hasUpdate()) {
-        showWelcomeDialogIfNeed();
-        return;
-    }
-
-    auto promise = appUpdateScenario()->showUpdate();
-    promise.onResolve(this, [showWelcomeDialogIfNeed](const muse::Ret& ret) {
-        // Ok means close the app and install the update
-        if (ret.code() == static_cast<int>(muse::Ret::Code::Ok)) {
-            return;
-        }
-        showWelcomeDialogIfNeed();
-    });
+    showWelcomeDialogIfNeed();
 }
 
 muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
@@ -317,22 +306,18 @@ muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
 
 void StartupScenario::openProject(const ProjectFile& file)
 {
-    dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(file.url, file.displayNameOverride));
+    commandDispatcher()->dispatch(PROJECT_OPEN_COMMAND, {
+        { PROJECT_URL_PARAM, Val(file.url.toString()) },
+        { PROJECT_DISPLAY_NAME_PARAM, Val(file.displayNameOverride) },
+    });
 }
 
 void StartupScenario::restoreLastSession()
 {
-    auto promise = interactive()->question(muse::trc("appshell", "The previous session quit unexpectedly."),
-                                           muse::trc("appshell", "Do you want to restore the session?"),
-                                           { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes },
-                                           muse::IInteractive::Button::NoButton, {},
-                                           muse::trc("appshell", "Restore session"));
-
-    promise.onResolve(this, [this](const muse::IInteractive::Result& res) {
-        if (res.isButton(muse::IInteractive::Button::Yes)) {
-            sessionsManager()->restore();
-        } else {
-            sessionsManager()->reset();
+    auto promise = interactive()->open(AUTO_RECOVERY_URI);
+    promise.onResolve(this, [this](const muse::Val& val) {
+        if (val.toQVariant().toMap().value("action").toString() == "quit") {
+            commandDispatcher()->dispatch(APP_QUIT_COMMAND);
         }
     });
 }

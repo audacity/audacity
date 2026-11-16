@@ -9,7 +9,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 #include "framework/interactive/iinteractive.h"
 #include "appshell/iappshellconfiguration.h"
 #include "importexport/export/iexportconfiguration.h"
@@ -18,6 +18,7 @@
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "playback/iplaybackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "audio/driver/iaudiodrivercontroller.h"
 
 namespace au::importexport {
 class ExportPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -27,8 +28,9 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
+    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<IExporter> exporter{ this };
@@ -40,6 +42,15 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)
 
     Q_PROPERTY(bool trimBlankSpace READ trimBlankSpace WRITE setTrimBlankSpace NOTIFY trimBlankSpaceChanged)
+    Q_PROPERTY(bool trimBlankSpaceEnabled READ trimBlankSpaceEnabled NOTIFY trimBlankSpaceEnabledChanged)
+
+    Q_PROPERTY(bool separateFilesExport READ separateFilesExport NOTIFY currentProcessChanged)
+    Q_PROPERTY(bool separateFilesByLabels READ separateFilesByLabels NOTIFY currentProcessChanged)
+    Q_PROPERTY(QString fileNamePrefix READ fileNamePrefix WRITE setFileNamePrefix NOTIFY fileNamePrefixChanged)
+    Q_PROPERTY(bool includeNumbers READ includeNumbers WRITE setIncludeNumbers NOTIFY includeNumbersChanged)
+    Q_PROPERTY(
+        bool includeAudioBeforeFirstLabel READ includeAudioBeforeFirstLabel WRITE setIncludeAudioBeforeFirstLabel NOTIFY includeAudioBeforeFirstLabelChanged)
+    Q_PROPERTY(QString fileNamePreview READ fileNamePreview NOTIFY fileNamePreviewChanged)
 
     Q_PROPERTY(QString filename READ filename NOTIFY filenameChanged)
     Q_PROPERTY(QString suggestedFilePath READ suggestedFilePath NOTIFY suggestedFilePathChanged)
@@ -57,9 +68,10 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
 
     // dynamic inputs section
     Q_PROPERTY(bool customFFmpegOptionsVisible READ customFFmpegOptionsVisible NOTIFY customFFmpegOptionsVisibleChanged)
-    Q_PROPERTY(bool oggFormatOptionsVisible READ oggFormatOptionsVisible NOTIFY oggFormatOptionsVisibleChanged)
     Q_PROPERTY(bool hasMetadata READ hasMetadata NOTIFY hasMetadataChanged)
     Q_PROPERTY(int optionsCount READ optionsCount NOTIFY optionsCountChanged)
+
+    Q_PROPERTY(bool settingsOnly READ settingsOnly WRITE setSettingsOnly NOTIFY settingsOnlyChanged)
 
 public:
     explicit ExportPreferencesModel(QObject* parent = nullptr);
@@ -69,12 +81,26 @@ public:
     Q_INVOKABLE void apply();
     Q_INVOKABLE void cancel();
 
+    bool settingsOnly() const;
+    void setSettingsOnly(bool settingsOnly);
+
     QString currentProcess() const;
     Q_INVOKABLE void setCurrentProcess(const QString& process);
     QVariantList processList() const;
 
     bool trimBlankSpace() const;
     void setTrimBlankSpace(bool trim);
+    bool trimBlankSpaceEnabled() const;
+
+    bool separateFilesExport() const;
+    bool separateFilesByLabels() const;
+    QString fileNamePrefix() const;
+    void setFileNamePrefix(const QString& prefix);
+    bool includeNumbers() const;
+    void setIncludeNumbers(bool include);
+    bool includeAudioBeforeFirstLabel() const;
+    void setIncludeAudioBeforeFirstLabel(bool include);
+    QString fileNamePreview() const;
 
     QString filename() const;
     Q_INVOKABLE void setFilename(const QString& filename);
@@ -108,7 +134,6 @@ public:
 
     // dynamic inputs
     bool customFFmpegOptionsVisible();
-    bool oggFormatOptionsVisible();
     bool hasMetadata();
     int optionsCount();
 
@@ -119,9 +144,15 @@ public:
     muse::Ret warnAndDisableMasterFxBeforeExport() const;
 
 signals:
+    void settingsOnlyChanged();
     void currentProcessChanged();
     void processListChanged();
     void trimBlankSpaceChanged();
+    void trimBlankSpaceEnabledChanged();
+    void fileNamePrefixChanged();
+    void includeNumbersChanged();
+    void includeAudioBeforeFirstLabelChanged();
+    void fileNamePreviewChanged();
     void filenameChanged();
     void suggestedFilePathChanged();
     void fileExtensionChanged();
@@ -134,7 +165,6 @@ signals:
     void exportSampleRateListChanged();
 
     void customFFmpegOptionsVisibleChanged();
-    void oggFormatOptionsVisibleChanged();
     void hasMetadataChanged();
     void optionsCountChanged();
     void optionTitleListChanged();
@@ -142,12 +172,21 @@ signals:
     void exportCompleted();
 
 private:
+    muse::io::path_t exportFilePath() const;
     void updateCurrentSampleRate();
     void openCustomSampleRateDialog();
     void updateExportChannels();
 
+    bool hasLabelsToExport() const;
+    muse::Ret exportSingleFile();
+    muse::Ret exportSeparateFiles();
+    bool confirmOverwrite(const std::string& question);
+    IExporter::Options separateFilesOptions() const;
+
     QString m_filename;
+    QString m_fileNamePrefix;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;
+    bool m_settingsOnly = false;
 };
 }

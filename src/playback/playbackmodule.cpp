@@ -6,11 +6,14 @@
 #include <QtQml>
 
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
+#include "internal/playbackcommandsregister.h"
+#include "internal/playbackcommandsstate.h"
 #include "internal/playbackconfiguration.h"
 #include "internal/playbackcontroller.h"
 #include "internal/playbackmetercontroller.h"
-#include "internal/playbackuiactions.h"
 #include "internal/playbackuistate.h"
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
@@ -26,8 +29,6 @@
 using namespace au::playback;
 using namespace muse;
 using namespace muse::modularity;
-using namespace muse::ui;
-using namespace muse::actions;
 
 static const std::string mname("playback");
 
@@ -76,6 +77,11 @@ void PlaybackModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://playback/loop_region_in_out"), "Audacity/Playback/dialogs/LoopRegionInOut.qml");
     }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<PlaybackCommandsRegister>());
+    }
 }
 
 void PlaybackModule::onInit(const IApplication::RunMode& mode)
@@ -104,7 +110,6 @@ IContextSetup* PlaybackModule::newContext(const muse::modularity::ContextPtr& ct
 void PlaybackContext::registerExports()
 {
     m_controller = std::make_shared<PlaybackController>(iocContext());
-    m_uiActions = std::make_shared<PlaybackUiActions>(iocContext(), m_controller);
     m_playback = std::make_shared<Au3Playback>(iocContext());
     m_uiState = std::make_shared<PlaybackUiState>(iocContext());
 
@@ -113,6 +118,14 @@ void PlaybackContext::registerExports()
     ioc()->registerExport<IPlaybackUiState>(mname, m_uiState);
     ioc()->registerExport<playback::IPlayback>(mname, m_playback);
     ioc()->registerExport<ITrackPlaybackControl>(mname, std::make_shared<Au3TrackPlaybackControl>(iocContext()));
+}
+
+void PlaybackContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<PlaybackCommandsState>(iocContext()));
+    }
 }
 
 void PlaybackContext::onInit(const IApplication::RunMode& mode)
@@ -125,14 +138,8 @@ void PlaybackContext::onInit(const IApplication::RunMode& mode)
         return;
     }
 
-    m_uiActions->init();
     m_controller->init();
     m_uiState->init();
-
-    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void PlaybackContext::onDeinit()

@@ -22,10 +22,7 @@ Item {
 
     property var navigationPanels: null
     property var headerNavigationPanels: null
-    property NavigationPanel effectColumnNavigationPanel: null
-
-    property NavigationSection trackEffectsNavigationSection: null
-    property NavigationSection masterEffectsNavigationSection: null
+    property NavigationPanel effectsNavigationPanel: null
 
     signal openEffectsRequested
     signal panelActive(var trackId)
@@ -34,12 +31,8 @@ Item {
         id: tracksModel
     }
 
-    //! NOTE Sync with TracksItemsView
     TracksViewStateModel {
         id: tracksViewState
-        onTracksVerticalOffsetChanged: {
-            view.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight
-        }
     }
 
     Component.onCompleted: {
@@ -52,7 +45,6 @@ Item {
         id: prv
 
         property string currentItemNavigationName: ""
-        readonly property int listHeaderHeight: 2
     }
 
     Rectangle {
@@ -79,10 +71,12 @@ Item {
             RealtimeEffectSectionModel {
                 id: effectSectionModel
 
+                navigationFocusInsideEffectsPanel: root.effectsNavigationPanel.section.active || trackEffectsSection.hasPendingDialogRestore || masterEffectsSection.hasPendingDialogRestore
+
                 onFocusEffectsPanelRequested: {
                     Qt.callLater(function () {
-                        if (root.effectColumnNavigationPanel && effectColumn.visible) {
-                            root.effectColumnNavigationPanel.requestActive()
+                        if (root.effectsNavigationPanel && effectColumn.visible) {
+                            trackEffectsSection.requestActive()
                         }
                     })
                 }
@@ -93,8 +87,7 @@ Item {
             TrackEffectsSection {
                 id: trackEffectsSection
 
-                navigationSection: trackEffectsNavigationSection
-                navigationPanel: root.effectColumnNavigationPanel
+                navigationPanel: root.effectsNavigationPanel
                 navigationOrderStart: 1
 
                 Layout.fillWidth: true
@@ -136,8 +129,7 @@ Item {
             TrackEffectsSection {
                 id: masterEffectsSection
 
-                navigationSection: masterEffectsNavigationSection
-                navigationPanel: root.effectColumnNavigationPanel
+                navigationPanel: root.effectsNavigationPanel
                 navigationOrderStart: trackEffectsSection.navigationOrderEnd + 1
 
                 Layout.fillWidth: true
@@ -159,7 +151,7 @@ Item {
             readonly property int sideMargin: 12
             spacing: sideMargin
 
-            StyledListView {
+            TracksListView {
                 id: view
 
                 Layout.topMargin: 1
@@ -169,41 +161,9 @@ Item {
                 spacing: 0
                 cacheBuffer: 3000
 
-                ScrollBar.vertical: null
-
-                property real lockedVerticalScrollPosition
-                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
-
-                onVerticalScrollLockedChanged: {
-                    lockedVerticalScrollPosition = contentY
-                }
-
-                onContentYChanged: {
-                    if (verticalScrollLocked) {
-                        view.contentY = lockedVerticalScrollPosition
-                    } else {
-                        tracksViewState.changeTracksVerticalOffset(view.contentY + prv.listHeaderHeight)
-                    }
-                }
-
-                interactive: false
+                tracksViewState: tracksViewState
 
                 model: tracksModel
-
-                header: Rectangle {
-                    height: prv.listHeaderHeight
-                    width: parent.width
-                    color: "transparent"
-                }
-
-                footer: Item {
-                    height: tracksViewState.tracksVerticalScrollPadding
-                }
-
-                function insureVerticallyVisible(item) {
-                    var itemViewY = item.mapToItem(view.contentItem, Qt.point(0, 0)).y
-                    tracksViewState.insureVerticallyVisible(view.contentY + prv.listHeaderHeight, view.height, itemViewY + prv.listHeaderHeight, item.height)
-                }
 
                 delegate: Loader {
                     id: trackItemLoader
@@ -242,7 +202,7 @@ Item {
                                 if (navigation.active) {
                                     prv.currentItemNavigationName = navigation.name
 
-                                    view.insureVerticallyVisible(this)
+                                    view.ensureVerticallyVisible(this)
                                 }
                             }
 
@@ -266,6 +226,8 @@ Item {
                                 tracksModel.focusTrack(index)
                                 effectSectionModel.showEffectsSection = true
                                 root.openEffectsRequested()
+
+                                trackEffectsSection.requestActive()
                             }
 
                             onRemoveSelectionRequested: {
@@ -307,7 +269,7 @@ Item {
                                 if (navigation.active) {
                                     prv.currentItemNavigationName = navigation.name
 
-                                    view.insureVerticallyVisible(this)
+                                    view.ensureVerticallyVisible(this)
                                 }
                             }
 

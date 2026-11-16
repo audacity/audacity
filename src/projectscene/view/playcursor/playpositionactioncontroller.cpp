@@ -24,34 +24,18 @@
 
 #include "global/realfn.h"
 
+#include "playback/playbackcommands.h"
+
 using namespace au::projectscene;
-using namespace muse::actions;
 
-static const ActionCode PLAY_POSITION_DECREASE("play-position-decrease");
-static const ActionCode PLAY_POSITION_INCREASE("play-position-increase");
-static const ActionCode SEL_EXT_LEFT("sel-ext-left");
-static const ActionCode SEL_EXT_RIGHT("sel-ext-right");
-static const ActionCode SEL_CNTR_LEFT("sel-cntr-left");
-static const ActionCode SEL_CNTR_RIGHT("sel-cntr-right");
-static const ActionCode CURS_SEL_START("curs-sel-start");
-static const ActionCode CURS_SEL_END("curs-sel-end");
-static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
-
-au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
-    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+PlayPositionActionController::PlayPositionActionController(TimelineContext* context, const muse::modularity::ContextPtr& ctx)
+    : muse::Contextable(ctx), m_context(context)
 {
 }
 
 void PlayPositionActionController::init()
 {
-    dispatcher()->reg(this, PLAY_POSITION_DECREASE, this, &PlayPositionActionController::playPositionDecrease);
-    dispatcher()->reg(this, PLAY_POSITION_INCREASE, this, &PlayPositionActionController::playPositionIncrease);
-    dispatcher()->reg(this, SEL_EXT_LEFT, this, &PlayPositionActionController::selectionExtendLeft);
-    dispatcher()->reg(this, SEL_EXT_RIGHT, this, &PlayPositionActionController::selectionExtendRight);
-    dispatcher()->reg(this, SEL_CNTR_LEFT, this, &PlayPositionActionController::selectionContractLeft);
-    dispatcher()->reg(this, SEL_CNTR_RIGHT, this, &PlayPositionActionController::selectionContractRight);
-    dispatcher()->reg(this, CURS_SEL_START, this, &PlayPositionActionController::cursorToSelectionStart);
-    dispatcher()->reg(this, CURS_SEL_END, this, &PlayPositionActionController::cursorToSelectionEnd);
+    projectSceneActionsController()->setPlayPositionViewController(this);
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         onProjectChanged();
@@ -60,19 +44,11 @@ void PlayPositionActionController::init()
     onProjectChanged();
 }
 
-TimelineContext* PlayPositionActionController::timelineContext() const
+void PlayPositionActionController::deinit()
 {
-    return m_context;
-}
-
-void PlayPositionActionController::setTimelineContext(TimelineContext* newContext)
-{
-    if (m_context == newContext) {
-        return;
+    if (projectSceneActionsController()->playPositionViewController() == this) {
+        projectSceneActionsController()->setPlayPositionViewController(nullptr);
     }
-
-    m_context = newContext;
-    emit timelineContextChanged();
 }
 
 void PlayPositionActionController::playPositionDecrease()
@@ -91,10 +67,10 @@ void PlayPositionActionController::snapCurrentPosition()
     const double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
     const muse::secs_t secs = m_context->positionToTime(currentXPosition, true);
     if (muse::RealIsEqualOrMore(secs, 0.0) || !muse::RealIsEqual(secs, currentPlaybackPosition)) {
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(secs));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
+        commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+            { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(secs) },
+            { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+        });
     }
 }
 
@@ -115,10 +91,10 @@ void PlayPositionActionController::applySingleStep(Direction direction)
 
 void PlayPositionActionController::movePlayPositionTo(muse::secs_t secs)
 {
-    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-    q.addParam("seekTime", muse::Val(secs));
-    q.addParam("triggerPlay", muse::Val(false));
-    dispatcher()->dispatch(q);
+    commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+        { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(secs) },
+        { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+    });
 
     m_context->animatedInsureVisible(secs);
 }

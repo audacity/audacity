@@ -19,9 +19,9 @@ set(MODULE_TEST_LINK
 
 set(MODULE_TEST_INCLUDE
     ${MUSE_FRAMEWORK_PATH}/framework/multiwindows
-    ${MUSE_FRAMEWORK_PATH}/framework/actions
     ${MUSE_FRAMEWORK_PATH}/framework/interactive
     ${MUSE_FRAMEWORK_PATH}/framework/global
+    ${MUSE_FRAMEWORK_PATH}/framework/rcommand
     ${CMAKE_SOURCE_DIR}/src/appshell
     ${CMAKE_SOURCE_DIR}/src/record
 )

@@ -14,8 +14,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/trackedittypes.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditinteraction.h
-    ${CMAKE_CURRENT_LIST_DIR}/itrackeditactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/trackeditcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/iselectioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/itracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/itracksinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/iclipsinteraction.h
     ${CMAKE_CURRENT_LIST_DIR}/ilabelsinteraction.h
@@ -47,12 +48,16 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditoperationcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/trackedituiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/trackedituiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/itracknavigationcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
@@ -117,7 +122,7 @@ set(MODULE_LINK
         au3-project-history
         au3-project-rate
         au3-realtime-effects
-        au3-stretching-sequence
+        au3-clip-processing
         au3-time-frequency-selection
         au3-time-track
         au3-track
@@ -125,6 +130,7 @@ set(MODULE_LINK
         au3-wave-track
         extension_native
         muse::draw
+        Qt::Quick
 )
 
 set(MODULE_USE_UNITY OFF)

@@ -11,7 +11,6 @@
 namespace au::playback {
 class PlaybackConfiguration;
 class PlaybackController;
-class PlaybackUiActions;
 class PlaybackUiState;
 class PlaybackMeterController;
 class Au3Playback;
@@ -41,12 +40,12 @@ public:
         : muse::modularity::IContextSetup(ctx) {}
 
     void registerExports() override;
+    void resolveImports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:
     std::shared_ptr<PlaybackController> m_controller;
-    std::shared_ptr<PlaybackUiActions> m_uiActions;
     std::shared_ptr<Au3Playback> m_playback;
     std::shared_ptr<PlaybackUiState> m_uiState;
 };

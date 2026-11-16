@@ -33,7 +33,7 @@ execute_process(
     COMMAND cmake -P ${CI_TOOLS}/make_branch_env.cmake
 )
 
-# Make artifact name env
+# Make upload artifact name env
 execute_process(
-    COMMAND cmake -DPREFIX=AU4 -DARTIFACT_INFO=${ARTIFACT_INFO} -P ${CI_TOOLS}/make_artifact_name_env.cmake
+    COMMAND cmake -DPREFIX=AU4 -DARTIFACT_INFO=${ARTIFACT_INFO} -P ${CI_TOOLS}/make_upload_artifact_name_env.cmake
 )

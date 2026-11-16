@@ -1,8 +1,21 @@
 name: Audacity 3.x Bug report
-description: File a bug report
+description: Report an issue with Audacity 3
 labels: ["AU3-bug"]
 type: "bug"
 body:
+  - type: markdown
+    attributes:
+      value: |
+        Please verify whether the issue is also in Audacity 4. Download it from https://www.audacityteam.org/download/
+  - type: dropdown
+    id: au4-repro
+    attributes:
+      label: Is this bug reproducible in Audacity 4?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
   - type: textarea
     id: desc
     attributes:
@@ -15,7 +28,7 @@ body:
     id: str
     attributes:
       label: Steps to reproduce
-      description: Please provide step-by-step instructions to reproduce this bug 
+      description: Please provide step-by-step instructions to reproduce this bug
       placeholder: |
         1. go to ...
         2. then click on ...
@@ -61,7 +74,7 @@ body:
         - Linux
         - Other
         - OS independent
-    validations: 
+    validations:
       required: true
   - type: textarea
     id: context

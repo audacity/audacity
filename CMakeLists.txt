@@ -32,6 +32,8 @@ set(CMAKE_MODULE_PATH
     ${CMAKE_MODULE_PATH}
     )
 
+option(MUSE_MODULE_DOCKWINDOW_KDDOCKWIDGETS_V2 "Use KDDockWidgets v2" ON)
+
 include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseDeclareOptions.cmake)
 include(DeclareModuleSetup)
 
@@ -72,6 +74,9 @@ option(AU_BUILD_CONTEXT_TESTS "Build context tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
 option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_IMPORT_TESTS "Build import tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_EXPORT_TESTS "Build export tests" ${MUSE_ENABLE_UNIT_TESTS})
+option(AU_BUILD_MUSEHUB_MODULE "Build Muse Hub module" ON)
+option(AU_BUILD_MACROMANAGER_TESTS "Build macromanager tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
 option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ${MUSE_ENABLE_UNIT_TESTS})
 option(AU_BUILD_PREFERENCES_TESTS "Build preferences tests" ${MUSE_ENABLE_UNIT_TESTS})
@@ -91,6 +96,7 @@ option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
 option(AU_MODULE_EFFECTS_NYQUIST "Build audacity nyquist module" ON)
 
 if (OS_IS_LIN)
+    set(AU_BUILD_MUSEHUB_MODULE OFF CACHE BOOL "Build Muse Hub module" FORCE)
     option(AU_MODULE_EFFECTS_LV2 "Build audacity lv2 module" ON)
 endif(OS_IS_LIN)
 
@@ -132,6 +138,7 @@ set(MUSE_MODULE_MULTIWINDOWS_SINGLEPROC_MODE ON)
 set(MUSE_MODULE_MUSESAMPLER OFF)
 set(MUSE_MODULE_NETWORK ON)
 set(MUSE_MODULE_SHORTCUTS ON)
+set(MUSE_MODULE_SHORTCUTS_V2 ON)
 set(MUSE_MODULE_TESTFLOW ON)
 set(MUSE_MODULE_TOAST ON)
 set(MUSE_MODULE_UI ON)

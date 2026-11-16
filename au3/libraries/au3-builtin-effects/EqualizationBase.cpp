@@ -3,6 +3,7 @@
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 const EffectParameterMethods& EqualizationBase::Parameters() const
 {
@@ -319,7 +320,7 @@ bool EqualizationBase::Process(EffectInstance&, EffectSettings&)
             auto end = track->TimeToLongSamples(t1);
             auto len = end - start;
 
-            auto pTempTrack = track->EmptyCopy();
+            auto pTempTrack = WaveTrackUtilities::EmptyCopy(*track, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
             pTempTrack->ConvertToSampleFormat(floatSample);
             auto iter0 = pTempTrack->Channels().begin();
 

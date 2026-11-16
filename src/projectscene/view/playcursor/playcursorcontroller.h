@@ -31,7 +31,7 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
 #include "record/irecordcontroller.h"
-#include "actions/iactionsdispatcher.h"
+#include "rcommand/icommanddispatcher.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -47,7 +47,7 @@ class PlayCursorController : public QObject, public muse::async::Asyncable, publ
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<playback::IPlaybackController> playbackController{ this };
     muse::ContextInject<record::IRecordController> recordController{ this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
 
 public:
     PlayCursorController(QObject* parent = nullptr);
@@ -59,6 +59,7 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void seekToTime(double secs, bool triggerPlay = false);
     Q_INVOKABLE void animatedSeekToTime(double secs);
+    Q_INVOKABLE void seekToTimeKeepingView(double secs);
     Q_INVOKABLE void setPlaybackRegionByTime(double time1, double time2);
 
     //! NOTE Deferred seek: a press in the track area must not move the playhead
@@ -96,6 +97,7 @@ private:
     QTimer m_scrollSuppressionTimer;
     bool m_viewUpdatesSuppressed = false;
     bool m_seekAnimated = false;
+    bool m_keepViewOnSeek = false;
 
     bool m_seekGestureActive = false;
     bool m_seekGestureDragged = false;

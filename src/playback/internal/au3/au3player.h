@@ -73,7 +73,7 @@ public:
 private:
     au3::Au3Project& projectRef() const;
 
-    bool canStopAudioStream() const;
+    bool canStopTransport() const;
 
     TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly);
 
@@ -88,7 +88,6 @@ private:
     muse::ValNt<bool> m_reachedEnd;
 
     muse::ValCh<muse::secs_t> m_playbackPosition;
-    double m_startOffset = 0.0;
 
     struct TargetPoint {
         TargetPoint(const std::chrono::steady_clock::time_point time, const unsigned long long consumedSamples)

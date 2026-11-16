@@ -33,18 +33,14 @@
 
 - (BOOL)isAutoFillItem:(NSMenuItem*)item
 {
-    // AutoFill is injected by AppKit as a submenu whose children use private
-    // Apple selectors. Qt's own submenus always contain at least one item with
-    // qt_itemFired:, so the absence of that selector identifies an injected
-    // submenu without depending on the locale-sensitive item title.
+    //! NOTE AutoFill is injected by AppKit as a plain NSMenuItem with a submenu, while
+    //! every item Qt creates is a QCocoaNSMenuItem, so the class identifies the injected
+    //! entry without depending on the locale-sensitive title or on the submenu contents
     if (!item.hasSubmenu || item.action != @selector(submenuAction:)) {
         return NO;
     }
-    SEL qtFired = NSSelectorFromString(@"qt_itemFired:");
-    for (NSMenuItem* child in item.submenu.itemArray) {
-        if (child.action == qtFired) {
-            return NO;
-        }
+    if ([item isKindOfClass:NSClassFromString(@"QCocoaNSMenuItem")]) {
+        return NO;
     }
     return item.submenu.numberOfItems > 0;
 }

@@ -37,6 +37,7 @@ Item {
         delegate: ListItemBlank {
             id: listItem
             isSelected: ListView.isCurrentItem
+            enabled: historyPanelModel.isUndoRedoAvailable
 
             readonly property bool isRedoable: model.index > historyPanelModel.currentIndex
 
@@ -55,6 +56,8 @@ Item {
                 anchors.rightMargin: 12
 
                 spacing: 6
+
+                opacity: listItem.enabled ? 1 : ui.theme.itemOpacityDisabled
 
                 Item {
                     implicitWidth: 16

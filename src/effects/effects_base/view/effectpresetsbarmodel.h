@@ -7,6 +7,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 #include "effects/effects_base/ieffectparametersprovider.h"
 #include "effects/effects_base/ieffectpresetsprovider.h"
@@ -40,7 +41,7 @@ class EffectPresetsBarModel : public QObject, public muse::Contextable, public m
     muse::ContextInject<IEffectPresetsProvider> presetsController { this };
     muse::ContextInject<IEffectParametersProvider> parametersProvider { this };
     muse::ContextInject<IPresetStatesRegister> presetStatesRegister { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
 
 public:
     explicit EffectPresetsBarModel(QObject* parent = nullptr);

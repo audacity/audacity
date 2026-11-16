@@ -20,11 +20,14 @@ public:
     AudioSetupContextMenuModel() = default;
 
     Q_INVOKABLE void load() override;
+    Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
+
+protected:
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
 
 private:
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
-
     void makeMenuItems();
+    muse::uicomponents::MenuItem* makeQueryMenuItem(const muse::rcommand::CommandQuery& query, const muse::TranslatableString& title);
 
     muse::uicomponents::MenuItemList makeHostItems();
     muse::uicomponents::MenuItemList makePlaybackDevicesItems();

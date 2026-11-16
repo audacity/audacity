@@ -10,10 +10,14 @@
 #include "project/types/projectmeta.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace au::project;
 using namespace muse;
 using namespace muse::io;
+
+using au::au3::wxToStdString;
+using au::au3::wxFromStdString;
 
 ProjectMeta Au3Metadata::tags() const
 {
@@ -23,18 +27,13 @@ ProjectMeta Au3Metadata::tags() const
     Tags& au3Tags = Tags::Get(*project);
 
     for (auto row : au3Tags.GetRange()) {
-        auto tag = row.first.ToStdString();
-        if (tag == TITLE_TAG) {
-            au4Tags.trackTitle = row.second.ToStdString();
-        }
-
-        const std::string key = row.first.ToStdString();
-        const std::string val = row.second.ToStdString();
+        const std::string key = wxToStdString(row.first);
+        const std::string val = wxToStdString(row.second);
 
         bool assigned = false;
         // assign to standard fields if matched
         for (int i = 0; i < project::standardTags.size(); ++i) {
-            if (key == project::standardTags[i]) {
+            if (row.first.IsSameAs(wxFromStdString(project::standardTags[i]), false)) {
                 au4Tags.*(kStdMembers[i]) = val;
                 assigned = true;
                 break;
@@ -60,7 +59,7 @@ void Au3Metadata::setTags(ProjectMeta au4Tags)
         const std::string& key = project::standardTags[i];
         const std::string& val = au4Tags.*(kStdMembers[i]);
 
-        au3Tags.SetTag(key, val);
+        au3Tags.SetTag(wxFromStdString(key), wxFromStdString(val));
     }
 
     for (auto it = au4Tags.additionalTags.cbegin(); it != au4Tags.additionalTags.cend(); ++it) {
@@ -71,7 +70,7 @@ void Au3Metadata::setTags(ProjectMeta au4Tags)
 
         const QString val = it.value().toString();
 
-        au3Tags.SetTag(key.toStdString(), val.toStdString());
+        au3Tags.SetTag(wxFromStdString(key.toStdString()), wxFromStdString(val.toStdString()));
     }
 }
 

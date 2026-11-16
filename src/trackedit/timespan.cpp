@@ -3,13 +3,15 @@
  */
 
 #include "timespan.h"
+
+#include "framework/global/realfn.h"
 #include "log.h"
 
 namespace au::trackedit {
 TimeSpan::TimeSpan(secs_t start, secs_t end)
     : m_start(std::move(start)), m_end(std::move(end))
 {
-    IF_ASSERT_FAILED(!muse::is_equal(start, end) && end > start) {
+    IF_ASSERT_FAILED(muse::RealIsEqualOrMore(end, start)) {
         LOGE() << "invalid time span: start=" << start << " end=" << end;
     }
 }

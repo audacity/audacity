@@ -14,6 +14,11 @@ const muse::Settings::Key INPUT_MONITORING_KEY("record", "record/inputMonitoring
 const muse::Settings::Key LEAD_IN_TIME_DURATION_KEY("record", "record/leadInTimeDuration");
 const muse::Settings::Key CROSSFADE_DURATION_KEY("record", "record/crossfadeDuration");
 
+const muse::Settings::Key TIMED_RECORDING_DURATION_KEY("record", "record/timedRecording/durationSeconds");
+const muse::Settings::Key TIMED_RECORDING_SAVE_PROJECT_KEY("record", "record/timedRecording/saveProject");
+const muse::Settings::Key TIMED_RECORDING_EXPORT_AUDIO_KEY("record", "record/timedRecording/exportAudio");
+const muse::Settings::Key TIMED_RECORDING_QUIT_AUDACITY_KEY("record", "record/timedRecording/quitAudacity");
+
 //! NOTE: these keys deliberately match the au3 preference paths (bridged to the
 //! same settings storage), so values recorded by au3 code stay readable;
 //! "RecodingTrackName" reproduces the au3 key's typo
@@ -45,6 +50,12 @@ void RecordConfiguration::init()
     muse::settings()->valueChanged(CROSSFADE_DURATION_KEY).onReceive(nullptr, [this](const muse::Val&) {
         m_crossfadeDurationChanged.notify();
     });
+
+    const TimedRecordingOptions timedRecordingDefaults;
+    muse::settings()->setDefaultValue(TIMED_RECORDING_DURATION_KEY, muse::Val(timedRecordingDefaults.durationSeconds));
+    muse::settings()->setDefaultValue(TIMED_RECORDING_SAVE_PROJECT_KEY, muse::Val(timedRecordingDefaults.saveProject));
+    muse::settings()->setDefaultValue(TIMED_RECORDING_EXPORT_AUDIO_KEY, muse::Val(timedRecordingDefaults.exportAudio));
+    muse::settings()->setDefaultValue(TIMED_RECORDING_QUIT_AUDACITY_KEY, muse::Val(timedRecordingDefaults.quitAudacity));
 }
 
 bool RecordConfiguration::isMicMeteringOn() const
@@ -116,4 +127,22 @@ RecordingTrackNameOptions RecordConfiguration::recordingTrackNameOptions() const
     options.addDateStamp = muse::settings()->value(DATE_STAMP_KEY).toBool();
     options.addTimeStamp = muse::settings()->value(TIME_STAMP_KEY).toBool();
     return options;
+}
+
+TimedRecordingOptions RecordConfiguration::timedRecordingOptions() const
+{
+    TimedRecordingOptions options;
+    options.durationSeconds = muse::settings()->value(TIMED_RECORDING_DURATION_KEY).toInt64();
+    options.saveProject = muse::settings()->value(TIMED_RECORDING_SAVE_PROJECT_KEY).toBool();
+    options.exportAudio = muse::settings()->value(TIMED_RECORDING_EXPORT_AUDIO_KEY).toBool();
+    options.quitAudacity = muse::settings()->value(TIMED_RECORDING_QUIT_AUDACITY_KEY).toBool();
+    return options;
+}
+
+void RecordConfiguration::setTimedRecordingOptions(const TimedRecordingOptions& options)
+{
+    muse::settings()->setSharedValue(TIMED_RECORDING_DURATION_KEY, muse::Val(options.durationSeconds));
+    muse::settings()->setSharedValue(TIMED_RECORDING_SAVE_PROJECT_KEY, muse::Val(options.saveProject));
+    muse::settings()->setSharedValue(TIMED_RECORDING_EXPORT_AUDIO_KEY, muse::Val(options.exportAudio));
+    muse::settings()->setSharedValue(TIMED_RECORDING_QUIT_AUDACITY_KEY, muse::Val(options.quitAudacity));
 }

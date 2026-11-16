@@ -3,22 +3,22 @@
 */
 #pragma once
 
-#include "actions/actionable.h"
 #include "uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "context/iuicontextresolver.h"
 #include "au3cloud/iau3audiocomservice.h"
+#include "projectscene/iprojectsceneactionscontroller.h"
 
 namespace au::projectscene {
-class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel, public muse::actions::Actionable
+class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel
 {
     Q_OBJECT
 
     Q_PROPERTY(bool isCompactMode READ isCompactMode WRITE setIsCompactMode NOTIFY isCompactModeChanged)
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<IProjectSceneActionsController> projectSceneActionsController { this };
     muse::ContextInject<context::IGlobalContext> context { this };
     muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
     muse::ContextInject<au3cloud::IAu3AudioComService> au3CloudService { this };
@@ -31,11 +31,10 @@ public:
 
 signals:
     void openAudioSetupContextMenu();
-    void openGetEffectsDialog();
     void isCompactModeChanged();
 
 private:
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
 
     bool m_loaded = false;
     bool m_isCompactMode = false;

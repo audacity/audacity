@@ -7,9 +7,9 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/rcommand/commandable.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
@@ -22,14 +22,16 @@
 
 #include "record/irecord.h"
 #include "record/irecordcontroller.h"
+#include "record/itimedrecordingscenario.h"
 
 namespace au::record {
-class RecordController : public IRecordController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
+class RecordController : public IRecordController, public muse::rcommand::Commandable, public muse::async::Asyncable,
+    public muse::Contextable
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<IRecord> record{ this };
@@ -38,6 +40,7 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<ITimedRecordingScenario> timedRecordingScenario{ this };
 
     friend class RecordControllerTests;
 
@@ -55,8 +58,6 @@ public:
     muse::async::Notification isRecordingChanged() const override;
 
     const std::vector<trackedit::ClipKey>& recordingClipKeys() const override;
-
-    bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 
     bool isMicMeteringOn() const override;
     muse::async::Notification isMicMeteringOnChanged() const override;
@@ -79,17 +80,17 @@ private:
 
     void onProjectChanged();
 
-    void toggleRecord();
-    void recordOnNewTrack();
-    void start();
-    void startWithNewTrack();
-    void pause();
-    void resume();
-    void stop();
-    void leadInRecording();
+    muse::Ret toggleRecord();
+    muse::Ret recordOnNewTrack();
+    muse::Ret start();
+    muse::Ret startWithNewTrack();
+    muse::Ret pause();
+    muse::Ret resume();
+    muse::Ret stop();
+    muse::Ret leadInRecording();
     void stopPlaybackIfPaused();
-    void toggleMicMetering();
-    void toggleInputMonitoring();
+    muse::Ret toggleMicMetering();
+    muse::Ret toggleInputMonitoring();
 
     void setCurrentRecordStatus(RecordStatus status);
 
@@ -97,8 +98,6 @@ private:
     muse::async::Notification m_isRecordAllowedChanged;
 
     RecordStatus m_currentRecordStatus = RecordStatus::Stopped;
-
-    muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
     muse::secs_t m_leadInRecordingStartTime = 0.0;
     std::vector<trackedit::TrackId> m_leadInRecordingTrackIds;

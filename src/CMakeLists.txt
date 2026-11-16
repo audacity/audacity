@@ -31,6 +31,9 @@ add_subdirectory(audio)
 if (AU_BUILD_CLOUD_AUDIOCOM)
     add_subdirectory(au3cloud)
 endif()
+if (AU_BUILD_MUSEHUB_MODULE)
+    add_subdirectory(musehub)
+endif()
 add_subdirectory(context)
 add_subdirectory(project)
 add_subdirectory(preferences)
@@ -42,6 +45,8 @@ endif()
 if (AU_BUILD_PROJECTSCENE_MODULE)
    add_subdirectory(projectscene)
 endif()
+
+add_subdirectory(macromanager)
 
 add_subdirectory(spectrogram)
 

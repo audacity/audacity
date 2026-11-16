@@ -10,21 +10,22 @@
 
 #include "modularity/ioc.h"
 #include "async/asyncable.h"
-#include "context/iuicontextresolver.h"
-#include "shortcuts/ishortcutsregister.h"
+#include "rcommand/commandtypes.h"
+#include "shortcuts_v2/icommandshortcutsregister.h"
+#include "shortcuts_v2/ishortcutsresolver.h"
 
 namespace au::projectscene {
 class TapHoldShortcut : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 
-    muse::ContextInject<muse::shortcuts::IShortcutsRegister> shortcutsRegister{ this };
-    muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
+    muse::GlobalInject<muse::shortcuts::ICommandShortcutsRegister> commandShortcutsRegister;
+    muse::ContextInject<muse::shortcuts::IShortcutsResolver> shortcutsResolver{ this };
 
 public:
-    explicit TapHoldShortcut(muse::modularity::ContextPtr ctx, const std::string& action, QObject* target = nullptr);
+    explicit TapHoldShortcut(muse::modularity::ContextPtr ctx, const muse::rcommand::Command& command, QObject* target = nullptr);
 
-    void setAction(const std::string& action);
+    void setCommand(const muse::rcommand::Command& command);
 
     void setHoldDelay(int ms);
 
@@ -37,12 +38,12 @@ public:
 private:
     bool eventFilter(QObject* obj, QEvent* event) override;
     void onHoldTimeout();
-    void updateShortcut(const std::string& action);
+    void updateShortcut();
 
     bool matchKeyEvent(QKeyEvent* ke) const;
 
     QTimer m_holdTimer;
-    std::string m_action;
+    muse::rcommand::Command m_command;
     muse::shortcuts::Shortcut m_shortcut;
 
     int m_holdDelay = 250;

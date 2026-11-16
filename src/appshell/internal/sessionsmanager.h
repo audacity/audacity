@@ -26,7 +26,7 @@
 
 #include "modularity/ioc.h"
 #include "global/io/ifilesystem.h"
-#include "actions/iactionsdispatcher.h"
+#include "rcommand/icommanddispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iappshellconfiguration.h"
 #include "multiwindows/imultiwindowsprovider.h"
@@ -44,7 +44,7 @@ class SessionsManager : public ISessionsManager, public muse::async::Asyncable, 
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
     muse::GlobalInject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
 
 public:
@@ -52,20 +52,20 @@ public:
         : muse::Contextable(ctx) {}
 
     void init();
-    void deinit();
 
     bool hasProjectsForRestore() override;
+    muse::io::paths_t projectsForRestore() const override;
 
-    void restore() override;
-    void reset() override;
+    void restore(const muse::io::paths_t& projects) override;
+    void discard(const muse::io::paths_t& projects) override;
 
 private:
+    void pruneOutdatedProjects();
     void update();
 
     void removeProjectFromSession(const muse::io::path_t& projectPath);
     void addProjectToSession(const muse::io::path_t& projectPath);
 
-    void removeProjectsUnsavedChanges(const muse::io::paths_t& projectsPaths);
     void removeUnsavedChanges(const muse::io::path_t& projectPath);
 
     muse::io::path_t m_lastOpenedProjectPath;

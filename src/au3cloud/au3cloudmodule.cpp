@@ -8,14 +8,16 @@
 
 #include "au3cloud/iau3audiocomservice.h"
 #include "framework/global/log.h"
-#include "framework/ui/iuiactionsregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
+#include "internal/cloudcommandsregister.h"
+#include "internal/cloudcommandsstate.h"
 #include "internal/au3cloudconfiguration.h"
 #include "internal/au3cloudservice.h"
 #include "internal/au3audiocomservice.h"
 #include "internal/cloudprojectsprovider.h"
 #include "internal/au3cloudactionscontroller.h"
-#include "internal/clouduiactions.h"
 
 #include "view/accountmodel.h"
 
@@ -42,6 +44,14 @@ void Au3CloudModule::registerExports()
     globalIoc()->registerExport<au3cloud::ICloudProjectsProvider>(mname, m_cloudProjectsProvider);
 }
 
+void Au3CloudModule::resolveImports()
+{
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<CloudCommandsRegister>());
+    }
+}
+
 void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
 {
     m_cloudService->init();
@@ -50,6 +60,12 @@ void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
     if (!registerCustomScheme(QStringLiteral("audacity"))) {
         LOGW() << "Failed to register audacity:// URL scheme";
     }
+}
+
+void Au3CloudModule::onAllInited(const muse::IApplication::RunMode&)
+{
+    m_cloudConfiguration->onAllInited();
+    m_cloudService->onAllInited();
 }
 
 void Au3CloudModule::onDeinit()
@@ -74,20 +90,22 @@ void Au3CloudContext::registerExports()
 {
     m_audioComService = std::make_shared<Au3AudioComService>(iocContext());
     m_actionsController = std::make_shared<Au3CloudActionsController>(iocContext());
-    m_uiActions = std::make_shared<CloudUiActions>();
 
     ioc()->registerExport<au3cloud::IAu3AudioComService>(mname, m_audioComService);
+}
+
+void Au3CloudContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<CloudCommandsState>(iocContext()));
+    }
 }
 
 void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
 {
     m_audioComService->init();
     m_actionsController->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void Au3CloudContext::onDeinit()

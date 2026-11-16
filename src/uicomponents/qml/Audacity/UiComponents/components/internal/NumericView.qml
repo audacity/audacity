@@ -52,7 +52,7 @@ RowLayout {
     signal valueChangeRequested(var newValue)
     signal valueEditingFinished
 
-    height: 28
+    implicitHeight: 28
 
     spacing: root.arrowSpacing
 
@@ -86,6 +86,8 @@ RowLayout {
     RoundedRectangle {
         Layout.preferredWidth: contentItem.width
         Layout.fillHeight: true
+
+        z: root.navigation.highlight ? 1 : 0
 
         topLeftRadius: root.backgroundLeftRadius
         bottomLeftRadius: root.backgroundLeftRadius
@@ -155,9 +157,10 @@ RowLayout {
             }
         }
 
-        NavigationFocusBorder {
+        DualFocusBorder {
             navigationCtrl: root.navigation
-            drawOutsideParent: false
+            outerColor: root.textColor
+            radius: root.backgroundLeftRadius
         }
     }
 

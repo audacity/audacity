@@ -31,6 +31,7 @@ import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.TrackEdit
 import Audacity.Video
+import Audacity.MacroManager
 
 DockPage {
     id: root
@@ -72,28 +73,38 @@ DockPage {
         order: 2
     }
 
-    property NavigationSection trackEffectsKeyNavSec: NavigationSection {
-        name: "TrackEffectsSection"
+    property NavigationSection effectsKeyNavSec: NavigationSection {
+        name: "EffectsSection"
         enabled: root.visible && tracksPanel.showEffectsSection
         order: playbackToolBarKeyNavSec.order + 1
     }
 
-    property NavigationSection masterEffectsKeyNavSec: NavigationSection {
-        name: "MasterEffectsSection"
+    property NavigationPanel effectsKeyNavPanel: NavigationPanel {
+        name: "EffectsPanel"
+        section: root.effectsKeyNavSec
         enabled: root.visible && tracksPanel.showEffectsSection
-        order: trackEffectsKeyNavSec.order + 1
+        direction: NavigationPanel.Vertical
+        order: 0
+
+        accessible.name: qsTrc("appshell", "Real-time effects panel")
     }
 
     property NavigationSection addNewTrackKeyNavSec: NavigationSection {
         name: "AddNewTrackSection"
         enabled: root.visible
-        order: masterEffectsKeyNavSec.order + 1
+        order: effectsKeyNavSec.order + 1
+    }
+
+    property NavigationSection timelineKeyNavSec: NavigationSection {
+        name: "TimelineSection"
+        enabled: root.visible
+        order: addNewTrackKeyNavSec.order + 1
     }
 
     property NavigationSection keynavTopPanelSec: NavigationSection {
         name: "NavigationTopPanel"
         enabled: root.visible
-        order: addNewTrackKeyNavSec.order + 1
+        order: timelineKeyNavSec.order + 1
     }
 
     property NavigationSection keynavLeftPanelSec: NavigationSection {
@@ -148,6 +159,7 @@ DockPage {
 
     readonly property string verticalPanelsGroup: "VERTICAL_PANELS"
     readonly property string horizontalPanelsGroup: "HORIZONTAL_PANELS"
+    readonly property string toolPanelsGroup: "TOOL_PANELS"
 
     readonly property var verticalPanelDropDestinations: [
         {
@@ -330,6 +342,7 @@ DockPage {
                     id: trackstitleBarItem
 
                     navigation.section: root.addNewTrackKeyNavSec
+                    effectsNavigationPanel: root.effectsKeyNavPanel
 
                     effectsSectionWidth: tracksPanel.effectsSectionWidth
                     showEffectsSection: tracksPanel.showEffectsSection
@@ -354,11 +367,8 @@ DockPage {
 
                     navigationPanels: tracksNavModel.trackItemPanels
                     headerNavigationPanels: tracksNavModel.trackHeaderPanels
-                    effectColumnNavigationPanel: trackstitleBarItem.closeEffectsNavigation
+                    effectsNavigationPanel: root.effectsKeyNavPanel
                     effectsSectionWidth: tracksPanel.effectsSectionWidth
-
-                    trackEffectsNavigationSection: root.trackEffectsKeyNavSec
-                    masterEffectsNavigationSection: root.masterEffectsKeyNavSec
 
                     onOpenEffectsRequested: {
                         tracksPanel.showEffectsSection = true
@@ -427,6 +437,51 @@ DockPage {
             }
         },
         DockPanel {
+            id: macroManagerPanel
+
+            readonly property int panelWidth: root.verticalPanelDefaultWidth
+            readonly property int floatingMaximumWidth: 16777215
+
+            objectName: pageModel.macroManagerPanelName()
+            title: qsTrc("appshell", "Macro manager")
+
+            navigationSection: root.navigationPanelSec(macroManagerPanel.location)
+
+            titleBar: Component {
+                MacroManagerTitleBar {
+                    title: macroManagerPanel.title
+                }
+            }
+
+            floatable: true
+
+            width: panelWidth
+            minimumWidth: panelWidth
+            maximumWidth: floating ? floatingMaximumWidth : panelWidth
+
+            groupName: root.toolPanelsGroup
+            location: Location.Right
+
+            visible: false
+
+            dropDestinations: [
+                {
+                    "dock": tracksPanel,
+                    "dropLocation": Location.Left
+                },
+                {
+                    "dock": root.centralDock,
+                    "dropLocation": Location.Right,
+                    "dropDistance": root.verticalPanelDefaultWidth
+                }
+            ]
+
+            MacroManagerPanel {
+                navigationSection: macroManagerPanel.navigationSection
+                navigationOrderStart: macroManagerPanel.contentNavigationPanelOrderStart
+            }
+        },
+        DockPanel {
             id: historyPanel
 
             objectName: root.pageModel.historyPanelName()
@@ -438,7 +493,7 @@ DockPage {
             minimumWidth: root.verticalPanelDefaultWidth
             maximumWidth: root.verticalPanelDefaultWidth
 
-            groupName: root.verticalPanelsGroup
+            groupName: root.toolPanelsGroup
             location: Location.Right
 
             //! NOTE: hidden by default
@@ -502,7 +557,10 @@ DockPage {
         id: tracksItemsView
 
         navPanels: tracksNavModel.viewItemPanels
+        rulerNavPanels: tracksNavModel.rulerPanels
         navDefaultControl: tracksNavModel.defaultNavigationControl
+
+        timelineNavigationSection: root.timelineKeyNavSec
 
         Binding {
             target: tracksNavModel

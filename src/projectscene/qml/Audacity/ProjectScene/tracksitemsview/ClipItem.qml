@@ -31,6 +31,7 @@ Rectangle {
     required property int headerHeight
     property color clipColor: ui.theme.extra["clip_color_1"]
     property color clipSelectedColor: ui.theme.extra["clip_selected_color_1"]
+    property color clipTimeSelectionColor: "transparent"
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
     property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : classicHeaderColor
     property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.8) : classicHeaderHoveredColor
@@ -67,6 +68,11 @@ Rectangle {
     required property var pressedSpectrogram
     required property bool splitToolActive
 
+    property real fadeInDuration: 0
+    property real fadeOutDuration: 0
+    required property int fadeInType
+    required property int fadeOutType
+
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
 
@@ -82,11 +88,17 @@ Rectangle {
     signal clipStartEditRequested
     signal clipEndEditRequested
     signal cancelClipDragEditRequested
+    signal automationPointDragged
 
     signal clipLeftTrimRequested(bool completed, int action)
     signal clipRightTrimRequested(bool completed, int action)
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
+
+    signal fadeEditStarted
+    signal fadeInDurationChangeRequested(real duration, bool completed)
+    signal fadeOutDurationChangeRequested(real duration, bool completed)
+    signal fadeEditCanceled
 
     signal requestSelected
     signal requestSelectionReset
@@ -121,7 +133,7 @@ Rectangle {
     }
 
     property int borderWidth: 1
-    property bool hover: root.containsMouse || root.headerHovered
+    property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered
     property bool headerHovered: false
     property var lastSample: undefined
     property bool altPressed: false
@@ -264,12 +276,45 @@ Rectangle {
     }
 
     function openContextMenu() {
+        navCtrl.requestActive()
+
         if (root.multiClipsSelected || root.isGrouped) {
             prv.ensureMultiMenuLoaded()
         } else {
             prv.ensureSingleMenuLoaded()
         }
         menuBtn.toggleMenu(menuBtn)
+    }
+
+    function openContextMenuAt(x, y, modifiers) {
+        if (!root.enableCursorInteraction) {
+            return
+        }
+
+        // Activate the control before it is set as parent-control of the context menu, so that the active control is set this clip.
+        navCtrl.requestActive()
+
+        if (root.multiClipsSelected) {
+            prv.ensureMultiMenuLoaded()
+            if (modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
+                if (!root.clipSelected) {
+                    root.requestSelectionReset()
+                }
+                root.requestSelected()
+            }
+            multiClipContextMenuLoader.show(Qt.point(x, y), multiClipContextMenuModel.items)
+        } else if (root.isGrouped) {
+            prv.ensureMultiMenuLoaded()
+            if (!root.clipSelected) {
+                root.requestSelectionReset()
+            }
+            root.requestSelected()
+            multiClipContextMenuLoader.show(Qt.point(x, y), multiClipContextMenuModel.items)
+        } else {
+            prv.ensureSingleMenuLoaded()
+            singleClipContextMenuLoader.show(Qt.point(x, y), singleClipContextMenuModel.items)
+            root.requestSelected()
+        }
     }
 
     function mousePositionChanged(x, y) {
@@ -315,6 +360,25 @@ Rectangle {
             spectrogramViewLoader.item.update()
         }
     }
+
+    function cancelDrag() {
+        automation.updateCursorOverride(false)
+        automation.cancelEdit()
+        clipGainModel.cancelDrag()
+        tooltip.hide(true)
+    }
+
+    // The spectrogram reflects the fades, but isn't otherwise told of their changes
+    function updateSpectrogramView() {
+        if (spectrogramViewLoader.item) {
+            spectrogramViewLoader.item.update()
+        }
+    }
+
+    onFadeInDurationChanged: updateSpectrogramView()
+    onFadeOutDurationChanged: updateSpectrogramView()
+    onFadeInTypeChanged: updateSpectrogramView()
+    onFadeOutTypeChanged: updateSpectrogramView()
 
     ClipContextMenuModel {
         id: singleClipContextMenuModel
@@ -379,7 +443,7 @@ Rectangle {
         Component.onCompleted: updateCustomCursor()
         onForbiddenChanged: updateCustomCursor()
 
-        acceptedButtons: Qt.RightButton
+        acceptedButtons: Qt.NoButton
 
         visible: root.enableCursorInteraction
 
@@ -387,32 +451,8 @@ Rectangle {
             root.setContainsMouse(containsMouse)
         }
 
-        onClicked: function (e) {
-            if (root.multiClipsSelected) {
-                prv.ensureMultiMenuLoaded()
-                if (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier)) {
-                    if (!root.clipSelected) {
-                        root.requestSelectionReset()
-                    }
-                    root.requestSelected()
-                }
-                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
-            } else if (root.isGrouped) {
-                prv.ensureMultiMenuLoaded()
-                if (!root.clipSelected) {
-                    root.requestSelectionReset()
-                }
-                root.requestSelected()
-                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
-            } else {
-                prv.ensureSingleMenuLoaded()
-                singleClipContextMenuLoader.show(Qt.point(e.x, e.y), singleClipContextMenuModel.items)
-                root.requestSelected()
-            }
-        }
-
         onPositionChanged: function (e) {
-            clipItemMousePositionChanged(e.x, e.y);
+            clipItemMousePositionChanged(e.x, e.y)
 
             // propagate mouse position to the wave view adjusting the y position
             waveView.onWaveViewPositionChanged(e.x, e.y - header.height)
@@ -425,6 +465,12 @@ Rectangle {
 
             root.setContainsMouse(containsMouse)
         }
+    }
+
+    HoverHandler {
+        id: clipHoverHandler
+
+        enabled: root.enableCursorInteraction
     }
 
     // NOTE: hover events from polyline are not visible in MouseArea
@@ -446,9 +492,8 @@ Rectangle {
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
@@ -504,12 +549,11 @@ Rectangle {
     MouseArea {
         id: rightTrimStretchEdgeHover
 
-        x: root.width - 5
+        x: root.width - 6
         z: headerDragArea.z + 1
         width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5) : 11
-        height: !root.collapsed ? root.height / 3 : root.height / 2
-
-        anchors.top: root.top
+        y: clipHandles.y
+        height: clipHandles.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
@@ -581,7 +625,7 @@ Rectangle {
             height: root.headerHeight
             z: 2
 
-            visible: !root.collapsed || root.hover
+            visible: !root.collapsed || root.hover || menuBtn.isMenuOpened
 
             Rectangle {
                 id: headerSelectionRectangle
@@ -593,7 +637,7 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: waveView.transformColor(clipColor)
+                color: root.clipTimeSelectionColor
                 visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
             }
 
@@ -606,6 +650,12 @@ Rectangle {
                         return
                     }
 
+                    root.headerHovered = containsMouse
+                }
+
+                // during dragging, the clip is hidden, and do not receive mouse events
+                // we need to restore hover state when the clip become visible again
+                onVisibleChanged: {
                     root.headerHovered = containsMouse
                 }
 
@@ -837,6 +887,8 @@ Rectangle {
                     //! NOTE: Override doClicked function from FlatButton to run clip selection logic before the base
                     //! menu button emits clicked
                     function doClicked(mouse) {
+                        navCtrl.requestActive()
+
                         if (root.multiClipsSelected || root.isGrouped) {
                             prv.ensureMultiMenuLoaded()
                         } else {
@@ -972,8 +1024,10 @@ Rectangle {
 
                     defaultValue: clipGainModel.defaultValue
 
-                    xRangeFrom: waveView.itemStartTime
-                    xRangeTo: waveView.itemEndTime
+                    // Offset the envelope display to follow the drag preview while its point times remain unchanged.
+                    readonly property real timeOffset: waveView.startTime - clipGainModel.clipStartTime
+                    xRangeFrom: waveView.itemStartTime - timeOffset
+                    xRangeTo: waveView.itemEndTime - timeOffset
 
                     yRangeFrom: clipGainModel.minValue
                     yRangeTo: clipGainModel.maxValue
@@ -981,17 +1035,33 @@ Rectangle {
                     ySplitValue: clipGainModel.ySplitValue
                     yAxisInverse: false
 
-                    Component.onCompleted: {
-                        automation.init()
+                    // While dragging, the mouse may go over other items, e.g. fade handles, which would show their own cursor
+                    property bool cursorOverridden: false
+
+                    function updateCursorOverride(dragging) {
+                        if (dragging && !cursorOverridden) {
+                            CustomCursorProvider.overrideStandardCursor(Qt.CrossCursor)
+                            cursorOverridden = true
+                        } else if (!dragging && cursorOverridden) {
+                            CustomCursorProvider.restoreCursor()
+                            cursorOverridden = false
+                        }
                     }
 
+                    Component.onDestruction: updateCursorOverride(false)
+
                     onPointMoved: function (index, x, y, completed) {
+                        updateCursorOverride(!completed)
                         clipGainModel.setPoint(index, x, y, completed)
                         tooltip.value = gainToDb(y)
                         tooltip.show(true)
+                        if (!completed) {
+                            root.automationPointDragged()
+                        }
                     }
 
                     onPointAdded: function (x, y, completed) {
+                        updateCursorOverride(!completed)
                         clipGainModel.addPoint(x, y, completed)
                     }
 
@@ -999,12 +1069,8 @@ Rectangle {
                         clipGainModel.removePoint(index, completed)
                     }
 
-                    onDragCancelled: {
-                        clipGainModel.cancelDrag()
-                        tooltip.hide(true)
-                    }
-
                     onInteractionFinished: function () {
+                        updateCursorOverride(false)
                         if (!automation.hasActivePoint) {
                             tooltip.hide(true)
                         }
@@ -1140,6 +1206,45 @@ Rectangle {
         }
     }
 
+    ClipFades {
+        id: fades
+
+        // The fades span the views, below the header
+        y: viewsColumn.y
+        width: root.width
+        height: viewsColumn.height
+        // The header covers the top of a collapsed clip when shown
+        drawingTop: header.visible ? Math.max(0, header.y + header.height - y) : 0
+        // Level with the trim and stretch handles, but dropping down with the header of a collapsed clip
+        handlesY: clipHandles.y - y + drawingTop
+
+        clipOffset: (waveView.itemStartTime - waveView.startTime) * root.context.zoom
+        clipWidth: (waveView.endTime - waveView.startTime) * root.context.zoom
+
+        fadeInWidth: root.fadeInDuration * root.context.zoom
+        fadeOutWidth: root.fadeOutDuration * root.context.zoom
+        fadeInType: root.fadeInType
+        fadeOutType: root.fadeOutType
+        // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
+        handlesVisible: root.clipSelected && !root.moveActive
+
+        onFadeEditStarted: root.fadeEditStarted()
+
+        onFadeInWidthChangeRequested: function (width, completed) {
+            root.fadeInDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeOutWidthChangeRequested: function (width, completed) {
+            root.fadeOutDurationChangeRequested(width / root.context.zoom, completed)
+        }
+
+        onFadeEditCanceled: root.fadeEditCanceled()
+
+        onFadeHandlesMousePositionChanged: function (xWithinFadeHandles, yWithinFadeHandles) {
+            clipItemMousePositionChanged(xWithinFadeHandles, fades.y + yWithinFadeHandles)
+        }
+    }
+
     ClipHandles {
         id: clipHandles
 
@@ -1152,6 +1257,7 @@ Rectangle {
         clipHeight: root.height
         headerHeight: header.height
         altPressed: root.altPressed
+        exclusionItem: root.collapsed ? menuBtn : null
 
         clipNavigationPanel: root.clipNavigationPanel
 

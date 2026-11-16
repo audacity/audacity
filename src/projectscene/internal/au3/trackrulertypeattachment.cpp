@@ -3,6 +3,10 @@
 */
 #include "trackrulertypeattachment.h"
 
+#include "modularity/ioc.h"
+
+#include "projectscene/iprojectsceneconfiguration.h"
+
 using namespace au::au3;
 using namespace au::trackedit;
 
@@ -32,6 +36,11 @@ TrackRulerTypeAttachment::TrackRulerTypeAttachment(Au3Track& track)
     : mTrack{track.shared_from_this()}
     , mRulerType{TrackRulerType::Linear}
 {
+    // Value read from the project file, if any, overrides this
+    muse::GlobalInject<au::projectscene::IProjectSceneConfiguration> configuration;
+    if (configuration()) {
+        mRulerType = configuration()->defaultRulerType();
+    }
 }
 
 void TrackRulerTypeAttachment::Reparent(const std::shared_ptr<Au3Track>& parent)

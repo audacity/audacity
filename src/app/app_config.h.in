@@ -2,6 +2,7 @@
 /* Modules                                        */
 /* ============================================== */
 #cmakedefine AU_BUILD_CLOUD_AUDIOCOM 1
+#cmakedefine AU_BUILD_MUSEHUB_MODULE 1
 
 #cmakedefine AU_MODULE_EFFECTS_VST 1
 #cmakedefine AU_MODULE_EFFECTS_NYQUIST 1

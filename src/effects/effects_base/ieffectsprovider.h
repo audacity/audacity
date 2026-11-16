@@ -24,7 +24,8 @@ public:
     virtual ~IEffectsProvider() = default;
 
     virtual void initOnce(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                          muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
+                          muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                          StartupPluginValidationPolicy validationPolicy) = 0;
 
     virtual EffectMetaList effectMetaList() const = 0;
     virtual EffectMeta meta(const EffectId& effectId) const = 0;

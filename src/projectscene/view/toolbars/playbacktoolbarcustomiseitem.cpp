@@ -4,10 +4,9 @@
 #include "playbacktoolbarcustomiseitem.h"
 
 using namespace au::projectscene;
-using namespace muse::uicomponents;
 
 PlaybackToolBarCustomiseItem::PlaybackToolBarCustomiseItem(const ItemType& type, QObject* parent)
-    : SelectableItemListModel::Item(parent), m_type(type)
+    : QObject(parent), m_type(type)
 {
 }
 

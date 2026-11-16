@@ -32,15 +32,12 @@
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumePressureRuler.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/audio/VolumeSlider.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/GetEffectsMenu.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml</file>
-        <file>qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorLine.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlaybackSeekLine.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorHead.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml</file>
+        <file>qml/Audacity/ProjectScene/common/TracksListView.qml</file>
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/internal/CustomiseView.qml</file>
@@ -48,7 +45,11 @@
         <file>qml/Audacity/ProjectScene/toolbars/internal/PlaybackToolBarCustomisePopup.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipItemSmall.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipPreview.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandleIcon.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ClipHandles.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipFade.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipFadeHandle.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/ClipFades.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/ChannelSplitter.qml</file>
         <file>images/customCursorShapes/ClipStretchBoth.png</file>
         <file>images/customCursorShapes/ClipStretchLeft.png</file>

@@ -22,6 +22,7 @@
 #ifndef AU_PROJECT_PROJECTTYPES_H
 #define AU_PROJECT_PROJECTTYPES_H
 
+#include <filesystem>
 #include <optional>
 #include <variant>
 
@@ -326,6 +327,18 @@ inline bool isAudacityUnsavedFile(const muse::io::path_t& filename)
 inline bool isAudacityUnsavedFileType(const std::string_view ext)
 {
     return ext == AUP4UNSAVED;
+}
+
+inline bool isSameProjectFile(const muse::io::path_t& lhs, const muse::io::path_t& rhs)
+{
+    if (lhs == rhs) {
+        return true;
+    }
+
+    // Different paths can name one file: other case on a case-insensitive volume, a link, or a Windows short name
+    std::error_code ec;
+    return std::filesystem::equivalent(std::filesystem::path(lhs.toQString().toStdU16String()),
+                                       std::filesystem::path(rhs.toQString().toStdU16String()), ec);
 }
 
 inline bool isAudacityFile(const muse::io::path_t& filename)

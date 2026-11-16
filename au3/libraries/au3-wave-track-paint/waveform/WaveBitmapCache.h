@@ -19,6 +19,7 @@
 class wxBitmap;
 class wxImage;
 class WaveDataCache;
+class ClipFades;
 class Envelope;
 class WaveClip;
 
@@ -74,4 +75,7 @@ private:
 
     const WaveClip& mWaveClip;
     Observer::Subscription mStretchChangedSubscription;
+
+    const ClipFades& mFades;
+    Observer::Subscription mFadesChangedSubscription;
 };

@@ -17,13 +17,16 @@
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
+#include "au3-clip-processing/PlayableSequenceFactory.h"
+#include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
+
+#include "playback/playbackcommands.h"
 
 #include "au3audioinput.h"
 #include "../../recorderrors.h"
@@ -35,8 +38,6 @@ using namespace au::au3;
 
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
-
-static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 struct PropertiesOfSelected
 {
@@ -175,7 +176,7 @@ TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnl
                            + (selectedOnly ? &Au3Track::IsSelected : &Au3Track::Any);
         for (auto pTrack : range) {
             result.playbackSequences.push_back(
-                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+                PlayableSequenceFactory::Create(*pTrack, pTrack->GetClipInterfaces()));
         }
     }
     if (nonWaveToo) {
@@ -205,6 +206,14 @@ void Au3Record::init()
         }
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.UpdatePendingTracks();
+    });
+
+    audioEngine()->recordingNewBlocks().onNotify(this, [this]() {
+        if (m_recordData.empty()) {
+            return;
+        }
+        // Autosave project during recording to keep the document synchronized with the recorded data
+        ProjectFileIO::Get(projectRef()).AutoSave();
     });
 
     audioEngine()->recordingClipChanged().onReceive(this, [this](const au3::Au3TrackId& trackId, const au3::Au3ClipId& clipId) {
@@ -298,10 +307,10 @@ void Au3Record::init()
         m_recordPosition.set(m_recordPosition.val);
         m_recordingFinished.notify();
 
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(m_recordPosition.val));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
+        commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+            { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(m_recordPosition.val) },
+            { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+        });
 
         m_recordData.clear();
         rebuildRecordingClipKeys();
@@ -431,7 +440,7 @@ muse::Ret Au3Record::start()
         if (audioEngine()->isCapturing()) {
             return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
         }
-        audioEngine()->stopStream();
+        audioEngine()->stopTransport();
     }
 
     audioEngine()->stopMonitoring();
@@ -441,22 +450,22 @@ muse::Ret Au3Record::start()
 
 muse::Ret Au3Record::pause()
 {
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return make_ret(Err::RecordingStopError);
     }
 
-    audioEngine()->pauseStream(true);
+    audioEngine()->pauseTransport(true);
 
     return make_ok();
 }
 
 muse::Ret Au3Record::resume()
 {
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return make_ret(Err::RecordingResumeError);
     }
 
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     return make_ok();
 }
@@ -464,13 +473,13 @@ muse::Ret Au3Record::resume()
 muse::Ret Au3Record::stop()
 {
     //! NOTE: copied from ProjectAudioManager::Stop
-    if (!canStopAudioStream()) {
+    if (!canStopTransport()) {
         return make_ret(Err::RecordingStopError);
     }
 
-    audioEngine()->stopStream();
+    audioEngine()->stopTransport();
     //Make sure to unpause
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
@@ -604,7 +613,7 @@ muse::Ret Au3Record::leadInRecording()
         if (audioEngine()->isCapturing()) {
             return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
         }
-        audioEngine()->stopStream();
+        audioEngine()->stopTransport();
     }
 
     audioEngine()->stopMonitoring();
@@ -622,10 +631,10 @@ muse::Ret Au3Record::leadInRecording()
         // Set playhead to lead-in time start and trigger position tracking.
         // With isDefaultPlayTrackPolicy=false, the stream time starts from
         // t1-leadInTime so this will align with the actual audio position.
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(t1 - leadInTime));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
+        commandDispatcher()->dispatch(playback::PLAYBACK_SEEK_COMMAND, {
+            { playback::PLAYBACK_SEEK_TIME_PARAM, muse::Val(t1 - leadInTime) },
+            { playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM, muse::Val(false) },
+        });
     }
 
     return ret;
@@ -687,7 +696,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     // The engine's pause flag survives stream restarts; clear it so that a
     // recording initiated from a paused playback state starts immediately
-    audioEngine()->pauseStream(false);
+    audioEngine()->pauseTransport(false);
 
     // TODO: what is the meaning of the next line, do we need it?
     // projectAudioManager.SetAppending(!altAppearance);
@@ -935,13 +944,13 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    au::audio::IAudioEngine::StartStreamOptions options;
+    au::audio::IAudioEngine::StartTransportOptions options;
     options.isDefaultPolicy = false;
     options.sampleRate = audioStreamSampleRate;
     options.leadInTime = leadInTime;
     options.crossfadeData = crossfadeData;
 
-    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, options);
+    int token = audioEngine()->startTransport(transportSequences, t0, t1, t1, project, options);
 
     success = (token > 0);
 
@@ -970,9 +979,9 @@ void Au3Record::commitRecording()
                                        trc("record", "Record"));
 }
 
-bool Au3Record::canStopAudioStream() const
+bool Au3Record::canStopTransport() const
 {
-    return audioEngine()->canStopAudioStream(projectRef());
+    return audioEngine()->canStopTransport(projectRef());
 }
 
 au::context::IPlaybackStatePtr Au3Record::playbackState() const

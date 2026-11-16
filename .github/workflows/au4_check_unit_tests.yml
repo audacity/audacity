@@ -9,6 +9,11 @@ on:
         type: boolean
         required: false
         default: false
+      publish_coverage_report:
+        description: 'Publish code coverage badge to S3 (main repository only)'
+        type: boolean
+        required: false
+        default: false
   schedule:
     - cron: "0 3 * * 4" # Every Thursday night at 03:00 for master branch
 
@@ -21,26 +26,23 @@ env:
 
 jobs:
   run_tests:
-    # 24.04 rather than 22.04 because generating the video fixtures needs an
-    # ffmpeg built with SVT-AV1, which jammy's 4.4.2 is not. See
-    # tools/videosync/make_fixtures.py.
     runs-on: ubuntu-24.04
     steps:
     - name: Clone repository
-      uses: actions/checkout@v6
+      uses: actions/checkout@v7
       with:
         submodules: recursive
 
     - name: "Configure workflow"
       run: |
         cmake -DEVENT=${{ github.event_name }} \
-              -DBUILD_MODE="devel_build" \
+              -DBUILD_MODE="devel" \
               -DARTIFACT_INFO="build.artifacts/" \
               -P ${CI_DIR}/common/ci_configure.cmake
 
     - name: Restore ccache files
       id: restore-ccache
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: ${{ github.workspace }}/.ccache
         key: ${{github.workflow}}-${{runner.arch}}-ccache-
@@ -48,7 +50,7 @@ jobs:
     - name: Setup ccache
       run: |
         sudo apt-get update && sudo apt-get install -y ccache
-        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+        bash ./muse/buildscripts/ci/tools/setup_ccache_config.sh
 
     - name: Free up disk space
       run: |
@@ -62,7 +64,7 @@ jobs:
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
-        version: '6.10.1'
+        version: '6.11.2'
         host: 'linux'
         target: 'desktop'
         arch: 'linux_gcc_64'
@@ -72,6 +74,10 @@ jobs:
     - name: Setup environment
       run: |
         bash ./buildscripts/ci/linux/setup.sh
+
+    - name: Install FFmpeg for the FFmpeg metadata tests
+      run: |
+        sudo apt-get install -y --no-install-recommends ffmpeg
 
     # The video tests decode real files. Without them roughly half of
     # au_video_tests skips itself and the job still reports green, so the
@@ -84,7 +90,7 @@ jobs:
 
     - name: Restore video fixtures
       id: restore-fixtures
-      uses: actions/cache/restore@v5
+      uses: actions/cache/restore@v6
       with:
         path: tools/videosync/fixtures
         key: video-fixtures-${{ runner.arch }}-${{ steps.fixture-key.outputs.hash }}
@@ -97,7 +103,7 @@ jobs:
 
     - name: Save video fixtures
       if: steps.restore-fixtures.outputs.cache-hit != 'true'
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         path: tools/videosync/fixtures
         key: video-fixtures-${{ runner.arch }}-${{ steps.fixture-key.outputs.hash }}
@@ -125,6 +131,9 @@ jobs:
 
     - name: Run tests
       run: |
+        # A capture device for the audio tests: PortAudio ignores ALSA's
+        # predefined "null" device, but not an alias of it.
+        echo 'pcm.test_null { type null }' >> ~/.asoundrc
         cmake -P ${CI_DIR}/linux/ci_run_utests.cmake
       env:
         ASAN_OPTIONS: "detect_leaks=0"
@@ -132,18 +141,25 @@ jobs:
     - name: Code coverage
       if: github.event_name == 'schedule' || inputs.code_coverage == true
       run: |
-        lcov --capture --directory "$(pwd)/build.debug/" --output-file coverage.info
-        lcov --remove coverage.info '/usr/*' '*/tests/*' '*/thirdparty/*' '*/moc_*' '*framework/Headers/*' '*/hb-*' '*/Qt/*' --output-file filtered_coverage.info
+        # Writes filtered_coverage.info, coverage_badge.svg, coverage_report/ and exports COVERAGE, FUNCTIONS_COVERAGE
+        cmake -P ./muse/buildscripts/ci/codecoverage/make_code_coverage.cmake --build_dir build.debug
 
-        COVERAGE=$(lcov --summary filtered_coverage.info --ignore-errors inconsistent,corrupt,unsupported,empty,negative,mismatch,gcov | grep -oP 'lines\.+:\s+\K[0-9.]+')
-        python3 buildscripts/ci/linux/tools/lcov_badger.py "${COVERAGE}" coverage_badge.svg
+    - name: Upload coverage report
+      if: github.event_name == 'schedule' || inputs.code_coverage == true
+      uses: actions/upload-artifact@v7
+      with:
+        name: code_coverage_report
+        path: |
+          filtered_coverage.info
+          coverage_badge.svg
+          coverage_report/
 
     - name: Push to S3
-      if: ( github.event_name == 'schedule' || inputs.code_coverage ) && github.repository == 'audacity/audacity'
+      if: github.repository == 'audacity/audacity' && ( github.event_name == 'schedule' || ( inputs.code_coverage && inputs.publish_coverage_report ) )
       run: |
         S3_URL='s3://extensions.musescore.org/test/code_coverage/au_coverage_badge.svg'
 
-        bash ./buildscripts/ci/tools/s3_push_file.sh \
+        bash ./muse/buildscripts/ci/tools/s3_push_file.sh \
           --s3_key '${{ secrets.S3_KEY }}' \
           --s3_secret '${{ secrets.S3_SECRET }}' \
           --s3_url "${S3_URL}" \
@@ -158,7 +174,7 @@ jobs:
         echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
     - name: Save ccache files
       if: always()
-      uses: actions/cache/save@v5
+      uses: actions/cache/save@v6
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache

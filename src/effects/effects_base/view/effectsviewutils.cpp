@@ -13,9 +13,7 @@ muse::uicomponents::MenuItemList utils::toMenuItemList(const std::vector<Dropdow
         item->setTitle(muse::TranslatableString::untranslatable({ options[i].title }));
         item->setSelectable(true);
         item->setSelected(i == selectedIndex);
-        auto state = item->state();
-        state.enabled = true;
-        item->setState(state);
+        item->setEnabled(true);
         result.append(item);
     }
     return result;

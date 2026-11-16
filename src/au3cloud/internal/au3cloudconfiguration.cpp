@@ -8,6 +8,7 @@
 
 #include "au3-cloud-audiocom/CloudLibrarySettings.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
+#include "au3-network-manager/NetworkManager.h"
 
 using namespace au::au3cloud;
 
@@ -20,6 +21,12 @@ void Au3CloudConfiguration::init()
     muse::settings()->setDefaultValue(WARN_ON_SYNC_ERROR, muse::Val(true));
 }
 
+void Au3CloudConfiguration::onAllInited()
+{
+    const QVariant userAgent = cloudConfiguration()->headers().knownHeaders.value(QNetworkRequest::UserAgentHeader);
+    audacity::network_manager::NetworkManager::GetInstance().setUserAgent(userAgent.toString().toStdString());
+}
+
 muse::io::path_t Au3CloudConfiguration::cloudProjectsPath() const
 {
     return muse::io::Dir::fromNativeSeparators(muse::io::path_t(audacity::cloud::audiocom::CloudProjectsSavePath.Read()));
@@ -30,9 +37,9 @@ void Au3CloudConfiguration::setCloudProjectsPath(const muse::io::path_t& path)
     audacity::cloud::audiocom::CloudProjectsSavePath.Write(path.toStdString());
 }
 
-std::vector<std::string> Au3CloudConfiguration::preferredAudioFormats() const
+std::vector<std::string> Au3CloudConfiguration::preferredAudioFormats(bool preferLossless) const
 {
-    return audacity::cloud::audiocom::GetServiceConfig().GetPreferredAudioFormats(true);
+    return audacity::cloud::audiocom::GetServiceConfig().GetPreferredAudioFormats(preferLossless);
 }
 
 std::string Au3CloudConfiguration::exportConfig(const std::string& mimeType) const

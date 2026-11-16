@@ -12,7 +12,7 @@ namespace au::record {
 class RecordConfiguration;
 class RecordController;
 class RecordMeterController;
-class RecordUiActions;
+class TimedRecordingScenario;
 class Au3Record;
 
 class RecordModule : public muse::modularity::IModuleSetup
@@ -21,8 +21,7 @@ public:
 
     std::string moduleName() const override;
     void registerExports() override;
-    void registerResources() override;
-    void registerUiTypes() override;
+    void resolveImports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
@@ -45,8 +44,8 @@ public:
 
 private:
     std::shared_ptr<RecordController> m_controller;
-    std::shared_ptr<RecordUiActions> m_uiActions;
     std::shared_ptr<Au3Record> m_record;
+    std::shared_ptr<TimedRecordingScenario> m_timedRecordingScenario;
 };
 }
 

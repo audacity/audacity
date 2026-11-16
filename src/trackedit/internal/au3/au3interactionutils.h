@@ -47,11 +47,12 @@ au3::Au3WaveTrack* appendWaveTrack(au3::Au3TrackList& tracks, size_t nChannels, 
 NeedsDownmixing moveClipsVertically(int offset, const au3::Au3TrackList& orig, au3::Au3TrackList& copy,
                                     const trackedit::ClipKeyList& selectedClips);
 
-au::trackedit::TrackListInfo getTrackListInfo(const au3::Au3TrackList& tracks);
-
 bool clipIdSetsAreEqual(const au3::Au3WaveTrack& track1, const au3::Au3WaveTrack& track2);
 
 muse::Ret withProgress(muse::IInteractive& interactive, const std::string& title, const std::function<bool(ProgressCb, CancelCb)>& action);
+
+//! Resamples each clip to the paired sample rate
+muse::Ret resampleClips(muse::IInteractive& interactive, const std::vector<std::pair<std::shared_ptr<au3::Au3WaveClip>, int> >& clips);
 
 //! Trim/split/remove @p otherClip so it no longer occupies the [begin, end)
 //! region (e.g. to make room for another clip on the same track), emitting the
@@ -59,6 +60,5 @@ muse::Ret withProgress(muse::IInteractive& interactive, const std::string& title
 void trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTrack* waveTrack, secs_t begin, secs_t end,
                              std::shared_ptr<au3::Au3WaveClip> otherClip);
 
-void remapCopiedClipGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks,
-                           const std::vector<au3::Au3WaveTrack*>& copies);
+void remapCopiedItemGroups(const ITrackeditProject& prj, const au3::Au3TrackList& projectTracks, const std::vector<au3::Au3Track*>& copies);
 }

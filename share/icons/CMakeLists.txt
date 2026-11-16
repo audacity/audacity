@@ -5,7 +5,7 @@
 include(GetPlatformInfo)
 
 if (OS_IS_MAC)
-    install(FILES AppIcon/AU4_AppIcon.icns RENAME AppIcon.icns DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME})
+    # See also SetupIconComposerIcon.cmake
 
     install(FILES AupIcon/AU4_AupIcon.icns RENAME AupIcon.icns DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME})
 

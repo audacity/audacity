@@ -58,7 +58,7 @@ void au::effects::NyquistEffectsRepository::registerSpectralEffects()
             if (spectralEffectIdOpt) {
                 spectrogram::SpectralEffect spectralEffect;
                 spectralEffect.spectralEffectId = *spectralEffectIdOpt;
-                spectralEffect.action = effects::makeEffectAction(effects::EFFECT_OPEN_ACTION, meta.id);
+                spectralEffect.effectId = meta.id;
                 spectralEffect.title = meta.title;
                 spectralEffectsRegister()->registerSpectralEffect(spectralEffect);
             }

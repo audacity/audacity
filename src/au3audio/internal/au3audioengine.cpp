@@ -19,7 +19,7 @@ using namespace au::au3audio;
 std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
 
 static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
-    [](au::au3::Au3Project& project, const bool newDefault) -> AudioIOStartStreamOptions {
+    [](au::au3::Au3Project& project, const bool newDefault) -> AudioIOStartTransportOptions {
         auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
         options.listener = s_audioIOListener;
 
@@ -31,7 +31,7 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
             const double trackEndTime = TrackList::Get(project).GetEndTime();
             const double loopEndTime = playRegion.GetEnd();
             options.policyFactory = [&project, trackEndTime, loopEndTime](
-                const AudioIOStartStreamOptions& options) -> std::unique_ptr<PlaybackPolicy>
+                const AudioIOStartTransportOptions& options) -> std::unique_ptr<PlaybackPolicy>
             {
                 return std::make_unique<DefaultPlaybackPolicy>(project,
                                                                trackEndTime, loopEndTime, options.pStartTime,
@@ -79,9 +79,9 @@ bool Au3AudioEngine::isStreamActive(AudacityProject& project) const
     return AudioIO::Get()->IsStreamActive(token);
 }
 
-double Au3AudioEngine::streamTime() const
+double Au3AudioEngine::transportTime() const
 {
-    return AudioIO::Get()->GetStreamTime();
+    return AudioIO::Get()->GetTransportTime();
 }
 
 bool Au3AudioEngine::isMonitoring() const
@@ -113,11 +113,11 @@ std::optional<au::audio::AudioStreamDescriptor> Au3AudioEngine::currentStream() 
     };
 }
 
-int Au3AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime,
-                                const double mixerEndTime,
-                                AudacityProject& project, const StartStreamOptions& options)
+int Au3AudioEngine::startTransport(const TransportSequences& sequences, const double startTime, const double endTime,
+                                   const double mixerEndTime,
+                                   AudacityProject& project, const StartTransportOptions& options)
 {
-    AudioIOStartStreamOptions au3Options = ProjectAudioIO::GetDefaultOptions(project, options.isDefaultPolicy);
+    AudioIOStartTransportOptions au3Options = ProjectAudioIO::GetDefaultOptions(project, options.isDefaultPolicy);
     au3Options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     au3Options.rate = options.sampleRate;
     au3Options.leadInTime = options.leadInTime;
@@ -128,7 +128,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
         au3Options.pStartTime = *options.streamStartTime;
     }
     auto& audioIO = *AudioIO::Get();
-    const int token = audioIO.StartStream(sequences, startTime, endTime, mixerEndTime, au3Options);
+    const int token = audioIO.StartTransport(sequences, startTime, endTime, mixerEndTime, au3Options);
     if (token > 0) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);
         LOGI() << "PortAudio latency report (ms): outputLatency=" << audioIO.GetHardwarePlaybackLatencyMs() <<
@@ -137,16 +137,17 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
     return token;
 }
 
-void Au3AudioEngine::stopStream()
+void Au3AudioEngine::stopTransport()
 {
-    AudioIO::Get()->StopStream();
+    AudioIO::Get()->StopTransport();
+    AudioIO::Get()->StopMonitoring();
     AudioIO::Get()->WaitWhileBusy();
 }
 
 std::shared_ptr<RealtimeEffectState> Au3AudioEngine::addRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                             const std::string& effectId)
 {
-    return AudioIO::Get()->AddState(project, group, effectId);
+    return AudioIO::Get()->AddState(project, group, au::au3::wxFromStdString(effectId));
 }
 
 void Au3AudioEngine::removeRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
@@ -158,22 +159,22 @@ void Au3AudioEngine::removeRealtimeEffectState(AudacityProject& project, Channel
 std::shared_ptr<RealtimeEffectState> Au3AudioEngine::replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                                 size_t effectListIndex, const std::string& newEffectId)
 {
-    return AudioIO::Get()->ReplaceState(project, group, effectListIndex, newEffectId);
+    return AudioIO::Get()->ReplaceState(project, group, effectListIndex, au::au3::wxFromStdString(newEffectId));
 }
 
-void Au3AudioEngine::pauseStream(const bool pause)
+void Au3AudioEngine::pauseTransport(const bool pause)
 {
     AudioIO::Get()->SetPaused(pause);
 }
 
-void Au3AudioEngine::seekStream(double time)
+void Au3AudioEngine::seek(double time)
 {
-    AudioIO::Get()->SeekStream(time - AudioIO::Get()->GetStreamTime());
+    AudioIO::Get()->Seek(time - AudioIO::Get()->GetTransportTime());
 }
 
 void Au3AudioEngine::startMonitoring(AudacityProject& project)
 {
-    AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project);
+    AudioIOStartTransportOptions options = ProjectAudioIO::GetDefaultOptions(project);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     AudioIO::Get()->StartMonitoring(options);
 }
@@ -219,7 +220,7 @@ float Au3AudioEngine::getPlaybackVolume() const
     return playbackVolume;
 }
 
-bool Au3AudioEngine::canStopAudioStream(AudacityProject& project) const
+bool Au3AudioEngine::canStopTransport(AudacityProject& project) const
 {
     return !AudioIO::Get()->IsStreamActive()
            || AudioIO::Get()->IsMonitoring()
@@ -258,6 +259,11 @@ std::optional<au::audio::AudioCallbackInfo> Au3AudioEngine::consumeNextCallbackI
 muse::async::Notification Au3AudioEngine::recordingUpdateRequested() const
 {
     return s_audioIOListener->recordingUpdateRequested();
+}
+
+muse::async::Notification Au3AudioEngine::recordingNewBlocks() const
+{
+    return s_audioIOListener->recordingNewBlocks();
 }
 
 muse::async::Notification Au3AudioEngine::recordingCommitRequested() const

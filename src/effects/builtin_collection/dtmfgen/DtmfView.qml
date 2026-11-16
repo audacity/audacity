@@ -135,15 +135,6 @@ BuiltinEffectBase {
                     Layout.fillWidth: true
                     Layout.fillHeight: false
 
-                    border: Border {
-                        color: ui.theme.strokeColor
-                        width: 1
-                    }
-
-                    arrowSpacing: -2
-                    backgroundColor: ui.theme.backgroundSecondaryColor
-                    textColor: ui.theme.fontPrimaryColor
-
                     value: dtmf.duration
                     mode: TimecodeModeSelector.Duration
                     currentFormatStr: dtmf.durationFormat

@@ -23,7 +23,7 @@ public:
     Au3LabelsInteraction(const muse::modularity::ContextPtr& ctx);
 
     muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) override;
-    bool addLabelToSelection() override;
+    muse::RetVal<LabelKey> addLabelToSelection() override;
 
     bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) override;
     bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) override;
@@ -46,6 +46,10 @@ public:
     bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) override;
 
     void resetLabelStretchState() override;
+
+    int64_t labelGroupId(const LabelKey& labelKey) const override;
+    void setLabelGroupId(const LabelKey& labelKey, int64_t id) override;
+    LabelKeyList labelsInGroup(int64_t id) const override;
 
     muse::Progress progress() const override;
 

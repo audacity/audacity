@@ -19,7 +19,7 @@
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
-#include "au3-stretching-sequence/TempoChange.h"
+#include "au3-clip-processing/TempoChange.h"
 #include "projectthumbnail.h"
 
 //! HACK
@@ -34,6 +34,8 @@
 #include "trackcolor.h"
 #include "../au3projectcontext.h"
 #include "../au3types.h"
+
+#include <wx/filefn.h>
 
 #include <random>
 
@@ -174,14 +176,16 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
         pTrack->LinkConsistencyFix();
     }
 
-    //! NOTE: sanitize legacy/corrupted projects that were saved with overlapping
+    // Update saved state BEFORE sanitizing
+    // Saved state should represent what is stored on disk
+    updateSavedState();
+
+    //! NOTE: sanitize legacy/corrupted projects that were saved with empty clips or overlapping
     //! clip play regions (an unsupported state). Done here, before the trackedit
     //! project and UI are built, so no change notifications are needed.
     for (auto pWaveTrack : tracks.Any<WaveTrack>()) {
-        WaveTrackUtilities::RemoveOverlaps(*pWaveTrack);
+        WaveTrackUtilities::Sanitize(*pWaveTrack);
     }
-
-    updateSavedState();
 
     return ret;
 }
@@ -202,12 +206,29 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
     // intentionally, to keep "Save As" correct — see commit 86c2f8f7.)
     SavedMasterEffectList::Get(project).UpdateCopy();
 
-    auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), m_lastSavedTracks.get());
-    if (result) {
-        UndoManager::Get(project).StateSaved();
+    const FilePath fileName = wxFromString(filePath.toString());
+
+    // Moving an existing file aside during replacement
+    std::optional<ProjectFileIO::BackupProject> backup;
+    if (fileName != projectFileIO.GetFileName() && wxFileExists(fileName)) {
+        backup.emplace(projectFileIO, fileName);
+        if (!backup->IsOk()) {
+            return false;
+        }
     }
 
-    updateSavedState();
+    auto result = projectFileIO.SaveProject(fileName, m_lastSavedTracks.get());
+
+    // Once the project uses the new file, restoring the old one would delete it
+    if (backup && (result || projectFileIO.GetFileName() == fileName)) {
+        backup->Discard();
+    }
+
+    if (result) {
+        UndoManager::Get(project).StateSaved();
+        // Update state only when save succeeded
+        updateSavedState();
+    }
 
     return result;
 }
@@ -284,9 +305,7 @@ void Au3ProjectAccessor::close()
             // without save.  Don't leave the document blob from the last
             // push of undo history, when that undo state may get purged
             // with deletion of some new sample blocks.
-            // REVIEW: UpdateSaved() might fail too.  Do we need to test
-            // for that and report it?
-            projectFileIO.UpdateSaved(m_lastSavedTracks.get());
+            projectFileIO.AutoSaveDelete();
         }
     }
 
@@ -377,5 +396,5 @@ muse::Ret Au3ProjectAccessor::removeAutosaveData()
 muse::io::path_t Au3ProjectAccessor::getFileName() const
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    return projectFileIO.GetFileName().ToStdString();
+    return wxToStdString(projectFileIO.GetFileName());
 }

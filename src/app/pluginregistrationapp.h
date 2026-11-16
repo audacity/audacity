@@ -7,16 +7,20 @@
 #include <memory>
 
 #include "global/internal/baseapplication.h"
+#include "diagnostics/idiagnosticsconfiguration.h"
 
 #include "cmdoptions.h"
 
 namespace au::app {
 class PluginRegistrationApp : public muse::BaseApplication
 {
+    muse::GlobalInject<muse::diagnostics::IDiagnosticsConfiguration> diagnosticsConfiguration;
+
 public:
     PluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options);
 
 protected:
+    void applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& options) override;
     void startupScenario(const muse::modularity::ContextPtr& ctxId) override;
 
 private:

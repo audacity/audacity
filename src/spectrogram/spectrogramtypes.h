@@ -3,14 +3,15 @@
  */
 #pragma once
 
-#include "framework/actions/actiontypes.h"
+#include "framework/global/types/string.h"
+#include "framework/global/types/uri.h"
 
 #include "shared/axis/axisscale.h"
 #include "shared/axis/axistypes.h"
 #include "shared/axis/numberscale.h"
 
 namespace au::spectrogram {
-static const muse::actions::ActionCode TRACK_SPECTROGRAM_SETTINGS_ACTION("track-spectrogram-settings");
+static const muse::Uri TRACK_SPECTROGRAM_SETTINGS_URI("audacity://spectrogram/track-settings");
 
 /** SpectrogramScale and NumberScale are aliases for the generic axis types
  *  from the shared module. Kept here to avoid churn across spectrogram call
@@ -111,7 +112,7 @@ enum class SpectralEffectId {
 
 struct SpectralEffect {
     SpectralEffectId spectralEffectId;
-    muse::actions::ActionCode action;
+    muse::String effectId;
     muse::String title;
 };
 

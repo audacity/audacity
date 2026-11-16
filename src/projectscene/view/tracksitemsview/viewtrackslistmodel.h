@@ -5,8 +5,6 @@
 
 #include <QAbstractListModel>
 
-#include <actions/actionable.h>
-
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -22,8 +20,7 @@
 #include "trackedit/dom/track.h"
 
 namespace au::projectscene {
-class ViewTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable,
-    public muse::Contextable
+class ViewTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

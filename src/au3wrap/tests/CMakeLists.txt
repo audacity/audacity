@@ -9,6 +9,14 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/tracktemplatefactory.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/au3projectmock.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/filenames_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/clipbufferingnode_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/crossfadingsmoother_tests.cpp
+)
+
+set(MODULE_TEST_LINK
+    au3wrap
 )
 
 set(MODULE_TEST_LINK

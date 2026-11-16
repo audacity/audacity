@@ -140,13 +140,16 @@ if(BUILD_CONFIGURE MATCHES "UTEST")
         set(MUSE_COMPILE_ASAN ON)
     endif()
 
-    message(STATUS "If you added tests to a module that didn't have them yet, make sure that this module is enabled, see SetupConfigure.cmake")
-    set(MUSE_MODULE_MIDI OFF)
-    set(MUSE_MODULE_MUSESAMPLER OFF)
-    set(MUSE_MODULE_NETWORK OFF)
-    set(MUSE_MODULE_SHORTCUTS OFF)
+    # With code coverage, build every module, so that the ones without tests are counted as uncovered
+    if (NOT MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
+        message(STATUS "If you added tests to a module that didn't have them yet, make sure that this module is enabled, see SetupConfigure.cmake")
+        set(MUSE_MODULE_MIDI OFF)
+        set(MUSE_MODULE_MUSESAMPLER OFF)
+        set(MUSE_MODULE_NETWORK OFF)
+        set(MUSE_MODULE_SHORTCUTS OFF)
 
-    set(MUE_BUILD_APPSHELL_MODULE OFF)
+        set(MUE_BUILD_APPSHELL_MODULE OFF)
+    endif()
 
 endif()
 

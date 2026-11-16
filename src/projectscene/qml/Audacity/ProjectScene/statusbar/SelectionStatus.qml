@@ -10,6 +10,10 @@ Row {
 
     property NavigationPanel navigationPanel: null
 
+    property int maximumWidth: -1
+
+    readonly property bool showTitles: root.maximumWidth <= 0 || prv.fullContentWidth <= root.maximumWidth
+
     spacing: 6
 
     SelectionStatusModel {
@@ -20,12 +24,19 @@ Row {
         selectionModel.init()
     }
 
+    QtObject {
+        id: prv
+
+        readonly property int fullContentWidth: titleLabel.implicitWidth + startEndTimeCode.width + durationLabel.implicitWidth + durationTimecode.width + root.spacing * 3
+    }
+
     StyledTextLabel {
         id: titleLabel
 
         anchors.verticalCenter: parent.verticalCenter
 
         text: qsTrc("projectscene", "Selection")
+        visible: root.showTitles
 
         enabled: selectionModel.isEnabled
         opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
@@ -69,6 +80,7 @@ Row {
         anchors.verticalCenter: parent.verticalCenter
 
         text: qsTrc("projectscene", "Duration")
+        visible: root.showTitles
 
         enabled: selectionModel.isEnabled
         opacity: enabled ? 1.0 : ui.theme.itemOpacityDisabled
@@ -76,6 +88,8 @@ Row {
 
     Timecode {
         id: durationTimecode
+
+        appearance: Timecode.Appearance.Clock
 
         value: selectionModel.endTime - selectionModel.startTime
         mode: TimecodeModeSelector.Duration

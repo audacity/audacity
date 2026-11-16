@@ -2,6 +2,7 @@
 #include "log.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-effects/Effect.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 namespace au::effects {
 namespace {
@@ -11,9 +12,12 @@ constexpr const char16_t* REALTIME_VIEWER_URI
 
 muse::Ret AbstractViewLauncher::doShowEffect(int instanceId, EffectFamily family) const
 {
+    const Effect* effect = effectsProvider()->effect(instancesRegister()->effectIdByInstanceId(instanceId));
+
     muse::UriQuery uri(DESTRUCTIVE_EFFECT_VIEWER_URI);
     uri.addParam("instanceId", muse::Val(instanceId));
     uri.addParam("effectFamily", muse::Val(family));
+    uri.addParam("batchProcessing", muse::Val(effect && effect->IsBatchProcessing()));
     const auto ret = interactive()->openSync(uri);
     return ret.ret;
 }
@@ -25,7 +29,7 @@ void AbstractViewLauncher::doShowRealtimeEffect(const RealtimeEffectStatePtr& st
     }
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
     if (!instance) {
-        LOGW() << "Could not get instance for " << state->GetID().ToStdString();
+        LOGW() << "Could not get instance for " << au::au3::wxToStdString(state->GetID());
         return;
     }
 
@@ -49,9 +53,8 @@ void AbstractViewLauncher::hideRealtimeEffect(const RealtimeEffectStatePtr& stat
     IF_ASSERT_FAILED(state) {
         return;
     }
-    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->GetInstance());
+    const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(state->PeekInstance());
     if (!instance) {
-        LOGW() << "Could not get instance for " << state->GetID().ToStdString();
         return;
     }
     const auto instanceId = instance->id();

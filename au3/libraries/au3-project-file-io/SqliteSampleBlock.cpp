@@ -15,7 +15,7 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "DBConnection.h"
 #include "ProjectFileIO.h"
 #include "au3-math/SampleFormat.h"
-#include "au3-stretching-sequence/AudioSegmentSampleView.h"
+#include "au3-clip-processing/AudioSegmentSampleView.h"
 #include "au3-xml/XMLTagHandler.h"
 
 #include "au3-wave-track/SampleBlock.h" // to inherit

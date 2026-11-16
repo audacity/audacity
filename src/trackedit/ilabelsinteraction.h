@@ -20,7 +20,7 @@ public:
     virtual ~ILabelsInteraction() = default;
 
     virtual muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) = 0;
-    virtual bool addLabelToSelection() = 0;
+    virtual muse::RetVal<LabelKey> addLabelToSelection() = 0;
 
     virtual bool changeLabelTitle(const LabelKey& labelKey, const muse::String& title) = 0;
     virtual bool changeLabelLowFrequency(const LabelKey& labelKey, double frequency) = 0;
@@ -42,6 +42,10 @@ public:
     virtual bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) = 0;
 
     virtual void resetLabelStretchState() = 0;
+
+    virtual int64_t labelGroupId(const LabelKey& labelKey) const = 0;
+    virtual void setLabelGroupId(const LabelKey& labelKey, int64_t id) = 0;
+    virtual LabelKeyList labelsInGroup(int64_t id) const = 0;
 
     virtual muse::Progress progress() const = 0;
 };

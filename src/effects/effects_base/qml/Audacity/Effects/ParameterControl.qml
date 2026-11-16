@@ -141,7 +141,7 @@ Item {
 
             onClicked: {
                 // Toggle is a single atomic operation - begin and end gesture immediately
-                root.gestureStarted(root.parameterId);
+                root.gestureStarted(root.parameterId)
 
                 // Send the opposite of current value (toggle)
                 var isCurrentlyOn = parameterData.isToggleChecked
@@ -365,6 +365,9 @@ Item {
                 pathFieldTitle: parameterData ? parameterData.name : ""
 
                 path: parameterData ? parameterData.currentValueString : ""
+
+                buttonType: FlatButton.Horizontal
+                buttonOrientation: Qt.Horizontal
 
                 pickerType: {
                     if (!parameterData) {

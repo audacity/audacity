@@ -15,6 +15,14 @@ Rectangle {
 
     property int earWidth: 0
 
+    component TimeSelection: QtObject {
+        property real start: 0
+        property real width: 0
+        property color color: "transparent"
+    }
+
+    readonly property TimeSelection timeSelection: TimeSelection {}
+
     property real leftVisibleMargin: 0
 
     property bool enableCursorInteraction: true
@@ -28,7 +36,6 @@ Rectangle {
 
     signal requestSingleSelected
 
-    signal contextMenuOpenRequested(real x, real y)
     signal mousePositionChanged(real x, real y)
     signal headerHoveredChanged(bool value)
 
@@ -52,6 +59,21 @@ Rectangle {
         readonly property int doubleClickMaxDistance: 5
     }
 
+    Rectangle {
+        id: selectionHighlight
+
+        readonly property real startX: Math.max(0, root.timeSelection.start)
+        readonly property real endX: Math.min(root.width, root.timeSelection.start + root.timeSelection.width)
+
+        x: startX
+        width: Math.max(0, endX - startX)
+        height: root.height
+
+        radius: root.radius
+        color: root.timeSelection.color
+        visible: width > 0
+    }
+
     MouseArea {
         id: headerDragArea
         anchors.fill: parent
@@ -59,7 +81,7 @@ Rectangle {
         property var lastClickTime: Date()
         property point doubleClickStartPosition
 
-        acceptedButtons: Qt.LeftButton | Qt.RightButton
+        acceptedButtons: Qt.LeftButton
         hoverEnabled: true
         cursorShape: Qt.OpenHandCursor
 
@@ -67,10 +89,6 @@ Rectangle {
 
         onPressed: function (e) {
             var currentTime = Date.now()
-
-            if (e.button === Qt.RightButton) {
-                return
-            }
 
             if (currentTime - lastClickTime < prv.doubleClickInterval) {
                 // Double click - edit title
@@ -85,9 +103,6 @@ Rectangle {
         }
 
         onClicked: function (e) {
-            if (e.button === Qt.RightButton) {
-                root.contextMenuOpenRequested(e.x, e.y)
-            }
             e.accepted = false
         }
 

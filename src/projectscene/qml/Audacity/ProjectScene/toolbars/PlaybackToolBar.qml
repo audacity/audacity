@@ -204,6 +204,8 @@ Item {
 
                 accessibleName: qsTrc("projectscene", "Playback position:")
 
+                appearance: Timecode.Appearance.Clock
+
                 value: Boolean(itemData) ? itemData.currentValue : 0
 
                 mode: TimecodeModeSelector.TimePoint

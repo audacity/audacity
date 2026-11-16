@@ -23,7 +23,6 @@
 #include "au3-project/Project.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-files/wxFileNameWrapper.h"
-#include "au3-stretching-sequence/StretchingSequence.h"
 
 #include "ExportUtils.h"
 

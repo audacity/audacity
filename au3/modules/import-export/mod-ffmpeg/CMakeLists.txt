@@ -10,6 +10,8 @@ set( SOURCES
    FFmpeg.cpp
    FFmpeg.h
    FFmpegDefines.h
+   FFmpegMetadata.cpp
+   FFmpegMetadata.h
    ImportFFmpeg.h
    ExportFFmpeg.h
    ExportFFmpegOptions.cpp

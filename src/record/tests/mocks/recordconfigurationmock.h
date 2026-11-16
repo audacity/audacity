@@ -28,5 +28,8 @@ public:
     MOCK_METHOD(muse::async::Notification, crossfadeDurationChanged, (), (const, override));
 
     MOCK_METHOD(RecordingTrackNameOptions, recordingTrackNameOptions, (), (const, override));
+
+    MOCK_METHOD(TimedRecordingOptions, timedRecordingOptions, (), (const, override));
+    MOCK_METHOD(void, setTimedRecordingOptions, (const TimedRecordingOptions&), (override));
 };
 }

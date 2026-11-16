@@ -36,22 +36,22 @@ VST3EffectBase::VST3EffectBase(
 
 PluginPath VST3EffectBase::GetPath() const
 {
-    return VST3Utils::MakePluginPathString({ mModule->getPath() }, mEffectClassInfo->ID().toString());
+    return VST3Utils::MakePluginPathString(wxString::FromUTF8(mModule->getPath()), mEffectClassInfo->ID().toString());
 }
 
 ComponentInterfaceSymbol VST3EffectBase::GetSymbol() const
 {
-    return wxString { mEffectClassInfo->name() };
+    return wxString::FromUTF8(mEffectClassInfo->name());
 }
 
 VendorSymbol VST3EffectBase::GetVendor() const
 {
-    return wxString { mEffectClassInfo->vendor() };
+    return wxString::FromUTF8(mEffectClassInfo->vendor());
 }
 
 wxString VST3EffectBase::GetVersion() const
 {
-    return mEffectClassInfo->version();
+    return wxString::FromUTF8(mEffectClassInfo->version());
 }
 
 TranslatableString VST3EffectBase::GetDescription() const

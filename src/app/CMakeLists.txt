@@ -62,7 +62,6 @@ elseif(OS_IS_LIN)
 
 elseif(OS_IS_MAC)
     set(EXECUTABLE_NAME audacity MACOSX_BUNDLE)
-    set(MACOSX_BUNDLE_ICON_FILE AppIcon.icns)
     set(MACOSX_BUNDLE_GUI_IDENTIFIER ${MUSE_APP_GUI_IDENTIFIER})
     set(MACOSX_BUNDLE_BUNDLE_NAME ${MUSE_APP_TITLE})
     set(MACOSX_BUNDLE_LONG_VERSION_STRING ${MUSE_APP_VERSION})
@@ -155,6 +154,8 @@ add_to_link_if_exists(effects_vst)
 add_to_link_if_exists(exporter)
 add_to_link_if_exists(iex_labels)
 add_to_link_if_exists(importer)
+add_to_link_if_exists(musehub)
+add_to_link_if_exists(macromanager)
 add_to_link_if_exists(playback)
 add_to_link_if_exists(preferences)
 add_to_link_if_exists(project)
@@ -171,6 +172,10 @@ if (OS_IS_MAC)
     list(APPEND AUDACITY_APPEND_SRC internal/platform/macos/backgroundprocess.mm)
 else()
     list(APPEND AUDACITY_APPEND_SRC internal/platform/stub/backgroundprocess.cpp)
+endif()
+
+if (MUSE_MODULE_TESTFLOW)
+    list(APPEND AUDACITY_APPEND_SRC testflowrunner.cpp testflowrunner.h)
 endif()
 
 if (OS_IS_WIN)
@@ -258,6 +263,9 @@ if (OS_IS_MAC)
             string(APPEND AU4_BUNDLE_LOCALIZATIONS "\t\t<string>${AU4_LANGUAGE_CODE}</string>\n")
         endif()
     endforeach()
+
+    include(${PROJECT_SOURCE_DIR}/share/icons/SetupIconComposerIcon.cmake)
+    target_setup_iconcomposer_icon(audacity "${PROJECT_SOURCE_DIR}/share/icons/AppIcon/AppIcon.icon")
 
     set_target_properties(audacity
         PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${PROJECT_SOURCE_DIR}/buildscripts/packaging/MacOS/MacOSXBundleInfo.plist.in

@@ -67,6 +67,54 @@ public:
     std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
 };
 
+TEST_F(Au3LabelsInteractionsTests, LabelsAreUngroupedByDefault)
+{
+    //! [GIVEN] A label track with one label
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
+
+    //! [THEN] It belongs to no group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(key), -1);
+    EXPECT_TRUE(m_labelsInteraction->labelsInGroup(-1).empty());
+}
+
+TEST_F(Au3LabelsInteractionsTests, SetLabelGroupIdNotifiesAndListsTheLabelInItsGroup)
+{
+    //! [GIVEN] Two labels on a track
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey first { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("first")) };
+    region.setTimes(3.0, 4.0);
+    const LabelKey second { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("second")) };
+
+    //! [EXPECT] The grouped label reports a change
+    EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(1);
+
+    //! [WHEN] One label joins group 7
+    m_labelsInteraction->setLabelGroupId(first, 7);
+
+    //! [THEN] Only that label is listed in the group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(first), 7);
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(second), -1);
+    EXPECT_EQ(m_labelsInteraction->labelsInGroup(7), LabelKeyList { first });
+}
+
+TEST_F(Au3LabelsInteractionsTests, LabelGroupIdOfAMissingLabelIsNone)
+{
+    //! [GIVEN] A label track with one label
+    Au3LabelTrack* labelTrack = ::LabelTrack::Create(Au3TrackList::Get(projectRef()));
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { labelTrack->GetId(), labelTrack->AddLabel(region, wxString("label")) };
+
+    //! [THEN] Stale keys, e.g. a label's key from before it moved to another track, are in no group
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(LabelKey { key.trackId, key.itemId + 1000 }), -1);
+    EXPECT_EQ(m_labelsInteraction->labelGroupId(LabelKey { key.trackId + 1000, key.itemId }), -1);
+}
+
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneExists)
 {
     //! [GIVEN] There is a project without any label tracks
@@ -89,7 +137,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneE
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -133,7 +181,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesExistingLabelTrack)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -180,7 +228,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesFocusedLabelTrack)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -211,13 +259,20 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
+    //! [GIVEN] Playback is not active at position 3.5 seconds
+    const double playbackPosition = 3.5;
+    ON_CALL(*m_playbackState, isPlaying())
+    .WillByDefault(Return(false));
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(playbackPosition));
+
     //! [EXPECT] The project is notified about a new track and a new label being added
     EXPECT_CALL(*m_trackEditProject, notifyAboutTrackAdded(_)).Times(1);
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelAdded(_)).Times(1);
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label at the cursor position
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label at cursor position should succeed";
@@ -230,11 +285,11 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     ASSERT_NE(labelTrack, nullptr) << "Label track should exist";
     ASSERT_EQ(labelTrack->GetNumLabels(), 1) << "Label track should contain one label";
 
-    //! [THEN] The label is a point label (same start and end time)
+    //! [THEN] The label is a point label (same start and end time), at the playback position
     const Au3Label* label = labelTrack->GetLabel(0);
     ASSERT_NE(label, nullptr) << "Label should exist";
-    ASSERT_DOUBLE_EQ(label->getT0(), cursorPosition) << "Label start should be at cursor position";
-    ASSERT_DOUBLE_EQ(label->getT1(), cursorPosition) << "Label end should be at cursor position";
+    ASSERT_DOUBLE_EQ(label->getT0(), playbackPosition) << "Label start should be at playback position";
+    ASSERT_DOUBLE_EQ(label->getT1(), playbackPosition) << "Label end should be at playback position";
 }
 
 TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
@@ -254,19 +309,19 @@ TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
     //! [WHEN] Add first label from 0.0 to 1.0
     ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(0.0));
     ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(1.0));
-    bool result1 = m_labelsInteraction->addLabelToSelection();
+    bool result1 = m_labelsInteraction->addLabelToSelection().ret;
     ASSERT_TRUE(result1) << "Adding first label should succeed";
 
     //! [WHEN] Add second label from 2.0 to 3.0
     ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(2.0));
     ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(3.0));
-    bool result2 = m_labelsInteraction->addLabelToSelection();
+    bool result2 = m_labelsInteraction->addLabelToSelection().ret;
     ASSERT_TRUE(result2) << "Adding second label should succeed";
 
     //! [WHEN] Add third label from 4.0 to 5.0
     ON_CALL(*m_selectionController, dataSelectedStartTime()).WillByDefault(Return(4.0));
     ON_CALL(*m_selectionController, dataSelectedEndTime()).WillByDefault(Return(5.0));
-    bool result3 = m_labelsInteraction->addLabelToSelection();
+    bool result3 = m_labelsInteraction->addLabelToSelection().ret;
     ASSERT_TRUE(result3) << "Adding third label should succeed";
 
     //! [THEN] Only one label track was created
@@ -319,7 +374,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithAudioTrackPresent)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -375,7 +430,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenPlaybackIsActive)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection (while playback is active)
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The existing label track now contains one label
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -430,7 +485,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenRecordingIsActive)
     EXPECT_CALL(*m_selectionController, setSelectedLabels(_, _)).Times(1);
 
     //! [WHEN] Add a label to the selection (while recording is active)
-    bool result = m_labelsInteraction->addLabelToSelection();
+    bool result = m_labelsInteraction->addLabelToSelection().ret;
 
     //! [THEN] The existing label track now contains one label
     ASSERT_TRUE(result) << "Adding label to selection should succeed";
@@ -1054,6 +1109,65 @@ TEST_F(Au3LabelsInteractionsTests, CutLabelWithInvalidKey)
     ASSERT_EQ(labelTrack->GetLabel(0)->GetId(), labelId) << "Original label should still have correct ID";
 }
 
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsToAnotherTrackKeepsGroupAndSelection)
+{
+    //! [GIVEN] Two label tracks, the first holding a grouped and selected label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* fromTrack = ::LabelTrack::Create(tracks);
+    Au3LabelTrack* toTrack = ::LabelTrack::Create(tracks);
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { fromTrack->GetId(), fromTrack->AddLabel(region, wxString("Grouped")) };
+    Au3Label* label = fromTrack->GetLabelById(key.itemId);
+    label->SetGroupId(7);
+    label->SetSelected(true);
+
+    //! [WHEN] The label is moved one track down and later in time
+    const muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels({ key }, 1.0, 1);
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 1u);
+
+    //! [THEN] The moved label lives on the second track and keeps its group, selection, title and length
+    EXPECT_EQ(result.val.front().trackId, toTrack->GetId());
+    EXPECT_EQ(fromTrack->GetNumLabels(), 0);
+    ASSERT_EQ(toTrack->GetNumLabels(), 1);
+    const Au3Label* moved = toTrack->GetLabelById(result.val.front().itemId);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_EQ(moved->GetGroupId(), 7);
+    EXPECT_TRUE(moved->GetSelected());
+    EXPECT_EQ(moved->title, wxString("Grouped"));
+    EXPECT_DOUBLE_EQ(moved->getT0(), 2.0);
+    EXPECT_DOUBLE_EQ(moved->getT1(), 3.0);
+}
+
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsToTrackKeepsGroupAndSelection)
+{
+    //! [GIVEN] Two label tracks, the first holding a grouped and selected label
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+    Au3LabelTrack* fromTrack = ::LabelTrack::Create(tracks);
+    Au3LabelTrack* toTrack = ::LabelTrack::Create(tracks);
+    SelectedRegion region;
+    region.setTimes(1.0, 2.0);
+    const LabelKey key { fromTrack->GetId(), fromTrack->AddLabel(region, wxString("Grouped")) };
+    Au3Label* label = fromTrack->GetLabelById(key.itemId);
+    label->SetGroupId(7);
+    label->SetSelected(true);
+
+    //! [WHEN] The label is sent to the second track
+    const muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabelsToTrack({ key }, toTrack->GetId());
+    ASSERT_TRUE(result.ret);
+    ASSERT_EQ(result.val.size(), 1u);
+
+    //! [THEN] The moved label keeps its group and selection
+    EXPECT_EQ(result.val.front().trackId, toTrack->GetId());
+    ASSERT_EQ(toTrack->GetNumLabels(), 1);
+    const Au3Label* moved = toTrack->GetLabelById(result.val.front().itemId);
+    ASSERT_NE(moved, nullptr);
+    EXPECT_EQ(moved->GetGroupId(), 7);
+    EXPECT_TRUE(moved->GetSelected());
+    EXPECT_DOUBLE_EQ(moved->getT0(), 1.0);
+}
+
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsRight)
 {
     //! [GIVEN] There is a project with a label track containing three labels
@@ -1251,6 +1365,45 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithNoSelection)
     ASSERT_EQ(label->GetId(), labelId) << "Label should have correct ID";
     ASSERT_DOUBLE_EQ(label->getT0(), 1.0) << "Label start time should be unchanged";
     ASSERT_DOUBLE_EQ(label->getT1(), 2.0) << "Label end time should be unchanged";
+}
+
+TEST_F(Au3LabelsInteractionsTests, MoveLabelsClampsIndividuallyAtBoundaryTracks)
+{
+    auto& tracks = Au3TrackList::Get(projectRef());
+    auto* first = ::LabelTrack::Create(tracks);
+    ASSERT_NE(createTrack(TestTrackID::TRACK_SMALL_SILENCE), INVALID_TRACK);
+    auto* middle = ::LabelTrack::Create(tracks);
+    ASSERT_NE(createTrack(TestTrackID::TRACK_SMALL_SILENCE), INVALID_TRACK);
+    auto* last = ::LabelTrack::Create(tracks);
+
+    for (int offset : { -1, 1 }) {
+        LabelKeyList keys;
+        for (auto* track : { first, middle, last }) {
+            keys.push_back({ track->GetId(), track->AddLabel(SelectedRegion(10.0, 15.0), wxString("Label")) });
+        }
+
+        const auto result = m_labelsInteraction->moveLabels(keys, 0.0, offset);
+        ASSERT_TRUE(result.ret);
+        ASSERT_EQ(result.val.size(), 3);
+        EXPECT_EQ(result.val[0].trackId, offset < 0 ? first->GetId() : middle->GetId());
+        EXPECT_EQ(result.val[1].trackId, offset < 0 ? first->GetId() : last->GetId());
+        EXPECT_EQ(result.val[2].trackId, offset < 0 ? middle->GetId() : last->GetId());
+        EXPECT_EQ(first->GetNumLabels(), offset < 0 ? 2 : 0);
+        EXPECT_EQ(middle->GetNumLabels(), 1);
+        EXPECT_EQ(last->GetNumLabels(), offset < 0 ? 0 : 2);
+        for (const auto& key : result.val) {
+            auto* track = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(key.trackId));
+            const auto* label = DomAccessor::findLabel(track, key.itemId);
+            ASSERT_NE(label, nullptr);
+            EXPECT_DOUBLE_EQ(label->getT0(), 10.0);
+            EXPECT_DOUBLE_EQ(label->getT1(), 15.0);
+        }
+        for (auto* track : { first, middle, last }) {
+            while (track->GetNumLabels() > 0) {
+                track->DeleteLabel(0);
+            }
+        }
+    }
 }
 
 TEST_F(Au3LabelsInteractionsTests, MoveLabelsToAnotherTrack)

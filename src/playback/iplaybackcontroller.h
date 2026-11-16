@@ -8,7 +8,6 @@
 #include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
 #include "framework/global/progress.h"
-#include "framework/actions/actiontypes.h"
 
 #include "playbacktypes.h"
 
@@ -45,7 +44,6 @@ public:
     virtual bool isStopped() const = 0;
 
     virtual void stop() = 0;
-    virtual void stopSeekAndUpdatePlaybackRegion() = 0;
 
     virtual muse::async::Channel<uint32_t> midiTickPlayed() const = 0;
 
@@ -56,17 +54,12 @@ public:
     // virtual void setTrackSoloMuteState(const engraving::InstrumentTrackId& trackId,
     // const notation::INotationSoloMuteState::SoloMuteState& state) const = 0;
 
-    virtual bool actionChecked(const muse::actions::ActionCode& actionCode) const = 0;
-    virtual muse::async::Channel<muse::actions::ActionCode> actionCheckedChanged() const = 0;
-
     virtual muse::secs_t totalPlayTime() const = 0;
     virtual muse::async::Notification totalPlayTimeChanged() const = 0;
 
     virtual muse::secs_t lastPlaybackSeekTime() const = 0;
     virtual void setLastPlaybackSeekTime(muse::secs_t secs) = 0;
     virtual muse::async::Notification lastPlaybackSeekTimeChanged() const = 0;
-
-    virtual muse::Progress loadingProgress() const = 0;
 };
 }
 

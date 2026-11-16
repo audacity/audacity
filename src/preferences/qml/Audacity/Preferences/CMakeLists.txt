@@ -18,6 +18,7 @@ qt_add_qml_module(preferences_qml
         editpreferencesmodel.h
         exportpreferencespagemodel.cpp
         exportpreferencespagemodel.h
+        foreign.h
         generalpreferencesmodel.cpp
         generalpreferencesmodel.h
         musicpreferencesmodel.cpp
@@ -32,6 +33,8 @@ qt_add_qml_module(preferences_qml
         preferencesmodel.h
         recordingpreferencesmodel.cpp
         recordingpreferencesmodel.h
+        trackspreferencesmodel.cpp
+        trackspreferencesmodel.h
         updatepreferencesmodel.cpp
         updatepreferencesmodel.h
         usageinfopreferencesmodel.cpp
@@ -96,6 +99,7 @@ qt_add_qml_module(preferences_qml
         internal/SpectrogramScaleSection.qml
         internal/SpectrogramSelectionSection.qml
         internal/TemporaryFilesSection.qml
+        internal/TrackDisplaySection.qml
         internal/ThemeAdditionalOptionsSection.qml
         internal/ThemesSection.qml
         internal/UiColorsSection.qml
@@ -107,6 +111,7 @@ qt_add_qml_module(preferences_qml
         internal/ZoomToggleSection.qml
         PlaybackPreferencesPage.qml
         PluginPreferencesPage.qml
+        TracksPreferencesPage.qml
         PreferencesDialog.qml
         PreferencesPage.qml
         ShortcutsPreferencesPage.qml
@@ -123,4 +128,7 @@ qt_add_qml_module(preferences_qml
 
 fixup_qml_module_dependencies(preferences_qml)
 
-target_link_libraries(preferences_qml PRIVATE audacity_extensions)
+target_link_libraries(preferences_qml PRIVATE
+    audacity_extensions
+    importer # TempoDetectionPref (foreign.h) lives there; the link makes its metatypes visible to qmltyperegistrar
+)

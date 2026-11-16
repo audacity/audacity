@@ -135,7 +135,7 @@ void TrackLabelsLayoutManager::subscribeToLabelsChanges()
     for (const LabelInfo& label : labels) {
         connect(label.item, &TrackLabelItem::startTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
         connect(label.item, &TrackLabelItem::endTimeChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
-        connect(label.item, &TrackLabelItem::visualWidthChanged, [this, labelKey = label.key]() {
+        connect(label.item, &TrackLabelItem::visualWidthChanged, this, [this, labelKey = label.key]() {
             QList<LabelInfo> labels = collectLabelsInfo();
             for (const LabelInfo& label : labels) {
                 if (label.key == labelKey && !label.isEditing) {
@@ -145,6 +145,7 @@ void TrackLabelsLayoutManager::subscribeToLabelsChanges()
             }
         });
 
+        connect(label.item, &TrackLabelItem::draggedChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
         connect(label.item, &TrackLabelItem::isEditingChanged, this, &TrackLabelsLayoutManager::relink);
     }
 
@@ -167,6 +168,30 @@ void TrackLabelsLayoutManager::unsubscribeFromLabelsChanges()
 
     disconnect(m_labelsModel, &QAbstractListModel::rowsInserted, this, &TrackLabelsLayoutManager::subscribeToLabelsChanges);
     disconnect(m_labelsModel, &QAbstractListModel::rowsRemoved, this, &TrackLabelsLayoutManager::subscribeToLabelsChanges);
+}
+
+TimelineContext* TrackLabelsLayoutManager::timelineContext() const
+{
+    return m_context;
+}
+
+void TrackLabelsLayoutManager::setTimelineContext(TimelineContext* newContext)
+{
+    if (m_context == newContext) {
+        return;
+    }
+
+    if (m_context) {
+        disconnect(m_context, nullptr, this, nullptr);
+    }
+
+    m_context = newContext;
+
+    if (m_context) {
+        connect(m_context, &TimelineContext::zoomChanged, this, &TrackLabelsLayoutManager::scheduleRelayout);
+    }
+
+    emit timelineContextChanged();
 }
 
 QList<TrackLabelsLayoutManager::LabelInfo> TrackLabelsLayoutManager::collectLabelsInfo() const
@@ -234,6 +259,7 @@ void TrackLabelsLayoutManager::relayout()
     }
 
     QList<LabelInfo> labels = collectLabelsInfo();
+    labels.removeIf([](const LabelInfo& label) { return label.item->dragged(); });
 
     std::sort(labels.begin(), labels.end(), [](const LabelInfo& a, const LabelInfo& b) {
         if (a.x != b.x) {
@@ -336,6 +362,8 @@ void TrackLabelsLayoutManager::relink()
     m_rightLinkedLabels.clear();
 
     QList<LabelInfo> labels = collectLabelsInfo();
+    // Do not link to ghosts
+    labels.removeIf([](const LabelInfo& label) { return label.item->isDragGhost(); });
     for (const LabelInfo& label : labels) {
         label.item->setIsLeftLinked(false);
         label.item->setIsRightLinked(false);
@@ -345,6 +373,9 @@ void TrackLabelsLayoutManager::relink()
     // Label is linked if its right edge matches another label's left edge (or vice versa)
     for (int i = 0; i < labels.size(); ++i) {
         const LabelInfo& current = labels[i];
+        if (current.isPoint) {
+            continue;
+        }
 
         double currentRightEdge = current.startTime + current.width;
         double currentLeftEdge = current.startTime;
@@ -355,6 +386,9 @@ void TrackLabelsLayoutManager::relink()
             }
 
             const LabelInfo& other = labels[j];
+            if (other.isPoint) {
+                continue;
+            }
 
             double otherRightEdge = other.startTime + other.width;
             double otherLeftEdge = other.startTime;

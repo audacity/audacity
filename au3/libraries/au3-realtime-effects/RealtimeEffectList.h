@@ -115,6 +115,10 @@ public:
     //! Use only in the main thread.  Sends Remove messages
     void Clear();
 
+    //! Use only in the main thread.  Replaces the states, shared with the
+    //! track this list was copied from, by independent copies
+    void CloneStates();
+
     //! Report the position of a state in the list
     std::optional<size_t> FindState(
         const std::shared_ptr<RealtimeEffectState>& pState) const;

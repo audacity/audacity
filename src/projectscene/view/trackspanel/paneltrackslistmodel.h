@@ -6,7 +6,7 @@
 
 #include <QAbstractListModel>
 
-#include "actions/iactionsdispatcher.h"
+#include "rcommand/icommanddispatcher.h"
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -41,7 +41,7 @@ class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyn
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 

@@ -75,6 +75,17 @@ Item {
         max: knob.to
 
         onValueChanged: {
+            // Optional soft limits narrower than the knob range.
+            const limitMin = root.parameter["limitMin"]
+            const limitMax = root.parameter["limitMax"]
+            const lower = limitMin !== undefined ? limitMin : -Infinity
+            const upper = limitMax !== undefined ? limitMax : Infinity
+            const limited = Math.min(upper, Math.max(lower, warper.value))
+            if (limited !== warper.value) {
+                warper.value = limited
+                return
+            }
+
             root.newValueRequested(root.parameter["key"], root.normalizedValue(warper.value))
         }
     }
@@ -148,8 +159,8 @@ Item {
 
             implicitWidth: 70
 
-            minValue: knob.from
-            maxValue: knob.to
+            minValue: root.parameter["limitMin"] !== undefined ? root.parameter["limitMin"] : knob.from
+            maxValue: root.parameter["limitMax"] !== undefined ? root.parameter["limitMax"] : knob.to
             decimals: {
                 let s = root.precisionStepSize().toString()
                 if (s.indexOf('.') >= 0)

@@ -57,6 +57,7 @@ public:
 
     muse::Ret performEffect(const EffectId& effectId) override;
     muse::Ret performEffect(const EffectId& effectId, const std::string& params) override;
+    muse::RetVal<std::string> configureEffect(const EffectId& effectId, const std::string& params) override;
     bool lastProcessorIsAvailable() const override;
     muse::async::Notification lastProcessorIsNowAvailable() const override;
     muse::async::Channel<EffectId> lastProcessorIdChanged() const override;
@@ -87,12 +88,14 @@ private:
     bool DoEffect(const EffectId& effectId, au3::Au3Project& project, unsigned flags);
 
     struct EffectContext {
-        double t0 = 0.0;
         double t1 = 0.0;
         std::shared_ptr<::TrackList> tracks;
         BasicUI::ProgressDialog* preparingPreviewProgress = nullptr;
         bool isPreview = false;
     };
+
+    //! `noexcept` because called from `Defer` dtor.
+    static void restoreEffectStateHack(EffectBase& effect, const EffectContext& ctx) noexcept;
 
     struct EffectPreviewState {
         EffectPreviewState(const EffectId& effectId, const EffectContext& originContext,

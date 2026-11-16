@@ -28,12 +28,7 @@ RealtimeEffectList::~RealtimeEffectList()
 
 std::unique_ptr<ClientData::Cloneable<> > RealtimeEffectList::Clone() const
 {
-    auto result = std::make_unique<RealtimeEffectList>();
-    for (auto& pState : mStates) {
-        result->mStates.push_back(pState->Clone());
-    }
-    result->SetActive(this->IsActive());
-    return result;
+    return std::make_unique<RealtimeEffectList>(*this);
 }
 
 RealtimeEffectList& RealtimeEffectList::operator=(const RealtimeEffectList& other)
@@ -186,6 +181,17 @@ void RealtimeEffectList::Clear()
         Publisher<RealtimeEffectListMessage>::Publish(
             { RealtimeEffectListMessage::Type::Remove, index, {}, temp[index] });
     }
+}
+
+void RealtimeEffectList::CloneStates()
+{
+    States clones;
+    clones.reserve(mStates.size());
+    for (const auto& pState : mStates) {
+        clones.push_back(pState->Clone());
+    }
+    // Lock for only a short time
+    (LockGuard{ mLock }, swap(clones, mStates));
 }
 
 std::optional<size_t> RealtimeEffectList::FindState(

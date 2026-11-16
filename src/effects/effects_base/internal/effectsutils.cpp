@@ -441,6 +441,31 @@ muse::String utils::effectDisplayTitle(const EffectMeta& meta)
     return muse::mtrc(meta.titleContext.toStdString().c_str(), meta.title);
 }
 
+// It can be that different plugins have the same name. Seeing them side by side in a menu is confusing for the user.
+// To mitigate this, we replace the title with the path of the plugin.
+void utils::replaceIdenticalTitlesWithPaths(EffectMetaList& effects)
+{
+    using DuplicationKey = std::tuple<EffectFamily, EffectType, muse::String, muse::String>;
+
+    std::map<DuplicationKey, std::vector<size_t> > duplicateMap;
+
+    for (auto i = 0u; i < effects.size(); ++i) {
+        const auto& effect = effects[i];
+        DuplicationKey key{ effect.family, effect.type, effect.category, effect.title };
+        duplicateMap[key].push_back(i);
+    }
+
+    for (const auto&[_, indices] : duplicateMap) {
+        if (indices.size() == 1) {
+            continue;
+        }
+        for (const size_t index : indices) {
+            auto& meta = effects[index];
+            meta.title = meta.path.toString();
+        }
+    }
+}
+
 namespace {
 template<typename T>
 T value(const muse::String& str)

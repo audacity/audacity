@@ -8,28 +8,18 @@
 
 #include "effects/effects_base/ieffectloadersregister.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
-#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/audiouniteffectloader.h"
 #include "internal/audiounitpluginsscanner.h"
 #include "internal/audiounitpluginsmetareader.h"
 #include "internal/audiounitviewlauncher.h"
 
-#include "view/audiounitview.h"
-#include "view/audiounitviewmodel.h"
-
 static const std::string mname("effects_audiounit");
-
-static void AudioUnitInitQrc()
-{
-    Q_INIT_RESOURCE(audiounit);
-}
 
 au::effects::AudioUnitEffectsModule::AudioUnitEffectsModule()
     : m_metaReader(std::make_shared<AudioUnitPluginsMetaReader>()), m_effectLoader(std::make_shared<AudioUnitEffectLoader>()),
     m_pluginsScanner(std::make_shared<AudioUnitPluginsScanner>())
 {
-    AudioUnitInitQrc();
 }
 
 std::string au::effects::AudioUnitEffectsModule::moduleName() const
@@ -57,12 +47,6 @@ void au::effects::AudioUnitEffectsModule::resolveImports()
     if (loadersRegister) {
         loadersRegister->registerLoader(m_effectLoader);
     }
-}
-
-void au::effects::AudioUnitEffectsModule::registerUiTypes()
-{
-    qmlRegisterType<au::effects::AudioUnitView>("Audacity.AudioUnit", 1, 0, "AudioUnitView");
-    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(AudioUnitViewModelFactory);
 }
 
 void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMode& mode)

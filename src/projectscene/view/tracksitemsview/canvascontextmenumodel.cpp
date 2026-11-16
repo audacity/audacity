@@ -6,10 +6,11 @@
 
 #include "canvascontextmenumodel.h"
 
+#include "trackedit/trackeditcommands.h"
+
 using namespace au::projectscene;
 using namespace muse;
 using namespace muse::uicomponents;
-using namespace muse::actions;
 
 void CanvasContextMenuModel::load()
 {
@@ -22,24 +23,24 @@ void CanvasContextMenuModel::load()
 MenuItemList CanvasContextMenuModel::makeItems()
 {
     MenuItemList pasteAndItems {
-        makeMenuItem("action://trackedit/paste-overlap",
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_OVERLAP_COMMAND,
                      muse::TranslatableString("canvas", "Paste and overlap")),
-        makeMenuItem("action://trackedit/paste-insert",
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_INSERT_COMMAND,
                      muse::TranslatableString("canvas", "Paste and make room on this track")),
-        makeMenuItem("action://trackedit/paste-insert-all-tracks-ripple",
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_COMMAND,
                      muse::TranslatableString("canvas", "Paste and make room on all tracks")),
     };
 
     MenuItemList items {
-        makeMenuItem("action://trackedit/paste-default"),
+        makeMenuItem(trackedit::TRACKEDIT_PASTE_DEFAULT_COMMAND),
         makeMenu(muse::TranslatableString("canvas", "Paste and…"), pasteAndItems, "menu-paste-and"),
         makeSeparator(),
-        makeMenuItem("new-mono-track"),
-        makeMenuItem("new-stereo-track"),
-        makeMenuItem("new-label-track"),
+        makeMenuItem(trackedit::TRACKEDIT_NEW_MONO_TRACK_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_NEW_STEREO_TRACK_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_NEW_LABEL_TRACK_COMMAND),
         makeSeparator(),
-        makeMenuItem("select-all"),
-        makeMenuItem("clear-selection")
+        makeMenuItem(trackedit::TRACKEDIT_SELECT_ALL_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_CLEAR_SELECTION_COMMAND)
     };
 
     return items;

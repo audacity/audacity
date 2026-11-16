@@ -20,6 +20,10 @@ void HistoryPanelModel::classBegin()
         onCurrentProjectChanged();
     });
 
+    context()->isRecordingChanged().onNotify(this, [this] {
+        emit isUndoRedoAvailableChanged();
+    });
+
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         onHistoryEvent();
     });
@@ -94,6 +98,12 @@ QHash<int, QByteArray> HistoryPanelModel::roleNames() const
 int HistoryPanelModel::currentIndex() const
 {
     return isProjectLoaded() ? projectHistory()->currentStateIndex() : 0;
+}
+
+bool HistoryPanelModel::isUndoRedoAvailable() const
+{
+    // Undo/redo is blocked for the whole recording session, including while it is paused
+    return !context()->isRecording();
 }
 
 void HistoryPanelModel::undoRedoToIndex(int index)

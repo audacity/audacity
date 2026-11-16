@@ -21,6 +21,7 @@ public:
     virtual void notifyAboutTrackSpectrogramConfigurationChanged(int trackId) = 0;
 
     virtual void copyConfiguration(ISpectrogramConfiguration& source, ISpectrogramConfiguration& destination) const = 0;
+    virtual double trackSampleRate(int trackId) const = 0;
     virtual double frequencyHardMaximum(int trackId) const = 0;
     virtual double yToFrequency(int trackId, double spectrogramY, double spectrogramHeight) const = 0;
     virtual double frequencyToY(int trackId, double frequency, double spectrogramHeight) const = 0;

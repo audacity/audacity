@@ -5,39 +5,18 @@
 
 #include "framework/global/log.h"
 #include "framework/global/async/async.h"
-
+#include "framework/dockwindow/dockcommands.h"
 #include "framework/dockwindow/idockwindow.h"
 
-#include "internal/applicationuiactions.h"
-#include "projectscene/internal/projectsceneuiactions.h"
+#include "playback/playbackcommands.h"
+#include "projectscene/view/toolbars/playbacktoolbarconfig.h"
 
 using namespace au::appshell;
-using namespace muse::actions;
-
-static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
+using namespace muse;
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
-}
-
-void ProjectPageModel::revealVideoPanelIfAttached()
-{
-    // A project restored with a video attaches it during setCurrentProject,
-    // which happens before this page is loaded - so the reveal dispatched
-    // from ApplicationUiActions at that moment lands on the home page and is
-    // lost. This is the first point at which the project page's docks exist,
-    // so catch that case here. setDockOpen rather than the "toggle-video"
-    // action, because the action is registered a few lines above and only
-    // reaches whichever page is current.
-    if (!videoService() || !videoService()->isAttached()) {
-        return;
-    }
-
-    muse::dock::IDockWindow* window = dockWindowProvider()->window();
-    if (window && !window->isDockOpen(VIDEO_PANEL_NAME)) {
-        window->setDockOpen(VIDEO_PANEL_NAME, true);
-    }
 }
 
 void ProjectPageModel::init()
@@ -45,10 +24,9 @@ void ProjectPageModel::init()
     TRACEFUNC;
 
     if (!m_inited) {
-        for (const ActionCode& actionCode : ApplicationUiActions::toggleDockActions().keys()) {
-            DockName dockName = ApplicationUiActions::toggleDockActions()[actionCode];
-            dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
-        }
+        applicationActionController()->dockToggleRequested().onReceive(this, [this](const DockName& dockName) {
+            toggleDock(dockName);
+        });
 
         uiState()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
             updatePlaybackMeterVisibility();
@@ -58,21 +36,42 @@ void ProjectPageModel::init()
             updatePlaybackMeterVisibility();
         });
 
-        revealVideoPanelIfAttached();
+        if (videoService()) {
+            videoService()->attachedChanged().onNotify(this, [this]() {
+                revealVideoPanelIfAttached();
+            });
+        }
 
         m_inited = true;
     }
 
     updatePlaybackMeterVisibility();
+    revealVideoPanelIfAttached();
+}
+
+void ProjectPageModel::revealVideoPanelIfAttached()
+{
+    if (!videoService() || !videoService()->isAttached()) {
+        return;
+    }
+
+    const dock::IDockWindow* window = dockWindowProvider()->window();
+    if (!window || window->isDockOpen(VIDEO_PANEL_NAME)) {
+        return;
+    }
+
+    commandDispatcher()->dispatch(dock::DOCK_SET_OPEN_COMMAND, {
+        { "dock_name", Val(videoPanelName().toStdString()) },
+        { "open", Val(true) },
+    });
 }
 
 void ProjectPageModel::updatePlaybackMeterVisibility()
 {
-    const auto toolConfig = uiState()->toolConfig(playbackToolBarName(),
-                                                  au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    const auto toolConfig = uiState()->toolConfig(playbackToolBarName(), projectscene::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
-        return item.intent == PLAYBACK_LEVEL_QUERY.toString();
+        return item.intent == playback::PLAYBACK_LEVEL_COMMAND.toString();
     });
 
     if (it != toolConfig.items.end()) {
@@ -80,7 +79,10 @@ void ProjectPageModel::updatePlaybackMeterVisibility()
                                        && (playbackUiState()->playbackMeterPosition()
                                            == playback::PlaybackMeterPosition::MeterPosition::SideBar);
         muse::async::Async::call(this, [this, meterPanelVisible]() {
-            dispatcher()->dispatch("dock-set-open", ActionData::make_arg2<QString, bool>(playbackMeterPanelName(), meterPanelVisible));
+            commandDispatcher()->dispatch(dock::DOCK_SET_OPEN_COMMAND, {
+                { "dock_name", Val(playbackMeterPanelName().toStdString()) },
+                { "open", Val(meterPanelVisible) },
+            });
         });
     }
 }
@@ -125,6 +127,11 @@ QString ProjectPageModel::playbackMeterPanelName() const
     return PLAYBACK_METER_PANEL_NAME;
 }
 
+QString ProjectPageModel::macroManagerPanelName() const
+{
+    return MACRO_MANAGER_PANEL_NAME;
+}
+
 QString ProjectPageModel::statusBarName() const
 {
     return PROJECT_STATUSBAR_NAME;
@@ -132,5 +139,5 @@ QString ProjectPageModel::statusBarName() const
 
 void ProjectPageModel::toggleDock(const QString& name)
 {
-    dispatcher()->dispatch("dock-toggle", ActionData::make_arg1<QString>(name));
+    commandDispatcher()->dispatch(dock::DOCK_TOGGLE_COMMAND, { { "dock_name", Val(name.toStdString()) } });
 }

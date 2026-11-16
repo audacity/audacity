@@ -24,6 +24,7 @@
 #include "au3-track/TimeWarper.h"
 #include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 using namespace au::effects;
 
@@ -144,7 +145,7 @@ bool PaulstretchEffect::Process(EffectInstance&, EffectSettings&)
         double t0 = mT0 < trackStart ? trackStart : mT0;
         double t1 = mT1 > trackEnd ? trackEnd : mT1;
         if (t1 > t0) {
-            auto tempTrack = track->EmptyCopy();
+            auto tempTrack = WaveTrackUtilities::EmptyCopy(*track, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
             const auto channels = track->Channels();
             auto iter = tempTrack->Channels().begin();
             for (const auto pChannel : channels) {

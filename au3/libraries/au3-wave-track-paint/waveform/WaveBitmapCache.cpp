@@ -19,6 +19,7 @@
 #include "waveform/WaveDataCache.h"
 
 #include "au3-mixer/Envelope.h"
+#include "au3-clip-processing/ClipFades.h"
 #include "au3-graphics/FrameStatistics.h"
 
 #include "au3-wave-track/WaveClip.h"
@@ -118,34 +119,25 @@ struct WaveBitmapCache::LookupHelper final
 
         const auto columnsCount = result->AvailableColumns;
 
-        if (cache->mPaintParameters.DBScale) {
-            auto GetDBValue
-                =[dbRange = cache->mPaintParameters.DBRange](float value)
-            {
-                float sign = (value >= 0 ? 1 : -1);
+        const auto dbScale = cache->mPaintParameters.DBScale;
+        auto GetDBValue
+            =[dbRange = cache->mPaintParameters.DBRange](float value)
+        {
+            float sign = (value >= 0 ? 1 : -1);
 
-                if (value != 0.) {
-                    float db = LINEAR_TO_DB(fabs(value));
-                    value = (db + dbRange) / dbRange;
+            if (value != 0.) {
+                float db = LINEAR_TO_DB(fabs(value));
+                value = (db + dbRange) / dbRange;
 
-                    if (value < 0.0) {
-                        value = 0.0;
-                    }
-
-                    value *= sign;
+                if (value < 0.0) {
+                    value = 0.0;
                 }
 
-                return value;
-            };
-
-            for (size_t column = 0; column < columnsCount; ++column) {
-                auto oldColumn = result->Data[column];
-
-                DBRemappedColumns[column] = { GetDBValue(oldColumn.min),
-                                              GetDBValue(oldColumn.max),
-                                              GetDBValue(oldColumn.rms) };
+                value *= sign;
             }
-        }
+
+            return value;
+        };
 
         auto GetRowFromValue
             =[min = cache->mPaintParameters.Min, max = cache->mPaintParameters.Max,
@@ -159,9 +151,8 @@ struct WaveBitmapCache::LookupHelper final
 
         const auto zeroLineY = GetRowFromValue(.0f);
 
-        auto inputData = cache->mPaintParameters.DBScale
-                         ? DBRemappedColumns.data()
-                         : result->Data.data();
+        // The gains apply to the samples, so before they are remapped to dB
+        auto inputData = result->Data.data();
 
         auto envelope = cache->mEnvelope;
 
@@ -186,6 +177,38 @@ struct WaveBitmapCache::LookupHelper final
             }
 
             inputData = EnvRemappedColumns.data();
+        }
+
+        const auto fades = cache->mFades.snapshot();
+        if (fades.fadeIn > 0 || fades.fadeOut > 0) {
+            // In the key, samples are counted from the start of the sequence, before trimming
+            const auto firstColumnTime
+                =key.FirstSample / cache->GetScaledSampleRate() - cache->mWaveClip.GetTrimLeft();
+
+            for (size_t column = 0; column < columnsCount; ++column) {
+                const auto columnData = inputData[column];
+                const auto gain = static_cast<float>(fades.gainAt(firstColumnTime + column / key.PixelsPerSecond));
+
+                FadeRemappedColumns[column] = {
+                    columnData.min* gain,
+                    columnData.max* gain,
+                    columnData.rms* gain
+                };
+            }
+
+            inputData = FadeRemappedColumns.data();
+        }
+
+        if (dbScale) {
+            for (size_t column = 0; column < columnsCount; ++column) {
+                const auto columnData = inputData[column];
+
+                DBRemappedColumns[column] = { GetDBValue(columnData.min),
+                                              GetDBValue(columnData.max),
+                                              GetDBValue(columnData.rms) };
+            }
+
+            inputData = DBRemappedColumns.data();
         }
 
         const auto globalMaxRow = GetRowFromValue(cache->mPaintParameters.Max);
@@ -228,7 +251,8 @@ struct WaveBitmapCache::LookupHelper final
             function.AddBand(selected ? backgroundColors.Selected : backgroundColors.Normal, globalMaxRow, globalMinRow);
 
             if (envelope) {
-                const auto envelopeValue = envelope->GetNumberOfPoints() ? EnvelopeValues[column] : envelope->GetDefaultValue();
+                const auto linearEnvelopeValue = envelope->GetNumberOfPoints() ? EnvelopeValues[column] : envelope->GetDefaultValue();
+                const auto envelopeValue = dbScale ? GetDBValue(linearEnvelopeValue) : linearEnvelopeValue;
                 const auto envelopePositiveRow = std::clamp(GetRowFromValue(envelopeValue), globalMaxRow, globalMinRow);
                 const auto envelopeNegativeRow = std::clamp(GetRowFromValue(-envelopeValue) + 1, globalMaxRow, globalMinRow);
 
@@ -278,6 +302,7 @@ struct WaveBitmapCache::LookupHelper final
     std::array<double, GraphicsDataCacheBase::CacheElementWidth>
     EnvelopeValues {};
     WaveCacheElement::Columns EnvRemappedColumns {};
+    WaveCacheElement::Columns FadeRemappedColumns {};
 
     size_t AvailableColumns { 0 };
     bool IsComplete { 0 };
@@ -297,6 +322,8 @@ WaveBitmapCache::WaveBitmapCache(
             mWaveClip.GetRate() / mWaveClip.GetStretchRatio());
     })
                                   }
+    , mFades{ClipFades::Get(waveClip)}
+    , mFadesChangedSubscription{mFades.SubscribeToChanges([this] { Invalidate(); })}
 {
 }
 

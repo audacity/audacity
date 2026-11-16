@@ -81,9 +81,9 @@ public:
         //! [GIVEN] The audio engine is idle and startable by default
         ON_CALL(*m_audioEngine, isBusy())
         .WillByDefault(Return(false));
-        ON_CALL(*m_audioEngine, canStopAudioStream(_))
+        ON_CALL(*m_audioEngine, canStopTransport(_))
         .WillByDefault(Return(true));
-        ON_CALL(*m_audioEngine, startStream(_, _, _, _, _, _))
+        ON_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
         .WillByDefault(Return(1));
     }
 
@@ -128,18 +128,18 @@ public:
 };
 
 /**
- * @brief Play with an active loop region streams the loop region bounds
+ * @brief Play with an active loop region covers the loop region bounds
  */
-TEST_F(Au3PlayerTests, Play_WithActiveLoopRegion_StreamsLoopRegionBounds)
+TEST_F(Au3PlayerTests, Play_WithActiveLoopRegion_CoversLoopRegionBounds)
 {
     //! [GIVEN] An active loop region inside the track
     setLoopRegion(0.1, 0.2);
 
-    //! [THEN] The stream covers the loop region; the mixer runs to the project end
-    EXPECT_CALL(*m_audioEngine, startStream(_,
-                                            DoubleNear(0.1, TIME_TOLERANCE),
-                                            DoubleNear(0.2, TIME_TOLERANCE),
-                                            DoubleNear(TRACK_DURATION, TIME_TOLERANCE), _, _))
+    //! [THEN] The transport covers the loop region; the mixer runs to the project end
+    EXPECT_CALL(*m_audioEngine, startTransport(_,
+                                               DoubleNear(0.1, TIME_TOLERANCE),
+                                               DoubleNear(0.2, TIME_TOLERANCE),
+                                               DoubleNear(TRACK_DURATION, TIME_TOLERANCE), _, _))
     .WillOnce(Return(1));
 
     //! [WHEN] Play
@@ -159,13 +159,13 @@ TEST_F(Au3PlayerTests, Play_WithExplicitStartTime_ForwardsStreamStartTime)
     //! [GIVEN] An active loop region inside the track
     setLoopRegion(0.1, 0.2);
 
-    //! [THEN] The stream covers the loop region, but starts at the requested time
-    EXPECT_CALL(*m_audioEngine, startStream(_,
-                                            DoubleNear(0.1, TIME_TOLERANCE),
-                                            DoubleNear(0.2, TIME_TOLERANCE),
-                                            _, _,
-                                            testing::Field(&audio::IAudioEngine::StartStreamOptions::streamStartTime,
-                                                           testing::Optional(DoubleNear(0.05, TIME_TOLERANCE)))))
+    //! [THEN] The transport covers the loop region, but starts at the requested time
+    EXPECT_CALL(*m_audioEngine, startTransport(_,
+                                               DoubleNear(0.1, TIME_TOLERANCE),
+                                               DoubleNear(0.2, TIME_TOLERANCE),
+                                               _, _,
+                                               testing::Field(&audio::IAudioEngine::StartTransportOptions::streamStartTime,
+                                                              testing::Optional(DoubleNear(0.05, TIME_TOLERANCE)))))
     .WillOnce(Return(1));
 
     //! [WHEN] Play from 0.05 secs
@@ -175,16 +175,16 @@ TEST_F(Au3PlayerTests, Play_WithExplicitStartTime_ForwardsStreamStartTime)
 /**
  * @brief Play with an inactive play region streams from the cursor to the track end
  */
-TEST_F(Au3PlayerTests, Play_WithInactivePlayRegion_StreamsFromCursorToTrackEnd)
+TEST_F(Au3PlayerTests, Play_WithInactivePlayRegion_CoversFromCursorToTrackEnd)
 {
     //! [GIVEN] The cursor is at 0.1 secs (an inactive, empty play region)
     m_player->seek(muse::secs_t(0.1));
 
-    //! [THEN] The stream runs from the cursor to the track end
-    EXPECT_CALL(*m_audioEngine, startStream(_,
-                                            DoubleNear(0.1, TIME_TOLERANCE),
-                                            DoubleNear(TRACK_DURATION, TIME_TOLERANCE),
-                                            DoubleNear(TRACK_DURATION, TIME_TOLERANCE), _, _))
+    //! [THEN] The transport runs from the cursor to the track end
+    EXPECT_CALL(*m_audioEngine, startTransport(_,
+                                               DoubleNear(0.1, TIME_TOLERANCE),
+                                               DoubleNear(TRACK_DURATION, TIME_TOLERANCE),
+                                               DoubleNear(TRACK_DURATION, TIME_TOLERANCE), _, _))
     .WillOnce(Return(1));
 
     //! [WHEN] Play
@@ -196,20 +196,20 @@ TEST_F(Au3PlayerTests, Play_WithInactivePlayRegion_StreamsFromCursorToTrackEnd)
  * @details The mechanism behind "Play the selected time range" with looping enabled
  *          (issue #9393): a non-default policy stream bounded by the range itself
  */
-TEST_F(Au3PlayerTests, PlayRange_WithActiveLoopRegion_StreamsExactRangeOnce)
+TEST_F(Au3PlayerTests, PlayRange_WithActiveLoopRegion_CoversExactRangeOnce)
 {
     //! [GIVEN] An active loop region elsewhere in the track
     setLoopRegion(0.3, 0.4);
 
-    //! [THEN] The stream covers exactly the requested range with a non-default
+    //! [THEN] The transport covers exactly the requested range with a non-default
     //! (one-shot) policy — the loop region does not leak into the bounds
-    EXPECT_CALL(*m_audioEngine, startStream(_,
-                                            DoubleNear(0.1, TIME_TOLERANCE),
-                                            DoubleNear(0.2, TIME_TOLERANCE),
-                                            DoubleNear(0.2, TIME_TOLERANCE),
-                                            _,
-                                            testing::Field(&audio::IAudioEngine::StartStreamOptions::isDefaultPolicy,
-                                                           false)))
+    EXPECT_CALL(*m_audioEngine, startTransport(_,
+                                               DoubleNear(0.1, TIME_TOLERANCE),
+                                               DoubleNear(0.2, TIME_TOLERANCE),
+                                               DoubleNear(0.2, TIME_TOLERANCE),
+                                               _,
+                                               testing::Field(&audio::IAudioEngine::StartTransportOptions::isDefaultPolicy,
+                                                              false)))
     .WillOnce(Return(1));
 
     //! [WHEN] Play the range 0.1-0.2 secs
@@ -254,7 +254,7 @@ TEST_F(Au3PlayerTests, UpdatePlaybackPosition_WhenStreamInactive_WhileRunning_St
 
     //! [THEN] The engine stream is fully stopped, releasing the stream token;
     //! otherwise isBusy() would stay true and no new playback could ever start
-    EXPECT_CALL(*m_audioEngine, stopStream())
+    EXPECT_CALL(*m_audioEngine, stopTransport())
     .Times(1);
 
     //! [WHEN] The position poll runs
@@ -282,7 +282,7 @@ TEST_F(Au3PlayerTests, UpdatePlaybackPosition_WhenStreamInactive_WhilePaused_Doe
     .WillByDefault(Return(false));
 
     //! [THEN] No full stop is issued
-    EXPECT_CALL(*m_audioEngine, stopStream())
+    EXPECT_CALL(*m_audioEngine, stopTransport())
     .Times(0);
 
     //! [WHEN] The position poll runs
@@ -301,10 +301,10 @@ TEST_F(Au3PlayerTests, UpdatePlaybackPosition_UsesEngineStreamTime)
     m_player->play();
     ASSERT_EQ(m_player->playbackStatus(), PlaybackStatus::Running);
 
-    //! [GIVEN] The stream is active at 0.123 secs
+    //! [GIVEN] The transport is active at 0.123 secs
     ON_CALL(*m_audioEngine, isStreamActive(_))
     .WillByDefault(Return(true));
-    ON_CALL(*m_audioEngine, streamTime())
+    ON_CALL(*m_audioEngine, transportTime())
     .WillByDefault(Return(0.123));
 
     //! [WHEN] The position poll runs

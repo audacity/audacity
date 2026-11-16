@@ -13,7 +13,7 @@ Canvas {
         const points = curve.map(pt => ({
                     x: (pt.x - min) / (max - min) * width,
                     y: height - (pt.y - min) / (max - min) * height
-                }));
+                }))
 
         // Draw area under curve
         ctx.beginPath()
@@ -24,7 +24,7 @@ Canvas {
         // Down to bottom right
         ctx.closePath()
         ctx.fillStyle = ui.theme.extra["compression_curve_fill_color"]
-        ctx.fill();
+        ctx.fill()
 
         // Draw curve
         ctx.strokeStyle = ui.theme.extra["compression_curve_stroke_color"]

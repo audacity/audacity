@@ -12,7 +12,8 @@
 #include "framework/global/modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 
 #include "projectscene/view/trackruler/itrackruler.h"
 
@@ -23,8 +24,9 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable, public mu
 
     muse::GlobalInject<au::playback::IPlaybackConfiguration> configuration;
 
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
     Q_PROPERTY(std::vector<QVariantMap> fullSteps READ fullSteps NOTIFY fullStepsChanged)
     Q_PROPERTY(std::vector<QVariantMap> smallSteps READ smallSteps NOTIFY smallStepsChanged)
@@ -109,6 +111,8 @@ signals:
     void trackIdChanged();
 
     void isHalfWaveChanged();
+
+    void contextMenuOpenRequested();
 
 private:
     IProjectViewStatePtr viewState() const;

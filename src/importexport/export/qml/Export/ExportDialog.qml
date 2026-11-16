@@ -29,12 +29,21 @@ StyledDialogView {
     property int smallDropdownWidth: 364 * 0.65
     property int labelColumnWidth: 140
 
+    property bool settingsOnly: false
+    property string filePath: ""
+
     onNavigationActivateRequested: {
-        typeDropdown.navigation.requestActive()
+        if (root.settingsOnly) {
+            filenameField.navigation.requestActive()
+        } else {
+            typeDropdown.navigation.requestActive()
+        }
     }
 
     ExportPreferencesModel {
         id: exportPreferencesModel
+
+        settingsOnly: root.settingsOnly
 
         onExportCompleted: {
             root.accept()
@@ -51,6 +60,9 @@ StyledDialogView {
 
     Component.onCompleted: {
         exportPreferencesModel.init()
+        if (root.filePath !== "") {
+            exportPreferencesModel.setFileDialogPath(root.filePath)
+        }
         ffmpegPrefModel.init()
         dynamicOptionsModel.init()
     }
@@ -72,6 +84,8 @@ StyledDialogView {
 
             BaseSection {
                 id: typeSection
+
+                visible: !root.settingsOnly
 
                 //: Section heading in the Export dialog
                 title: qsTrc("export", "Export")
@@ -121,7 +135,9 @@ StyledDialogView {
                 }
             }
 
-            SeparatorLine {}
+            SeparatorLine {
+                visible: typeSection.visible
+            }
 
             BaseSection {
                 id: fileSection
@@ -134,13 +150,39 @@ StyledDialogView {
                 navigation.order: typeSection.navigation.order + 1
 
                 RowLayout {
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                        StyledTextLabel {
+                            id: fileNamePreviewLabel
+
+                            text: qsTrc("export", "File name preview")
+
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                    }
+
+                    StyledTextLabel {
+                        id: fileNamePreviewField
+
+                        Layout.fillWidth: true
+                        Layout.preferredWidth: root.dropdownWidth
+
+                        text: exportPreferencesModel.fileNamePreview
+                        horizontalAlignment: Text.AlignLeft
+                        elide: Text.ElideMiddle
+                    }
+                }
+
+                RowLayout {
 
                     Item {
                         width: root.labelColumnWidth
                         StyledTextLabel {
                             id: filenameLabel
 
-                            text: qsTrc("export", "File name")
+                            text: exportPreferencesModel.separateFilesExport ? qsTrc("export", "File name prefix") : qsTrc("export", "File name")
 
                             anchors.verticalCenter: parent.verticalCenter
                         }
@@ -152,7 +194,7 @@ StyledDialogView {
                         Layout.fillWidth: true
                         Layout.minimumWidth: implicitWidth
 
-                        currentText: exportPreferencesModel.filename
+                        currentText: exportPreferencesModel.separateFilesExport ? exportPreferencesModel.fileNamePrefix : exportPreferencesModel.filename
 
                         implicitWidth: root.dropdownWidth
 
@@ -162,8 +204,37 @@ StyledDialogView {
                         navigation.accessible.name: filenameLabel.text + ": " + currentText
 
                         onTextChanged: function (newTextValue) {
-                            exportPreferencesModel.setFilename(newTextValue)
+                            if (exportPreferencesModel.separateFilesExport) {
+                                exportPreferencesModel.fileNamePrefix = newTextValue
+                            } else {
+                                exportPreferencesModel.setFilename(newTextValue)
+                            }
                         }
+                    }
+                }
+
+                RowLayout {
+                    width: parent.width
+                    visible: exportPreferencesModel.separateFilesExport
+
+                    Item {
+                        width: root.labelColumnWidth
+                    }
+
+                    CheckBox {
+                        id: includeNumbersCheckBox
+
+                        Layout.fillWidth: true
+
+                        text: exportPreferencesModel.separateFilesByLabels ? qsTrc("export", "Number files in label order") : qsTrc("export", "Number files in track order")
+                        checked: exportPreferencesModel.includeNumbers
+
+                        navigation.name: "IncludeNumbersBox"
+                        navigation.panel: fileSection.navigation
+                        navigation.order: filenameField.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeNumbers = !exportPreferencesModel.includeNumbers
                     }
                 }
 
@@ -204,7 +275,7 @@ StyledDialogView {
 
                             navigation.name: "FolderFieldBox"
                             navigation.panel: fileSection.navigation
-                            navigation.order: filenameField.navigation.order + 1
+                            navigation.order: includeNumbersCheckBox.navigation.order + 1
                             navigation.accessible.name: folderLabel.text + ": " + currentText
 
                             onTextEditingFinished: function (newTextValue) {
@@ -357,7 +428,7 @@ StyledDialogView {
 
                                 checked: exportPreferencesModel.exportChannelsType == ExportChannels.CUSTOM
                                 text: qsTrc("export", "Custom mapping")
-                                enabled: exportPreferencesModel.maxExportChannels > 2
+                                enabled: exportPreferencesModel.maxExportChannels > 2 && !exportPreferencesModel.separateFilesExport
 
                                 spacing: 8
 
@@ -573,29 +644,18 @@ StyledDialogView {
                             }
                         }
                     }
-
-                    RowLayout {
-
-                        visible: exportPreferencesModel.oggFormatOptionsVisible
-
-                        Item {
-                            width: root.labelColumnWidth
-                        }
-
-                        StyledTextLabel {
-                            id: oggWarning
-
-                            text: qsTrc("export", "Effective bit rate may vary")
-                        }
-                    }
                 }
             }
 
-            SeparatorLine {}
+            SeparatorLine {
+                visible: renderingSection.visible
+            }
 
             BaseSection {
                 id: renderingSection
                 title: qsTrc("export", "Rendering")
+
+                visible: !root.settingsOnly
 
                 navigation.section: root.navigationSection
                 navigation.order: audioSection.navigation.order + 1
@@ -604,6 +664,8 @@ StyledDialogView {
                     CheckBox {
                         id: trimBlankSpaceCheckBox
                         width: parent.width
+
+                        enabled: exportPreferencesModel.trimBlankSpaceEnabled
 
                         text: qsTrc("export", "Trim blank space before first clip")
                         checked: exportPreferencesModel.trimBlankSpace
@@ -614,6 +676,23 @@ StyledDialogView {
                         navigation.accessible.name: text
 
                         onClicked: exportPreferencesModel.trimBlankSpace = !exportPreferencesModel.trimBlankSpace
+                    }
+
+                    CheckBox {
+                        id: includeAudioBeforeFirstLabelCheckBox
+                        width: parent.width
+
+                        visible: exportPreferencesModel.separateFilesByLabels
+
+                        text: qsTrc("export", "Include audio before first label")
+                        checked: exportPreferencesModel.includeAudioBeforeFirstLabel
+
+                        navigation.name: "IncludeAudioBeforeFirstLabelBox"
+                        navigation.panel: renderingSection.navigation
+                        navigation.order: trimBlankSpaceCheckBox.navigation.order + 1
+                        navigation.accessible.name: text
+
+                        onClicked: exportPreferencesModel.includeAudioBeforeFirstLabel = !exportPreferencesModel.includeAudioBeforeFirstLabel
                     }
                 }
             }
@@ -669,7 +748,7 @@ StyledDialogView {
             FlatButton {
                 id: okBtn
                 //: Label of the button that starts the export
-                text: qsTrc("global", "Export")
+                text: root.settingsOnly ? qsTrc("global", "Done") : qsTrc("global", "Export")
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.Apply
                 minWidth: 80
@@ -679,10 +758,22 @@ StyledDialogView {
                 navigation.order: 3
 
                 onClicked: {
-                    if (exportPreferencesModel.verifyExportPossible()) {
-                        exportPreferencesModel.apply()
-                        exportPreferencesModel.exportData()
+                    if (!exportPreferencesModel.verifyExportPossible()) {
+                        return
                     }
+
+                    exportPreferencesModel.apply()
+
+                    if (root.settingsOnly) {
+                        root.ret = {
+                            errcode: 0,
+                            value: exportPreferencesModel.suggestedFilePath
+                        }
+                        root.hide()
+                        return
+                    }
+
+                    exportPreferencesModel.exportData()
                 }
             }
         }

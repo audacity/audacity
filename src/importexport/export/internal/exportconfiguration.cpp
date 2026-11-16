@@ -14,6 +14,8 @@ static const std::string module_name("export");
 
 static const muse::Settings::Key EXPORT_PROCESS(module_name, "importexport/process");
 static const muse::Settings::Key EXPORT_TRIM_BLANK_SPACE(module_name, "importexport/trimBlankSpace");
+static const muse::Settings::Key EXPORT_INCLUDE_NUMBERS(module_name, "importexport/includeNumbers");
+static const muse::Settings::Key EXPORT_INCLUDE_AUDIO_BEFORE_FIRST_LABEL(module_name, "importexport/includeAudioBeforeFirstLabel");
 static const muse::Settings::Key EXPORT_ASK_LOCATION_TYPE(module_name, "importexport/askExportLocationType");
 static const muse::Settings::Key EXPORT_DIRECTORY_PATH(module_name, "importexport/directoryPath");
 static const muse::Settings::Key EXPORT_FORMAT(module_name, "importexport/format");
@@ -61,6 +63,16 @@ void ExportConfiguration::init()
         m_trimBlankSpaceChanged.notify();
     });
 
+    muse::settings()->setDefaultValue(EXPORT_INCLUDE_NUMBERS, muse::Val(false));
+    muse::settings()->valueChanged(EXPORT_INCLUDE_NUMBERS).onReceive(nullptr, [this] (const muse::Val&) {
+        m_includeNumbersChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(EXPORT_INCLUDE_AUDIO_BEFORE_FIRST_LABEL, muse::Val(false));
+    muse::settings()->valueChanged(EXPORT_INCLUDE_AUDIO_BEFORE_FIRST_LABEL).onReceive(nullptr, [this] (const muse::Val&) {
+        m_includeAudioBeforeFirstLabelChanged.notify();
+    });
+
     muse::settings()->setDefaultValue(EXPORT_ASK_LOCATION_TYPE, muse::Val(true));
     muse::settings()->valueChanged(EXPORT_ASK_LOCATION_TYPE).onReceive(nullptr, [this] (const muse::Val&) {
         m_askExportLocationTypeChanged.notify();
@@ -71,6 +83,7 @@ void ExportConfiguration::init()
         m_directoryPathChanged.notify();
     });
 
+    muse::settings()->setDefaultValue(EXPORT_FORMAT, muse::Val(DEFAULT_EXPORT_FORMAT));
     muse::settings()->valueChanged(EXPORT_FORMAT).onReceive(nullptr, [this] (const muse::Val&) {
         m_currentFormatChanged.notify();
     });
@@ -238,6 +251,36 @@ void ExportConfiguration::setTrimBlankSpace(bool trim)
 muse::async::Notification ExportConfiguration::trimBlankSpaceChanged() const
 {
     return m_trimBlankSpaceChanged;
+}
+
+bool ExportConfiguration::includeNumbers() const
+{
+    return muse::settings()->value(EXPORT_INCLUDE_NUMBERS).toBool();
+}
+
+void ExportConfiguration::setIncludeNumbers(bool include)
+{
+    muse::settings()->setSharedValue(EXPORT_INCLUDE_NUMBERS, muse::Val(include));
+}
+
+muse::async::Notification ExportConfiguration::includeNumbersChanged() const
+{
+    return m_includeNumbersChanged;
+}
+
+bool ExportConfiguration::includeAudioBeforeFirstLabel() const
+{
+    return muse::settings()->value(EXPORT_INCLUDE_AUDIO_BEFORE_FIRST_LABEL).toBool();
+}
+
+void ExportConfiguration::setIncludeAudioBeforeFirstLabel(bool include)
+{
+    muse::settings()->setSharedValue(EXPORT_INCLUDE_AUDIO_BEFORE_FIRST_LABEL, muse::Val(include));
+}
+
+muse::async::Notification ExportConfiguration::includeAudioBeforeFirstLabelChanged() const
+{
+    return m_includeAudioBeforeFirstLabelChanged;
 }
 
 bool ExportConfiguration::askExportLocationType() const

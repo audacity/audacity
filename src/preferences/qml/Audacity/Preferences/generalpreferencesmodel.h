@@ -32,7 +32,7 @@
 #include "framework/interactive/iinteractive.h"
 #include "framework/languages/ilanguagesconfiguration.h"
 #include "framework/languages/ilanguagesservice.h"
-#include "framework/shortcuts/ishortcutsconfiguration.h"
+#include "framework/shortcuts_v2/ishortcutsconfiguration.h"
 
 #include "project/iprojectconfiguration.h"
 

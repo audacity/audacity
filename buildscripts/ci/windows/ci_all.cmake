@@ -42,10 +42,8 @@ execute_process(
 
 message(STATUS "~~Package~~")
 
-include(${ROOT_DIR}/version.cmake)
-
 set(PACK_ARGS
-    -DBUILD_VERSION=${MUSE_APP_VERSION}
+
 )
 
 execute_process(

@@ -8,6 +8,7 @@
 
 #include "au3-components/PluginProvider.h"
 #include "au3-effects/Effect.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 #include "au3-module-manager/ModuleManager.h"
 
 #include "framework/global/io/path.h"
@@ -76,7 +77,7 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
     // We need the complete effect's path, e.g. in VST a .vst3 bundle (one path) may contain several effects.
     // Hence an effect's UUID is appended to the .vst3 path for disambiguation.
     m_pluginProvider.DiscoverPluginsAtPath(
-        path.toStdString(), errorMessage, [&](PluginProvider*, ComponentInterface* ident) -> const PluginID&
+        au::au3::wxFromPath(path), errorMessage, [&](PluginProvider*, ComponentInterface* ident) -> const PluginID&
     {
         const auto effect = dynamic_cast<const EffectDefinitionInterface*>(ident);
         IF_ASSERT_FAILED(effect) {
@@ -84,7 +85,7 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
         }
         if (utils::effectId(effect) == effectId) {
             au3path = ident->GetPath();
-            desc.SetID(effectId.toStdString());
+            desc.SetID(au::au3::wxFromString(effectId));
         }
         return desc.GetID();
     });

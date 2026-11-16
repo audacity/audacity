@@ -25,11 +25,14 @@ set( LIBRARIES
 PUBLIC
    au3-preferences
    au3-utility
+   # Keep public: AudioIOBase.h tests USE_PORTMIXER.
+   # Client libraries who include this header otherwise will get a different
+   # memory layout of the AudioIOBase class.
+   $<$<BOOL:${AU_USE_PORTMIXER}>:portmixer>
 PRIVATE
    au3-basic-ui
    au3-strings
    portaudio::portaudio
-   $<$<BOOL:${AU_USE_PORTMIXER}>:portmixer>
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

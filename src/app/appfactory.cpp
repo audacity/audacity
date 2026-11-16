@@ -16,7 +16,7 @@
 #include "framework/audioplugins/audiopluginsmodule.h"
 #include "framework/interactive/interactivemodule.h"
 #include "framework/ui/uimodule.h"
-#include "framework/shortcuts/shortcutsmodule.h"
+#include "framework/shortcuts_v2/shortcutsmodule.h"
 #include "framework/accessibility/accessibilitymodule.h"
 #include "framework/uicomponents/uicomponentsmodule.h"
 #include "framework/dockwindow/dockmodule.h"
@@ -47,6 +47,7 @@
 #include "au3audio/au3audiomodule.h"
 #include "playback/playbackmodule.h"
 #include "trackedit/trackeditmodule.h"
+#include "macromanager/macromanagermodule.h"
 #include "spectrogram/spectrogrammodule.h"
 #include "record/recordmodule.h"
 #include "uicomponents/uicomponentsmodule.h"
@@ -60,6 +61,11 @@
 #include "au3cloud/au3cloudmodule.h"
 #else
 #include "stubs/au3cloud/au3cloudstubmodule.h"
+#endif
+#ifdef AU_BUILD_MUSEHUB_MODULE
+#include "musehub/musehubmodule.h"
+#else
+#include "stubs/musehub/musehubstubmodule.h"
 #endif
 #ifdef AU_BUILD_USAGEINFO_MODULE
 #include "usageinfo/usageinfomodule.h"
@@ -182,12 +188,14 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::effects::NyquistEffectsModule());
     app->addModule(new au::effects::extensions::ExtensionEffectsModule());
     app->addModule(new au::context::ContextModule());
+    app->addModule(new au::musehub::MuseHubModule());
     app->addModule(new au::audio::AudioModule());
     app->addModule(new au::au3audio::Au3AudioModule());
     app->addModule(new au::projectscene::ProjectSceneModule());
     app->addModule(new au::playback::PlaybackModule());
     app->addModule(new au::record::RecordModule());
     app->addModule(new au::trackedit::TrackeditModule());
+    app->addModule(new au::macromanager::MacroManagerModule());
     app->addModule(new au::spectrogram::SpectrogramModule());
     app->addModule(new au::project::ProjectModule());
     app->addModule(new au::importexport::ExporterModule());
@@ -206,6 +214,13 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
 std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
     std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(options);
+
+    //! NOTE `diagnostics` must be first, because it installs the crash handler. Without it
+    //! a crashing validation only produces a dump on macOS, where the child happens to
+    //! inherit the parent's exception port, and that dump then carries the parent's
+    //! annotations.
+    app->addModule(new muse::diagnostics::DiagnosticsModule());
+    app->addModule(new muse::rcommand::RCommandModule()); // needed by diagnostics module
 
     app->addModule(new muse::audioplugins::AudioPluginsModule());
     app->addModule(new muse::actions::ActionsModule());

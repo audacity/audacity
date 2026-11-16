@@ -4,7 +4,7 @@
 #pragma once
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 class QUrl;
 
@@ -17,7 +17,7 @@ namespace au::au3cloud {
 //! "audacity://generate-audio?projectId=<id>"
 class CloudUrlHandler : public muse::Contextable
 {
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
 
 public:
     explicit CloudUrlHandler(muse::modularity::ContextPtr ctx);

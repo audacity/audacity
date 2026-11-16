@@ -5,10 +5,10 @@
 
 module.exports = {
     newMonoTrack: function () {
-        api.dispatcher.dispatch("new-mono-track")
+        api.dispatcher.dispatch("command://trackedit/new-mono-track")
     },
     newStereoTrack: function () {
-        api.dispatcher.dispatch("new-stereo-track")
+        api.dispatcher.dispatch("command://trackedit/new-stereo-track")
     },
 
 }

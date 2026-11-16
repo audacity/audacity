@@ -12,6 +12,7 @@
 #include "global/io/path.h"
 #include "global/logger.h"
 #include "global/internal/cmdoptions.h"
+#include "diagnostics/idiagnosticsconfiguration.h"
 
 namespace au::app {
 struct AudacityCmdOptions : public muse::CmdOptions {
@@ -37,7 +38,12 @@ struct AudacityCmdOptions : public muse::CmdOptions {
         QString testCaseContextValue;
         QString testCaseFunc;
         QString testCaseFuncArgs;
+        QString testCaseSpeed;
     } testflow;
+
+    struct Diagnostics {
+        std::optional<muse::diagnostics::CrashDumpConfig> crashDumpConfig;
+    } diagnostics;
 
     struct AudioPluginRegistration {
         muse::io::path_t pluginPath;

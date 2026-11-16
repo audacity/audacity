@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3concurrentclipchannelreader.h"
+#include "au3clipchannelreader.h"
 
 #include "au3-wave-track/WaveClip.h"
 #include "au3-math/SampleCount.h"
@@ -9,6 +10,7 @@
 namespace au::spectrogram {
 Au3ConcurrentClipChannelReader::Au3ConcurrentClipChannelReader(const WaveChannelInterval& waveChannelInterval)
     : m_waveChannelInterval(waveChannelInterval)
+    , m_fades(ClipFades::Get(waveChannelInterval.GetClip()).snapshot())
 {
 }
 
@@ -20,5 +22,6 @@ void Au3ConcurrentClipChannelReader::readSamples(long long from, int myLen, floa
     auto sampleView = m_waveChannelInterval.GetSampleView(sampleCount { from }, myLen, mayThrow);
     sampleView.Copy(destination, myLen);
     m_sampleCacheHolders.emplace_back(std::move(sampleView));
+    applyClipFades(m_waveChannelInterval, m_fades, from, myLen, destination);
 }
 }

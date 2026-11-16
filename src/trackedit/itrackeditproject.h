@@ -5,6 +5,7 @@
 
 #include <memory>
 #include <optional>
+#include <set>
 
 #include "modularity/imoduleinterface.h"
 
@@ -36,13 +37,16 @@ public:
     virtual std::vector<TrackId> trackIdList() const = 0;
     virtual std::vector<Track> trackList() const = 0;
     virtual muse::ValCh<bool> hasAudioContent() const = 0;
+    virtual muse::ValCh<bool> hasLabels() const = 0;
     virtual bool timeTrackFound() const = 0;
     virtual std::optional<Track> track(TrackId trackId) const = 0;
     virtual Clip clip(const ClipKey& key) const = 0;
     virtual Label label(const LabelKey& key) const = 0;
     virtual muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const = 0;
     virtual muse::async::NotifyList<Label> labelList(const TrackId& trackId) const = 0;
-    virtual std::vector<int64_t> groupsIdsList() const = 0;
+    virtual ItemTimeSpanList itemTimeSpansSorted(const TrackId& trackId) const = 0;
+    virtual std::optional<TimeSpan> itemTimeSpan(const TrackItemKey& key) const = 0;
+    virtual std::set<int64_t> groupsIdsList() const = 0;
     virtual std::optional<std::string> trackName(const TrackId& trackId) const = 0;
 
     virtual void reload() = 0;
@@ -64,7 +68,7 @@ public:
     virtual void notifyAboutLabelRemoved(const Label& label) = 0;
 
     virtual TimeSignature timeSignature() const = 0;
-    virtual void setTimeSignature(const TimeSignature& timeSignature) = 0;
+    virtual void setTimeSignature(const TimeSignature& timeSignature, bool noStretch = false) = 0;
     virtual muse::async::Channel<TimeSignature> timeSignatureChanged() const = 0;
 
     virtual muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const = 0;

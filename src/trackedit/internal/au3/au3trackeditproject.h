@@ -26,13 +26,16 @@ public:
     TrackIdList trackIdList() const override;
     std::vector<Track> trackList() const override;
     muse::ValCh<bool> hasAudioContent() const override;
+    muse::ValCh<bool> hasLabels() const override;
     bool timeTrackFound() const override;
     std::optional<Track> track(TrackId trackId) const override;
     Clip clip(const ClipKey& key) const override;
     Label label(const LabelKey& key) const override;
     muse::async::NotifyList<Clip> clipList(const TrackId& trackId) const override;
     muse::async::NotifyList<Label> labelList(const TrackId& trackId) const override;
-    std::vector<int64_t> groupsIdsList() const override;
+    ItemTimeSpanList itemTimeSpansSorted(const TrackId& trackId) const override;
+    std::optional<TimeSpan> itemTimeSpan(const TrackItemKey& key) const override;
+    std::set<int64_t> groupsIdsList() const override;
     std::optional<std::string> trackName(const TrackId& trackId) const override;
 
     void reload() override;
@@ -54,7 +57,7 @@ public:
     void notifyAboutLabelRemoved(const Label& label) override;
 
     TimeSignature timeSignature() const override;
-    void setTimeSignature(const TimeSignature& timeSignature) override;
+    void setTimeSignature(const TimeSignature& timeSignature, bool noStretch) override;
     muse::async::Channel<TimeSignature> timeSignatureChanged() const override;
 
     muse::async::Channel<std::vector<au::trackedit::Track> > tracksChanged() const override;
@@ -79,6 +82,9 @@ private:
     au::trackedit::Clips getClips(const TrackId& trackId) const;
     au::trackedit::Labels getLabels(const TrackId& trackId) const;
     void updateHasAudioContent();
+    void setHasAudioContent(bool has);
+    void updateHasLabels();
+    void setHasLabels(bool has);
 
     struct Au3Impl;
     std::shared_ptr<Au3Impl> m_impl;
@@ -96,6 +102,7 @@ private:
     mutable muse::async::Channel<trackedit::Track, int> m_trackMoved;
 
     muse::ValCh<bool> m_hasAudioContent;
+    muse::ValCh<bool> m_hasLabels;
 };
 
 class Au3TrackeditProjectCreator : public ITrackeditProjectCreator

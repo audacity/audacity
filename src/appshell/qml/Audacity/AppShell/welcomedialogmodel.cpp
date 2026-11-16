@@ -22,7 +22,8 @@
 
 #include "welcomedialogmodel.h"
 
-#include "framework/actions/actiontypes.h"
+#include "au3cloud/cloudcommands.h"
+#include "effects/effects_base/effectscommands.h"
 #include "translation.h"
 #include "log.h"
 
@@ -33,7 +34,8 @@ const char* AU4_VIDEO_URL {
     "https://youtu.be/BTQymidLYIM" };
 const char* FEATURE_SURVEY_URL { "https://audacityteam.org/survey" };
 const char* SOAP_VOICE_CLEANER_URL {
-    "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh" };
+    "https://www.musehub.com/plugin/soap-voice-cleaner?id=1ee282dd-0429-47a2-8615-7fcbe0f72480"
+    "&utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh" };
 }
 
 std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
@@ -42,7 +44,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                               ? "qrc:/resources/welcomedialog/AudioDotCom_Dark.png"
                               : "qrc:/resources/welcomedialog/AudioDotCom_Light.png";
 
-    return {
+    std::vector<Item> items = {
         {
             muse::qtrc("appshell/welcome", "Video: find out what’s new in Audacity 4"),
             "qrc:/resources/welcomedialog/YT_Release_Video_Thumb_v1.png",
@@ -58,21 +60,25 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             {},
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
-                muse::actions::ActionQuery query("audacity://cloud/show-tour-page");
-                dispatcher()->dispatch(query);
+                commandDispatcher()->dispatch(au3cloud::CLOUD_SHOW_TOUR_PAGE_COMMAND);
             }
         },
-#ifndef Q_OS_LINUX
-        {
+    };
+
+    const bool canGetEffects = commandsRegister()->commandInfo(effects::EFFECTS_GET_EFFECTS_COMMAND).isValid();
+    if (canGetEffects) {
+        items.push_back({
             muse::qtrc("appshell/welcome", "Explore free plugins for sculpting your audio"),
             "qrc:/resources/welcomedialog/MuseHubPromo.jpg",
             {},
             muse::qtrc("appshell/welcome", "View free plugins"),
             [this]() {
-                dispatcher()->dispatch("get-effects");
+                commandDispatcher()->dispatch(effects::EFFECTS_GET_EFFECTS_COMMAND);
             }
-        },
-#endif
+        });
+    }
+
+    items.insert(items.end(), {
         {
             muse::qtrc("appshell/welcome", "Help us decide the future of Audacity"),
             "qrc:/resources/welcomedialog/Audacity_Feature_Survey.png",
@@ -91,7 +97,8 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                 platformInteractive()->openUrl(SOAP_VOICE_CLEANER_URL);
             }
         }
-    };
+    });
+    return items;
 }
 
 WelcomeDialogModel::WelcomeDialogModel()
@@ -146,6 +153,23 @@ void WelcomeDialogModel::activateCurrentItem()
     if (action) {
         action();
     }
+}
+
+void WelcomeDialogModel::setCurrentIndex(int index)
+{
+    if (index < 0 || index >= count()) {
+        return;
+    }
+
+    const size_t newIndex = static_cast<size_t>(index);
+    if (newIndex == m_currentIndex) {
+        return;
+    }
+
+    m_currentIndex = newIndex;
+    configuration()->setWelcomeDialogLastShownIndex(index);
+
+    emit currentItemChanged();
 }
 
 void WelcomeDialogModel::nextItem()

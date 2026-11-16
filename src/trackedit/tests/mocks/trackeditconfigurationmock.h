@@ -27,6 +27,10 @@ public:
     MOCK_METHOD(void, setCloseGapBehavior, (CloseGapBehavior), (override));
     MOCK_METHOD(muse::async::Notification, closeGapBehaviorChanged, (), (const, override));
 
+    MOCK_METHOD(std::string, defaultAudioTrackName, (), (const, override));
+    MOCK_METHOD(void, setDefaultAudioTrackName, (const std::string&), (override));
+    MOCK_METHOD(muse::async::Notification, defaultAudioTrackNameChanged, (), (const, override));
+
     MOCK_METHOD(PasteBehavior, pasteBehavior, (), (const, override));
     MOCK_METHOD(void, setPasteBehavior, (PasteBehavior), (override));
     MOCK_METHOD(muse::async::Notification, pasteBehaviorChanged, (), (const, override));

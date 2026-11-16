@@ -27,7 +27,10 @@
 #include <QDragMoveEvent>
 #include <QEvent>
 
-#include "modularity/imoduleinterface.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/channel.h"
+
+#include "appshelltypes.h"
 
 namespace au::appshell {
 class IApplicationActionController : MODULE_EXPORT_INTERFACE
@@ -40,6 +43,8 @@ public:
     virtual void onDragEnterEvent(QDragEnterEvent* event) = 0;
     virtual void onDragMoveEvent(QDragMoveEvent* event) = 0;
     virtual void onDropEvent(QDropEvent* event) = 0;
+
+    virtual muse::async::Channel<DockName> dockToggleRequested() const = 0;
 };
 }
 

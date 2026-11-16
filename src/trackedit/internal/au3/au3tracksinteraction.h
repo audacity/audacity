@@ -78,6 +78,7 @@ public:
     bool splitStereoTracksToCenterMono(const TrackIdList& tracksIds) override;
     bool makeStereoTrack(const TrackId left, const TrackId right) override;
     bool resampleTracks(const TrackIdList& tracksIds, int rate) override;
+    muse::RetVal<TrackId> mixAndRender(const TrackIdList& tracksIds) override;
 
     double nearestZeroCrossing(double time) const override;
 

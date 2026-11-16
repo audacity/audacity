@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <string>
+
 #include "projectscene/view/trackruler/itrackruler.h"
 
 namespace au::projectscene {

@@ -37,6 +37,8 @@ public:
     virtual bool changeClipSpeed(const ClipKey& clipKey, double speed) = 0;
     virtual bool resetClipSpeed(const ClipKey& clipKey) = 0;
     virtual bool changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex) = 0;
+    virtual bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration) = 0;
+    virtual bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
 
@@ -44,9 +46,7 @@ public:
     virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;
     virtual std::optional<TimeSpan> removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
-    virtual muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset,
-                                                bool completed, bool& clipsMovedToOtherTracks) = 0;
-    virtual void cancelClipDragEdit() = 0;
+    virtual muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset) = 0;
 
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
     virtual bool splitClipsIntoNewTracks(const ClipKeyList& clipKeyList) = 0;
@@ -71,8 +71,6 @@ public:
 
     virtual int64_t clipGroupId(const trackedit::ClipKey& clipKey) const = 0;
     virtual void setClipGroupId(const trackedit::ClipKey& clipKey, int64_t id) = 0;
-    virtual void groupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
-    virtual void ungroupClips(const trackedit::ClipKeyList& clipKeyList) = 0;
     virtual ClipKeyList clipsInGroup(int64_t id) const = 0;
 
     virtual muse::Progress progress() const = 0;

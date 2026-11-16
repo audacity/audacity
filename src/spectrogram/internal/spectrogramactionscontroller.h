@@ -3,16 +3,19 @@
  */
 #pragma once
 
-#include "framework/actions/actionable.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
+
 #include "framework/global/modularity/ioc.h"
+#include "framework/rcommand/commandable.h"
+#include "framework/rcommand/icommanddispatcher.h"
+#include "context/iglobalcontext.h"
 
 namespace au::spectrogram {
-class SpectrogramActionsController : public muse::actions::Actionable, public muse::Contextable
+class SpectrogramActionsController : public muse::rcommand::Commandable, public muse::Contextable
 {
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
 
 public:
     SpectrogramActionsController(const muse::modularity::ContextPtr& ctx)
@@ -21,6 +24,6 @@ public:
     void init();
 
 private:
-    void openTrackSpectrogramSettings(const muse::actions::ActionData& args);
+    muse::Ret openTrackSpectrogramSettings(const muse::rcommand::Params& params);
 };
 }

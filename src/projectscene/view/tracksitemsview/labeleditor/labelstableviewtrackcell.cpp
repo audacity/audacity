@@ -3,7 +3,19 @@
 */
 #include "labelstableviewtrackcell.h"
 
+#include "trackedit/trackeditcommands.h"
+
 using namespace au::projectscene;
+
+std::optional<au::trackedit::TrackId> LabelsTableViewTrackCell::itemTrackId(const muse::uicomponents::MenuItem& item)
+{
+    const muse::rcommand::Params params = item.params();
+    if (!params.contains(trackedit::TRACKEDIT_TRACK_ID_PARAM)) {
+        return std::nullopt;
+    }
+
+    return trackedit::TrackId(params.at(trackedit::TRACKEDIT_TRACK_ID_PARAM).toInt64());
+}
 
 LabelsTableViewTrackCell::LabelsTableViewTrackCell(QObject* parent)
     : muse::uicomponents::TableViewCell(parent)
@@ -44,7 +56,6 @@ void LabelsTableViewTrackCell::setCurrentTrackId(const trackedit::TrackId& track
     m_trackId = trackId;
 
     for (muse::uicomponents::MenuItem* item : m_availableTracks) {
-        bool checked = !item->args().empty() ? item->args().arg<trackedit::TrackId>() == trackId : false;
-        item->setChecked(checked);
+        item->setChecked(itemTrackId(*item) == trackId);
     }
 }

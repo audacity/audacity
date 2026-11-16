@@ -20,7 +20,7 @@ Paul Licameli split from AudacityProject.h
 #include <atomic>
 #include <memory>
 class AudacityProject;
-struct AudioIOStartStreamOptions;
+struct AudioIOStartTransportOptions;
 class Meter;
 
 struct SpeedChangeMessage {};
@@ -31,17 +31,17 @@ class AUDIO_IO_API ProjectAudioIO final : public ClientData::Base, public Observ
 {
 public:
     //! Default factory function ignores the second argument
-    static AudioIOStartStreamOptions
+    static AudioIOStartTransportOptions
     DefaultOptionsFactory(AudacityProject& project, bool newDefaults);
 
-    //! Global hook making AudioIOStartStreamOptions for a project, which
+    //! Global hook making AudioIOStartTransportOptions for a project, which
     //! has a non-trivial default implementation
     struct AUDIO_IO_API DefaultOptions : DefaultedGlobalHook<DefaultOptions,
                                                              DefaultOptionsFactory
                                                              > {};
 
     //! Invoke the global hook, supplying a default argument
-    static AudioIOStartStreamOptions GetDefaultOptions(
+    static AudioIOStartTransportOptions GetDefaultOptions(
         AudacityProject& project, bool newDefaults = false /*!< if true, policy is meant to respond to
          looping region; but specifying that is outside this library's scope
       */

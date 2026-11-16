@@ -28,7 +28,7 @@ Item {
     onPlayStateChanged: {
         if (playState === Stopwatch.Playing && prv.prevPlayState === Stopwatch.Stopped) {
             timeline.clear()
-            outputDbMeterModel.isClipping = false;
+            outputDbMeterModel.isClipping = false
 
             // We happen to know that, when this statement is reached, AudioIO has "primed" the audio buffers,
             // meaning it already has processed several hundreds of milliseconds.

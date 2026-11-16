@@ -19,7 +19,9 @@
 #include "playback/tests/mocks/playbackcontrollermock.h"
 #include "context/tests/mocks/playbackstatemock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
-#include "actions/tests/mocks/actionsdispatchermock.h"
+#include "rcommand/tests/mocks/commanddispatchermock.h"
+
+#include "playback/playbackcommands.h"
 
 using namespace ::testing;
 
@@ -41,8 +43,10 @@ protected:
         m_playbackController = std::make_shared<NiceMock<playback::PlaybackControllerMock> >();
         m_audioOutput = std::make_shared<NiceMock<playback::AudioOutputMock> >();
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
-        m_dispatcher = std::make_shared<NiceMock<muse::actions::ActionsDispatcherMock> >();
+        m_commandDispatcher = std::make_shared<NiceMock<muse::rcommand::CommandDispatcherMock> >();
 
+        ON_CALL(*m_commandDispatcher, dispatch(_, _))
+        .WillByDefault(Invoke(&PlayCursorControllerTests::okResponse));
         ON_CALL(*m_globalContext, currentProject())
         .WillByDefault(Return(m_project));
         ON_CALL(*m_globalContext, currentTrackeditProject())
@@ -66,7 +70,7 @@ protected:
         SnapTestAccess::wireContext(m_context, m_globalContext, m_playback);
 
         m_controller = new PlayCursorController();
-        SnapTestAccess::wireCursor(m_controller, m_globalContext, m_dispatcher, m_playbackController);
+        SnapTestAccess::wireCursor(m_controller, m_globalContext, m_commandDispatcher, m_playbackController);
         m_controller->setTimelineContext(m_context);
     }
 
@@ -74,6 +78,13 @@ protected:
     {
         delete m_controller;
         delete m_context;
+    }
+
+    static muse::async::Promise<muse::rcommand::Response> okResponse(const muse::rcommand::Request& request, bool)
+    {
+        return muse::async::make_promise<muse::rcommand::Response>([request](auto resolve) {
+            return resolve(muse::rcommand::make_response(request, muse::make_ok()));
+        });
     }
 
     void useGridSnapOff(const std::set<muse::secs_t>& boundaries)
@@ -88,6 +99,18 @@ protected:
         m_viewState->setSnapType(type);
     }
 
+    //! NOTE Frame moves persist the zoom state into the AU3 project, which the mocks do not provide
+    muse::async::Channel<muse::secs_t> usePositionUpdatesWithoutViewState()
+    {
+        ON_CALL(*m_project, viewState())
+        .WillByDefault(Return(IProjectViewStatePtr()));
+        muse::async::Channel<muse::secs_t> positionChanged;
+        ON_CALL(*m_playbackState, playbackPositionChanged())
+        .WillByDefault(Return(positionChanged));
+        m_controller->init();
+        return positionChanged;
+    }
+
     std::shared_ptr<NiceMock<context::GlobalContextMock> > m_globalContext;
     std::shared_ptr<NiceMock<project::AudacityProjectMock> > m_project;
     std::shared_ptr<NiceMock<trackedit::TrackeditProjectMock> > m_trackeditProject;
@@ -96,7 +119,7 @@ protected:
     std::shared_ptr<NiceMock<playback::PlaybackControllerMock> > m_playbackController;
     std::shared_ptr<NiceMock<playback::AudioOutputMock> > m_audioOutput;
     std::shared_ptr<NiceMock<context::PlaybackStateMock> > m_playbackState;
-    std::shared_ptr<NiceMock<muse::actions::ActionsDispatcherMock> > m_dispatcher;
+    std::shared_ptr<NiceMock<muse::rcommand::CommandDispatcherMock> > m_commandDispatcher;
 
     TimelineContext* m_context = nullptr;
     PlayCursorController* m_controller = nullptr;
@@ -108,16 +131,17 @@ TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOff_SnapsToBoundary)
     //! Snap is applied by the caller via positionToTime(x, true).
     useGridSnapOff({ 10.0 });
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double time = m_context->positionToTime(10.5, true); // within the 4px(=4s at zoom 1) clip-snap tolerance
     m_controller->seekToTime(time);
 
-    EXPECT_TRUE(captured.contains("seekTime"));
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 10.0);
-    EXPECT_FALSE(captured.param("triggerPlay").toBool());
+    EXPECT_EQ(captured.command, playback::PLAYBACK_SEEK_COMMAND);
+    EXPECT_TRUE(captured.params.contains(playback::PLAYBACK_SEEK_TIME_PARAM));
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 10.0);
+    EXPECT_FALSE(captured.params.at(playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool());
 }
 
 TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOff_FarFromBoundary_UsesRawTime)
@@ -125,14 +149,14 @@ TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOff_FarFromBoundary_UsesRaw
     //! CASE Outside the snap tolerance, the raw time is used.
     useGridSnapOff({ 10.0 });
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double time = m_context->positionToTime(20.0, true); // 10s away from the only boundary
     m_controller->seekToTime(time);
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 20.0);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
 }
 
 TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOn_SnapsToGrid)
@@ -140,14 +164,14 @@ TEST_F(PlayCursorControllerTests, SeekToTime_GridSnapOn_SnapsToGrid)
     //! CASE With grid snap on, the seek lands on the nearest grid line.
     useGridSnapOn(SnapType::Seconds);
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double time = m_context->positionToTime(7.4, true);
     m_controller->seekToTime(time);
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 7.0);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 7.0);
 }
 
 TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_ClampsToZero_WhenNotAtStart)
@@ -157,13 +181,13 @@ TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_ClampsToZero_WhenNotAt
     ON_CALL(*m_playbackState, playbackPosition())
     .WillByDefault(Return(muse::secs_t(5.0)));
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->seekToTime(-3.0);
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 0.0);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 0.0);
 }
 
 TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_AlreadyAtStart_DoesNotDispatch)
@@ -173,10 +197,53 @@ TEST_F(PlayCursorControllerTests, SeekToTime_NegativeTime_AlreadyAtStart_DoesNot
     ON_CALL(*m_playbackState, playbackPosition())
     .WillByDefault(Return(muse::secs_t(0.0)));
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->seekToTime(-3.0);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTime_TargetOutsideFrame_MovesFrame)
+{
+    //! CASE A plain seek to a time outside the visible frame scrolls the frame to keep the cursor visible.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    m_controller->seekToTime(30.0);
+    positionChanged.send(30.0);
+
+    EXPECT_NE(m_context->frameStartTime(), frameStart);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTimeKeepingView_TargetOutsideFrame_LeavesFrame)
+{
+    //! CASE Seeking with the view kept dispatches the seek but leaves the frame where it was.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
+
+    m_controller->seekToTimeKeepingView(30.0);
+    positionChanged.send(30.0);
+
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 30.0);
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), frameStart);
+}
+
+TEST_F(PlayCursorControllerTests, SeekToTimeKeepingView_AffectsOnlyTheNextSeek)
+{
+    //! CASE The view is kept for that one seek only; a following plain seek scrolls again.
+    muse::async::Channel<muse::secs_t> positionChanged = usePositionUpdatesWithoutViewState();
+    const double frameStart = m_context->frameStartTime();
+
+    m_controller->seekToTimeKeepingView(30.0);
+    positionChanged.send(30.0);
+    m_controller->seekToTime(60.0);
+    positionChanged.send(60.0);
+
+    EXPECT_NE(m_context->frameStartTime(), frameStart);
 }
 
 TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
@@ -184,16 +251,50 @@ TEST_F(PlayCursorControllerTests, SetPlaybackRegionByTime_SnapsAndClampsEdges)
     //! CASE Region edges snap to boundaries and are clamped to >= 0.
     useGridSnapOff({ 10.0 });
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     double t1 = m_context->positionToTime(-3.0, true); // negative — clamped to 0 by setPlaybackRegionByTime
     double t2 = m_context->positionToTime(10.4, true); // snaps to 10.0
     m_controller->setPlaybackRegionByTime(t1, t2);
 
-    EXPECT_DOUBLE_EQ(captured.param("start").toDouble(), 0.0);
-    EXPECT_DOUBLE_EQ(captured.param("end").toDouble(), 10.0);
+    EXPECT_EQ(captured.command, playback::PLAYBACK_CHANGE_PLAY_REGION_COMMAND);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_CHANGE_PLAY_REGION_START_PARAM).toDouble(), 0.0);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_CHANGE_PLAY_REGION_END_PARAM).toDouble(), 10.0);
+}
+
+TEST_F(PlayCursorControllerTests, PositionTickWhilePaused_DoesNotScrollView)
+{
+    //! CASE Residual engine ticks after pausing must not scroll a view the
+    //! user scrolled/zoomed away; the cursor position itself still updates.
+    ON_CALL(*m_playbackState, playbackStatus())
+    .WillByDefault(Return(playback::PlaybackStatus::Paused));
+
+    m_context->onResizeFrameWidth(100.0); // frame = [0, 100]s at zoom 1
+
+    SnapTestAccess::updatePositionX(m_controller, muse::secs_t(500.0)); // play head far off-screen
+
+    EXPECT_DOUBLE_EQ(m_context->frameStartTime(), 0.0);
+    EXPECT_DOUBLE_EQ(m_controller->positionX(), 500.0);
+}
+
+TEST_F(PlayCursorControllerTests, PositionChangeWhileStopped_BringsViewToCursor)
+{
+    //! CASE Position changes from stop/seek still scroll the cursor into view.
+    ON_CALL(*m_playbackState, playbackStatus())
+    .WillByDefault(Return(playback::PlaybackStatus::Stopped));
+    // no view state: moving the frame would persist zoom into the au3 project
+    ON_CALL(*m_project, viewState())
+    .WillByDefault(Return(nullptr));
+
+    m_context->onResizeFrameWidth(100.0); // frame = [0, 100]s at zoom 1
+
+    SnapTestAccess::updatePositionX(m_controller, muse::secs_t(500.0));
+
+    EXPECT_GT(m_context->frameStartTime(), 0.0);
+    EXPECT_LE(m_context->frameStartTime(), 500.0);
+    EXPECT_GE(m_context->frameEndTime(), 500.0);
 }
 
 //! Seek gesture: pressing in the track area must never move the playhead by
@@ -211,7 +312,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_Press_DoesNotDispatchSeek)
     //! CASE Mousedown alone must not move the playhead.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -222,15 +323,15 @@ TEST_F(PlayCursorControllerTests, SeekGesture_PlainClick_SeeksOnRelease)
     //! CASE A press + release without dragging seeks to the pressed time on release.
     useGridSnapOff({});
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
     EXPECT_TRUE(m_controller->endSeekGesture());
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 20.0);
-    EXPECT_FALSE(captured.param("triggerPlay").toBool());
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
+    EXPECT_FALSE(captured.params.at(playback::PLAYBACK_SEEK_TRIGGER_PLAY_PARAM).toBool());
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_ClickWithinDragThreshold_StillSeeks)
@@ -238,15 +339,15 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWithinDragThreshold_StillSeek
     //! CASE Small jitter below the drag threshold is still a click.
     useGridSnapOff({});
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
     m_controller->updateSeekGesture(22.0, 52.0); // < 5px in both axes
     EXPECT_TRUE(m_controller->endSeekGesture());
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 20.0);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 20.0);
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_ClickAppliesSnap)
@@ -254,14 +355,14 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickAppliesSnap)
     //! CASE The deferred seek is snapped exactly like a direct seekToTime.
     useGridSnapOff({ 10.0 });
 
-    muse::actions::ActionQuery captured;
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
-    .WillOnce(SaveArg<0>(&captured));
+    muse::rcommand::Request captured;
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
+    .WillOnce(DoAll(SaveArg<0>(&captured), Invoke(&PlayCursorControllerTests::okResponse)));
 
     m_controller->beginSeekGesture(10.5, 10.5, 50.0); // within the 4px(=4s at zoom 1) clip-snap tolerance
     EXPECT_TRUE(m_controller->endSeekGesture());
 
-    EXPECT_DOUBLE_EQ(captured.param("seekTime").toDouble(), 10.0);
+    EXPECT_DOUBLE_EQ(captured.params.at(playback::PLAYBACK_SEEK_TIME_PARAM).toDouble(), 10.0);
 }
 
 TEST_F(PlayCursorControllerTests, SeekGesture_HorizontalDrag_DoesNotSeek)
@@ -272,7 +373,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_HorizontalDrag_DoesNotSeek)
     //! the playback-region update too.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(_))
     .Times(0);
@@ -287,7 +388,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_VerticalDrag_DoesNotSeek)
     //! CASE A vertical drag (multi-track selection) is a drag too.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -301,7 +402,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_DragReturningToOrigin_StillNoSeek)
     //! if the pointer returns to the press position before release.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -316,7 +417,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_Cancel_DoesNotSeek)
     //! double-click took over) never seeks.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     m_controller->beginSeekGesture(20.0, 20.0, 50.0);
@@ -330,7 +431,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_EndWithoutBegin_IsNoop)
     //! gesture) do nothing.
     useGridSnapOff({});
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
 
     EXPECT_FALSE(m_controller->endSeekGesture());
@@ -345,7 +446,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_ClickWhilePlaying_RecordsSeekTime_
     ON_CALL(*m_playbackState, isPlaying())
     .WillByDefault(Return(true));
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(muse::secs_t(20.0)));
 
@@ -388,7 +489,7 @@ TEST_F(PlayCursorControllerTests, SeekGesture_DragWhilePlaying_DoesNotTouchPlayb
     ON_CALL(*m_playbackState, isPlaying())
     .WillByDefault(Return(true));
 
-    EXPECT_CALL(*m_dispatcher, dispatch(A<const muse::actions::ActionQuery&>()))
+    EXPECT_CALL(*m_commandDispatcher, dispatch(_, _))
     .Times(0);
     EXPECT_CALL(*m_playbackController, setLastPlaybackSeekTime(_))
     .Times(0);

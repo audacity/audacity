@@ -1,6 +1,6 @@
 #pragma once
 
-#include "effects/builtin/view/builtineffectmodel.h"
+#include "effects/builtin/qml/Audacity/BuiltinEffects/builtineffectmodel.h"
 
 struct BassTrebleSettings;
 
@@ -34,10 +34,13 @@ private:
     {
     }
 
+    double compensateGain(const double currentGain, double currentValue, double newValue);
+
     using Setter = std::function<void (BassTrebleSettings&, double)>;
 
     QVariantMap m_paramsList;
     QMap<QString, Setter> m_setters;
+    QMap<QString, bool> m_ignores;
 };
 
 class BassTrebleViewModelFactory : public EffectViewModelFactory<BassTrebleViewModel>

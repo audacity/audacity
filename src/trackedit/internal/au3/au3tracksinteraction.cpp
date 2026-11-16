@@ -226,7 +226,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
     if (selectedTracks.empty()) {
         const TrackIdList tracksIdsToSelect = pasteIntoNewTracks(copiedData);
         selectionController()->setSelectedTracks(tracksIdsToSelect);
-        trackNavigationController()->setFocusedTrack(tracksIdsToSelect.front());
+        trackNavigationController()->setFocus(TrackFocus::track(tracksIdsToSelect.front()));
         projectWasModified = true;
         return muse::make_ok();
     }
@@ -260,7 +260,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
             TrackIdList clipSelectedTracks = selectionController()->selectedTracks();
             finalSelectedTracks.insert(finalSelectedTracks.end(), clipSelectedTracks.begin(), clipSelectedTracks.end());
             selectionController()->setSelectedTracks(finalSelectedTracks);
-            trackNavigationController()->setFocusedTrack(finalSelectedTracks.front());
+            trackNavigationController()->setFocus(TrackFocus::track(finalSelectedTracks.front()));
         }
     }
 
@@ -288,6 +288,28 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
     auto ret = canPasteTrackData(dstTracksIds, copiedData);
     if (!ret) {
         return ret;
+    }
+
+    // A destination with clips keeps its rate: convert the pasted data before the project is changed
+    std::vector<std::pair<Au3WaveTrack*, int> > tracksToResample;
+    std::vector<std::pair<std::shared_ptr<Au3WaveClip>, int> > clipsToResample;
+    for (size_t i = 0; i < dstTracksIds.size(); ++i) {
+        const Au3WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(dstTracksIds[i]));
+        const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i)->track());
+        if (dstWaveTrack && !dstWaveTrack->IsEmpty() && trackToPaste->GetRate() != dstWaveTrack->GetRate()) {
+            const int rate = static_cast<int>(dstWaveTrack->GetRate());
+            tracksToResample.emplace_back(trackToPaste.get(), rate);
+            for (const auto& clip : trackToPaste->Intervals()) {
+                clipsToResample.emplace_back(clip, rate);
+            }
+        }
+    }
+    ret = utils::resampleClips(*interactive(), clipsToResample);
+    if (!ret) {
+        return ret;
+    }
+    for (const auto& [track, rate] : tracksToResample) {
+        track->SetRate(rate);
     }
 
     muse::Ret ok { muse::make_ok() };
@@ -388,10 +410,10 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
         allDstTracksIds.insert(allDstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
 
         selectionController()->setSelectedTracks(allDstTracksIds);
-        trackNavigationController()->setFocusedTrack(allDstTracksIds.front());
+        trackNavigationController()->setFocus(TrackFocus::track(allDstTracksIds.front()));
     } else {
         selectionController()->setSelectedTracks(dstTracksIds);
-        trackNavigationController()->setFocusedTrack(dstTracksIds.front());
+        trackNavigationController()->setFocus(TrackFocus::track(dstTracksIds.front()));
     }
 
     return ok;
@@ -447,10 +469,10 @@ muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& 
         allDstTracksIds.insert(allDstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
 
         selectionController()->setSelectedTracks(allDstTracksIds);
-        trackNavigationController()->setFocusedTrack(allDstTracksIds.front());
+        trackNavigationController()->setFocus(TrackFocus::track(allDstTracksIds.front()));
     } else {
         selectionController()->setSelectedTracks(dstTracksIds);
-        trackNavigationController()->setFocusedTrack(dstTracksIds.front());
+        trackNavigationController()->setFocus(TrackFocus::track(dstTracksIds.front()));
     }
 
     return muse::make_ok();
@@ -486,7 +508,7 @@ ITrackDataPtr Au3TracksInteraction::copyNonContinuousTrackData(const TrackId tra
     if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
         auto& trackFactory = WaveTrackFactory::Get(projectRef());
         auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
-        auto clipboardTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+        auto clipboardTrack = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Ref, pSampleBlockFactory);
 
         for (const auto& itemKey : itemKeys) {
             if (std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, itemKey.itemId)) {
@@ -506,10 +528,10 @@ ITrackDataPtr Au3TracksInteraction::copyNonContinuousTrackData(const TrackId tra
         auto clipboardTrack = ::LabelTrack::CreatePtr(trackList);
 
         for (const auto& itemKey : itemKeys) {
-            if (Au3Label* label = DomAccessor::findLabel(labelTrack, itemKey.itemId)) {
-                SelectedRegion region;
-                region.setTimes(label->getT0() + offset, label->getT1() + offset);
-                clipboardTrack->AddLabel(region, label->title);
+            if (const Au3Label* label = DomAccessor::findLabel(labelTrack, itemKey.itemId)) {
+                Au3Label copy = *label;
+                copy.selectedRegion.setTimes(label->getT0() + offset, label->getT1() + offset);
+                clipboardTrack->AddLabel(copy);
             }
         }
 
@@ -649,6 +671,7 @@ bool Au3TracksInteraction::splitRangeSelectionIntoNewTracks(const TrackIdList& t
         std::shared_ptr<Au3Track> newTrack;
         utils::executeAndNotifyAboutChangedClips(prj, trackId, [&] {
             newTrack = waveTrack->Copy(begin, end, false);
+            RealtimeEffectList::Get(*newTrack).CloneStates();
             newTrack->MoveTo(begin);
             waveTrack->SplitDelete(begin, end);
         });
@@ -692,6 +715,7 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
 
         if (Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId))) {
             dest = waveTrack->Copy(begin, end, false);
+            RealtimeEffectList::Get(*dest).CloneStates();
             dest->MoveTo(std::max(static_cast<double>(begin), waveTrack->GetStartTime()));
         } else if (Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(trackId))) {
             dest = labelTrack->Copy(begin, end, false);
@@ -703,13 +727,16 @@ bool Au3TracksInteraction::duplicateSelectedOnTracks(const TrackIdList& tracksId
         }
     }
 
-    std::vector<Au3WaveTrack*> waveCopies;
+    std::vector<Au3Track*> trackCopies;
     for (const auto& copy : copies) {
         if (auto waveCopy = dynamic_cast<Au3WaveTrack*>(copy.get())) {
-            waveCopies.push_back(waveCopy);
+            for (const auto& clip : DomAccessor::waveClipsAsList(waveCopy)) {
+                clip->SetId(Au3WaveClip::NewID());
+            }
         }
+        trackCopies.push_back(copy.get());
     }
-    utils::remapCopiedClipGroups(*prj, tracks, waveCopies);
+    utils::remapCopiedItemGroups(*prj, tracks, trackCopies);
 
     for (const auto& dest : copies) {
         tracks.Add(dest);
@@ -757,7 +784,7 @@ bool Au3TracksInteraction::newMonoTrack()
 {
     auto trackId = addWaveTrack(1);
     selectionController()->setSelectedTracks({ trackId });
-    trackNavigationController()->setFocusedTrack(trackId);
+    trackNavigationController()->setFocus(TrackFocus::track(trackId));
 
     return true;
 }
@@ -766,7 +793,7 @@ bool Au3TracksInteraction::newStereoTrack()
 {
     auto trackId = addWaveTrack(2);
     selectionController()->setSelectedTracks({ trackId });
-    trackNavigationController()->setFocusedTrack(trackId);
+    trackNavigationController()->setFocus(TrackFocus::track(trackId));
 
     return true;
 }
@@ -780,7 +807,7 @@ muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::newLabelTrack(const m
     prj->notifyAboutTrackAdded(DomConverter::labelTrack(track));
 
     selectionController()->setSelectedTracks({ track->GetId() });
-    trackNavigationController()->setFocusedTrack(track->GetId());
+    trackNavigationController()->setFocus(TrackFocus::track(track->GetId()));
 
     return muse::RetVal<TrackId>::make_ok(track->GetId());
 }
@@ -819,15 +846,15 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
 
     const auto notRemovedTracks = prj->trackIdList();
     if (notRemovedTracks.empty()) {
-        trackNavigationController()->setFocusedTrack(-1);
+        trackNavigationController()->setFocus(TrackFocus::track(-1));
         return true;
     }
 
     const auto maxIndex = notRemovedTracks.size() - 1;
     if (maxIndex < indexFocusedTrack) {
-        trackNavigationController()->setFocusedTrack(notRemovedTracks.back());
+        trackNavigationController()->setFocus(TrackFocus::track(notRemovedTracks.back()));
     } else {
-        trackNavigationController()->setFocusedTrack(notRemovedTracks[indexFocusedTrack]);
+        trackNavigationController()->setFocus(TrackFocus::track(notRemovedTracks[indexFocusedTrack]));
     }
 
     return true;
@@ -855,17 +882,16 @@ bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)
         }
 
         auto au3Clone = au3Track->Duplicate();
+        RealtimeEffectList::Get(*au3Clone).CloneStates();
         Au3TrackList::AssignUniqueId(au3Clone);
         clones.push_back(au3Clone);
     }
 
-    std::vector<Au3WaveTrack*> waveClones;
+    std::vector<Au3Track*> trackClones;
     for (const auto& clone : clones) {
-        if (auto waveClone = dynamic_cast<Au3WaveTrack*>(clone.get())) {
-            waveClones.push_back(waveClone);
-        }
+        trackClones.push_back(clone.get());
     }
-    utils::remapCopiedClipGroups(*prj, tracks, waveClones);
+    utils::remapCopiedItemGroups(*prj, tracks, trackClones);
 
     for (const auto& au3Clone : clones) {
         tracks.Add(au3Clone, ::TrackList::DoAssignId::Yes);
@@ -1080,6 +1106,8 @@ bool Au3TracksInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksId
             LOGW() << "Failed to split stereo channels on track: " << trackId;
             continue;
         }
+        RealtimeEffectList::Get(*unlinkedTracks[0]).CloneStates();
+        RealtimeEffectList::Get(*unlinkedTracks[1]).CloneStates();
 
         unlinkedTracks[0]->SetPan(-1.0f);
         unlinkedTracks[1]->SetPan(1.0f);
@@ -1095,7 +1123,7 @@ bool Au3TracksInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksId
         }
 
         if (trackNavigationController()->focusedTrack() == trackId) {
-            trackNavigationController()->setFocusedTrack(unlinkedTracks[0]->GetId());
+            trackNavigationController()->setFocus(TrackFocus::track(unlinkedTracks[0]->GetId()));
         }
 
         const auto viewState = globalContext()->currentProject()->viewState();
@@ -1136,6 +1164,8 @@ bool Au3TracksInteraction::splitStereoTracksToCenterMono(const TrackIdList& trac
             LOGW() << "Failed to split stereo channels on track: " << trackId;
             continue;
         }
+        RealtimeEffectList::Get(*unlinkedTracks[0]).CloneStates();
+        RealtimeEffectList::Get(*unlinkedTracks[1]).CloneStates();
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[0].get()));
@@ -1148,7 +1178,7 @@ bool Au3TracksInteraction::splitStereoTracksToCenterMono(const TrackIdList& trac
         }
 
         if (trackNavigationController()->focusedTrack() == trackId) {
-            trackNavigationController()->setFocusedTrack(unlinkedTracks[0]->GetId());
+            trackNavigationController()->setFocus(TrackFocus::track(unlinkedTracks[0]->GetId()));
         }
 
         const auto viewState = globalContext()->currentProject()->viewState();
@@ -1300,6 +1330,47 @@ bool Au3TracksInteraction::resampleTracks(const TrackIdList& tracksIds, int rate
     }
 
     return true;
+}
+
+muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::mixAndRender(const TrackIdList& tracksIds)
+{
+    Au3TrackList& tracks = Au3TrackList::Get(projectRef());
+
+    const auto isInput = [&tracksIds](const Au3WaveTrack* track) {
+        return muse::contains(tracksIds, TrackId(track->GetId()));
+    };
+    const auto inputs = tracks.Any<const Au3WaveTrack>() + isInput;
+    if (inputs.empty()) {
+        return muse::RetVal<TrackId>::make_ret(make_ret(Err::TrackNotFound));
+    }
+
+    const TrackId lastInput = (*inputs.rbegin())->GetId();
+
+    //! NOTE The whole extent of the inputs is mixed, regardless of the time selection
+    const auto mix = MixAndRender(inputs,
+                                  Mixer::WarpOptions { tracks.GetOwner() },
+                                  tracks.MakeUniqueTrackName(wxFromStdString(muse::trc("trackedit", "Mix"))),
+                                  &WaveTrackFactory::Get(projectRef()),
+                                  ::ProjectRate::Get(projectRef()).GetRate(),
+                                  QualitySettings::SampleFormatChoice(),
+                                  0.0, 0.0);
+    if (!mix) {
+        LOGW() << "Mix and render was cancelled or failed";
+        return muse::RetVal<TrackId>::make_ret(make_ret(Err::Cancel));
+    }
+
+    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+
+    tracks.Append(mix, true);
+    prj->notifyAboutTrackAdded(DomConverter::track(mix.get()));
+    for (const auto& clip : prj->clipList(mix->GetId())) {
+        prj->notifyAboutClipAdded(clip);
+    }
+
+    //! NOTE Right below the last input, so the mix ends up where the inputs were when they are removed
+    moveTracksTo({ mix->GetId() }, trackPosition(lastInput) + 1);
+
+    return muse::RetVal<TrackId>::make_ok(mix->GetId());
 }
 
 //void Au3TracksInteraction::adjustVerticalZoom(const trackedit::TrackId& trackId)
@@ -1474,7 +1545,7 @@ std::shared_ptr<au::au3::Au3Track> Au3TracksInteraction::createNewTrackAndPaste(
         auto& trackFactory = WaveTrackFactory::Get(projectRef());
         auto& pSampleBlockFactory = trackFactory.GetSampleBlockFactory();
 
-        auto pFirstTrack = waveTrack->EmptyCopy(pSampleBlockFactory);
+        auto pFirstTrack = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Deep, pSampleBlockFactory);
         list.Add(pFirstTrack->SharedPointer());
         pFirstTrack->Paste(begin, *track, false);
         return pFirstTrack->SharedPointer();
@@ -1511,12 +1582,16 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
                : trackType == TrackType::Mono || trackType == TrackType::Stereo;
     };
 
+    const size_t clipboardTracksSize = std::count_if(clipboardData.begin(), clipboardData.end(), [&matchesFilter](const auto& data) {
+        return data->track() && matchesFilter(DomConverter::track(data->track().get()).type);
+    });
+
     //! NOTE: If there's a label track in clipboard, match tracks strictly by position and type
     if (hasLabelTrack && tracks.size() == clipboardData.size()) {
         TrackIdList result;
 
         for (const auto& track : tracks) {
-            if (matchesFilter(track.type)) {
+            if (matchesFilter(track.type) && result.size() < clipboardTracksSize) {
                 result.push_back(track.id);
             }
         }
@@ -1536,7 +1611,6 @@ TrackIdList Au3TracksInteraction::determineDestinationTracksIds(const std::vecto
         }
     }
 
-    size_t clipboardTracksSize = clipboardData.size();
     if (filteredDestinationTrackIds.size() > clipboardTracksSize) {
         //! NOTE: more tracks selected than needed, return sub-vector
         return TrackIdList(filteredDestinationTrackIds.begin(), filteredDestinationTrackIds.begin() + clipboardTracksSize);
@@ -1757,7 +1831,7 @@ void Au3TracksInteraction::doInsertSilence(const TrackIdList& trackIds, secs_t b
         if (!muse::is_zero(duration)) {
             PasteTimeWarper warper{ end, begin + duration };
 
-            auto copy = waveTrack->EmptyCopy();
+            auto copy = WaveTrackUtilities::EmptyCopy(*waveTrack, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
 
             copy->InsertSilence(0.0, duration);
             copy->Flush();

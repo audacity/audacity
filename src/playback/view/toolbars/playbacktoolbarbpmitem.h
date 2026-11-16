@@ -18,7 +18,7 @@ class PlaybackToolBarBPMItem : public muse::uicomponents::ToolBarItem
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:
-    explicit PlaybackToolBarBPMItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,
+    explicit PlaybackToolBarBPMItem(const muse::rcommand::CommandInfo& info, muse::uicomponents::ToolBarItemType::Type type,
                                     QObject* parent = nullptr);
 
     double currentValue() const;

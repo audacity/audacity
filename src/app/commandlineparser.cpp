@@ -24,7 +24,7 @@ static QStringList prepareArguments(int argc, char** argv)
     QStringList args;
 
     for (int i = 0; i < argc; ++i) {
-        QString arg = QString::fromLocal8Bit(argv[i]);
+        QString arg = QString::fromUtf8(argv[i]);
 
 #ifndef NDEBUG
         if (arg.startsWith("-qmljsdebugger")) {
@@ -79,6 +79,10 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption("plugin-registration-self-test",
                                           "Run plugin registration app self-test (verify initialization)"));
 
+    // Diagnostics
+    m_parser.addOption(internalCommandLineOption("crash-dumps-dir", "Directory the crash dumps of this process are written to", "path"));
+    m_parser.addOption(internalCommandLineOption("crash-server-url", "URL the crash dumps of this process are sent to", "url"));
+
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
     m_parser.addOption(QCommandLineOption("test-case", "Run test case by name or file", "nameOrFile"));
@@ -86,6 +90,7 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption("test-case-context-value", "Set test case context value", "value"));
     m_parser.addOption(QCommandLineOption("test-case-func", "Call test case function", "name"));
     m_parser.addOption(QCommandLineOption("test-case-func-args", "Call test case function args", "args"));
+    m_parser.addOption(QCommandLineOption("test-case-speed", "Test case speed mode: Default|Fast|Normal|Slow", "mode"));
 #endif
 }
 
@@ -163,6 +168,17 @@ void CommandLineParser::parse(int argc, char** argv)
         m_options->app.memoryLeakReport = true;
     }
 
+    {
+        const muse::io::path_t crashDumpDir = fromUserInputPath(m_parser.value("crash-dumps-dir"));
+        const muse::String crashServerUrl = muse::String::fromQString(m_parser.value("crash-server-url"));
+
+        if (!crashDumpDir.empty()) {
+            m_options->diagnostics.crashDumpConfig.emplace(crashDumpDir, crashServerUrl);
+        } else if (!crashServerUrl.empty()) {
+            LOGE() << "--crash-server-url without --crash-dumps-dir, crash reporting is left unconfigured";
+        }
+    }
+
     // Audio plugin registration
     if (m_parser.isSet("register-audio-plugin")) {
         m_options->runMode = IApplication::RunMode::AudioPluginRegistration;
@@ -179,7 +195,6 @@ void CommandLineParser::parse(int argc, char** argv)
 #ifdef MUSE_MODULE_TESTFLOW
     // Testflow
     if (m_parser.isSet("test-case")) {
-        m_options->runMode = IApplication::RunMode::ConsoleApp;
         m_options->testflow.testCaseNameOrFile = fromUserInputPath(m_parser.value("test-case"));
     }
 
@@ -197,6 +212,10 @@ void CommandLineParser::parse(int argc, char** argv)
 
     if (m_parser.isSet("test-case-func-args")) {
         m_options->testflow.testCaseFuncArgs = m_parser.value("test-case-func-args");
+    }
+
+    if (m_parser.isSet("test-case-speed")) {
+        m_options->testflow.testCaseSpeed = m_parser.value("test-case-speed");
     }
 #endif
 

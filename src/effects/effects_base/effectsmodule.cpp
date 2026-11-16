@@ -6,9 +6,15 @@
 #include "au3-module-manager/PluginManager.h"
 #include "au3-files/FileNames.h"
 
+#include "au3wrap/internal/wxtypes_convert.h"
+
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/diagnostics/idiagnosticspathsregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
+#include "internal/effectscommandsregister.h"
+#include "internal/effectscommandsstate.h"
 #include "internal/effectconfigsettings.h"
 #include "internal/effectidresolver.h"
 #include "internal/effectsprovider.h"
@@ -78,6 +84,13 @@ void EffectsModule::resolveImports()
 
     // must run before the audioplugins cache loads in onInit
     KnownAudioPluginsConfigurator().init();
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        auto ecr = std::make_shared<EffectsCommandsRegister>();
+        ecr->init();
+        cr->reg(ecr);
+    }
 }
 
 void EffectsModule::registerResources()
@@ -102,7 +115,7 @@ void EffectsModule::registerUiTypes()
 void EffectsModule::onPreInit(const muse::IApplication::RunMode&)
 {
     auto configFactory = [](const FilePath& localFileName) -> std::unique_ptr<audacity::BasicSettings> {
-        return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
+        return std::make_unique<au3::EffectConfigSettings>(au::au3::wxToStdString(localFileName));
     };
 
     PluginManager::Get().Initialize(std::move(configFactory), std::make_unique<EffectIdResolver>());
@@ -115,7 +128,7 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     //! --- Diagnostics ---
     auto pr = globalIoc()->resolve<muse::diagnostics::IDiagnosticsPathsRegister>(mname);
     if (pr) {
-        pr->reg("pluginsettings", FileNames::PluginSettings().ToStdString());
+        pr->reg("pluginsettings", au::au3::wxToStdString(FileNames::PluginSettings()));
     }
 }
 
@@ -156,6 +169,14 @@ void EffectsContext::registerExports()
     ioc()->registerExport<IRealtimeEffectService>(mname, m_realtimeEffectService);
     ioc()->registerExport<IEffectsProviderInitializer>(mname, std::make_shared<EffectsProviderInitializer>(iocContext()));
     ioc()->registerExport<IMissingEffectChecker>(mname, std::make_shared<MissingEffectChecker>(iocContext()));
+}
+
+void EffectsContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<EffectsCommandsState>(iocContext()));
+    }
 }
 
 void EffectsContext::onInit(const muse::IApplication::RunMode&)

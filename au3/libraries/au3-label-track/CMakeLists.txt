@@ -20,7 +20,7 @@ PRIVATE
    au3-effects
    au3-preferences
    au3-project
-   au3-stretching-sequence
+   au3-clip-processing
    au3-strings
    wxBase
 )

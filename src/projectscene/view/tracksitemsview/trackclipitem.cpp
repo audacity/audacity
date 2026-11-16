@@ -7,6 +7,21 @@
 
 using namespace au::projectscene;
 
+namespace {
+constexpr FadeTypes::Type fadeType(au::trackedit::FadeType type)
+{
+    switch (type) {
+    case au::trackedit::FadeType::Linear:
+        return FadeTypes::Type::LINEAR;
+    case au::trackedit::FadeType::Logarithmic:
+        return FadeTypes::Type::LOGARITHMIC;
+    default:
+        assert(false);
+        return FadeTypes::Type::LINEAR;
+    }
+}
+}
+
 TrackClipItem::TrackClipItem(QObject* parent)
     : ViewTrackItem(parent)
 {
@@ -21,10 +36,15 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     m_groupId = clip.groupId;
     m_pitch = clip.pitch;
     m_speed = clip.speed;
+    m_fadeInDuration = clip.fadeInDuration;
+    m_fadeOutDuration = clip.fadeOutDuration;
+    m_fadeInType = fadeType(clip.fadeInType);
+    m_fadeOutType = fadeType(clip.fadeOutType);
 
     emit titleChanged();
     emit pitchChanged();
     emit speedPercentageChanged();
+    emit fadesChanged();
     emit colorChanged();
     emit groupIdChanged();
     emit contentChanged();
@@ -59,4 +79,24 @@ bool TrackClipItem::isSpeedModified() const
 double TrackClipItem::speed() const
 {
     return m_speed;
+}
+
+double TrackClipItem::fadeInDuration() const
+{
+    return m_fadeInDuration;
+}
+
+double TrackClipItem::fadeOutDuration() const
+{
+    return m_fadeOutDuration;
+}
+
+FadeTypes::Type TrackClipItem::fadeInType() const
+{
+    return m_fadeInType;
+}
+
+FadeTypes::Type TrackClipItem::fadeOutType() const
+{
+    return m_fadeOutType;
 }

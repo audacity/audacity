@@ -3,8 +3,12 @@
 */
 #include "accountmodel.h"
 
+#include <QDateTime>
+
 #include "framework/global/io/path.h"
 #include "framework/global/types/retval.h"
+
+#include "../cloudcommands.h"
 
 using namespace au::au3cloud;
 
@@ -57,21 +61,15 @@ void AccountModel::signOut() const
 
 void AccountModel::openSignInDialog() const
 {
-    muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-    query.addParam("sync", muse::Val(true));
-
-    dispatcher()->dispatch(query);
+    authorization()->ensureAuthorized(iocContext());
 }
 
 void AccountModel::openCreateAccountDialog() const
 {
-    muse::actions::ActionQuery query("audacity://cloud/open-create-account-dialog");
-    query.addParam("sync", muse::Val(true));
-
-    dispatcher()->dispatch(query);
+    authorization()->ensureAuthorized(iocContext(), true);
 }
 
 void AccountModel::openProfile() const
 {
-    dispatcher()->dispatch(muse::actions::ActionQuery("audacity://cloud/open-profile-page"));
+    commandDispatcher()->dispatch(CLOUD_OPEN_PROFILE_PAGE_COMMAND);
 }

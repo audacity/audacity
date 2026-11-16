@@ -31,6 +31,7 @@ protected:
     std::optional<au::trackedit::TrackId> trackId() const;
     bool isMasterTrack() const { return m_isMasterTrack; }
     muse::uicomponents::MenuItemList effectMenus();
+    muse::uicomponents::MenuItem* makeEffectItem(const effects::EffectId& effectId);
 
     muse::ContextInject<effects::IEffectViewController> effectViewController{ this };
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };

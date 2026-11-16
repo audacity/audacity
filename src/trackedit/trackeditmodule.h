@@ -8,10 +8,10 @@
 namespace au::trackedit {
 class TrackeditConfiguration;
 class TrackeditActionsController;
-class TrackeditUiActions;
 class Au3SelectionController;
 class TrackNavigationController;
 class TrackSpectrogramSettingsUpdater;
+class TracksViewRequestsService;
 
 class TrackeditModule : public muse::modularity::IModuleSetup
 {
@@ -38,14 +38,15 @@ public:
         : muse::modularity::IContextSetup(ctx) {}
 
     void registerExports() override;
+    void resolveImports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:
     std::shared_ptr<TrackeditActionsController> m_trackeditController;
-    std::shared_ptr<TrackeditUiActions> m_trackeditUiActions;
     std::shared_ptr<Au3SelectionController> m_selectionController;
     std::shared_ptr<TrackNavigationController> m_trackNavigationController;
     std::shared_ptr<TrackSpectrogramSettingsUpdater> m_trackSpectrogramSettingsUpdater;
+    std::shared_ptr<TracksViewRequestsService> m_tracksViewRequestsService;
 };
 }

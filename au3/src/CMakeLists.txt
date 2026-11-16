@@ -1269,7 +1269,7 @@ set( AUDACITY_LIBRARIES
    lib-tags-interface
    lib-wx-init-interface
    lib-time-track-interface
-   lib-stretching-sequence-interface
+   lib-clip-processing-interface
    lib-import-export-interface
    lib-export-ui-interface
    lib-wave-track-paint-interface

@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iexporter.h
     ${CMAKE_CURRENT_LIST_DIR}/iffmpegoptionsaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/iexportconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/exportcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.h
 
@@ -24,6 +25,10 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.h
@@ -53,6 +58,7 @@ set(MODULE_LINK
         au3-import-export-modules
         au3-mod-ffmpeg
         au3-mixer
+        au3-project-rate
         au3-strings
         au3-tags
         au3-track
@@ -62,3 +68,7 @@ set(MODULE_LINK
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_EXPORT_TESTS)
+    add_subdirectory(tests)
+endif()

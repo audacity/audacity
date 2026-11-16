@@ -8,7 +8,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
-#include "framework/actions/iactionsdispatcher.h"
+#include "framework/rcommand/icommanddispatcher.h"
 
 #include "context/iglobalcontext.h"
 #include "context/iplaybackstate.h"
@@ -23,7 +23,7 @@
 #include "../../irecordconfiguration.h"
 
 struct TransportSequences;
-struct AudioIOStartStreamOptions;
+struct AudioIOStartTransportOptions;
 
 namespace au::record {
 class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Contextable
@@ -33,7 +33,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
@@ -70,7 +70,7 @@ private:
 
     au3::Au3Project& projectRef() const;
 
-    bool canStopAudioStream() const;
+    bool canStopTransport() const;
 
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
                        const double audioStreamSampleRate, double leadInTime = 0.0,

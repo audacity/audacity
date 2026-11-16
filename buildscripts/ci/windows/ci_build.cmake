@@ -11,6 +11,7 @@ set(BUILD_MODE "" CACHE STRING "Build mode")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
 set(BUILD_WIN_PORTABLE "" CACHE STRING "Build portable")
 set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
+set(AUDIOPLUGINS_CRASHREPORT_URL "" CACHE STRING "Crash report url for the audio plugin validation processes")
 
 if (NOT BUILD_NUMBER)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)
@@ -25,13 +26,13 @@ if (NOT BUILD_REVISION)
 endif()
 
 set(APP_BUILD_MODE "dev")
-if (BUILD_MODE STREQUAL "devel_build")
+if (BUILD_MODE STREQUAL "devel")
     set(APP_BUILD_MODE "dev")
-elseif(BUILD_MODE STREQUAL "nightly_build")
+elseif(BUILD_MODE STREQUAL "nightly")
     set(APP_BUILD_MODE "dev")
-elseif(BUILD_MODE STREQUAL "testing_build")
+elseif(BUILD_MODE STREQUAL "testing")
     set(APP_BUILD_MODE "testing")
-elseif(BUILD_MODE STREQUAL "stable_build")
+elseif(BUILD_MODE STREQUAL "stable")
     set(APP_BUILD_MODE "release")
 endif()
 
@@ -43,6 +44,7 @@ set(CONFIG
     -DBUILD_REVISION=${BUILD_REVISION}
     -DBUILD_ENABLE_UNIT_TESTS=OFF
     -DCRASH_REPORT_URL=${CRASH_REPORT_URL}
+    -DAUDIOPLUGINS_CRASHREPORT_URL=${AUDIOPLUGINS_CRASHREPORT_URL}
 )
 
 execute_process(

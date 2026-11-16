@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+#include <QCursor>
 #include <QGuiApplication>
 
 #include "preferencesmodel.h"
@@ -203,6 +204,9 @@ void PreferencesModel::load(const QString& currentPageId)
 
         makeItem("editing", QT_TRANSLATE_NOOP("preferences",
                                               "Audio editing"), IconCode::Code::IBEAM, "Preferences/EditPreferencesPage.qml"),
+
+        makeItem("tracks", QT_TRANSLATE_NOOP("preferences", "Tracks"), IconCode::Code::WAVEFORM,
+                 "Preferences/TracksPreferencesPage.qml"),
 
         makeItem("playback-recording", QT_TRANSLATE_NOOP("preferences",
                                                          "Playback/Recording"), IconCode::Code::MICROPHONE,

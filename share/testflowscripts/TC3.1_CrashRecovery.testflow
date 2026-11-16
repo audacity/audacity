@@ -1,0 +1,11 @@
+# TC3.1: Crash recovery
+#
+# Each script runs in a new app process, all sharing one profile, in this order.
+TC3.1_CrashRecovery/1_OpenThreeProjects.js
+TC3.1_CrashRecovery/2_Selection.js
+TC3.1_CrashRecovery/3_Skip.js
+TC3.1_CrashRecovery/4_Quit.js
+TC3.1_CrashRecovery/5_DiscardPartially.js
+TC3.1_CrashRecovery/6_RecoverPartially.js
+TC3.1_CrashRecovery/7_DiscardAll.js
+TC3.1_CrashRecovery/8_NothingToRecover.js

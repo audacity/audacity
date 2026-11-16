@@ -13,6 +13,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/effectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/effectsmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/effectstypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/effectscommands.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsmenuprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
@@ -43,8 +44,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsactionscontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectscommandsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectscommandsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectscommandsstate.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectscommandsstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsproviderinitializer.cpp
@@ -142,7 +145,7 @@ set(MODULE_LINK
         au3-project-history
         au3-project-rate
         au3-realtime-effects
-        au3-stretching-sequence
+        au3-clip-processing
         au3-strings
         au3-track
         au3-transactions
@@ -151,6 +154,8 @@ set(MODULE_LINK
         au3-module-manager
         au3-files
         uicomponents
+        uicomponents_qml
+        Qt::Quick
 )
 
 set(MODULE_USE_UNITY OFF)

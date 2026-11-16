@@ -8,6 +8,8 @@ qt_add_qml_module(appshell_qml
         aboutmodel.h
         appmenumodel.cpp
         appmenumodel.h
+        autorecoverymodel.cpp
+        autorecoverymodel.h
         DevTools/Settings/settingslistmodel.cpp
         DevTools/Settings/settingslistmodel.h
         DevTools/Table/tabletestsmodel.cpp
@@ -44,6 +46,7 @@ qt_add_qml_module(appshell_qml
         AboutDialogPrivacyTab.qml
         AlphaWelcomePopup.qml
         AppWindow.qml
+        AutoRecoveryDialog.qml
         DevTools/CrashHandler/CrashHandlerDevTools.qml
         DevTools/DevToolsMenu.qml
         DevTools/DevToolsPage.qml
@@ -145,7 +148,7 @@ if (NOT OS_IS_MAC)
     target_link_libraries(appshell_qml PRIVATE Qt6::GuiPrivate)
 endif(NOT OS_IS_MAC)
 
-target_link_libraries(appshell_qml PRIVATE Qt::Widgets)
+target_link_libraries(appshell_qml PRIVATE Qt::Widgets Qt::Quick)
 
 fixup_qml_module_dependencies(appshell_qml)
 

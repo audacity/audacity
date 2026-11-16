@@ -63,13 +63,15 @@ jobs:
           echo "DO_PUSH_TO_S3=$DO_PUSH_TO_S3" | tee -a $GITHUB_OUTPUT
 
       - name: Clone repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
+        with:
+          submodules: true
 
       - name: Install Qt for lrelease
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
         uses: jurplel/install-qt-action@v4
         with:
-          version: 6.10.2
+          version: 6.11.2
           host: "linux"
           target: "desktop"
           arch: "linux_gcc_64"
@@ -82,7 +84,7 @@ jobs:
       - name: Setup environment for pushing to S3
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
         run: |
-          bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.AU_S3_KEY }} --s3_secret ${{ secrets.AU_S3_SECRET }}
+          bash ./muse/buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.AU_S3_KEY }} --s3_secret ${{ secrets.AU_S3_SECRET }}
 
           cmake -P ./buildscripts/ci/common/make_build_number_env.cmake
           BUILD_NUMBER=$(cat ./build.artifacts/env/build_number.env)
@@ -120,6 +122,18 @@ jobs:
         env:
           S3_UPLOAD_URL: s3://audacity-updates/languages/4.0/
         run: bash ./buildscripts/ci/translation/s3_packandsend.sh
+
+      - name: Check that the upload is publicly readable
+        if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        env:
+          S3_UPLOAD_URL: s3://audacity-updates/languages/4.0/
+        run: |
+          bucket_path="${S3_UPLOAD_URL#s3://}"
+          url="https://${bucket_path%%/*}.s3.amazonaws.com/${bucket_path#*/}details.json"
+          if ! curl --fail --silent --show-error --head --location "${url}" > /dev/null; then
+            echo "::error ::${url} is not readable or does not exist"
+            exit 1
+          fi
 
       - name: Upload artifacts on GitHub
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'

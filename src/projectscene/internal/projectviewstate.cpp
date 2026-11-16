@@ -328,6 +328,12 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     d.rulerType.val = defaultRulerType;
     d.viewType.val = defaultViewType;
 
+    // A track created with a spectrogram default view needs frequency selection too
+    if (defaultViewType == trackedit::TrackViewType::Spectrogram
+        || defaultViewType == trackedit::TrackViewType::WaveformAndSpectrogram) {
+        frequencySelectionController()->setShowsSpectrogram(trackId, true);
+    }
+
     d.viewType.ch.onReceive(this, [this, trackId](auto) {
         const auto prj = globalContext()->currentTrackeditProject();
         if (prj) {
@@ -573,6 +579,32 @@ au::trackedit::TrackIdList ProjectViewState::tracksInRange(double y1, double y2)
     }
 
     return trackedit::TrackIdList(tracks.begin() + i, tracks.begin() + j);
+}
+
+bool ProjectViewState::isBelowAllTracks(double y) const
+{
+    const std::optional<int> bottomY = tracksBottomY();
+    return bottomY.has_value() && muse::RealIsEqualOrMore(y, *bottomY);
+}
+
+std::optional<int> ProjectViewState::tracksBottomY() const
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return std::nullopt;
+    }
+
+    const trackedit::TrackIdList tracks = prj->trackIdList();
+    if (tracks.empty()) {
+        return std::nullopt;
+    }
+
+    int bottomY = -tracksVerticalOffset().val;
+    for (const trackedit::TrackId& id : tracks) {
+        bottomY += trackHeight(id).val;
+    }
+
+    return bottomY;
 }
 
 void ProjectViewState::setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio)
@@ -1015,6 +1047,16 @@ bool ProjectViewState::moveInitiated() const
     return m_moveInitiated;
 }
 
+void ProjectViewState::setMovePreviewEndTime(double time)
+{
+    m_movePreviewEndTime = time;
+}
+
+double ProjectViewState::movePreviewEndTime() const
+{
+    return m_movePreviewEndTime;
+}
+
 void ProjectViewState::setLastEditedClip(const trackedit::ClipKey& clipKey)
 {
     if (m_lastEditedClip == clipKey) {
@@ -1069,7 +1111,7 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
     for (const auto& trackId : prj->trackIdList()) {
         // Add clips boundaries
         for (const auto& clip : prj->clipList(trackId)) {
-            if (excludeCurrentSelection && muse::contains(selectedClips, clip.key)) {
+            if ((excludeCurrentSelection || m_moveInitiated) && muse::contains(selectedClips, clip.key)) {
                 continue;
             }
 
@@ -1083,7 +1125,7 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
 
         // Add labels boundaries
         for (const auto& label : prj->labelList(trackId)) {
-            if (excludeCurrentSelection && muse::contains(selectedLabels, label.key)) {
+            if ((excludeCurrentSelection || m_moveInitiated) && muse::contains(selectedLabels, label.key)) {
                 continue;
             }
 

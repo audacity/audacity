@@ -1,6 +1,7 @@
 #include "samplespainterutils.h"
 
 #include "au3-mixer/Envelope.h"
+#include "au3-clip-processing/ClipFades.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveClipUtilities.h"
 #include "au3-wave-track/WaveChannelUtilities.h"
@@ -245,12 +246,11 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     const double t1 = metrics.toTime;
     const auto s1 = sampleCount(ceil(t1 * rate));
 
-    // Assume size_t will not overflow, else we wouldn't be here drawing the
-    // few individual samples
-    const auto slen = std::min(snSamples - s0, s1 - s0 + 1).as_size_t();
-    if (slen <= 0) {
-        SampleData();
+    const auto samplesToRead = std::min(snSamples - s0, s1 - s0 + 1);
+    if (samplesToRead <= 0) {
+        return SampleData();
     }
+    const auto slen = samplesToRead.as_size_t();
 
     Floats buffer{ slen };
     clip.GetSamples(channelIndex, (samplePtr)buffer.get(), floatSample, s0, slen, false);
@@ -259,13 +259,14 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
     auto ypos = std::vector<double>(slen);
     auto clippedX = std::vector<double>();
     const auto invRate = 1.0 / rate;
+    const auto fades = ClipFades::Get(clip).snapshot();
 
     for (size_t s = 0; s < slen; s++) {
         const double time = (s + s0).as_double() / rate;
         const double xx = zoomInfo.TimeToPositionF(time);
         xpos[s] = xx;
 
-        const double value = clip.GetEnvelope().GetValue(time, invRate);
+        const double value = clip.GetEnvelope().GetValue(time, invRate) * fades.gainAt(time);
         const double tt = buffer[s] * value;
 
         if ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)) {
@@ -341,6 +342,10 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
 
     std::map<int, int> channelSampleDistance;
     int top = 0;
+
+    const auto value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate())) * ClipFades::Get(*waveClip).gainAt(
+        adjustedTime);
+
     for (size_t i = 0; i < waveClip->NChannels(); i++) {
         waveMetrics.height = channelHeight[i];
 
@@ -349,7 +354,6 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
             continue;
         }
 
-        const double value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate()));
         const auto tt = oneSample * value;
 
         const auto adjustedYPos = position.y() - top;

@@ -5,7 +5,7 @@
 
 #include "../common/params.h"
 
-#include "effects/builtin/view/builtineffectmodel.h"
+#include "effects/builtin/qml/Audacity/BuiltinEffects/builtineffectmodel.h"
 
 #include "framework/interactive/iinteractive.h"
 

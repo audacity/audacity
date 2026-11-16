@@ -14,7 +14,6 @@ public:
     CloudAudioFileContextMenuModel(QString audioId, QString slug, QObject* parent = nullptr);
 
     Q_INVOKABLE void load() override;
-    void handleMenuItem(const QString& itemId) override;
 
 private:
     QString m_audioId;

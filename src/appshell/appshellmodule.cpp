@@ -28,10 +28,12 @@
 #include "framework/global/modularity/ioc.h"
 
 #include "framework/interactive/iinteractiveuriregister.h"
-#include "framework/ui/iuiactionsregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
-#include "internal/applicationuiactions.h"
 #include "internal/applicationactioncontroller.h"
+#include "internal/appshellcommandsregister.h"
+#include "internal/appshellcommandsstate.h"
 #include "internal/appshellconfiguration.h"
 #include "internal/startupscenario.h"
 #include "internal/sessionsmanager.h"
@@ -78,9 +80,15 @@ void AppShellModule::resolveImports()
         ir->registerPageUri(muse::Uri("audacity://devtools"));
 
         ir->registerQmlUri(muse::Uri("audacity://about/audacity"), "Audacity.AppShell", "AboutDialog");
+        ir->registerQmlUri(muse::Uri("audacity://autorecovery"), "Audacity.AppShell", "AutoRecoveryDialog");
         ir->registerQmlUri(muse::Uri("audacity://firstLaunchSetup"), "Audacity.AppShell", "FirstLaunchSetupDialog");
         ir->registerQmlUri(muse::Uri("audacity://signin/audiocom"), "Audacity.AppShell", "SigninAudiocomDialog");
         ir->registerQmlUri(muse::Uri("audacity://welcomedialog"), "Audacity.AppShell", "WelcomeDialog");
+    }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<AppShellCommandsRegister>());
     }
 }
 
@@ -117,12 +125,19 @@ muse::modularity::IContextSetup* AppShellModule::newContext(const muse::modulari
 void AppShellContext::registerExports()
 {
     m_applicationActionController = std::make_shared<ApplicationActionController>(iocContext());
-    m_applicationUiActions = std::make_shared<ApplicationUiActions>(iocContext(), m_applicationActionController);
     m_sessionsManager = std::make_shared<SessionsManager>(iocContext());
 
     ioc()->registerExport<IApplicationActionController>(mname, m_applicationActionController);
     ioc()->registerExport<IStartupScenario>(mname, new StartupScenario(iocContext()));
     ioc()->registerExport<ISessionsManager>(mname, m_sessionsManager);
+}
+
+void AppShellContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<AppShellCommandsState>(iocContext()));
+    }
 }
 
 void AppShellContext::onPreInit(const muse::IApplication::RunMode& mode)
@@ -141,13 +156,7 @@ void AppShellContext::onInit(const muse::IApplication::RunMode& mode)
     }
 
     m_applicationActionController->init();
-    m_applicationUiActions->init();
     m_sessionsManager->init();
-
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_applicationUiActions);
-    }
 }
 
 void AppShellContext::onAllInited(const muse::IApplication::RunMode& mode)
@@ -157,9 +166,4 @@ void AppShellContext::onAllInited(const muse::IApplication::RunMode& mode)
     }
 
     m_applicationActionController->processPendingEvents();
-}
-
-void AppShellContext::onDeinit()
-{
-    m_sessionsManager->deinit();
 }

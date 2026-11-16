@@ -23,7 +23,6 @@ public:
     ClipContextMenuModel() = default;
 
     Q_INVOKABLE void load() override;
-    Q_INVOKABLE void handleMenuItem(const QString& itemId) override;
 
     ClipKey clipKey() const;
     void setClipKey(const ClipKey& newClipKey);
@@ -33,15 +32,15 @@ signals:
     void clipTitleEditRequested();
 
 private:
-    void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
+    void onCommandStateChanged(const muse::rcommand::Command& command, const muse::rcommand::CommandState& state) override;
     void updateStretchEnabledState(muse::uicomponents::MenuItem& item);
     void updatePitchSpeedModifiedEnabledState(muse::uicomponents::MenuItem& item);
 
+    muse::rcommand::Params clipParams() const;
     muse::uicomponents::MenuItemList makeClipColourItems();
     void updateColorCheckedState();
     void updateColorMenu();
 
     ClipKey m_clipKey;
-    muse::actions::ActionCodeList m_colorChangeActionCodeList;
 };
 }

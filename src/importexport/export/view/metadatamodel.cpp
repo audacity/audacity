@@ -81,14 +81,12 @@ void MetadataModel::load()
 
     beginResetModel();
 
-    project::ProjectMeta toLoad;
     if (isMetadataEmpty(projectMeta) && !defaultTemplate.empty()) {
-        toLoad = parseXml(QString::fromStdString(defaultTemplate));
+        m_meta = parseXml(QString::fromStdString(defaultTemplate));
     } else {
-        toLoad = metadata()->tags();
+        m_meta = std::move(projectMeta);
     }
 
-    m_meta = std::move(toLoad);
     m_additionalKeys = m_meta.additionalTags.keys();
 
     endResetModel();

@@ -4,13 +4,13 @@
 #pragma once
 
 #include <QColor>
+#include <QObject>
 #include <QString>
 
 #include "ui/view/iconcodes.h"
-#include "uicomponents/qml/Muse/UiComponents/selectableitemlistmodel.h"
 
 namespace au::projectscene {
-class PlaybackToolBarCustomiseItem : public muse::uicomponents::SelectableItemListModel::Item
+class PlaybackToolBarCustomiseItem : public QObject
 {
     Q_OBJECT
 

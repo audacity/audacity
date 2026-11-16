@@ -11,16 +11,17 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   twolame # ExportMP2.h includes twolame.h
-   au3-files
    au3-import-export
+PRIVATE
+   au3-files
    au3-mixer
    au3-tags
    au3-track
-PRIVATE
+   twolame
+   libid3tag::libid3tag
    wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "PRIVATE;-DUSE_LIBID3TAG" ""
 )

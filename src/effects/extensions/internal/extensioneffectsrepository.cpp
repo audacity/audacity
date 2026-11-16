@@ -61,11 +61,30 @@ bool sameEntry(const ExtensionEffectEntry& a, const ExtensionEffectEntry& b)
 }
 } // namespace
 
-void ExtensionEffectsRepository::initialize(const muse::extensions::ManifestList& manifests)
+void ExtensionEffectsRepository::init()
 {
-    if (!m_initialized) {
-        reload(manifests);
+    extensionsRegister()->manifestListChanged().onNotify(this, [this]() {
+        reload();
+    });
+    extensionsRegister()->enabledChanged().onReceive(this, [this](const muse::extensions::ExtensionUri&) {
+        reload();
+    });
+
+    reload();
+}
+
+bool ExtensionEffectsRepository::reload()
+{
+    const bool changed = reload(extensionsRegister()->manifestList(muse::extensions::Filter::Enabled));
+    if (changed) {
+        m_changed.notify();
     }
+    return changed;
+}
+
+muse::async::Notification ExtensionEffectsRepository::changed() const
+{
+    return m_changed;
 }
 
 bool ExtensionEffectsRepository::reload(const muse::extensions::ManifestList& manifests)

@@ -14,10 +14,13 @@ Rectangle {
     id: root
 
     property var navPanels: null
+    property var rulerNavPanels: null
 
     //! NOTE: the control of the empty project, it has no item of its own,
     //! so the tracks area draws the navigation focus border for it
     property NavigationControl navDefaultControl: null
+
+    property NavigationSection timelineNavigationSection: null
 
     readonly property alias tracksAreaItem: content
 
@@ -57,12 +60,19 @@ Rectangle {
 
     clip: true
 
-    enum State {
-        Idle,
-        DraggingItem
-    }
+    TrackItemsMoveController {
+        id: itemsMoveController
+        context: timeline.context
 
-    property int interactionState: TracksItemsView.State.Idle
+        onGuidelineChanged: function (time) {
+            root.updateGuidelineAtTime(time)
+        }
+
+        onKeyboardTrackChanged: function (trackId) {
+            const trackY = tracksViewState.trackVerticalPosition(trackId) + tracksViewState.tracksVerticalOffset
+            tracksViewState.ensureVerticallyVisible(tracksViewState.tracksVerticalOffset, tracksItemsView.height, trackY, tracksViewState.trackHeight(trackId))
+        }
+    }
 
     MouseHelper {
         id: mouseHelper
@@ -73,13 +83,19 @@ Rectangle {
 
         property bool playRegionActivated: false
         readonly property int headerHeight: 20
-        readonly property int listHeaderHeight: 2
 
         function cancelItemDragEdit() {
             if (mainMouseArea.pressed) {
                 // This will lead to a cancel signal on `mainMouseArea` that will call back into this function,
                 // but this time in released state.
                 mouseHelper.callUngrabMouseOnItem(mainMouseArea)
+                return
+            }
+            if (itemsMoveController.cancel()) {
+                root.hoveredItemKey = null
+                root.itemHeaderHovered = false
+                tracksItemsView.mouseMoveActive = false
+                timeline.context.updateSelectedItemTime()
                 return
             }
             if (root.hoveredItemKey) {
@@ -163,21 +179,12 @@ Rectangle {
         }
     }
 
-    //! NOTE Sync with TracksPanel
     TracksViewStateModel {
         id: tracksViewState
-        onTracksVerticalOffsetChanged: {
-            tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight
-        }
     }
 
     PlayCursorController {
         id: playCursorController
-        context: timeline.context
-    }
-
-    PlayPositionActionController {
-        id: playPositionActionController
         context: timeline.context
     }
 
@@ -225,18 +232,18 @@ Rectangle {
         timeline.init()
         playRegionController.init()
         playCursorController.init()
-        playPositionActionController.init()
         tracksViewState.init()
-        project.init();
+        itemsMoveController.init()
+        project.init()
 
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
         // Let's make sure that everything is loaded and initialized before this,
         // to avoid double loading at the beginning, when some parameters are initialized.
-        Qt.callLater(tracksModel.load);
+        Qt.callLater(tracksModel.load)
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight)
+        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - tracksItemsView.listHeaderHeight)
     }
 
     Rectangle {
@@ -344,6 +351,8 @@ Rectangle {
 
             height: 40
 
+            navigationSection: root.timelineNavigationSection
+
             Timer {
                 id: playCursorReleaseTimer
                 interval: 100
@@ -356,9 +365,23 @@ Rectangle {
 
             property double displayedPlayCursorX: playCursorController.positionX
 
+            readonly property real devicePixelRatio: Screen.devicePixelRatio > 0 ? Screen.devicePixelRatio : 1
+            readonly property real playCursorPixelX: snapToDevicePixel(displayedPlayCursorX)
+            readonly property real devicePixel: Math.max(1, Math.round(devicePixelRatio)) / devicePixelRatio
+
+            readonly property real windowOriginX: {
+                root.x
+                root.width
+                return timeline.mapToItem(null, 0, 0).x
+            }
+
+            function snapToDevicePixel(x) {
+                return Math.round((x + windowOriginX) * devicePixelRatio) / devicePixelRatio - windowOriginX
+            }
+
             function updateCursorPosition(x, y) {
                 const snappedTime = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
-                lineCursor.x = timeline.context.timeToPosition(snappedTime)
+                lineCursor.x = timeline.snapToDevicePixel(timeline.context.timeToPosition(snappedTime))
                 timeline.context.updateMousePositionTime(x)
                 tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
             }
@@ -380,7 +403,7 @@ Rectangle {
 
                 y: parent.top
                 height: timeline.height
-                width: 1
+                width: timeline.devicePixel
 
                 color: ui.theme.fontPrimaryColor
             }
@@ -407,7 +430,7 @@ Rectangle {
                 property bool dragActive: false
                 property double dragPositionX: timeline.displayedPlayCursorX
 
-                x: timeline.displayedPlayCursorX - (width / 2)
+                x: timeline.playCursorPixelX - lineX
 
                 MouseArea {
                     anchors.fill: parent
@@ -416,12 +439,12 @@ Rectangle {
 
                     onPressed: function (e) {
                         head.dragActive = true
-                        head.dragPositionX = mapToItem(timeline, e.x, e.y).x
+                        head.dragPositionX = Math.max(mapToItem(timeline, e.x, e.y).x, timeline.context.timeToPosition(0.0))
                         timeline.displayedPlayCursorX = head.dragPositionX
                     }
 
                     onPositionChanged: function (e) {
-                        var ix = mapToItem(timeline, e.x, e.y).x
+                        var ix = Math.max(mapToItem(timeline, e.x, e.y).x, timeline.context.timeToPosition(0.0))
                         if (pressed) {
                             head.dragPositionX = ix
                             timeline.displayedPlayCursorX = ix
@@ -431,7 +454,7 @@ Rectangle {
                     }
 
                     onReleased: function (e) {
-                        var ix = mapToItem(timeline, e.x, e.y).x
+                        var ix = Math.max(mapToItem(timeline, e.x, e.y).x, timeline.context.timeToPosition(0.0))
                         let ixTime = timeline.context.positionToTime(ix)
                         playCursorController.seekToTime(ixTime)
                         if (!timelineMouseArea.playRegionActivated) {
@@ -553,6 +576,9 @@ Rectangle {
 
             property var lastItemClickKey: null
             property bool itemWasMoved: false
+            property bool marqueeReleased: false
+            property int gestureButton: Qt.NoButton
+            property int ignoredButtons: Qt.NoButton
             property point pressStartPosition: Qt.point(0, 0)
             readonly property int moveThreshold: 5
 
@@ -561,14 +587,25 @@ Rectangle {
             }
 
             onPressed: function (e) {
+                if (gestureButton !== Qt.NoButton) {
+                    ignoredButtons |= e.button
+                    return
+                }
+                gestureButton = e.button
+                ignoredButtons = Qt.NoButton
+
+                itemWasMoved = false
+
+                if (itemsMoveController.keyboardActive) {
+                    itemsMoveController.finish()
+                }
                 if (root.altPressed) {
                     return
                 }
 
                 if (e.button === Qt.LeftButton) {
                     if (root.itemHeaderHovered && !(splitToolController.active && splitToolController.hoveredTrackSplittable)) {
-                        tracksItemsView.itemStartEditRequested(hoveredItemKey)
-                        root.interactionState = TracksItemsView.State.DraggingItem
+                        itemsMoveController.start(hoveredItemKey)
                         lastItemClickKey = root.hoveredItemKey
                     } else {
                         content.forceActiveFocus()
@@ -593,23 +630,21 @@ Rectangle {
                         lastItemClickKey = null
                     }
 
-                    itemWasMoved = false
                     pressStartPosition = Qt.point(e.x, e.y)
                 } else if (e.button === Qt.RightButton) {
-                    if (tracksHovered)
-                    //! TODO AU4: handle context menu over empty track area
-                    {} else {
-                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
-                    }
+                    selectionViewController.startMarquee(timeline.context.positionToTime(e.x), e.y)
                 }
             }
 
             onPositionChanged: function (e) {
                 timeline.updateCursorPosition(e.x, e.y)
+                if (itemsMoveController.keyboardActive) {
+                    return
+                }
                 splitToolController.mouseMove(e.x)
                 playCursorController.updateSeekGesture(e.x, e.y)
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem && !itemWasMoved) {
+                if (itemsMoveController.active && !itemWasMoved) {
                     var dx = Math.abs(e.x - pressStartPosition.x)
                     var dy = Math.abs(e.y - pressStartPosition.y)
                     if (dx > moveThreshold || dy > moveThreshold) {
@@ -617,40 +652,59 @@ Rectangle {
                     }
                 }
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem && itemWasMoved) {
-                    tracksItemsView.itemMoveRequested(hoveredItemKey, false)
+                if (itemsMoveController.active && itemWasMoved) {
+                    tracksItemsView.mouseMoveActive = true
+                    itemsMoveController.update()
                     tracksItemsView.startAutoScroll()
                 } else {
                     selectionViewController.onPositionChanged(timeline.context.positionToTime(e.x), e.y)
-                    let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
                     snapGuidelineToPosition(e.x)
                 }
             }
 
             onReleased: function (e) {
-                if (e.button !== Qt.LeftButton) {
+                if (e.button !== gestureButton) {
+                    return
+                }
+                gestureButton = Qt.NoButton
+
+                if (e.button === Qt.RightButton) {
+                    const marqueeEnded = selectionViewController.marqueeActive
+                    selectionViewController.finishMarquee()
+                    if (marqueeEnded) {
+                        return
+                    }
+
+                    if (root.itemHovered && root.hoveredItemKey) {
+                        tracksItemsView.itemContextMenuRequested(root.hoveredItemKey, e.x, e.y, e.modifiers)
+                    } else if (!tracksHovered) {
+                        canvasContextMenuLoader.show(Qt.point(e.x + timelineIndent.width, e.y + timelineHeader.height), canvasContextMenuModel.items)
+                    }
                     return
                 }
 
-                if (!itemWasMoved) {
-                    tracksItemsView.itemReleaseRequested(hoveredItemKey)
-                    itemWasMoved = false
+                if (e.button !== Qt.LeftButton || itemsMoveController.keyboardActive) {
+                    return
                 }
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem) {
-                    root.interactionState = TracksItemsView.State.Idle
-                    if (itemWasMoved) {
-                        tracksItemsView.itemMoveRequested(hoveredItemKey, true)
-                        tracksItemsView.stopAutoScroll()
-                    }
-                    tracksItemsView.itemEndEditRequested(hoveredItemKey)
+                marqueeReleased = false
+
+                if (!itemWasMoved && lastItemClickKey) {
+                    tracksItemsView.itemReleaseRequested(lastItemClickKey)
+                }
+
+                if (itemsMoveController.active) {
+                    root.hoveredItemKey = itemsMoveController.finish()
+                    tracksItemsView.mouseMoveActive = false
+                    tracksItemsView.stopAutoScroll()
                 } else {
                     splitToolController.mouseUp(e.x)
 
                     if (selectionViewController.selectionInProgress) {
+                        marqueeReleased = selectionViewController.marqueeActive
                         let releaseTime = timeline.context.positionToTime(e.x)
-                        selectionViewController.onReleased(releaseTime, e.y);
+                        selectionViewController.onReleased(releaseTime, e.y)
 
                         // Deferred from the press. Only a plain click repositions the playhead
                         // and the next playback start; a drag selection leaves both alone —
@@ -668,23 +722,30 @@ Rectangle {
             }
 
             onCanceled: e => {
-                root.interactionState = TracksItemsView.State.Idle
+                gestureButton = Qt.NoButton
+                ignoredButtons = Qt.NoButton
                 playCursorController.cancelSeekGesture()
+                selectionViewController.cancelMarquee()
                 prv.cancelItemDragEdit()
             }
 
             onClicked: e => {
+                if (ignoredButtons & e.button) {
+                    ignoredButtons &= ~e.button
+                    return
+                }
+
                 if (e.button !== Qt.LeftButton) {
                     return
                 }
 
-                if (!root.itemHovered && !itemWasMoved) {
+                if (!root.itemHovered && !itemWasMoved && !marqueeReleased) {
                     selectionViewController.resetSelectedItems()
                 }
             }
 
             onDoubleClicked: e => {
-                if (e.button !== Qt.LeftButton) {
+                if ((ignoredButtons & e.button) || e.button !== Qt.LeftButton) {
                     return
                 }
 
@@ -692,13 +753,12 @@ Rectangle {
                     return
                 }
 
-                if (root.itemHovered) {
-                    selectionViewController.selectItemData(root.hoveredItemKey)
-                    playCursorController.animatedSeekToTime(timeline.context.selectedItemStartTime)
+                if (root.itemHovered && root.hoveredItemKey && selectionViewController.selectItemData(root.hoveredItemKey, e.y)) {
+                    playCursorController.seekToTimeKeepingView(timeline.context.selectedItemStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectedItemStartTime, timeline.context.selectedItemEndTime)
                 } else {
                     selectionViewController.selectTrackAudioData(e.y)
-                    playCursorController.animatedSeekToTime(timeline.context.selectionStartTime)
+                    playCursorController.seekToTimeKeepingView(timeline.context.selectionStartTime)
                     playCursorController.setPlaybackRegionByTime(timeline.context.selectionStartTime, timeline.context.selectionEndTime)
                 }
                 itemsSelection.visible = false
@@ -709,7 +769,7 @@ Rectangle {
         HoverHandler {
             id: emptyAreaGuidelineHandler
 
-            enabled: root.interactionState !== TracksItemsView.State.DraggingItem
+            enabled: !itemsMoveController.active
 
             function processHover() {
                 let pos = point.position
@@ -765,11 +825,13 @@ Rectangle {
             scrollbarOpacityNormal: 0.5
             scrollbarOpacityPressed: 0.8
 
-            StyledListView {
+            TracksListView {
                 id: tracksItemsView
 
                 anchors.fill: parent
                 clip: false // do not clip so clip handles are visible
+
+                tracksViewState: tracksViewState
 
                 property bool mouseMoveActive: false
 
@@ -782,10 +844,6 @@ Rectangle {
                 }
 
                 ScrollBar.horizontal: null
-                ScrollBar.vertical: null
-
-                property real lockedVerticalScrollPosition
-                property bool verticalScrollLocked: tracksViewState.tracksVerticalScrollLocked
 
                 function checkIfAnyTrack(f) {
                     for (let i = 0; i < tracksItemsView.count; i++) {
@@ -817,15 +875,8 @@ Rectangle {
                     }
                 }
 
-                function insureVerticallyVisible(item) {
-                    var itemViewY = item.mapToItem(tracksItemsView.contentItem, Qt.point(0, 0)).y
-                    tracksViewState.insureVerticallyVisible(tracksItemsView.contentY + prv.listHeaderHeight, tracksItemsView.height, itemViewY + prv.listHeaderHeight, item.height)
-                }
-
-                signal itemMoveRequested(var itemKey, bool completed)
-                signal itemStartEditRequested(var itemKey)
-                signal itemEndEditRequested(var itemKey)
                 signal itemReleaseRequested(var itemKey)
+                signal itemContextMenuRequested(var itemKey, real x, real y, int modifiers)
                 signal cancelItemDragEditRequested(var itemKey)
                 signal startAutoScroll
                 signal stopAutoScroll
@@ -833,26 +884,12 @@ Rectangle {
                 signal previewImportClipRequested(var trackIds, real startPos, var durations, var titles)
                 signal clearPreviewImportClip(var excludeTrackIds)
 
-                header: Rectangle {
-                    height: prv.listHeaderHeight
-                    width: parent.width
-                    color: "transparent"
-                }
-
-                footer: Item {
-                    height: tracksViewState.tracksVerticalScrollPadding
-                }
-
-                onVerticalScrollLockedChanged: {
-                    lockedVerticalScrollPosition = contentY
-                }
-
                 onContentYChanged: {
-                    if (verticalScrollLocked) {
-                        contentY = lockedVerticalScrollPosition
-                    } else {
-                        tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY + prv.listHeaderHeight)
+                    if (!verticalScrollLocked) {
                         timeline.context.startVerticalScrollPosition = tracksItemsView.contentY
+                        if (tracksItemsView.mouseMoveActive) {
+                            itemsMoveController.update()
+                        }
                     }
                 }
 
@@ -911,6 +948,7 @@ Rectangle {
 
                             context: timeline.context
 
+                            moveController: itemsMoveController
                             container: tracksItemsView
                             canvas: content
 
@@ -995,13 +1033,6 @@ Rectangle {
                                 selectionViewController.resetDataSelection()
                             }
 
-                            onUpdateMouseMoveActive: function (completed) {
-                                if (tracksItemsView.mouseMoveActive !== completed) {
-                                    return
-                                }
-                                tracksItemsView.mouseMoveActive = !completed
-                            }
-
                             onRequestSelectionContextMenu: function (x, y) {
                                 let mapped = trackClipsContainer.mapToItem(tracksItemsView, x, y)
                                 selectionContextMenuLoader.show(Qt.point(mapped.x + canvasIndent.width, mapped.y + timelineHeader.height), selectionContextMenuModel.items)
@@ -1011,8 +1042,8 @@ Rectangle {
                                 selectionViewController.onSelectionHorizontalResize(timeline.context.positionToTime(x1), timeline.context.positionToTime(x2), completed)
                             }
 
-                            onInsureVerticallyVisible: function () {
-                                tracksItemsView.insureVerticallyVisible(this)
+                            onEnsureVerticallyVisible: function () {
+                                tracksItemsView.ensureVerticallyVisible(this)
                             }
 
                             onInteractionStarted: {
@@ -1112,6 +1143,7 @@ Rectangle {
                             width: trackItemLoader.width
 
                             context: timeline.context
+                            moveController: itemsMoveController
                             container: tracksItemsView
                             canvas: content
                             canvasIndentWidth: content.anchors.leftMargin
@@ -1195,13 +1227,6 @@ Rectangle {
                                 selectionViewController.resetDataSelection()
                             }
 
-                            onUpdateMouseMoveActive: function (completed) {
-                                if (tracksItemsView.mouseMoveActive !== completed) {
-                                    return
-                                }
-                                tracksItemsView.mouseMoveActive = !completed
-                            }
-
                             onUpdateItemGuideline: function (time) {
                                 root.updateGuidelineAtTime(time)
                             }
@@ -1210,8 +1235,8 @@ Rectangle {
                                 root.snapGuidelineToPosition(x)
                             }
 
-                            onInsureVerticallyVisible: function () {
-                                tracksItemsView.insureVerticallyVisible(this)
+                            onEnsureVerticallyVisible: function () {
+                                tracksItemsView.ensureVerticallyVisible(this)
                             }
                         }
                     }
@@ -1244,11 +1269,26 @@ Rectangle {
             width: timeline.context.selectionEndPosition - x
         }
 
+        Rectangle {
+            id: marqueeSelection
+
+            visible: selectionViewController.marqueeActive
+
+            x: selectionViewController.marqueeRect.x
+            y: selectionViewController.marqueeRect.y
+            width: selectionViewController.marqueeRect.width
+            height: selectionViewController.marqueeRect.height
+
+            color: ui.colorWithAlphaF(ui.theme.extra["marquee_selection_color"], 0.12)
+            border.color: ui.theme.extra["marquee_selection_color"]
+            border.width: 1
+        }
+
         PlaybackSeekLine {
             anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
-            x: timeline.context.lastPlaybackSeekPosition
+            x: timeline.snapToDevicePixel(timeline.context.lastPlaybackSeekPosition)
             // The seek line marks "where playback will resume" — meaningless
             // while recording (the playhead is being driven by record position),
             // so hide it to avoid showing a stale marker at the pre-record cursor.
@@ -1261,7 +1301,7 @@ Rectangle {
             anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
-            x: timeline.displayedPlayCursorX
+            x: timeline.playCursorPixelX
         }
 
         Rectangle {
@@ -1270,8 +1310,8 @@ Rectangle {
             anchors.top: content.top
             anchors.bottom: content.bottom
 
-            width: 1
-            x: playRegionController.guidelineVisible ? playRegionController.guidelinePosition : (root.guidelineVisible ? root.guidelinePos : -1)
+            width: timeline.devicePixel
+            x: timeline.snapToDevicePixel(playRegionController.guidelineVisible ? playRegionController.guidelinePosition : (root.guidelineVisible ? root.guidelinePos : -1))
 
             color: tracksViewState.snapEnabled ? ui.theme.extra["guideline_snap_enabled_color"] : ui.theme.extra["guideline_snap_disabled_color"]
 
@@ -1281,10 +1321,10 @@ Rectangle {
         Rectangle {
             id: splitGuideline
 
-            x: splitToolController.guidelinePosition
+            x: timeline.snapToDevicePixel(splitToolController.guidelinePosition)
             y: splitToolController.singleTrack ? hoveredTrackVerticalPosition : 0
 
-            width: 1
+            width: timeline.devicePixel
             height: splitToolController.singleTrack ? hoveredTrackHeight : content.height
 
             color: ui.theme.extra["guideline_split_color"]
@@ -1297,6 +1337,7 @@ Rectangle {
 
             model: tracksModel
             context: timeline.context
+            navPanels: root.rulerNavPanels
 
             height: parent.height
             width: verticalRulerPanelHeader.width
@@ -1318,6 +1359,7 @@ Rectangle {
         context: timeline.context
         time: playRegionModel.start
         contentX: content.x
+        windowOriginX: timeline.windowOriginX
         visible: playRegionModel.active
     }
 
@@ -1329,6 +1371,7 @@ Rectangle {
         context: timeline.context
         time: playRegionModel.end
         contentX: content.x
+        windowOriginX: timeline.windowOriginX
         visible: playRegionModel.active
     }
 

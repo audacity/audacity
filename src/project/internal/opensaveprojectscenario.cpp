@@ -184,12 +184,6 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
 
     std::vector<std::string> filter {
         muse::trc("project", "Audacity 4 files") + " (*.aup4)"
-
-#ifdef Q_OS_MAC
-        + " (*)"
-#else
-        + " (*.)"
-#endif
     };
 
     muse::io::path_t selectedPath = interactive()->selectSavingFileSync(dialogTitle, defaultPath, filter);
@@ -211,7 +205,34 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
     }
     correctedPath += "aup4";
 
+    const bool suffixCorrected = correctedPath != selectedPath.toStdString();
     selectedPath = correctedPath;
+
+    // Another spelling of this project's own file is a plain save
+    if (isSameProjectFile(project->path(), selectedPath)) {
+        selectedPath = project->path();
+    }
+
+    if (selectedPath != project->path() && multiwindowsProvider()->isProjectAlreadyOpened(selectedPath)) {
+        interactive()->errorSync(muse::trc("project-file-io", "Error Saving Project"),
+                                 muse::trc("project/save",
+                                           "The project was not saved because the selected project is open in another window.\n"
+                                           "Please try again and select an original name."));
+        return askLocalPath(project, saveMode);
+    }
+
+    // The file dialog asked about the name before the suffix was corrected
+    if (suffixCorrected && selectedPath != project->path() && fileSystem()->exists(selectedPath)) {
+        const int overwriteBtn = int(IInteractive::Button::CustomButton) + 1;
+        const IInteractive::ButtonData overwriteBtnData(overwriteBtn, muse::trc("export", "Overwrite"));
+        IInteractive::Result result = interactive()->questionSync(io::filename(selectedPath).toStdString(),
+                                                                  muse::trc("export", "Do you want to overwrite?"),
+                                                                  { overwriteBtnData,
+                                                                    interactive()->buttonData(IInteractive::Button::Cancel) });
+        if (result.button() != overwriteBtn) {
+            return askLocalPath(project, saveMode);
+        }
+    }
 
     configuration()->setLastSavedProjectsPath(io::dirpath(selectedPath));
 
@@ -258,60 +279,6 @@ RetVal<CloudProjectInfo> OpenSaveProjectScenario::askCloudLocation(IAudacityProj
 RetVal<CloudProjectInfo> OpenSaveProjectScenario::askPublishLocation(IAudacityProjectPtr project) const
 {
     return doAskCloudLocation(project, SaveMode::Save, true);
-}
-
-RetVal<CloudAudioInfo> OpenSaveProjectScenario::askShareAudioLocation(IAudacityProjectPtr project) const
-{
-    bool isCloudAvailable = audioComService()->authorization()->checkCloudIsAvailable();
-    if (!isCloudAvailable) {
-        return warnCloudNotAvailableForSharingAudio();
-    }
-
-    std::string dialogText = muse::trc("project/save", "Log in or create a new account on Audio.com to share your music.");
-    Ret ret = audioComService()->authorization()->ensureAuthorization(false, dialogText).ret;
-    if (!ret) {
-        return ret;
-    }
-
-    QString defaultName = project->displayName();
-    //! TODO AU4
-    // QUrl uploadUrl = project->cloudAudioInfo().url;
-    QUrl uploadUrl = QUrl();
-    cloud::Visibility defaultVisibility = cloud::Visibility::Public;
-
-    UriQuery query("audacity://project/savetocloud");
-    query.addParam("isPublishShare", Val(true));
-    query.addParam("name", Val(defaultName));
-    query.addParam("visibility", Val(defaultVisibility));
-    query.addParam("cloudCode", Val(cloud::AUDIO_COM_CLOUD_CODE));
-
-    //! TODO AU4
-    // if (!uploadUrl.isEmpty()) {
-    //     query.addParam("existingScoreOrAudioUrl", Val(uploadUrl.toString()));
-    // }
-
-    RetVal<Val> rv = interactive()->openSync(query);
-    if (!rv.ret) {
-        return rv.ret;
-    }
-
-    QVariantMap vals = rv.val.toQVariant().toMap();
-    using Response = cloud::SaveToCloudResponse::SaveToCloudResponse;
-    auto response = static_cast<Response>(vals["response"].toInt());
-    switch (response) {
-    case Response::Cancel:
-    case Response::SaveLocallyInstead:
-        return make_ret(Ret::Code::Cancel);
-    case Response::Ok:
-        break;
-    }
-
-    CloudAudioInfo result;
-    result.name = vals["name"].toString();
-    result.visibility = static_cast<cloud::Visibility>(vals["visibility"].toInt());
-    result.replaceExisting = vals["replaceExisting"].toBool() && !uploadUrl.isEmpty();
-
-    return RetVal<CloudAudioInfo>::make_ok(result);
 }
 
 //! TODO AU4

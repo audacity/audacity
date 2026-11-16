@@ -9,13 +9,11 @@
 #include "projectscene/view/trackruler/dblinearmonoruler.h"
 #include "projectscene/view/trackruler/dblinearstereoruler.h"
 
+#include "projectscene/projectscenecommands.h"
+
 #include "trackrulermodel.h"
 
 using namespace au::projectscene;
-
-namespace {
-const muse::actions::ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
-}
 
 TrackRulerModel::TrackRulerModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -64,6 +62,14 @@ void TrackRulerModel::init()
         emit smallStepsChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    trackNavigationController()->openRulerContextMenuRequested().onReceive(this, [this](const trackedit::TrackId& trackId) {
+        if (trackId == m_trackId) {
+            emit contextMenuOpenRequested();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    // Bindings may have read the ruler type before the track id was set
+    emit rulerTypeChanged();
     emit fullStepsChanged();
     emit smallStepsChanged();
 }
@@ -355,9 +361,9 @@ void TrackRulerModel::resetZoom()
 
 void TrackRulerModel::toggleHalfWave()
 {
-    muse::actions::ActionQuery query(TOGGLE_TRACK_HALF_WAVE);
-    query.addParam("trackId", muse::Val { m_trackId });
-    dispatcher()->dispatch(query);
+    commandDispatcher()->dispatch(PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND, {
+        { PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_TRACK_ID_PARAM, muse::Val(m_trackId) },
+    });
 }
 
 bool TrackRulerModel::isDefaultZoom() const

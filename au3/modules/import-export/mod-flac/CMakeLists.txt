@@ -13,19 +13,20 @@ set( SOURCES
 
 set( LIBRARIES
 PUBLIC
-   FLAC::FLAC
-   FLAC::FLAC++
    au3-import-export
+PRIVATE
+   au3-math
    au3-mixer
    au3-tags
    au3-track
    au3-wave-track
-PRIVATE
-   au3-math
+   FLAC::FLAC
+   FLAC::FLAC++
    rapidjson::rapidjson
+   libid3tag::libid3tag
    wxBase
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "PRIVATE;-DUSE_LIBID3TAG" ""
 )

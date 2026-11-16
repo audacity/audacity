@@ -8,10 +8,15 @@ set( SOURCES
    FileFormats.cpp
    FileFormats.h
    AcidizerTags.h
+   GetAcidizerTags.cpp
+   GetAcidizerTags.h
 )
 set( LIBRARIES
 PUBLIC
-   SndFile::sndfile # FileFormats.h includes <sndfile.h>
+   # Intentionally PUBLIC: this library is the libsndfile facade. FileFormats.h
+   # and GetAcidizerTags.h expose SNDFILE, which cannot be forward-declared
+   # (its typedef differs between libsndfile versions).
+   SndFile::sndfile
    au3-math
    au3-strings
 PRIVATE
