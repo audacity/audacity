@@ -16,12 +16,9 @@ var testCase = {
         u.step("Skip kept the three projects", function () {
             r.expectProjectCount(3);
         }),
-        u.step("Press `Quit Audacity`", function () {
-            r.click("Quit Audacity");
-        }),
-        // Quitting ends the test case as passed, before this step
-        u.step("Audacity has quit", function () {
-            u.fail("Audacity did not quit");
+        u.step("Press `Quit Audacity`, Audacity quits", function () {
+            api.testflow.expectQuit()
+            r.click("Quit Audacity")
         }),
     ],
 };
