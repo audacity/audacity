@@ -162,6 +162,7 @@ void VideoService::restoreFromProject()
     }
 
     m_offset = muse::secs_t(savedOffset);
+    m_offsetChanged.notify();
 
     // A path that still resolves after the media was replaced or re-encoded
     // is worse than one that does not, because nothing else would notice.
