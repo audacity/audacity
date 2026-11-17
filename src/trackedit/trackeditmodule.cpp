@@ -29,7 +29,7 @@
 #include "framework/global/api/iapiregister.h"
 #include "framework/rcommand/icommandsregister.h"
 #include "framework/rcommand/icommandsstate.h"
-#include "macromanager/imacrosteptypesregister.h"
+#include "macromanager/imacrostephandlersregister.h"
 
 #include "api/projectapi.h"
 
@@ -40,7 +40,7 @@
 #include "internal/trackeditconfiguration.h"
 #include "internal/trackeditoperationcontroller.h"
 #include "internal/clipboarddata.h"
-#include "internal/selectsteptype.h"
+#include "internal/selectstephandler.h"
 #include "internal/tracknavigationcontroller.h"
 #include "internal/tracksviewrequestsservice.h"
 #include "internal/trackspectrogramsettingsupdater.h"
@@ -172,9 +172,9 @@ void TrackeditContext::resolveImports()
         cs->reg(std::make_shared<TrackeditCommandsState>(iocContext()));
     }
 
-    auto sr = ioc()->resolve<macromanager::IMacroStepTypesRegister>(mname);
+    auto sr = ioc()->resolve<macromanager::IMacroStepHandlersRegister>(mname);
     if (sr) {
-        sr->reg(std::make_shared<SelectEnhancedStepType>(iocContext()));
+        sr->reg(std::make_shared<SelectEnhancedStepHandler>(iocContext()));
     }
 }
 

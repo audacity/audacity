@@ -28,7 +28,7 @@ private:
     std::string m_value;
 };
 
-struct MacroStep {
+struct CommandStep {
     muse::rcommand::Command command;
     muse::rcommand::Params params;
 };
@@ -38,11 +38,11 @@ struct MacroReference {
 };
 
 struct CustomStep {
-    std::string type;
+    std::string handlerId;
     muse::Val data;
 };
 
-using MacroItem = std::variant<MacroStep, MacroReference, CustomStep>;
+using MacroStep = std::variant<CommandStep, MacroReference, CustomStep>;
 
 struct MacroMetadata {
     muse::DateTime created;
@@ -52,7 +52,7 @@ struct MacroMetadata {
 
 struct Macro {
     std::string name;
-    std::vector<MacroItem> steps;
+    std::vector<MacroStep> steps;
     std::optional<MacroMetadata> metadata = std::nullopt;
 };
 

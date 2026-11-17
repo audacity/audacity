@@ -7,20 +7,20 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "context/iglobalcontext.h"
-#include "macromanager/imacrosteptype.h"
+#include "macromanager/imacrostephandler.h"
 
 namespace au::trackedit {
-inline static const std::string SELECT_ENHANCED_STEP_TYPE("trackedit/select/enhanced");
+inline static const std::string SELECT_ENHANCED_STEP_HANDLER_ID("trackedit/select/enhanced");
 inline static const muse::Uri SELECT_STEP_DIALOG_URI("audacity://trackedit/select/step");
 inline static const muse::TranslatableString SELECT_ENHANCED_STEP_TITLE("trackedit", "Select (enhanced)");
 
-class SelectEnhancedStepType : public macromanager::IMacroStepType, public muse::Contextable, public muse::async::Asyncable
+class SelectEnhancedStepHandler : public macromanager::IMacroStepHandler, public muse::Contextable, public muse::async::Asyncable
 {
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:
-    explicit SelectEnhancedStepType(const muse::modularity::ContextPtr& ctx)
+    explicit SelectEnhancedStepHandler(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
     std::string id() const override;

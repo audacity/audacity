@@ -92,12 +92,12 @@ protected:
         ioc->unregister<IGlobalConfiguration>(MODULE);
     }
 
-    static MacroItem step(const Command& command)
+    static MacroStep step(const Command& command)
     {
-        return MacroStep { command, {} };
+        return CommandStep { command, {} };
     }
 
-    static MacroItem reference(const std::string& name)
+    static MacroStep reference(const std::string& name)
     {
         return MacroReference { name };
     }

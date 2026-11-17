@@ -6,13 +6,13 @@
 
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/rcommand/icommandsregister.h"
-#include "macromanager/imacrosteptypesregister.h"
+#include "macromanager/imacrostephandlersregister.h"
 
 #include "internal/au3/au3exporter.h"
 #include "internal/au3/au3ffmpegoptionsaccessor.h"
 #include "internal/exportcommandscontroller.h"
 #include "internal/exportcommandsregister.h"
-#include "internal/exportsteptypes.h"
+#include "internal/exportstephandlers.h"
 
 #include "view/exportpreferencesmodel.h"
 #include "view/dynamicexportoptionsmodel.h"
@@ -118,10 +118,10 @@ void ExporterContext::registerExports()
 
 void ExporterContext::resolveImports()
 {
-    auto sr = ioc()->resolve<macromanager::IMacroStepTypesRegister>(mname);
+    auto sr = ioc()->resolve<macromanager::IMacroStepHandlersRegister>(mname);
     if (sr) {
-        sr->reg(std::make_shared<ExportAudioStepType>(iocContext()));
-        sr->reg(std::make_shared<ExportSimpleStepType>(iocContext()));
+        sr->reg(std::make_shared<ExportAudioStepHandler>(iocContext()));
+        sr->reg(std::make_shared<ExportSimpleStepHandler>(iocContext()));
     }
 }
 

@@ -6,7 +6,7 @@
 #include "framework/global/translation.h"
 
 #include "../internal/exportcommandoptions.h"
-#include "../internal/exportsteptypes.h"
+#include "../internal/exportstephandlers.h"
 #include "exportstepoutput.h"
 
 using namespace au::importexport;
