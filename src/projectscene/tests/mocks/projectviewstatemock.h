@@ -108,5 +108,12 @@ public:
     MOCK_METHOD(muse::async::Notification, modifiersReleased, (), (const, override));
 
     MOCK_METHOD(int, trackDefaultHeight, (), (const, override));
+    MOCK_METHOD(int, trackDefaultHeight, (const trackedit::TrackId&), (const, override));
+    MOCK_METHOD(int, trackMinHeight, (), (const, override));
+    MOCK_METHOD(void, collapseTrack, (const trackedit::TrackId&), (override));
+    MOCK_METHOD(void, expandTrack, (const trackedit::TrackId&), (override));
+
+    MOCK_METHOD(int, tracksViewportHeight, (), (const, override));
+    MOCK_METHOD(void, setTracksViewportHeight, (int), (override));
 };
 }

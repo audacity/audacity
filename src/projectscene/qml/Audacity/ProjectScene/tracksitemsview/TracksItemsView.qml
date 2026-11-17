@@ -894,6 +894,7 @@ Rectangle {
 
                 onHeightChanged: {
                     timeline.context.onResizeFrameHeight(tracksItemsView.height)
+                    tracksViewState.setTracksViewportHeight(tracksItemsView.height - tracksItemsView.listHeaderHeight)
                 }
 
                 Connections {

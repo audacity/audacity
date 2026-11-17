@@ -137,6 +137,13 @@ public:
     muse::async::Notification modifiersReleased() const override;
 
     int trackDefaultHeight() const override;
+    int trackDefaultHeight(const trackedit::TrackId& trackId) const override;
+    int trackMinHeight() const override;
+    void collapseTrack(const trackedit::TrackId& trackId) override;
+    void expandTrack(const trackedit::TrackId& trackId) override;
+
+    int tracksViewportHeight() const override;
+    void setTracksViewportHeight(int height) override;
 
 private:
     friend class ProjectViewStateTests;
@@ -153,12 +160,15 @@ private:
         muse::ValCh<bool> isHalfWave;
         muse::ValCh<int> rulerType;
         muse::ValCh<trackedit::TrackViewType> viewType;
+        int heightBeforeCollapse = 0;
     };
 
     mutable muse::ValCh<int> m_totalTracksHeight;
     mutable muse::ValCh<int> m_verticalRulerWidth;
 
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
+    TrackData& trackData(const trackedit::TrackId& trackId);
+    void doSetTrackHeight(const trackedit::TrackId& trackId, int height);
     void recomputeTotalTrackHeight();
     bool doSetTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType);
 
@@ -166,6 +176,7 @@ private:
 
     muse::ValCh<int> m_tracksVerticalOffset;
     muse::ValCh<bool> m_tracksVerticalScrollLocked;
+    int m_tracksViewportHeight = 0;
 
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;
     muse::ValCh<Snap> m_snap;
