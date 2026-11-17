@@ -142,9 +142,9 @@ VideoError FFmpegSoftwareBackend::open(const std::string& path)
         return VideoError::NoDecoder;
     }
 
-    // Video decoding needs the send/receive API. It is optional in the loader
-    // and absent on avcodec 55, where audio import still works fine.
-    if (!m_codec->CanDecodeVideo()) {
+    // Video decoding needs the send/receive and flush APIs. They are optional
+    // in the loader and absent on avcodec 55, where audio import still works.
+    if (!m_codec->CanDecodeVideo() || !m_codec->CanFlushBuffers()) {
         return VideoError::FFmpegTooOld;
     }
 

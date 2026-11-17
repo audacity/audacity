@@ -195,9 +195,14 @@ struct Decoder
 
     double timeBase() const { return av_q2d(st->time_base); }
 
+    int64_t startPts() const
+    {
+        return st->start_time == AV_NOPTS_VALUE ? 0 : st->start_time;
+    }
+
     int64_t toPts(double seconds) const
     {
-        return static_cast<int64_t>(llround(seconds / av_q2d(st->time_base)));
+        return startPts() + static_cast<int64_t>(llround(seconds / av_q2d(st->time_base)));
     }
 
     void flush()
@@ -409,7 +414,7 @@ int main(int argc, char** argv)
         }
 
         const int64_t pts = d.lastPts;
-        const double got = pts * d.timeBase();
+        const double got = (pts - d.startPts()) * d.timeBase();
         const int frameNo = static_cast<int>(llround(got * fps));
         const int luma = patchLuma(d.frame);
         const bool shouldBeLit = (llround(t / markerEvery) * markerEvery == t);

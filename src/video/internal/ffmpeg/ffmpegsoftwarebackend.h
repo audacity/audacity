@@ -17,14 +17,14 @@ class AVFrameWrapper;
 namespace au::video {
 //! Decodes video through the FFmpeg that Audacity loads at runtime.
 //!
-//! Synchronous and single-shot: every frameAt() seeks, flushes and decodes
-//! forward. That is fast enough to follow a playhead being dragged while
-//! stopped, which is all M1 needs, and it keeps the first version free of the
-//! worker thread and frame cache.
+//! Synchronous: frameAt() seeks, flushes and decodes forward on the calling
+//! thread.
 //!
-//! Must be constructed and used on one thread. FFmpegFunctions::Load() caches
-//! into an unsynchronised static and mutates process environment on some
-//! platforms, so it is called on the GUI thread only.
+//! open() and close() run on the GUI thread, because FFmpegFunctions::Load()
+//! caches into an unsynchronised static and mutates process environment on
+//! some platforms. frameAt() may then run on one other thread; isOpen(),
+//! streamInfo() and timeToPts() read only what open() set, so they are safe to
+//! call meanwhile.
 class FFmpegSoftwareBackend : public IVideoDecodeBackend
 {
 public:

@@ -66,6 +66,11 @@ void VideoSurfaceItem::componentComplete()
         refreshNow();
     });
 
+    videoService()->offsetChanged().onNotify(this, [this]() {
+        m_haveShown = false;
+        refreshNow();
+    });
+
     // A frame the decoder just produced may be the one that should be showing.
     videoService()->frameReady().onNotify(this, [this]() {
         if (!m_tick.isActive()) {

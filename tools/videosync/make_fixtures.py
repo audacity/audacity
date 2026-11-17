@@ -419,7 +419,9 @@ def verify(outdir):
             samples = array.array("h")
             samples.frombytes(w.readframes(frames))
         os.remove(tmp_wav)
-        found = [i for i in range(frames) if samples[i * ch] > 16000]
+        hot = [i for i in range(frames) if samples[i * ch] > 16000]
+        hot_set = set(hot)
+        found = [i for i in hot if (i - 1) not in hot_set]
         expected = [m["sample"] for m in clip["markers"]]
         audio_ok = found == expected
         ok = ok and audio_ok

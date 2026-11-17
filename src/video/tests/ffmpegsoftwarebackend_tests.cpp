@@ -5,6 +5,7 @@
 
 #include <chrono>
 #include <cmath>
+#include <cstdlib>
 #include <string>
 
 #include <QFileInfo>
@@ -31,8 +32,8 @@ bool fixtureExists(const std::string& name)
     return QFileInfo::exists(QString::fromStdString(fixture(name)));
 }
 
-//! The fixtures are generated rather than committed, and no CI job installs
-//! FFmpeg, so these tests report why they did not run instead of failing.
+//! The fixtures are generated rather than committed, so these tests report why
+//! they did not run instead of failing. On CI, CiHasFFmpegAndFixtures fails.
 #define REQUIRE_FIXTURE(name)                                                  \
     do {                                                                       \
         if (!fixtureExists(name)) {                                            \
@@ -93,6 +94,19 @@ TEST(FFmpegSoftwareBackendTests, StartsClosed)
     FFmpegSoftwareBackend backend;
     EXPECT_FALSE(backend.isOpen());
     EXPECT_FALSE(backend.streamInfo().isValid());
+}
+
+TEST(FFmpegSoftwareBackendTests, CiHasFFmpegAndFixtures)
+{
+    if (!std::getenv("CI")) {
+        GTEST_SKIP() << "Only enforced on CI";
+    }
+
+    ASSERT_TRUE(fixtureExists("sync25.mkv")) << "Missing " << fixture("sync25.mkv");
+
+    FFmpegSoftwareBackend backend;
+    const VideoError err = backend.open(fixture("sync25.mkv"));
+    EXPECT_EQ(err, VideoError::None) << errorMessage(err).toStdString();
 }
 
 TEST(FFmpegSoftwareBackendTests, ReportsAMissingFileRatherThanCrashing)

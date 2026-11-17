@@ -111,10 +111,10 @@ static ProjectFileIORegistry::AttributeWriterEntry entry {
 static ProjectFileIORegistry::AttributeReaderEntries entries {
     (ProjectVideoRef & (*)(AudacityProject&)) & ProjectVideoRef::Get, {
         { "video_path", [](auto& ref, auto value) {
-                ref.setPath(value.ToWString().ToStdString());
+                ref.setPath(value.ToWString().ToStdString(wxConvUTF8));
             } },
         { "video_path_rel", [](auto& ref, auto value) {
-                ref.setRelativePath(value.ToWString().ToStdString());
+                ref.setRelativePath(value.ToWString().ToStdString(wxConvUTF8));
             } },
         { "video_duration", [](auto& ref, auto value) {
                 ref.setDuration(value.Get(ref.duration()));

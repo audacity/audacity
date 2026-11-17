@@ -176,7 +176,7 @@ TEST(VideoDecodeWorkerTests, KeepsOnlyTheNewestPendingRequest)
     // First one starts decoding and occupies the thread; the rest pile up on
     // a slot that only holds one, so only the last of them should be served.
     worker.request(requestAt(1.0));
-    std::this_thread::sleep_for(10ms);
+    ASSERT_TRUE(waitFor([&]() { return backend->calls() > 0; }));
 
     for (int i = 0; i < 20; ++i) {
         worker.request(requestAt(2.0 + i));
@@ -204,7 +204,7 @@ TEST(VideoDecodeWorkerTests, CountsWhatItDropped)
     worker.start();
 
     worker.request(requestAt(0.0));
-    std::this_thread::sleep_for(5ms);
+    ASSERT_TRUE(waitFor([&]() { return backend->calls() > 0; }));
     worker.request(requestAt(1.0));
     worker.request(requestAt(2.0));
     worker.request(requestAt(3.0));

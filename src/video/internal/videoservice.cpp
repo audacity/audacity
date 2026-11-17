@@ -146,13 +146,14 @@ void VideoService::restoreFromProject()
 
     if (resolved.empty()) {
         // The project opens regardless; the panel says the file is missing.
+        detachWithoutClearingProject();
         m_error = VideoError::FileNotFound;
         m_attachedChanged.notify();
         return;
     }
 
-    // Read before attaching: attach() begins with detach(), which resets the
-    // offset along with the rest of the attachment state.
+    // Read before attaching: attach() resets the offset along with the rest
+    // of the attachment state.
     const double savedOffset = ref->offset();
 
     const VideoError err = attach(resolved, CommitToProject::No);
@@ -201,7 +202,7 @@ VideoError VideoService::attach(const std::string& path)
 
 VideoError VideoService::attach(const std::string& path, CommitToProject commit)
 {
-    detach();
+    detachWithoutClearingProject();
 
     // Opened here rather than on the worker: FFmpegFunctions::Load caches into
     // an unsynchronised static and mutates process environment on some
@@ -211,6 +212,10 @@ VideoError VideoService::attach(const std::string& path, CommitToProject commit)
 
     m_error = err;
     if (err != VideoError::None) {
+        if (commit == CommitToProject::Yes) {
+            storeInProject();
+            commitProjectChange();
+        }
         m_attachedChanged.notify();
         return err;
     }
@@ -259,7 +264,10 @@ VideoError VideoService::attach(const std::string& path, CommitToProject commit)
 
     m_worker->start();
 
-    storeInProject();
+    if (commit == CommitToProject::Yes) {
+        storeInProject();
+        commitProjectChange();
+    }
 
     m_attachedChanged.notify();
     return VideoError::None;
