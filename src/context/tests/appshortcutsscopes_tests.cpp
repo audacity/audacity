@@ -3,7 +3,9 @@
 */
 #include <gtest/gtest.h>
 
-#include "context/internal/shortcutresolver.h"
+#include "context/internal/appshortcutsscopes.h"
+
+#include "framework/shortcuts_v2/internal/shortcutsresolver.h"
 
 #include "framework/ui/tests/mocks/navigationmocks.h"
 
@@ -18,7 +20,7 @@ using namespace muse::shortcuts;
 static const std::string MODULE_NAME("context_tests");
 
 namespace au::context {
-class ShortcutResolverTests : public ::testing::Test
+class AppShortcutsScopesTests : public ::testing::Test
 {
 public:
     void SetUp() override
@@ -29,13 +31,18 @@ public:
         m_navigationController = std::make_shared<NiceMock<muse::ui::NavigationControllerMock> >();
         modularity::ioc(m_iocCtx)->registerExport<muse::ui::INavigationController>(MODULE_NAME, m_navigationController);
 
-        m_resolver = std::make_unique<ShortcutResolver>(m_iocCtx);
+        m_resolver = std::make_shared<ShortcutsResolver>();
+        modularity::ioc(m_iocCtx)->registerExport<IShortcutsResolver>(MODULE_NAME, m_resolver);
+
+        m_scopes = std::make_shared<AppShortcutsScopes>(m_iocCtx);
+        m_scopes->init();
 
         setProjectPageShown(true);
     }
 
     void TearDown() override
     {
+        m_scopes.reset();
         m_resolver.reset();
         modularity::removeIoC(m_iocCtx);
     }
@@ -65,7 +72,8 @@ public:
     }
 
     const modularity::ContextPtr m_iocCtx = std::make_shared<modularity::Context>(1);
-    std::unique_ptr<ShortcutResolver> m_resolver;
+    std::shared_ptr<ShortcutsResolver> m_resolver;
+    std::shared_ptr<AppShortcutsScopes> m_scopes;
     std::shared_ptr<NiceMock<UiContextResolverMock> > m_uiContextResolver;
     std::shared_ptr<NiceMock<muse::ui::NavigationControllerMock> > m_navigationController;
     NiceMock<muse::ui::NavigationSectionMock> m_section;
@@ -76,7 +84,7 @@ public:
     };
 };
 
-TEST_F(ShortcutResolverTests, TimelineWinsOverNavigationWhenProjectFocused)
+TEST_F(AppShortcutsScopesTests, TimelineWinsOverNavigationWhenProjectFocused)
 {
     setProjectFocused(true);
 
@@ -88,7 +96,7 @@ TEST_F(ShortcutResolverTests, TimelineWinsOverNavigationWhenProjectFocused)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://projectscene/play-position-decrease"));
 }
 
-TEST_F(ShortcutResolverTests, NavigationWinsWhenProjectNotFocused)
+TEST_F(AppShortcutsScopesTests, NavigationWinsWhenProjectNotFocused)
 {
     setProjectFocused(false);
 
@@ -100,7 +108,7 @@ TEST_F(ShortcutResolverTests, NavigationWinsWhenProjectNotFocused)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://navigation/left"));
 }
 
-TEST_F(ShortcutResolverTests, TimelineWinsOverModuleScopeWhenProjectFocused)
+TEST_F(AppShortcutsScopesTests, TimelineWinsOverModuleScopeWhenProjectFocused)
 {
     setProjectFocused(true);
 
@@ -112,7 +120,7 @@ TEST_F(ShortcutResolverTests, TimelineWinsOverModuleScopeWhenProjectFocused)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://trackedit/track-view-item-extend-left"));
 }
 
-TEST_F(ShortcutResolverTests, ModuleScopeWinsWhenProjectNotFocused)
+TEST_F(AppShortcutsScopesTests, ModuleScopeWinsWhenProjectNotFocused)
 {
     setProjectFocused(false);
 
@@ -124,7 +132,7 @@ TEST_F(ShortcutResolverTests, ModuleScopeWinsWhenProjectNotFocused)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://projectscene/selection-extend-left"));
 }
 
-TEST_F(ShortcutResolverTests, NoActiveShortcutWhenOnlyTimelineAndProjectNotFocused)
+TEST_F(AppShortcutsScopesTests, NoActiveShortcutWhenOnlyTimelineAndProjectNotFocused)
 {
     setProjectFocused(false);
 
@@ -135,7 +143,7 @@ TEST_F(ShortcutResolverTests, NoActiveShortcutWhenOnlyTimelineAndProjectNotFocus
     EXPECT_FALSE(m_resolver->selectActive(list).isValid());
 }
 
-TEST_F(ShortcutResolverTests, PlaybackWinsOverNavigationTrigger)
+TEST_F(AppShortcutsScopesTests, PlaybackWinsOverNavigationTrigger)
 {
     setProjectFocused(false);
 
@@ -147,7 +155,7 @@ TEST_F(ShortcutResolverTests, PlaybackWinsOverNavigationTrigger)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://playback/toggle-play-stop"));
 }
 
-TEST_F(ShortcutResolverTests, RecordWinsOverNavigationTrigger)
+TEST_F(AppShortcutsScopesTests, RecordWinsOverNavigationTrigger)
 {
     setProjectFocused(true);
 
@@ -159,7 +167,7 @@ TEST_F(ShortcutResolverTests, RecordWinsOverNavigationTrigger)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://record/stop"));
 }
 
-TEST_F(ShortcutResolverTests, CommandWinsOverNoneCommandInSameScope)
+TEST_F(AppShortcutsScopesTests, CommandWinsOverNoneCommandInSameScope)
 {
     setProjectFocused(false);
 
@@ -171,17 +179,12 @@ TEST_F(ShortcutResolverTests, CommandWinsOverNoneCommandInSameScope)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://app/quit"));
 }
 
-TEST_F(ShortcutResolverTests, EmptyListHasNoActiveShortcut)
-{
-    EXPECT_FALSE(m_resolver->selectActive({}).isValid());
-}
-
-TEST_F(ShortcutResolverTests, ScopeTitleIsCaseInsensitive)
+TEST_F(AppShortcutsScopesTests, ScopeTitleIsCaseInsensitive)
 {
     EXPECT_EQ(m_resolver->scopeTitle("timeline").str, m_resolver->scopeTitle("TIMELINE").str);
 }
 
-TEST_F(ShortcutResolverTests, TrackNavigationSectionWinsWhenTrackViewFocused)
+TEST_F(AppShortcutsScopesTests, TrackNavigationSectionWinsWhenTrackViewFocused)
 {
     setProjectFocused(true);
     setActiveSection("TrackViewSection");
@@ -189,7 +192,7 @@ TEST_F(ShortcutResolverTests, TrackNavigationSectionWinsWhenTrackViewFocused)
     EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://track-navigation/range-selection"));
 }
 
-TEST_F(ShortcutResolverTests, NavigationWinsWhenTimelineRulerFocused)
+TEST_F(AppShortcutsScopesTests, NavigationWinsWhenTimelineRulerFocused)
 {
     setProjectFocused(true);
     setActiveSection("TimelineSection");
@@ -197,7 +200,7 @@ TEST_F(ShortcutResolverTests, NavigationWinsWhenTimelineRulerFocused)
     EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://navigation/trigger-control"));
 }
 
-TEST_F(ShortcutResolverTests, NavigationWinsWhenTrackHeaderControlsFocused)
+TEST_F(AppShortcutsScopesTests, NavigationWinsWhenTrackHeaderControlsFocused)
 {
     setProjectFocused(false);
     setActiveSection("TrackViewSection");
@@ -205,14 +208,14 @@ TEST_F(ShortcutResolverTests, NavigationWinsWhenTrackHeaderControlsFocused)
     EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://navigation/trigger-control"));
 }
 
-TEST_F(ShortcutResolverTests, NavigationWinsWhenNoSectionIsActive)
+TEST_F(AppShortcutsScopesTests, NavigationWinsWhenNoSectionIsActive)
 {
     setProjectFocused(false);
 
     EXPECT_EQ(m_resolver->selectActive(m_shiftEnter).command, rcommand::Command("command://navigation/trigger-control"));
 }
 
-TEST_F(ShortcutResolverTests, SpaceTriggersControlOnHomePage)
+TEST_F(AppShortcutsScopesTests, SpaceTriggersControlOnHomePage)
 {
     setProjectPageShown(false);
     setProjectFocused(false);
@@ -226,7 +229,7 @@ TEST_F(ShortcutResolverTests, SpaceTriggersControlOnHomePage)
     EXPECT_EQ(m_resolver->selectActive(list).command, rcommand::Command("command://navigation/trigger-control"));
 }
 
-TEST_F(ShortcutResolverTests, ProjectPageShortcutsDoNothingOnHomePage)
+TEST_F(AppShortcutsScopesTests, ProjectPageShortcutsDoNothingOnHomePage)
 {
     setProjectPageShown(false);
     setProjectFocused(false);
@@ -236,7 +239,7 @@ TEST_F(ShortcutResolverTests, ProjectPageShortcutsDoNothingOnHomePage)
     }
 }
 
-TEST_F(ShortcutResolverTests, ProjectAndAppShortcutsWorkOnHomePage)
+TEST_F(AppShortcutsScopesTests, ProjectAndAppShortcutsWorkOnHomePage)
 {
     setProjectPageShown(false);
     setProjectFocused(false);

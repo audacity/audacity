@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include <string>
+#include <memory>
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/shortcuts_v2/ishortcutsresolver.h"
@@ -12,21 +12,21 @@
 #include "context/iuicontextresolver.h"
 
 namespace au::context {
-class ShortcutResolver : public muse::shortcuts::IShortcutsResolver, public muse::Contextable
+class AppShortcutsScopes : public muse::Contextable, public std::enable_shared_from_this<AppShortcutsScopes>
 {
+    muse::ContextInject<muse::shortcuts::IShortcutsResolver> shortcutsResolver{ this };
     muse::ContextInject<IUiContextResolver> uiContextResolver{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
 
 public:
-    ShortcutResolver(const muse::modularity::ContextPtr& ctx)
+    AppShortcutsScopes(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
-    muse::shortcuts::Shortcut selectActive(const muse::shortcuts::ShortcutList& list) const override;
-
-    muse::TranslatableString scopeTitle(const std::string& scopeCode) const override;
+    void init();
 
 private:
-    int scopePriority(const std::string& scope) const;
+    using Condition = bool (AppShortcutsScopes::*)() const;
+
     bool isProjectPageShown() const;
     bool isProjectFocused() const;
     bool isTrackViewFocused() const;

@@ -29,6 +29,7 @@
 namespace au::context {
 class GlobalContext;
 class UiContextResolver;
+class AppShortcutsScopes;
 
 class ContextModule : public muse::modularity::IModuleSetup
 {
@@ -52,6 +53,7 @@ public:
 private:
     std::shared_ptr<GlobalContext> m_globalContext;
     std::shared_ptr<UiContextResolver> m_uicontextResolver;
+    std::shared_ptr<AppShortcutsScopes> m_shortcutsScopes;
 };
 }
 
