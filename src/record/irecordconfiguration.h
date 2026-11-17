@@ -43,6 +43,14 @@ public:
     virtual void setCrossfadeDuration(double milliseconds) = 0;
     virtual muse::async::Notification crossfadeDurationChanged() const = 0;
 
+    virtual bool isSoundActivatedRecordingOn() const = 0;
+    virtual void setIsSoundActivatedRecordingOn(bool enable) = 0;
+    virtual muse::async::Notification isSoundActivatedRecordingOnChanged() const = 0;
+
+    virtual double soundActivationLevel() const = 0;
+    virtual void setSoundActivationLevel(double db) = 0;
+    virtual muse::async::Notification soundActivationLevelChanged() const = 0;
+
     virtual RecordingTrackNameOptions recordingTrackNameOptions() const = 0;
 
     virtual TimedRecordingOptions timedRecordingOptions() const = 0;

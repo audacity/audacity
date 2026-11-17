@@ -18,6 +18,7 @@
 #include "audio/iaudioengine.h"
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "au3wrap/au3types.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "../../irecord.h"
 #include "../../irecordconfiguration.h"
@@ -31,6 +32,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
