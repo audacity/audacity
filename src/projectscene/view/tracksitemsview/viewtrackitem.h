@@ -26,7 +26,7 @@ class ViewTrackItem : public QObject
     Q_PROPERTY(double rightVisibleMargin READ rightVisibleMargin WRITE setRightVisibleMargin NOTIFY rightVisibleMarginChanged FINAL)
     Q_PROPERTY(TrackItemTime time READ time WRITE setTime NOTIFY timeChanged FINAL)
     Q_PROPERTY(bool selected READ selected WRITE setSelected NOTIFY selectedChanged FINAL)
-    Q_PROPERTY(bool intersectsSelection READ intersectsSelection WRITE setIntersectsSelection NOTIFY intersectsSelectionChanged FINAL)
+    Q_PROPERTY(bool movesWithSelection READ movesWithSelection WRITE setMovesWithSelection NOTIFY movesWithSelectionChanged FINAL)
     Q_PROPERTY(bool focused READ focused WRITE setFocused NOTIFY focusedChanged FINAL)
     Q_PROPERTY(bool titleEditRequested READ titleEditRequested WRITE setTitleEditRequested NOTIFY titleEditRequestedChanged FINAL)
     Q_PROPERTY(bool dragged READ dragged WRITE setDragged NOTIFY draggedChanged FINAL)
@@ -52,8 +52,8 @@ public:
     bool selected() const;
     void setSelected(bool newSelected);
 
-    bool intersectsSelection() const;
-    void setIntersectsSelection(bool newState);
+    bool movesWithSelection() const;
+    void setMovesWithSelection(bool newState);
 
     bool focused() const;
     void setFocused(bool focused);
@@ -89,7 +89,7 @@ signals:
     void endTimeChanged();
 
     void selectedChanged();
-    void intersectsSelectionChanged();
+    void movesWithSelectionChanged();
 
     void focusedChanged();
     void titleEditRequestedChanged();
@@ -104,7 +104,7 @@ protected:
     double m_x = 0.0;
     double m_width = 0.0;
     bool m_selected = false;
-    bool m_intersectsSelection = false;
+    bool m_movesWithSelection = false;
     bool m_focused = false;
     bool m_titleEditRequested = false;
     bool m_dragged = false;
