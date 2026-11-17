@@ -952,6 +952,9 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     Ret ret = project->createNew();
     if (!ret) {
         LOGE() << ret.toString();
+        interactive()->error(muse::trc("project", "Could not create a new project"),
+                             muse::mtrc("project", "Make sure the temporary files location is accessible: %1")
+                             .arg(io::toNativeSeparators(configuration()->temporaryDir()).toString()).toStdString());
         return nullptr;
     }
 
