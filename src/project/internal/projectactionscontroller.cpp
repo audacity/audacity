@@ -952,10 +952,12 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     Ret ret = project->createNew();
     if (!ret) {
         LOGE() << ret.toString();
-        if (!askToUseDefaultTemporaryDir()) {
+        const RetVal<io::path_t> fallbackTempDir = askFallbackTemporaryDir();
+        if (!fallbackTempDir.ret) {
             return nullptr;
         }
 
+        configuration()->setTemporaryDir(fallbackTempDir.val);
         project = std::make_shared<Audacity4Project>(iocContext());
         ret = project->createNew();
         if (!ret) {
@@ -971,12 +973,12 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     return project;
 }
 
-bool ProjectActionsController::askToUseDefaultTemporaryDir()
+RetVal<io::path_t> ProjectActionsController::askFallbackTemporaryDir() const
 {
     const io::path_t defaultTempDir = configuration()->defaultTemporaryDir();
     if (configuration()->temporaryDir() == defaultTempDir) {
         showTemporaryDirError();
-        return false;
+        return make_ret(Ret::Code::Cancel);
     }
 
     constexpr int useDefaultButton = int(IInteractive::Button::CustomButton) + 1;
@@ -992,14 +994,13 @@ bool ProjectActionsController::askToUseDefaultTemporaryDir()
     const IInteractive::Result result = interactive()->warningSync(title, text, buttons, useDefaultButton,
                                                                    { IInteractive::Option::WithIcon }, title);
     if (!result.isButton(useDefaultButton)) {
-        return false;
+        return make_ret(Ret::Code::Cancel);
     }
 
-    configuration()->setTemporaryDir(defaultTempDir);
-    return true;
+    return RetVal<io::path_t>::make_ok(defaultTempDir);
 }
 
-void ProjectActionsController::showTemporaryDirError()
+void ProjectActionsController::showTemporaryDirError() const
 {
     interactive()->error(muse::trc("project", "Could not create a new project"),
                          muse::mtrc("project", "Make sure the temporary files location is accessible: %1")

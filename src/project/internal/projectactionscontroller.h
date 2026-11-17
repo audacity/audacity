@@ -94,8 +94,8 @@ private:
     muse::Ret loadWithFallback(const IAudacityProjectPtr& project, const muse::io::path_t& loadPath, const std::string& format);
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
     IAudacityProjectPtr createProjectInCurrentWindow();
-    bool askToUseDefaultTemporaryDir();
-    void showTemporaryDirError();
+    muse::RetVal<muse::io::path_t> askFallbackTemporaryDir() const;
+    void showTemporaryDirError() const;
     muse::Ret openCloudProject(const muse::io::path_t& localPath, const muse::String& projectId,
                                const muse::String& snapshotId = muse::String(), bool forceOverwrite = false);
     //! TODO AU4
