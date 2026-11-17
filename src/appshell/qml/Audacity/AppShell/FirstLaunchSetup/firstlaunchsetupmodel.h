@@ -29,6 +29,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/ui/iuiconfiguration.h"
 #include "au3cloud/iau3audiocomservice.h"
 
 #include "appshell/iappshellconfiguration.h"
@@ -51,6 +52,7 @@ class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable, pub
     Q_PROPERTY(QString nextButtonText READ nextButtonText NOTIFY nextButtonTextChanged)
 
     muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<au::au3cloud::IAu3AudioComService> au3CloudService { this };

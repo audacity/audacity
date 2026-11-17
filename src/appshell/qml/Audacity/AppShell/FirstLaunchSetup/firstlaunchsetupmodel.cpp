@@ -56,6 +56,10 @@ void FirstLaunchSetupModel::load()
         m_pages.append(Page { APP_UPDATES_AND_USAGE_INFO_PAGE, "audacity://project" });
     }
 
+    if (!configuration()->hasCompletedFirstLaunchSetup() && uiConfiguration()->isFollowSystemThemeAvailable()) {
+        uiConfiguration()->setFollowSystemTheme(true);
+    }
+
     setCurrentPageIndex(0);
     m_loaded = true;
 }
