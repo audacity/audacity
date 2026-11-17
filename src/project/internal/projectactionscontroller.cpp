@@ -393,7 +393,7 @@ muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
 
     const bool removeAfterImport = params.at(PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(false)).toBool();
 
-    Ret ret = processMediaFiles(filePaths);
+    Ret ret = processMediaFiles(filePaths, !removeAfterImport);
     if (removeAfterImport) {
         for (const auto& filePath : filePaths) {
             fileSystem()->remove(filePath);
@@ -407,7 +407,7 @@ muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
     return ret;
 }
 
-muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& paths)
+muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& paths, bool attachVideo)
 {
     if (paths.empty()) {
         return make_ret(Ret::Code::Cancel);
@@ -445,7 +445,12 @@ muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& p
         return ret;
     }
 
-    return project->import(actualPaths);
+    const muse::Ret importRet = project->import(actualPaths);
+    if (importRet && attachVideo) {
+        attachImportedVideo(actualPaths);
+    }
+
+    return importRet;
 }
 
 bool ProjectActionsController::isUrlSupported(const QUrl& url) const

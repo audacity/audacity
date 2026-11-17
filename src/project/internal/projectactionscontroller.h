@@ -95,7 +95,7 @@ private:
     //! Attaches the picture of a video the user just imported, when exactly
     //! one was imported and nothing is attached yet.
     void attachImportedVideo(const muse::io::paths_t& filePaths);
-    muse::Ret processMediaFiles(const muse::io::paths_t& paths);
+    muse::Ret processMediaFiles(const muse::io::paths_t& paths, bool attachVideo = true);
     muse::Ret closeProject();
 
     muse::Ret openProject(const muse::io::path_t& path,
