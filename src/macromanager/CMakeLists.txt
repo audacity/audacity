@@ -10,8 +10,8 @@ target_sources(macromanager PRIVATE
     macromanagertypes.h
     imacrosrepository.h
     imacrorunner.h
-    imacrosteptype.h
-    imacrosteptypesregister.h
+    imacrostephandler.h
+    imacrostephandlersregister.h
     irunonfilesrequests.h
 
     internal/macrooutputnames.cpp
@@ -22,8 +22,8 @@ target_sources(macromanager PRIVATE
     internal/macroserialization.h
     internal/macrosrepository.cpp
     internal/macrosrepository.h
-    internal/macrosteptypesregister.cpp
-    internal/macrosteptypesregister.h
+    internal/macrostephandlersregister.cpp
+    internal/macrostephandlersregister.h
     internal/runonfilesrequests.cpp
     internal/runonfilesrequests.h
     internal/runonfilesstarter.cpp

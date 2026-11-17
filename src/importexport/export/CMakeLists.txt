@@ -33,8 +33,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/exportcommandsregister.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/exportsteptypes.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/exportsteptypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportstephandlers.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/exportstephandlers.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/exportpreferencesmodel.h

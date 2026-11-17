@@ -65,8 +65,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/selectstep.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/selectstep.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/selectsteptype.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/selectsteptype.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/selectstephandler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/selectstephandler.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.cpp

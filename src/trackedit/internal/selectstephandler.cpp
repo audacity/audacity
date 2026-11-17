@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "selectsteptype.h"
+#include "selectstephandler.h"
 
 #include "selectstep.h"
 
@@ -18,17 +18,17 @@ async::Promise<Ret> resolved(const Ret& ret)
 }
 }
 
-std::string SelectEnhancedStepType::id() const
+std::string SelectEnhancedStepHandler::id() const
 {
-    return SELECT_ENHANCED_STEP_TYPE;
+    return SELECT_ENHANCED_STEP_HANDLER_ID;
 }
 
-TranslatableString SelectEnhancedStepType::title() const
+TranslatableString SelectEnhancedStepHandler::title() const
 {
     return SELECT_ENHANCED_STEP_TITLE;
 }
 
-String SelectEnhancedStepType::summary(const Val& data) const
+String SelectEnhancedStepHandler::summary(const Val& data) const
 {
     const RetVal<SelectEnhancedStep> step = selectStepFromVal(data);
     if (!step.ret) {
@@ -38,17 +38,17 @@ String SelectEnhancedStepType::summary(const Val& data) const
     return selectStepSummary(step.val);
 }
 
-Val SelectEnhancedStepType::defaultData() const
+Val SelectEnhancedStepHandler::defaultData() const
 {
     return toVal(SelectEnhancedStep {});
 }
 
-std::optional<UriQuery> SelectEnhancedStepType::editUri() const
+std::optional<UriQuery> SelectEnhancedStepHandler::editUri() const
 {
     return UriQuery(SELECT_STEP_DIALOG_URI);
 }
 
-async::Promise<Ret> SelectEnhancedStepType::execute(const Val& data) const
+async::Promise<Ret> SelectEnhancedStepHandler::execute(const Val& data) const
 {
     const RetVal<SelectEnhancedStep> step = selectStepFromVal(data);
     if (!step.ret) {

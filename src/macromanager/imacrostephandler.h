@@ -15,10 +15,10 @@
 #include "framework/global/types/val.h"
 
 namespace au::macromanager {
-class IMacroStepType
+class IMacroStepHandler
 {
 public:
-    virtual ~IMacroStepType() = default;
+    virtual ~IMacroStepHandler() = default;
 
     virtual std::string id() const = 0;
     virtual muse::TranslatableString title() const = 0;
@@ -28,5 +28,5 @@ public:
     virtual muse::async::Promise<muse::Ret> execute(const muse::Val& data) const = 0;
 };
 
-using IMacroStepTypePtr = std::shared_ptr<IMacroStepType>;
+using IMacroStepHandlerPtr = std::shared_ptr<IMacroStepHandler>;
 }

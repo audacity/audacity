@@ -14,7 +14,7 @@
 #include "framework/rcommand/icommandsregister.h"
 #include "effects/effects_base/ieffectsprovider.h"
 #include "macromanager/imacrosrepository.h"
-#include "macromanager/imacrosteptypesregister.h"
+#include "macromanager/imacrostephandlersregister.h"
 
 namespace au::macromanager {
 class AvailableCommandsModel : public QAbstractListModel, public muse::Contextable, public muse::async::Asyncable
@@ -28,7 +28,7 @@ class AvailableCommandsModel : public QAbstractListModel, public muse::Contextab
     muse::GlobalInject<IMacrosRepository> repository;
     muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
 
-    muse::ContextInject<IMacroStepTypesRegister> stepTypesRegister = { this };
+    muse::ContextInject<IMacroStepHandlersRegister> stepHandlersRegister = { this };
 
 public:
     explicit AvailableCommandsModel(QObject* parent = nullptr);
@@ -67,7 +67,7 @@ private:
 
     void reload();
     void appendCommands();
-    void appendStepTypes();
+    void appendStepHandlers();
     void appendMacros();
 
     std::optional<MacroId> m_editedMacroId;

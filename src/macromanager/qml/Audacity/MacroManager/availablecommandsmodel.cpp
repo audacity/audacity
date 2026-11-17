@@ -126,7 +126,7 @@ void AvailableCommandsModel::reload()
 {
     m_allItems.clear();
     appendCommands();
-    appendStepTypes();
+    appendStepHandlers();
     appendMacros();
 
     std::ranges::sort(m_allItems, [](const Item& a, const Item& b) {
@@ -171,10 +171,10 @@ void AvailableCommandsModel::appendCommands()
     }
 }
 
-void AvailableCommandsModel::appendStepTypes()
+void AvailableCommandsModel::appendStepHandlers()
 {
-    for (const IMacroStepTypePtr& type : stepTypesRegister()->types()) {
-        m_allItems.append({ QString::fromStdString(type->id()), type->title().qTranslated(), QString(), QString(), false });
+    for (const IMacroStepHandlerPtr& handler : stepHandlersRegister()->handlers()) {
+        m_allItems.append({ QString::fromStdString(handler->id()), handler->title().qTranslated(), QString(), QString(), false });
     }
 }
 

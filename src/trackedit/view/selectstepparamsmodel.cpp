@@ -7,7 +7,7 @@
 
 #include "framework/global/types/val.h"
 
-#include "../internal/selectsteptype.h"
+#include "../internal/selectstephandler.h"
 
 using namespace au::trackedit;
 using namespace muse;
