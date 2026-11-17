@@ -195,6 +195,11 @@ muse::io::path_t ProjectConfiguration::temporaryDir() const
     return muse::settings()->value(TEMPORARY_FILES_PATH).toPath();
 }
 
+muse::io::path_t ProjectConfiguration::defaultTemporaryDir() const
+{
+    return muse::settings()->defaultValue(TEMPORARY_FILES_PATH).toPath();
+}
+
 void ProjectConfiguration::setTemporaryDir(const muse::io::path_t& path)
 {
     muse::settings()->setSharedValue(TEMPORARY_FILES_PATH, muse::Val(path));
@@ -270,12 +275,6 @@ void ProjectConfiguration::initTempDir()
         LOGE() << "Default temporary directory is not usable: " << defaultTempDir;
     }
     muse::settings()->setDefaultValue(TEMPORARY_FILES_PATH, muse::Val(defaultTempDir));
-
-    const muse::io::path_t tempDir = temporaryDir();
-    if (tempDir != defaultTempDir && !ensureWritableDirectory(tempDir)) {
-        LOGW() << "Temporary directory is not usable: " << tempDir << ", resetting to default: " << defaultTempDir;
-        muse::settings()->setSharedValue(TEMPORARY_FILES_PATH, muse::Val(defaultTempDir));
-    }
 
     muse::settings()->valueChanged(TEMPORARY_FILES_PATH).onReceive(nullptr, [this](const muse::Val& val) {
         m_temporaryDirChanged.send(val.toString());

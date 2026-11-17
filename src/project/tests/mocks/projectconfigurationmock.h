@@ -38,6 +38,7 @@ public:
     MOCK_METHOD(void, setShouldAskSaveLocationType, (bool shouldAsk), (override));
 
     MOCK_METHOD(muse::io::path_t, temporaryDir, (), (const, override));
+    MOCK_METHOD(muse::io::path_t, defaultTemporaryDir, (), (const, override));
     MOCK_METHOD(void, setTemporaryDir, (const muse::io::path_t& path), (override));
     MOCK_METHOD(muse::async::Channel<muse::io::path_t>, temporaryDirChanged, (), (const, override));
 

@@ -11,6 +11,7 @@
 #include "au3-project-history/UndoManager.h"
 #include "au3-realtime-effects/SavedMasterEffectList.h"
 #include "au3-file-formats/AcidizerTags.h"
+#include "au3-files/TempDirectory.h"
 #include "au3-import-export/Import.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
@@ -129,7 +130,12 @@ Au3ProjectAccessor::Au3ProjectAccessor(const muse::modularity::ContextPtr& ctx)
 muse::Ret Au3ProjectAccessor::open()
 {
     auto& projectFileIO = ProjectFileIO::Get(m_data->projectRef());
-    return projectFileIO.OpenProject() ? muse::make_ok() : muse::make_ret(static_cast<muse::Ret::Code>(project::Err::DatabaseError));
+    if (!projectFileIO.OpenProject()) {
+        TempDirectory::ResetTempDir();
+        return muse::make_ret(static_cast<muse::Ret::Code>(project::Err::DatabaseError));
+    }
+
+    return muse::make_ok();
 }
 
 muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignoreAutosave)
