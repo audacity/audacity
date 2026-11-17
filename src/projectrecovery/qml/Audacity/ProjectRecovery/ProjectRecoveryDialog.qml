@@ -49,6 +49,25 @@ StyledDialogView {
         readonly property int busyBodyHeight: 272
         readonly property int containerRadius: 4
 
+        function errorMessage(kind) {
+            switch (kind) {
+            case ProjectRecoveryWizardModel.OriginalChanged:
+                return qsTrc("projectrecovery", "Another program changed the project at the same time")
+            case ProjectRecoveryWizardModel.WriteFailed:
+                return qsTrc("projectrecovery", "There is not enough free disk space or no write permission")
+            case ProjectRecoveryWizardModel.NewerVersion:
+                return qsTrc("projectrecovery", "A newer version of Audacity saved this project")
+            case ProjectRecoveryWizardModel.NotAProject:
+                return qsTrc("projectrecovery", "This file is not a readable Audacity project")
+            case ProjectRecoveryWizardModel.UnsupportedDamage:
+                return qsTrc("projectrecovery", "This tool cannot repair this damage yet")
+            case ProjectRecoveryWizardModel.ResultFailedCheck:
+                return qsTrc("projectrecovery", "The recovered project failed its final check and was deleted")
+            default:
+                return qsTrc("projectrecovery", "An internal error stopped the recovery tool")
+            }
+        }
+
         readonly property var methods: [
             {
                 method: ProjectRecoveryWizardModel.Lossless,
@@ -142,6 +161,60 @@ StyledDialogView {
             textFormat: Text.PlainText
             font: parent.boldValue ? ui.theme.bodyBoldFont : ui.theme.bodyFont
             horizontalAlignment: parent.boldValue ? Text.AlignLeft : Text.AlignRight
+        }
+    }
+
+    component ErrorDetails: ColumnLayout {
+        id: errorDetails
+
+        property string details
+        signal copyRequested
+
+        Layout.fillWidth: true
+        spacing: 8
+
+        StyledTextLabel {
+            Layout.fillWidth: true
+            text: qsTrc("projectrecovery", "Your original file was not changed")
+            horizontalAlignment: Text.AlignLeft
+            wrapMode: Text.Wrap
+        }
+
+        ExpandableBlank {
+            Layout.fillWidth: true
+            isExpanded: false
+            title: isExpanded ? qsTrc("projectrecovery", "Hide details") : qsTrc("projectrecovery", "Show details")
+
+            contentItemComponent: Container {
+                implicitHeight: detailsColumn.implicitHeight + 2 * 12
+
+                ColumnLayout {
+                    id: detailsColumn
+
+                    anchors.fill: parent
+                    anchors.margins: 12
+                    spacing: 8
+
+                    TextEdit {
+                        Layout.fillWidth: true
+                        text: errorDetails.details
+                        textFormat: Text.PlainText
+                        readOnly: true
+                        selectByMouse: true
+                        wrapMode: Text.Wrap
+                        font: ui.theme.bodyFont
+                        color: ui.theme.fontPrimaryColor
+                    }
+
+                    FlatButton {
+                        orientation: Qt.Horizontal
+                        icon: IconCode.COPY
+                        text: qsTrc("projectrecovery", "Copy")
+
+                        onClicked: errorDetails.copyRequested()
+                    }
+                }
+            }
         }
     }
 
@@ -291,7 +364,7 @@ StyledDialogView {
                 buttonRole: ButtonBoxModel.AcceptRole
                 buttonId: ButtonBoxModel.CustomButton + 5
                 accentButton: true
-                enabled: wizard.errorText === ""
+                enabled: wizard.errorKind === ProjectRecoveryWizardModel.None
 
                 onClicked: {
                     wizard.openResult()
@@ -420,12 +493,19 @@ StyledDialogView {
                 spacing: 16
 
                 PageHeading {
-                    title: wizard.errorText === "" ? qsTrc("projectrecovery", "Analysis complete") : qsTrc("projectrecovery", "Analysis failed")
-                    description: wizard.errorText === "" ? qsTrc("projectrecovery", "Your project has been analyzed. Review the issues below and proceed to recovery.") : wizard.errorText
+                    title: wizard.errorKind === ProjectRecoveryWizardModel.None ? qsTrc("projectrecovery", "Analysis complete") : qsTrc("projectrecovery", "Analysis failed")
+                    description: wizard.errorKind === ProjectRecoveryWizardModel.None ? qsTrc("projectrecovery", "Your project has been analyzed. Review the issues below and proceed to recovery.") : prv.errorMessage(wizard.errorKind)
+                }
+
+                ErrorDetails {
+                    visible: wizard.errorKind !== ProjectRecoveryWizardModel.None
+                    details: wizard.errorDetails
+
+                    onCopyRequested: wizard.copyErrorDetails()
                 }
 
                 Container {
-                    visible: wizard.errorText === ""
+                    visible: wizard.errorKind === ProjectRecoveryWizardModel.None
                     implicitHeight: projectColumn.implicitHeight + 2 * prv.margins
 
                     ColumnLayout {
@@ -789,7 +869,7 @@ StyledDialogView {
                 anchors.bottomMargin: prv.bodyBottomMargin
                 spacing: 16
 
-                readonly property bool failed: wizard.errorText !== ""
+                readonly property bool failed: wizard.errorKind !== ProjectRecoveryWizardModel.None
 
                 ColumnLayout {
                     Layout.fillWidth: true
@@ -814,11 +894,18 @@ StyledDialogView {
 
                     StyledTextLabel {
                         Layout.fillWidth: true
-                        text: finishedColumn.failed ? wizard.errorText : qsTrc("projectrecovery", "The recovery process has run. Open your project to check if it worked.")
+                        text: finishedColumn.failed ? prv.errorMessage(wizard.errorKind) : qsTrc("projectrecovery", "The recovery process has run. Open your project to check if it worked.")
                         textFormat: Text.PlainText
                         horizontalAlignment: Text.AlignHCenter
                         wrapMode: Text.Wrap
                     }
+                }
+
+                ErrorDetails {
+                    visible: finishedColumn.failed
+                    details: wizard.errorDetails
+
+                    onCopyRequested: wizard.copyErrorDetails()
                 }
 
                 Container {

@@ -10,6 +10,7 @@
 
 #include "global/io/ioretcodes.h"
 
+#include "../projectrecoveryerrors.h"
 #include "database.h"
 #include "documentedit.h"
 #include "workingcopy.h"
@@ -54,7 +55,14 @@ muse::Ret checkRepairable(const Inspection& inspection)
         }
     }
     if (!others.empty()) {
-        return muse::make_ret(muse::Ret::Code::NotSupported, "no repair for these problems: " + others);
+        const std::string text = "no repair for these problems: " + others;
+        if (inspection.has(Problem::NewerProjectVersion)) {
+            return make_ret(Err::NewerVersion, text);
+        }
+        if (inspection.has(Problem::NotAudacityProject) || inspection.has(Problem::DatabaseNotReadable)) {
+            return make_ret(Err::NotAProject, text);
+        }
+        return muse::make_ret(muse::Ret::Code::NotSupported, text);
     }
     if (!inspection.has(Problem::MissingBlocks)) {
         return muse::make_ret(muse::Ret::Code::BadArgs, "the project has no problem to repair");
@@ -109,8 +117,8 @@ muse::RetVal<RepairReport> ProjectRepairer::repair(const muse::io::path_t& origi
         for (const Problem problem : verification.val.problems) {
             problems += "; " + problemText(problem);
         }
-        return muse::RetVal<RepairReport>::make_ret(muse::make_ret(muse::Ret::Code::InternalError,
-                                                                   "the output failed its check and was deleted" + problems));
+        return muse::RetVal<RepairReport>::make_ret(make_ret(Err::ResultFailedCheck,
+                                                             "the output failed its check and was deleted" + problems));
     }
 
     RepairReport report;
@@ -137,7 +145,7 @@ muse::Ret ProjectRepairer::copyToOutput(const muse::io::path_t& original, const 
         if (ret.code() != static_cast<int>(muse::io::Err::FSAlreadyExists)) {
             removeOutput(output);
         }
-        return ret;
+        return make_ret(Err::WriteFailed, "cannot copy the project to " + output.toStdString() + ": " + ret.toString());
     }
     if (copy.originalChanged()) {
         removeOutput(output);
@@ -148,7 +156,7 @@ muse::Ret ProjectRepairer::copyToOutput(const muse::io::path_t& original, const 
     std::filesystem::permissions(output.toStdWString(), std::filesystem::perms::owner_write, std::filesystem::perm_options::add, error);
     if (error) {
         removeOutput(output);
-        return muse::make_ret(muse::Ret::Code::UnknownError, "cannot make " + output.toStdString() + " writable: " + error.message());
+        return make_ret(Err::WriteFailed, "cannot make " + output.toStdString() + " writable: " + error.message());
     }
     return muse::make_ok();
 }
@@ -194,7 +202,7 @@ muse::Ret ProjectRepairer::writeState(const muse::io::path_t& output, const Proj
     // Audacity opens a project with a -wal file as one that did not close
     for (const char* suffix : SIDE_FILES) {
         if (fileSystem()->exists(output + suffix)) {
-            return muse::make_ret(muse::Ret::Code::InternalError, std::string("the output keeps its ") + suffix + " file");
+            return make_ret(Err::ResultFailedCheck, std::string("the output keeps its ") + suffix + " file");
         }
     }
     return muse::make_ok();

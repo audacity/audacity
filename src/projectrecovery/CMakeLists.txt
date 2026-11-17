@@ -9,6 +9,7 @@ target_sources(projectrecovery PRIVATE
     projectrecoverymodule.h
     projectrecoverycommands.h
     iprojectrecoveryservice.h
+    projectrecoveryerrors.h
 
     internal/binaryxml.cpp
     internal/binaryxml.h

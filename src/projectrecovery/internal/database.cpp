@@ -10,9 +10,29 @@
 
 #include "au3-sqlite-helpers/sqlite/SQLiteUtils.h"
 
+#include "../projectrecoveryerrors.h"
+
 using namespace au::projectrecovery;
 
 namespace {
+//! The outcome that a failed SQLite call means for the user, with SQLite's text as the details
+muse::Ret sqliteRet(int code, const std::string& text)
+{
+    switch (code & 0xff) {
+    case SQLITE_FULL:
+    case SQLITE_IOERR:
+    case SQLITE_READONLY:
+    case SQLITE_CANTOPEN:
+    case SQLITE_PERM:
+        return make_ret(Err::WriteFailed, text);
+    case SQLITE_CORRUPT:
+    case SQLITE_NOTADB:
+        return muse::make_ret(muse::Ret::Code::BadData, text);
+    default:
+        return muse::make_ret(muse::Ret::Code::InternalError, text);
+    }
+}
+
 //! A file: URI; SQLite needs one for the immutable parameter
 std::string fileUri(const muse::io::path_t& path)
 {
@@ -108,7 +128,7 @@ muse::Ret Database::open(const muse::io::path_t& path, Mode mode)
     if (rc != SQLITE_OK) {
         const std::string text = m_db ? sqlite3_errmsg(m_db) : sqlite3_errstr(rc);
         close();
-        return muse::make_ret(muse::Ret::Code::InternalError, "cannot open the database: " + text);
+        return sqliteRet(rc, "cannot open the database: " + text);
     }
     return muse::make_ok();
 }
@@ -123,7 +143,7 @@ void Database::close()
 
 muse::Ret Database::error() const
 {
-    return muse::make_ret(muse::Ret::Code::InternalError, std::string(sqlite3_errmsg(m_db)));
+    return sqliteRet(sqlite3_errcode(m_db), sqlite3_errmsg(m_db));
 }
 
 muse::Ret Database::query(const std::string& sql, const std::vector<DatabaseValue>& parameters, const RowHandler& onRow)
@@ -161,8 +181,9 @@ muse::Ret Database::query(const std::string& sql, const std::vector<DatabaseValu
 muse::Ret Database::exec(const std::string& sql)
 {
     char* message = nullptr;
-    if (sqlite3_exec(m_db, sql.c_str(), nullptr, nullptr, &message) != SQLITE_OK) {
-        muse::Ret ret = muse::make_ret(muse::Ret::Code::InternalError, std::string(message ? message : sqlite3_errmsg(m_db)));
+    const int rc = sqlite3_exec(m_db, sql.c_str(), nullptr, nullptr, &message);
+    if (rc != SQLITE_OK) {
+        muse::Ret ret = sqliteRet(rc, message ? message : sqlite3_errmsg(m_db));
         sqlite3_free(message);
         return ret;
     }

@@ -36,7 +36,8 @@ class ProjectRecoveryWizardModel : public QObject, public muse::Contextable, pub
     Q_PROPERTY(int stepCount READ stepCount CONSTANT)
     Q_PROPERTY(bool canGoNext READ canGoNext NOTIFY stageChanged)
     Q_PROPERTY(bool projectOpen READ projectOpen NOTIFY stageChanged)
-    Q_PROPERTY(QString errorText READ errorText NOTIFY stageChanged)
+    Q_PROPERTY(ErrorKind errorKind READ errorKind NOTIFY stageChanged)
+    Q_PROPERTY(QString errorDetails READ errorDetails NOTIFY stageChanged)
 
     Q_PROPERTY(bool hasDocument READ hasDocument NOTIFY stageChanged)
     Q_PROPERTY(QString projectVersion READ projectVersion NOTIFY stageChanged)
@@ -86,6 +87,19 @@ public:
     };
     Q_ENUM(Integrity)
 
+    //! What went wrong, for the message the user reads
+    enum class ErrorKind {
+        None,
+        OriginalChanged,
+        WriteFailed,
+        NewerVersion,
+        NotAProject,
+        UnsupportedDamage,
+        ResultFailedCheck,
+        Internal,
+    };
+    Q_ENUM(ErrorKind)
+
     explicit ProjectRecoveryWizardModel(QObject* parent = nullptr);
 
     QString projectPath() const;
@@ -99,7 +113,9 @@ public:
     int stepCount() const;
     bool canGoNext() const;
     bool projectOpen() const;
-    QString errorText() const;
+    ErrorKind errorKind() const;
+    //! The technical text for issue reports, in English
+    QString errorDetails() const;
 
     bool hasDocument() const;
     QString projectVersion() const;
@@ -123,6 +139,7 @@ public:
     Q_INVOKABLE void selectMethod(int method);
     Q_INVOKABLE void runRecovery();
     Q_INVOKABLE void openResult();
+    Q_INVOKABLE void copyErrorDetails() const;
 
 signals:
     void projectPathChanged();
@@ -132,6 +149,7 @@ private:
     void onInspected(const muse::RetVal<Inspection>& inspection);
     void onRepaired(const muse::RetVal<RepairReport>& report);
     void setStage(Stage stage);
+    void setError(const muse::Ret& ret);
     bool canRepair() const;
     const DocumentInfo* activeDocument() const;
     muse::io::path_t makeOutputPath() const;
@@ -140,7 +158,8 @@ private:
     Stage m_stage = Stage::SelectProject;
     bool m_projectOpen = false;
     Method m_method = Method::Lossy;
-    QString m_error;
+    ErrorKind m_errorKind = ErrorKind::None;
+    QString m_errorDetails;
     QString m_outputPath;
     std::optional<Inspection> m_inspection;
 };

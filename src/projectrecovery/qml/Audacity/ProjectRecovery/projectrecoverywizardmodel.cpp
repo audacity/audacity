@@ -3,6 +3,9 @@
  */
 #include "projectrecoverywizardmodel.h"
 
+#include <QClipboard>
+#include <QGuiApplication>
+
 #include <cmath>
 
 #include "framework/global/translation.h"
@@ -11,10 +14,37 @@
 #include "project/projectcommands.h"
 #include "project/types/projecttypes.h"
 
+#include "projectrecovery/projectrecoveryerrors.h"
+
 using namespace au::projectrecovery;
 
 namespace {
 constexpr int STEP_COUNT = 5;
+
+ProjectRecoveryWizardModel::ErrorKind errorKindOf(const muse::Ret& ret)
+{
+    using Kind = ProjectRecoveryWizardModel::ErrorKind;
+    if (ret.success()) {
+        return Kind::None;
+    }
+    switch (ret.code()) {
+    case static_cast<int>(muse::Ret::Code::Busy):
+        return Kind::OriginalChanged;
+    case static_cast<int>(Err::WriteFailed):
+        return Kind::WriteFailed;
+    case static_cast<int>(Err::NewerVersion):
+        return Kind::NewerVersion;
+    case static_cast<int>(Err::NotAProject):
+        return Kind::NotAProject;
+    case static_cast<int>(muse::Ret::Code::NotSupported):
+    case static_cast<int>(muse::Ret::Code::BadData):
+        return Kind::UnsupportedDamage;
+    case static_cast<int>(Err::ResultFailedCheck):
+        return Kind::ResultFailedCheck;
+    default:
+        return Kind::Internal;
+    }
+}
 }
 
 ProjectRecoveryWizardModel::ProjectRecoveryWizardModel(QObject* parent)
@@ -99,9 +129,25 @@ bool ProjectRecoveryWizardModel::projectOpen() const
     return m_projectOpen;
 }
 
-QString ProjectRecoveryWizardModel::errorText() const
+ProjectRecoveryWizardModel::ErrorKind ProjectRecoveryWizardModel::errorKind() const
 {
-    return m_error;
+    return m_errorKind;
+}
+
+QString ProjectRecoveryWizardModel::errorDetails() const
+{
+    return m_errorDetails;
+}
+
+void ProjectRecoveryWizardModel::copyErrorDetails() const
+{
+    QGuiApplication::clipboard()->setText(m_errorDetails);
+}
+
+void ProjectRecoveryWizardModel::setError(const muse::Ret& ret)
+{
+    m_errorKind = errorKindOf(ret);
+    m_errorDetails = ret.success() ? QString() : QString::fromStdString(ret.text().empty() ? ret.toString() : ret.text());
 }
 
 const DocumentInfo* ProjectRecoveryWizardModel::activeDocument() const
@@ -247,7 +293,7 @@ void ProjectRecoveryWizardModel::next()
     }
 
     m_inspection.reset();
-    m_error.clear();
+    setError(muse::make_ok());
     setStage(Stage::Analyzing);
     const muse::io::path_t path(m_projectPath);
     recoveryService()->inspect(path).onResolve(this, [this](const muse::RetVal<Inspection>& inspection) {
@@ -286,7 +332,7 @@ void ProjectRecoveryWizardModel::onInspected(const muse::RetVal<Inspection>& ins
     if (inspection.ret) {
         m_inspection = inspection.val;
     } else {
-        m_error = QString::fromStdString(inspection.ret.text());
+        setError(inspection.ret);
     }
     setStage(Stage::Results);
 }
@@ -299,7 +345,7 @@ void ProjectRecoveryWizardModel::runRecovery()
     const muse::io::path_t original(m_projectPath);
     const muse::io::path_t output = makeOutputPath();
     m_outputPath = output.toQString();
-    m_error.clear();
+    setError(muse::make_ok());
     setStage(Stage::Recovering);
     recoveryService()->repair(original, output).onResolve(this, [this](const muse::RetVal<RepairReport>& report) {
         onRepaired(report);
@@ -308,15 +354,13 @@ void ProjectRecoveryWizardModel::runRecovery()
 
 void ProjectRecoveryWizardModel::onRepaired(const muse::RetVal<RepairReport>& report)
 {
-    if (!report.ret) {
-        m_error = QString::fromStdString(report.ret.text());
-    }
+    setError(report.ret);
     setStage(Stage::Finished);
 }
 
 void ProjectRecoveryWizardModel::openResult()
 {
-    if (m_stage != Stage::Finished || !m_error.isEmpty()) {
+    if (m_stage != Stage::Finished || m_errorKind != ErrorKind::None) {
         return;
     }
     const muse::io::path_t output(m_outputPath);

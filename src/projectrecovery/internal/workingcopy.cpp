@@ -8,6 +8,7 @@
 
 #include "framework/global/log.h"
 
+#include "../projectrecoveryerrors.h"
 #include "database.h"
 
 using namespace au::projectrecovery;
@@ -27,7 +28,7 @@ muse::Ret WorkingCopy::prepare(const muse::io::path_t& original, const muse::io:
     m_walError.clear();
 
     if (fileSystem()->entryType(original) != muse::io::EntryType::File) {
-        return muse::make_ret(muse::Ret::Code::BadArgs, "not a file: " + original.toStdString());
+        return make_ret(Err::NotAProject, "not a file: " + original.toStdString());
     }
 
     const muse::io::path_t wal = original + "-wal";
@@ -57,7 +58,7 @@ muse::Ret WorkingCopy::prepare(const muse::io::path_t& original, const muse::io:
     }
     muse::Ret ret = fileSystem()->makePath(folder);
     if (!ret) {
-        return ret;
+        return make_ret(Err::WriteFailed, "cannot make the folder " + folder.toStdString() + ": " + ret.toString());
     }
 
     m_path = target;
@@ -68,7 +69,7 @@ muse::Ret WorkingCopy::prepare(const muse::io::path_t& original, const muse::io:
         if (!ret) {
             removeCopy();
             m_path = original;
-            return ret;
+            return make_ret(Err::WriteFailed, "cannot copy the project to " + target.toStdString() + ": " + ret.toString());
         }
     }
 

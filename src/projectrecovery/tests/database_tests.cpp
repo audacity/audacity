@@ -4,6 +4,7 @@
 #include <gtest/gtest.h>
 
 #include "projectrecovery/internal/database.h"
+#include "projectrecovery/projectrecoveryerrors.h"
 
 #include "testprojectbuilder.h"
 
@@ -116,6 +117,16 @@ TEST_F(DatabaseTests, PragmaIntegerReadsTheValue)
     ASSERT_TRUE(pageSize.ret) << pageSize.ret.toString();
     EXPECT_GE(pageSize.val, 512);
     EXPECT_LE(pageSize.val, 65536);
+}
+
+TEST_F(DatabaseTests, AWriteThatSQLiteRefusesIsAWriteFailure)
+{
+    //! [WHEN] A read-only connection writes
+    const muse::Ret ret = m_db.exec("DELETE FROM sampleblocks;");
+
+    //! [THEN] The error says that writing failed, with SQLite's text as the details
+    EXPECT_EQ(ret.code(), static_cast<int>(Err::WriteFailed));
+    EXPECT_FALSE(ret.text().empty());
 }
 
 #ifndef _WIN32
