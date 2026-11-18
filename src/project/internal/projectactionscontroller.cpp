@@ -952,13 +952,59 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     Ret ret = project->createNew();
     if (!ret) {
         LOGE() << ret.toString();
-        return nullptr;
+        const RetVal<io::path_t> fallbackTempDir = askFallbackTemporaryDir();
+        if (!fallbackTempDir.ret) {
+            return nullptr;
+        }
+
+        configuration()->setTemporaryDir(fallbackTempDir.val);
+        project = std::make_shared<Audacity4Project>(iocContext());
+        ret = project->createNew();
+        if (!ret) {
+            LOGE() << ret.toString();
+            showTemporaryDirError();
+            return nullptr;
+        }
     }
 
     globalContext()->setCurrentProject(project);
     projectHistory()->init();
 
     return project;
+}
+
+RetVal<io::path_t> ProjectActionsController::askFallbackTemporaryDir() const
+{
+    const io::path_t defaultTempDir = configuration()->defaultTemporaryDir();
+    if (configuration()->temporaryDir() == defaultTempDir) {
+        showTemporaryDirError();
+        return make_ret(Ret::Code::Cancel);
+    }
+
+    constexpr int useDefaultButton = int(IInteractive::Button::CustomButton) + 1;
+    const IInteractive::ButtonDatas buttons {
+        IInteractive::ButtonData(IInteractive::Button::Cancel, muse::trc("global", "Cancel")),
+        IInteractive::ButtonData(useDefaultButton, muse::trc("project", "Use default location"), true)
+    };
+
+    const std::string title = muse::trc("project", "Could not create a new project");
+    const std::string text = muse::mtrc("project", "The temporary files location is not accessible: %1\n\n"
+                                                   "Use the default location instead? It can be changed later in Preferences.")
+                             .arg(io::toNativeSeparators(configuration()->temporaryDir()).toString()).toStdString();
+    const IInteractive::Result result = interactive()->warningSync(title, text, buttons, useDefaultButton,
+                                                                   { IInteractive::Option::WithIcon }, title);
+    if (!result.isButton(useDefaultButton)) {
+        return make_ret(Ret::Code::Cancel);
+    }
+
+    return RetVal<io::path_t>::make_ok(defaultTempDir);
+}
+
+void ProjectActionsController::showTemporaryDirError() const
+{
+    interactive()->error(muse::trc("project", "Could not create a new project"),
+                         muse::mtrc("project", "Make sure the temporary files location is accessible: %1")
+                         .arg(io::toNativeSeparators(configuration()->temporaryDir()).toString()).toStdString());
 }
 
 Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId,

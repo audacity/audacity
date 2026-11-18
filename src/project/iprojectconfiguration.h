@@ -44,6 +44,7 @@ public:
     virtual void setShouldAskSaveLocationType(bool shouldAsk) = 0;
 
     virtual muse::io::path_t temporaryDir() const = 0;
+    virtual muse::io::path_t defaultTemporaryDir() const = 0;
     virtual void setTemporaryDir(const muse::io::path_t& path) = 0;
     virtual muse::async::Channel<muse::io::path_t> temporaryDirChanged() const = 0;
 

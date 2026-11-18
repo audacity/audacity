@@ -47,6 +47,7 @@ public:
     void setShouldAskSaveLocationType(bool shouldAsk) override;
 
     muse::io::path_t temporaryDir() const override;
+    muse::io::path_t defaultTemporaryDir() const override;
     void setTemporaryDir(const muse::io::path_t& path) override;
     muse::async::Channel<muse::io::path_t> temporaryDirChanged() const override;
 

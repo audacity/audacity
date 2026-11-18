@@ -1,7 +1,6 @@
-#include <QDir>
-
 #include "framework/global/settings.h"
 #include "framework/global/translation.h"
+#include "framework/global/log.h"
 
 #include "projectconfiguration.h"
 
@@ -196,6 +195,11 @@ muse::io::path_t ProjectConfiguration::temporaryDir() const
     return muse::settings()->value(TEMPORARY_FILES_PATH).toPath();
 }
 
+muse::io::path_t ProjectConfiguration::defaultTemporaryDir() const
+{
+    return muse::settings()->defaultValue(TEMPORARY_FILES_PATH).toPath();
+}
+
 void ProjectConfiguration::setTemporaryDir(const muse::io::path_t& path)
 {
     muse::settings()->setSharedValue(TEMPORARY_FILES_PATH, muse::Val(path));
@@ -258,14 +262,20 @@ muse::async::Channel<int> ProjectConfiguration::autoSaveIntervalChanged() const
 
 void ProjectConfiguration::initTempDir()
 {
-    QString appDataLocation = (globalConfiguration()->userAppDataPath() + "/SessionData").toQString();
-    QDir dir(appDataLocation);
-    if (!dir.exists()) {
-        if (!dir.mkpath(".")) {
-            //! TODO AU4: failed to create directory, should exit the app?
+    auto ensureWritableDirectory = [this](const muse::io::path_t& path) {
+        if (path.empty() || !fileSystem()->makePath(path)) {
+            return false;
         }
+
+        return bool(fileSystem()->isWritable(path.appendingComponent(".write_test")));
+    };
+
+    const muse::io::path_t defaultTempDir = globalConfiguration()->userAppDataPath().appendingComponent("SessionData");
+    if (!ensureWritableDirectory(defaultTempDir)) {
+        LOGE() << "Default temporary directory is not usable: " << defaultTempDir;
     }
-    muse::settings()->setDefaultValue(TEMPORARY_FILES_PATH, muse::Val(appDataLocation));
+    muse::settings()->setDefaultValue(TEMPORARY_FILES_PATH, muse::Val(defaultTempDir));
+
     muse::settings()->valueChanged(TEMPORARY_FILES_PATH).onReceive(nullptr, [this](const muse::Val& val) {
         m_temporaryDirChanged.send(val.toString());
     });
