@@ -15,6 +15,7 @@
 #include "au3-audio-io/AudioIO.h"
 #include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-label-track/LabelTrack.h"
+#include "au3-mixer/Envelope.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track/Track.h"
 #include "au3-track/PendingTracks.h"
@@ -41,6 +42,18 @@ using namespace au::au3;
 
 constexpr int RATE_NOT_SELECTED = -1;
 using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
+
+namespace {
+std::shared_ptr<Au3WaveClip> linkedPendingClip(Au3WaveTrack& pendingTrack, Au3WaveClip& origClip)
+{
+    for (const auto& clip : pendingTrack.Intervals()) {
+        if (clip->GetSequences() == origClip.GetSequences()) {
+            return clip;
+        }
+    }
+    return nullptr;
+}
+}
 
 struct PropertiesOfSelected
 {
@@ -364,6 +377,14 @@ void Au3Record::init()
             IF_ASSERT_FAILED(origClip) {
                 return;
             }
+
+            auto* pendingWaveTrack = dynamic_cast<Au3WaveTrack*>(PendingTracks::Get(projectRef()).FindPendingTrack(*origWaveTrack));
+            if (pendingWaveTrack) {
+                if (const auto pendingClip = linkedPendingClip(*pendingWaveTrack, *origClip)) {
+                    origClip->SetEnvelope(std::make_unique<Envelope>(pendingClip->GetEnvelope()));
+                }
+            }
+            origClip->MarkChanged();
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
@@ -814,9 +835,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 if (newClip) {
                     newClip->SetIsPlaceholder(false);
                 }
-                if (auto copiedClip = pending->NewestOrNewClip()) {
-                    copiedClip->SetIsPlaceholder(false);
-                }
+                insertEmptyInterval(*pending, t0, false, wt);
                 transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
                 m_recordData.push_back(RecordData { trackedit::ClipKey(wt->GetId(), newClip->GetId()), newClip->GetId(), false, false });
@@ -922,13 +941,11 @@ Ret Au3Record::doRecord(Au3Project& project,
                 pendingTracks.RegisterPendingChangedTrack(updater, newTrack.get())
                 );
             // Source clip was marked as placeholder so that it would not be
-            // skipped in clip copying.  Un-mark it and its copy now
+            // skipped in clip copying.  Un-mark it now
             if (newClip) {
                 newClip->SetIsPlaceholder(false);
             }
-            if (auto copiedClip = pending->NewestOrNewClip()) {
-                copiedClip->SetIsPlaceholder(false);
-            }
+            insertEmptyInterval(*pending, t0, false, newTrack.get());
             transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
             m_recordData.push_back(RecordData { trackedit::ClipKey(newTrack->GetId(), newClip->GetId()), newClip->GetId(), false, false });
