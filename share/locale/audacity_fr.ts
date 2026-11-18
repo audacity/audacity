@@ -6747,7 +6747,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="87"/>
         <source>Split at silences</source>
-        <translation>Diviser les aux silences</translation>
+        <translation>Diviser aux silences</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="268"/>
@@ -20553,7 +20553,7 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="68"/>
         <source>Split at silences</source>
-        <translation>Diviser les aux silences</translation>
+        <translation>Diviser aux silences</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="71"/>
@@ -21985,7 +21985,7 @@ Souhaitez-vous continuer ?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="895"/>
         <source>Split stereo tracks to center mono</source>
-        <translation>Diviser les pistes stéréo vers mono centre</translation>
+        <translation>Diviser les pistes stéréo vers mono Centre</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
