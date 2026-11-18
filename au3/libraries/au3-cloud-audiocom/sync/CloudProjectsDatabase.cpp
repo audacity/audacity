@@ -698,10 +698,10 @@ CloudProjectsDatabase::GetPendingProjectBlob(
             return {};
         }
 
-        const auto size = row.GetColumnBytes(6);
+        const auto size = row.GetColumnBytes(5);
         data.BlobData.resize(size);
 
-        if (size != row.ReadData(6, data.BlobData.data(), size)) {
+        if (size != row.ReadData(5, data.BlobData.data(), size)) {
             return {};
         }
 
