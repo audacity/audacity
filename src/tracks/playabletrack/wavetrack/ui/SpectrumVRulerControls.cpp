@@ -172,7 +172,7 @@ void SpectrumVRulerControls::DoUpdateVRuler(
          }
          else {
             // use Hz
-            vruler->SetRange((int)(maxFreq), (int)(minFreq));
+            vruler->SetRange(maxFreq, minFreq);
             vruler->SetUnits({});
          }
          vruler->SetUpdater(&LinearUpdater::Instance());
