@@ -7,7 +7,9 @@
 
 #include <cstdint>
 #include <filesystem>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace au::projectrecovery::tests {
@@ -16,6 +18,8 @@ struct TestBlock {
     int64_t samples = 0;
     //! False: the document references the block, but the file has no row for it
     bool stored = true;
+    //! A length attribute that differs from the samples of the block
+    std::optional<int64_t> writtenLength = std::nullopt;
 };
 
 struct TestClip {
@@ -32,10 +36,15 @@ struct TestTrack {
 
 struct TestProject {
     std::vector<TestTrack> tracks;
+    //! False: blocks without the length attribute, as before Audacity 4.0.0
+    bool blockLengths = true;
 };
 
 //! A project document with the elements and attributes that recovery reads
 XmlDocument makeDocument(const TestProject& project);
+
+//! The value of a named attribute; throws when the node has no such attribute
+XmlValue& attributeValue(XmlNode& node, std::string_view name);
 
 //! Writes a project file as ProjectFileIO does: the schema, the project row and the stored blocks
 void writeProjectFile(const std::filesystem::path& path, const TestProject& project);

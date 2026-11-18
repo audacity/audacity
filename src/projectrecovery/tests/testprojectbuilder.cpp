@@ -6,8 +6,10 @@
 #include <gtest/gtest.h>
 #include <sqlite3.h>
 
+#include <algorithm>
 #include <fstream>
 #include <iterator>
+#include <stdexcept>
 
 #include "au3-sqlite-helpers/sqlite/SQLiteUtils.h"
 
@@ -142,6 +144,10 @@ XmlDocument au::projectrecovery::tests::makeDocument(const TestProject& project)
                 XmlNode blockNode;
                 blockNode.tag = "waveblock";
                 blockNode.attributes.push_back(integerAttribute("start", FieldType::LongLong, start));
+                if (project.blockLengths) {
+                    blockNode.attributes.push_back(integerAttribute("length", FieldType::LongLong,
+                                                                    block.writtenLength.value_or(block.samples)));
+                }
                 blockNode.attributes.push_back(integerAttribute("blockid", FieldType::LongLong, block.id));
                 sequenceNode.children.push_back(std::move(blockNode));
                 start += block.samples;
@@ -157,6 +163,17 @@ XmlDocument au::projectrecovery::tests::makeDocument(const TestProject& project)
     XmlDocument document;
     document.elements.push_back(std::move(root));
     return document;
+}
+
+XmlValue& au::projectrecovery::tests::attributeValue(XmlNode& node, std::string_view name)
+{
+    const auto attribute = std::find_if(node.attributes.begin(), node.attributes.end(), [name](const XmlAttribute& a) {
+        return a.name == name;
+    });
+    if (attribute == node.attributes.end()) {
+        throw std::out_of_range("no attribute " + std::string(name));
+    }
+    return attribute->value;
 }
 
 void au::projectrecovery::tests::writeProjectFile(const std::filesystem::path& path, const TestProject& project)

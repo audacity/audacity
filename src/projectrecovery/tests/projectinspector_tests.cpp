@@ -296,7 +296,7 @@ TEST_F(ProjectInspectorTests, BlocksOfCutLinesAreNotReferenced)
     XmlDocument document = makeDocument(project);
     XmlNode& clip = document.elements.front().children.front().children.front();
     XmlNode inner = clip;
-    inner.children.front().children.front().attributes[1].value.integer = 7;
+    attributeValue(inner.children.front().children.front(), "blockid").integer = 7;
     XmlNode outer = clip;
     outer.children.push_back(inner);
     clip.children.push_back(outer);
@@ -318,10 +318,11 @@ TEST_F(ProjectInspectorTests, BlocksOfCutLinesAreNotReferenced)
 
 TEST_F(ProjectInspectorTests, AMissingBlockAfterTheEndOfItsSequenceHasNoLength)
 {
-    //! [GIVEN] A missing block that starts after the sample count of its sequence
+    //! [GIVEN] In a file from before 4.0.0, a missing block that starts after the sample count of its sequence
     const auto path = file("nolength.aup4");
     TestProject project;
     project.tracks.push_back({ "Voice", 44100, { { "Take 1", 0, { { 1, 1000 }, { 2, 1000, false } } } } });
+    project.blockLengths = false;
     writeProjectFile(path, project);
     XmlDocument document = makeDocument(project);
     XmlNode& clip = document.elements.front().children.front().children.front();
@@ -478,4 +479,21 @@ TEST_F(ProjectInspectorTests, AProjectElementWithoutTheVersionsThatAudacityReads
         ASSERT_EQ(inspection.val.documents.size(), 1u);
         EXPECT_FALSE(inspection.val.documents.front().error.empty());
     }
+}
+
+TEST_F(ProjectInspectorTests, ABlockLengthThatDoesNotMatchTheBlockPositionsIsAProblem)
+{
+    //! [GIVEN] A project whose first block has a length attribute that does not match the start of the next block
+    const auto path = file("length.aup4");
+    TestProject project = twoClipProject(true, true);
+    project.tracks.front().clips.front().blocks.front().writtenLength = 1000;
+    writeProjectFile(path, project);
+
+    //! [WHEN] It is inspected
+    const muse::RetVal<Inspection> inspection = inspect(path);
+
+    //! [THEN] The mismatch is a problem
+    ASSERT_TRUE(inspection.ret) << inspection.ret.toString();
+    EXPECT_TRUE(inspection.val.has(Problem::BlockLengthMismatch));
+    EXPECT_FALSE(inspection.val.isHealthy());
 }

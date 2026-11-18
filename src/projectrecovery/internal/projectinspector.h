@@ -36,6 +36,8 @@ enum class Problem {
     MissingBlocks,
     //! A block's length could not be deduced for pre 3.7.9 project
     MissingBlockWithoutLength,
+    //! A block length attribute does not match the block positions
+    BlockLengthMismatch,
     //! PRAGMA integrity_check result
     IntegrityErrors,
 };

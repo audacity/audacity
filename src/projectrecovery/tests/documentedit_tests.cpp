@@ -3,8 +3,6 @@
  */
 #include <gtest/gtest.h>
 
-#include <stdexcept>
-
 #include "projectrecovery/internal/documentedit.h"
 #include "projectrecovery/internal/projectdocument.h"
 
@@ -21,12 +19,7 @@ XmlNode& clipNode(XmlDocument& document, size_t index)
 
 XmlValue& blockIdValue(XmlDocument& document, size_t clip, size_t block)
 {
-    for (XmlAttribute& attribute : clipNode(document, clip).children.front().children[block].attributes) {
-        if (attribute.name == "blockid") {
-            return attribute.value;
-        }
-    }
-    throw std::out_of_range("no blockid attribute");
+    return attributeValue(clipNode(document, clip).children.front().children[block], "blockid");
 }
 }
 

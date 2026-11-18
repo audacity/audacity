@@ -39,6 +39,8 @@ std::string problemText(Problem problem)
         return "the project references blocks missing from the database";
     case Problem::MissingBlockWithoutLength:
         return "a missing block has no length";
+    case Problem::BlockLengthMismatch:
+        return "a block length in the project document does not match the block positions";
     case Problem::IntegrityErrors:
         return "the database has integrity errors";
     }

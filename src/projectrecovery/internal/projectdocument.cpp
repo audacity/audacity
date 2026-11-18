@@ -35,14 +35,19 @@ Sequence au::projectrecovery::readSequence(const XmlNode& node)
     sequence.maxSamples = integerAttribute(node, "maxsamples");
     sequence.sampleFormat = static_cast<uint32_t>(integerAttribute(node, "sampleformat"));
     sequence.numSamples = integerAttribute(node, "numsamples");
+    std::vector<std::optional<int64_t> > writtenLengths;
     for (const XmlNode& child : node.children) {
         if (child.tag == "waveblock") {
             sequence.blocks.push_back({ integerAttribute(child, "start"), integerAttribute(child, "blockid") });
+            const XmlValue* length = child.attribute("length");
+            writtenLengths.push_back(length ? length->toInteger() : std::nullopt);
         }
     }
     for (size_t i = 0; i < sequence.blocks.size(); ++i) {
+        WaveBlock& block = sequence.blocks[i];
         const int64_t end = i + 1 < sequence.blocks.size() ? sequence.blocks[i + 1].start : sequence.numSamples;
-        sequence.blocks[i].length = end - sequence.blocks[i].start;
+        block.length = writtenLengths[i].value_or(end - block.start);
+        block.lengthMismatch = block.length != end - block.start;
     }
     return sequence;
 }

@@ -23,9 +23,10 @@ XmlAttribute doubleValue(const std::string& name, double value)
 
 TEST(ProjectDocumentTests, BlockLengthsComeFromTheNextStartAndTheSampleCount)
 {
-    //! [GIVEN] A clip with a full block, a silent block and a short last block
+    //! [GIVEN] A file from before 4.0.0, with a full block, a silent block and a short last block
     TestProject test;
     test.tracks.push_back({ "Voice", 48000, { { "Take 1", 2.5, { { 1, 262144 }, { -1000, 1000 }, { 2, 500 } } } } });
+    test.blockLengths = false;
 
     //! [WHEN] The model is read
     const auto project = readProjectDocument(makeDocument(test));
@@ -49,6 +50,26 @@ TEST(ProjectDocumentTests, BlockLengthsComeFromTheNextStartAndTheSampleCount)
     EXPECT_EQ(sequence.blocks[1].length, 1000);
     EXPECT_EQ(sequence.blocks[2].start, 263144);
     EXPECT_EQ(sequence.blocks[2].length, 500);
+}
+
+TEST(ProjectDocumentTests, TheLengthAttributeIsTheLengthAndMustMatchTheBlockPositions)
+{
+    //! [GIVEN] A middle and a last block with length attributes that do not match the next start and the sample count
+    TestProject test;
+    test.tracks.push_back({ "Voice", 44100, { { "Take 1", 0, { { 1, 1000 }, { 2, 500, true, 400 }, { 3, 300, true, 250 } } } } });
+
+    //! [WHEN] The model is read
+    const auto project = readProjectDocument(makeDocument(test));
+
+    //! [THEN] Each block has its written length, and only the two blocks do not match
+    ASSERT_TRUE(project.has_value());
+    const Sequence& sequence = project->waveTracks.front().clips.front().sequences.front();
+    ASSERT_EQ(sequence.blocks.size(), 3u);
+    EXPECT_EQ(sequence.blocks[1].length, 400);
+    EXPECT_EQ(sequence.blocks[2].length, 250);
+    EXPECT_FALSE(sequence.blocks[0].lengthMismatch);
+    EXPECT_TRUE(sequence.blocks[1].lengthMismatch);
+    EXPECT_TRUE(sequence.blocks[2].lengthMismatch);
 }
 
 TEST(ProjectDocumentTests, DocumentWithoutProjectElementIsNotAProject)

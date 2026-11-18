@@ -292,3 +292,21 @@ TEST_F(ProjectRepairerTests, AReadOnlyProjectGetsAWritableOutput)
     ASSERT_TRUE(report.ret) << report.ret.toString();
     EXPECT_NE(std::filesystem::status(output).permissions() & std::filesystem::perms::owner_write, std::filesystem::perms::none);
 }
+
+TEST_F(ProjectRepairerTests, AMissingBlockWhoseLengthDoesNotMatchGetsNoOutput)
+{
+    //! [GIVEN] A missing block with a length attribute that does not match the start of the next block
+    const auto original = file("length.aup4");
+    TestProject project = voiceProject(false, true);
+    project.tracks.front().clips.front().blocks.front().writtenLength = 1000;
+    writeProjectFile(original, project);
+    const auto output = file("length (Recovered).aup4");
+
+    //! [WHEN] It is repaired
+    const muse::RetVal<RepairReport> report = repair(original, output);
+
+    //! [THEN] The repair refuses it, and no output stays
+    EXPECT_EQ(report.ret.code(), static_cast<int>(muse::Ret::Code::NotSupported));
+    EXPECT_FALSE(std::filesystem::exists(output));
+    expectNoSideFiles(output);
+}

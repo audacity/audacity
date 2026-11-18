@@ -15,8 +15,10 @@ struct WaveBlock {
     int64_t start = 0;
     //! A value of 0 or less is silence of that many samples, without a row
     int64_t blockId = 0;
-    //! The start of the next block, or the sample count of the sequence, minus the start
+    //! From the length attribute; older files have none, and the block positions give the length
     int64_t length = 0;
+    //! The length attribute does not match the block positions
+    bool lengthMismatch = false;
 };
 
 struct Sequence {

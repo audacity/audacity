@@ -288,6 +288,12 @@ muse::RetVal<InspectedProject> ProjectInspector::inspectProject(const muse::io::
         if (withoutLength) {
             inspection.problems.push_back(Problem::MissingBlockWithoutLength);
         }
+        const std::vector<BlockReference>& loadedReferences = references[loaded->source];
+        const bool lengthMismatch = std::any_of(loadedReferences.begin(), loadedReferences.end(),
+                                                [](const BlockReference& reference) { return reference.block.lengthMismatch; });
+        if (lengthMismatch) {
+            inspection.problems.push_back(Problem::BlockLengthMismatch);
+        }
     }
 
     if (options.checkIntegrity) {
