@@ -33,11 +33,11 @@ Item {
         }
     }
 
-    Keys.onShortcutOverride: function(event) {
+    Keys.onShortcutOverride: function (event) {
         event.accepted = root.fullScreen && event.key === Qt.Key_Escape
     }
 
-    Keys.onEscapePressed: function(event) {
+    Keys.onEscapePressed: function (event) {
         if (root.fullScreen) {
             root.toggleFullScreen()
             event.accepted = true
