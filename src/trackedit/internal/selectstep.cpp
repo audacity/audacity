@@ -57,6 +57,12 @@ RetVal<E> enumParam(const Params& params, std::string_view key)
     return RetVal<E>::make_ret(badArgs("Unknown value of '" + std::string(key) + "': " + value));
 }
 
+template<typename E>
+void setEnumParam(Params& params, std::string_view key, E value)
+{
+    params.set(key, Val(EnumContract<E>::str_val(value)));
+}
+
 RetVal<SelectTimeSpec> timeSpecFromParams(const Params& params)
 {
     const RetVal<SelectTimeKind> kind = enumParam<SelectTimeKind>(params, SelectTimeKindContract::key);
@@ -223,11 +229,11 @@ SelectTracksKind au::trackedit::kindOf(const SelectTrackSpec& spec)
 Val au::trackedit::toVal(const SelectEnhancedStep& step)
 {
     Params params;
-    EnumContract<SelectTimeKind>::set(params, kindOf(step.time));
-    EnumContract<SelectTracksKind>::set(params, kindOf(step.tracks));
+    setEnumParam(params, SelectTimeKindContract::key, kindOf(step.time));
+    setEnumParam(params, SelectTracksKindContract::key, kindOf(step.tracks));
 
     if (const auto* range = std::get_if<SelectTimeRange>(&step.time)) {
-        EnumContract<SelectTimeRelativeTo>::set(params, range->relativeTo);
+        setEnumParam(params, SelectTimeRelativeToContract::key, range->relativeTo);
         params.set(TRACKEDIT_START_PARAM, Val(range->startOffset));
         params.set(TRACKEDIT_END_PARAM, Val(range->endOffset));
     }
@@ -235,7 +241,7 @@ Val au::trackedit::toVal(const SelectEnhancedStep& step)
     if (const auto* range = std::get_if<SelectTrackRange>(&step.tracks)) {
         params.set(SELECT_STEP_FIRST_TRACK_PARAM, Val(range->firstTrack));
         params.set(SELECT_STEP_TRACK_COUNT_PARAM, Val(range->trackCount));
-        EnumContract<SelectTracksMode>::set(params, range->mode);
+        setEnumParam(params, SelectTracksModeContract::key, range->mode);
     }
 
     return Val(ValMap(params));

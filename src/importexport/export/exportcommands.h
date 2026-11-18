@@ -423,18 +423,18 @@ struct ExportPresetContract {
 }
 
 namespace muse::rcommand {
-DECLARE_ENUM_CONTRACT(au::importexport::ExportChannelLayout, au::importexport::ExportChannelLayoutContract)
-DECLARE_ENUM_CONTRACT(au::importexport::ExportSampleRate, au::importexport::ExportSampleRateContract)
-DECLARE_ENUM_CONTRACT(au::importexport::Mp3SampleRate, au::importexport::Mp3SampleRateContract)
-DECLARE_ENUM_CONTRACT(au::importexport::WavEncoding, au::importexport::WavEncodingContract)
-DECLARE_ENUM_CONTRACT(au::importexport::Mp3Preset, au::importexport::Mp3PresetContract)
-DECLARE_ENUM_CONTRACT(au::importexport::Mp3VbrQuality, au::importexport::Mp3VbrQualityContract)
-DECLARE_ENUM_CONTRACT(au::importexport::Mp3BitRate, au::importexport::Mp3BitRateContract)
-DECLARE_ENUM_CONTRACT(au::importexport::Mp3Quality, au::importexport::Mp3QualityContract)
-DECLARE_ENUM_CONTRACT(au::importexport::FlacBitDepth, au::importexport::FlacBitDepthContract)
-DECLARE_ENUM_CONTRACT(au::importexport::FlacLevel, au::importexport::FlacLevelContract)
-DECLARE_ENUM_CONTRACT(au::importexport::OggQuality, au::importexport::OggQualityContract)
-DECLARE_ENUM_CONTRACT(au::importexport::ExportPreset, au::importexport::ExportPresetContract)
+DECLARE_ENUM_CONTRACT(au::importexport::ExportChannelLayoutContract)
+DECLARE_ENUM_CONTRACT(au::importexport::ExportSampleRateContract)
+DECLARE_ENUM_CONTRACT(au::importexport::Mp3SampleRateContract)
+DECLARE_ENUM_CONTRACT(au::importexport::WavEncodingContract)
+DECLARE_ENUM_CONTRACT(au::importexport::Mp3PresetContract)
+DECLARE_ENUM_CONTRACT(au::importexport::Mp3VbrQualityContract)
+DECLARE_ENUM_CONTRACT(au::importexport::Mp3BitRateContract)
+DECLARE_ENUM_CONTRACT(au::importexport::Mp3QualityContract)
+DECLARE_ENUM_CONTRACT(au::importexport::FlacBitDepthContract)
+DECLARE_ENUM_CONTRACT(au::importexport::FlacLevelContract)
+DECLARE_ENUM_CONTRACT(au::importexport::OggQualityContract)
+DECLARE_ENUM_CONTRACT(au::importexport::ExportPresetContract)
 }
 
 namespace au::importexport {

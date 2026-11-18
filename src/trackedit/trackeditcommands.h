@@ -202,8 +202,8 @@ struct SelectTracksModeContract {
 }
 
 namespace muse::rcommand {
-DECLARE_ENUM_CONTRACT(au::trackedit::SelectTimeRelativeTo, au::trackedit::SelectTimeRelativeToContract)
-DECLARE_ENUM_CONTRACT(au::trackedit::SelectTracksMode, au::trackedit::SelectTracksModeContract)
+DECLARE_ENUM_CONTRACT(au::trackedit::SelectTimeRelativeToContract)
+DECLARE_ENUM_CONTRACT(au::trackedit::SelectTracksModeContract)
 }
 
 namespace au::trackedit {

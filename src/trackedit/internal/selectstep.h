@@ -61,9 +61,9 @@ struct SelectTracksKindContract {
 }
 
 namespace muse::rcommand {
-DECLARE_ENUM_CONTRACT(au::trackedit::SelectAnchor, au::trackedit::SelectAnchorContract)
-DECLARE_ENUM_CONTRACT(au::trackedit::SelectTimeKind, au::trackedit::SelectTimeKindContract)
-DECLARE_ENUM_CONTRACT(au::trackedit::SelectTracksKind, au::trackedit::SelectTracksKindContract)
+DECLARE_ENUM_CONTRACT(au::trackedit::SelectAnchorContract)
+DECLARE_ENUM_CONTRACT(au::trackedit::SelectTimeKindContract)
+DECLARE_ENUM_CONTRACT(au::trackedit::SelectTracksKindContract)
 }
 
 namespace au::trackedit {
