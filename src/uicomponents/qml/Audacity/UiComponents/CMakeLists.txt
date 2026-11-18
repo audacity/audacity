@@ -37,7 +37,6 @@ qt_add_qml_module(uicomponents_qml
         components/TimeSignature.qml
         components/Timecode.qml
         components/TimecodeStartEnd.qml
-        components/ValueTooltip.qml
         components/internal/CornerHandle.qml
         components/internal/DualFocusBorder.qml
         components/internal/EdgeHandle.qml
