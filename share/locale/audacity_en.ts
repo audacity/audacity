@@ -753,8 +753,8 @@ After recovery, save the projects to ensure changes are written to disk.</transl
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
-        <source>Choosing &quot;Yes&quot; permanently deletes the selected projects immediately.</source>
-        <translation type="unfinished">Choosing &quot;Yes&quot; permanently deletes the selected projects immediately.</translation>
+        <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
+        <translation type="unfinished">Choosing “Yes” permanently deletes the selected projects immediately.</translation>
     </message>
 </context>
 <context>
@@ -15521,8 +15521,8 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="98"/>
-        <source>You don&apos;t have any macros yet</source>
-        <translation type="unfinished">You don&apos;t have any macros yet</translation>
+        <source>You don’t have any macros yet</source>
+        <translation type="unfinished">You don’t have any macros yet</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="76"/>
@@ -15627,13 +15627,13 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="45"/>
-        <source>&quot;%1&quot; will be deleted</source>
-        <translation type="unfinished">&quot;%1&quot; will be deleted</translation>
+        <source>“%1” will be deleted</source>
+        <translation type="unfinished">“%1” will be deleted</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="46"/>
-        <source>&quot;%1&quot; is used by other macros. Deleting it will also remove it from: %2</source>
-        <translation type="unfinished">&quot;%1&quot; is used by other macros. Deleting it will also remove it from: %2</translation>
+        <source>“%1” is used by other macros. Deleting it will also remove it from: %2</source>
+        <translation type="unfinished">“%1” is used by other macros. Deleting it will also remove it from: %2</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="64"/>
@@ -15688,8 +15688,8 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="202"/>
-        <source>A macro named &quot;%1&quot; already exists. Do you want to replace it?</source>
-        <translation type="unfinished">A macro named &quot;%1&quot; already exists. Do you want to replace it?</translation>
+        <source>A macro named “%1” already exists. Do you want to replace it?</source>
+        <translation type="unfinished">A macro named “%1” already exists. Do you want to replace it?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
@@ -20196,13 +20196,13 @@ Please connect an input device and rescan.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="208"/>
-        <source>Recording couldn&apos;t be started.</source>
-        <translation type="unfinished">Recording couldn&apos;t be started.</translation>
+        <source>Recording couldn’t be started.</source>
+        <translation type="unfinished">Recording couldn’t be started.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="222"/>
-        <source>Timed recording couldn&apos;t start</source>
-        <translation type="unfinished">Timed recording couldn&apos;t start</translation>
+        <source>Timed recording couldn’t start</source>
+        <translation type="unfinished">Timed recording couldn’t start</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="246"/>
@@ -20242,13 +20242,13 @@ Please connect an input device and rescan.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="330"/>
-        <source>Couldn&apos;t save the project</source>
-        <translation type="unfinished">Couldn&apos;t save the project</translation>
+        <source>Couldn’t save the project</source>
+        <translation type="unfinished">Couldn’t save the project</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="353"/>
-        <source>Couldn&apos;t export the audio</source>
-        <translation type="unfinished">Couldn&apos;t export the audio</translation>
+        <source>Couldn’t export the audio</source>
+        <translation type="unfinished">Couldn’t export the audio</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="357"/>
@@ -22100,8 +22100,8 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="973"/>
-        <source>Rendered all audio in track &apos;%1&apos;</source>
-        <translation type="unfinished">Rendered all audio in track &apos;%1&apos;</translation>
+        <source>Rendered all audio in track ‘%1’</source>
+        <translation type="unfinished">Rendered all audio in track ‘%1’</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>

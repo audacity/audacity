@@ -205,7 +205,7 @@ void TimedRecordingScenario::startRecording()
         }
 
         if (!response.ret.success() || !recordController()->isRecording()) {
-            failToStart(response.ret.text().empty() ? muse::trc("record", "Recording couldn't be started.") : response.ret.text());
+            failToStart(response.ret.text().empty() ? muse::trc("record", "Recording couldn’t be started.") : response.ret.text());
             return;
         }
 
@@ -219,7 +219,7 @@ void TimedRecordingScenario::startRecording()
 void TimedRecordingScenario::failToStart(const std::string& reason)
 {
     finish(Outcome::Failed);
-    toastService()->showError(muse::trc("record", "Timed recording couldn't start"), reason);
+    toastService()->showError(muse::trc("record", "Timed recording couldn’t start"), reason);
 }
 
 void TimedRecordingScenario::stopRecording(Outcome outcome)
@@ -327,7 +327,7 @@ void TimedRecordingScenario::runCompletionActions(const project::IAudacityProjec
         if (projectFilesController()->saveProject(actions.saveProjectPath)) {
             toastService()->show(muse::trc("record", "Project saved"), actions.saveProjectPath.toStdString(), ui::IconCode::Code::SAVE);
         } else {
-            toastService()->showError(muse::trc("record", "Couldn't save the project"), actions.saveProjectPath.toStdString());
+            toastService()->showError(muse::trc("record", "Couldn’t save the project"), actions.saveProjectPath.toStdString());
             succeeded = false;
         }
     }
@@ -350,7 +350,7 @@ bool TimedRecordingScenario::exportAudio(const project::IAudacityProjectPtr& pro
 
     const Ret ret = exporter()->exportData(path, options, nullptr, project);
     if (!ret) {
-        toastService()->showError(muse::trc("record", "Couldn't export the audio"), ret.text().empty() ? path.toStdString() : ret.text());
+        toastService()->showError(muse::trc("record", "Couldn’t export the audio"), ret.text().empty() ? path.toStdString() : ret.text());
         return false;
     }
 
