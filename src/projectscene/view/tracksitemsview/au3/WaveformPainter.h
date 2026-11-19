@@ -27,10 +27,10 @@ public:
 
     //! Build vertex-ready column data from the WaveDataCache directly (bypassing bitmap cache).
     //! columns is cleared first; reusing it between calls keeps its capacity.
-    //! dataComplete (optional) is set to false when any cache element is still being
-    //! computed — the caller should request the data again later and repaint.
-    void GetColumnData(size_t channelIndex, const WavePaintParameters& params, const au::projectscene::WaveMetrics& metrics,
-                       std::vector<WaveColumnVertex>& columns, bool* dataComplete = nullptr);
+    //! Returns false when any cache element is still being computed: the caller
+    //! should request the data again later and repaint.
+    bool GetColumnData(size_t channelIndex, const WavePaintParameters& params, const au::projectscene::WaveMetrics& metrics,
+                       std::vector<WaveColumnVertex>& columns);
 
     void MarkChanged() noexcept override;
     void Invalidate() override;

@@ -125,9 +125,7 @@ bool MinMaxRMSPainter::columns(const trackedit::ClipKey& clipKey, size_t channel
     .SetShowRMS(params.showRMS);
     paintParams.SetEnvelope(waveClip->GetEnvelope());
 
-    bool complete = true;
-    WaveformPainter::Get(*waveClip).GetColumnData(channelIndex, paintParams, metrics, columns, &complete);
-    return complete;
+    return WaveformPainter::Get(*waveClip).GetColumnData(channelIndex, paintParams, metrics, columns);
 }
 
 void MinMaxRMSPainter::samples(const trackedit::ClipKey& clipKey, size_t channelIndex, const IWavePainter::Params& params,
