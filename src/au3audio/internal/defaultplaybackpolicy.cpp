@@ -11,10 +11,10 @@
 
 namespace au::au3audio {
 DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject& project,
-                                             double trackEndTime, double loopEndTime, std::optional<double> pStartTime,
+                                             double playableEndTime, double loopEndTime, std::optional<double> pStartTime,
                                              bool loopEnabled, bool variableSpeed)
     : mProject{project}
-    , mTrackEndTime{trackEndTime}
+    , mPlayableEndTime{playableEndTime}
     , mLoopEndTime{loopEndTime}
     , mpStartTime{pStartTime}
     , mLoopEnabled{loopEnabled}
@@ -218,8 +218,8 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
             schedule.mT1 = data.mT1;
         }
         if (!mLoopEnabled) {
-            // Continue play to the end
-            schedule.mT1 = std::max(schedule.mT0, mTrackEndTime);
+            // Continue play to the playable end (the clip end, or a loop region end past it)
+            schedule.mT1 = std::max(schedule.mT0, mPlayableEndTime);
         }
         schedule.mWarpedLength = schedule.RealDuration(schedule.mT1);
 
