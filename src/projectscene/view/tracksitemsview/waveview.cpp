@@ -198,11 +198,6 @@ void WaveView::updatePolish()
     }
 }
 
-void WaveView::forceRepaint()
-{
-    scheduleRepaint();
-}
-
 void WaveView::geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry)
 {
     QQuickItem::geometryChange(newGeometry, oldGeometry);
@@ -468,20 +463,15 @@ void WaveView::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::scheduleRepaint);
+        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::scheduleRepaint);
+        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::scheduleRepaint);
         connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
 
         onWaveZoomChanged();
     }
 
     emit timelineContextChanged();
-}
-
-void WaveView::updateView()
-{
-    scheduleRepaint();
 }
 
 QColor WaveView::clipColor() const
