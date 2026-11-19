@@ -96,15 +96,14 @@ std::shared_ptr<au::au3::Au3WaveClip> MinMaxRMSPainter::findClip(const trackedit
     return track ? au::au3::DomAccessor::findWaveClip(track, clipKey.itemId) : nullptr;
 }
 
-IMinMaxRMSPainter::ClipData MinMaxRMSPainter::clipData(const trackedit::ClipKey& clipKey)
+std::optional<IMinMaxRMSPainter::ClipData> MinMaxRMSPainter::clipData(const trackedit::ClipKey& clipKey)
 {
     const std::shared_ptr<WaveClip> waveClip = findClip(clipKey);
     if (!waveClip) {
-        return {};
+        return std::nullopt;
     }
 
     ClipData data;
-    data.valid = true;
     data.channelCount = waveClip->NChannels();
     data.playStartTime = waveClip->GetPlayStartTime();
     data.playEndTime = waveClip->GetPlayEndTime();

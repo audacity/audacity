@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <optional>
 #include <vector>
 
 #include "modularity/imoduleinterface.h"
@@ -17,7 +18,6 @@ class IMinMaxRMSPainter : public IAu3WavePainter, MODULE_EXPORT_INTERFACE
 public:
     //! A clip's times and what the columns drawn for it depend on
     struct ClipData {
-        bool valid = false;
         size_t channelCount = 0;
         double playStartTime = 0.0;
         double playEndTime = 0.0;
@@ -30,7 +30,7 @@ public:
         double tileWidth = 0.0;
     };
 
-    virtual ClipData clipData(const trackedit::ClipKey& clipKey) = 0;
+    virtual std::optional<ClipData> clipData(const trackedit::ClipKey& clipKey) = 0;
 
     //! Fills columns for one channel of the window in metrics, whose times are relative to the
     //! untrimmed sequence start. Returns false while some of the data is still being computed.

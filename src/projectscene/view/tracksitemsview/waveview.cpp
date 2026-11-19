@@ -407,11 +407,12 @@ void WaveView::prepareSceneGraphData()
     input.plotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, input.params.zoom);
     setIsStemPlot(input.plotType == IWavePainter::PlotType::Stem);
 
-    input.clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
-    if (!input.clipData.valid) {
+    const std::optional<IMinMaxRMSPainter::ClipData> clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
+    if (!clipData) {
         m_sceneGraph.reset();
         return;
     }
+    input.clipData = *clipData;
 
     input.clipKey = m_clipKey.key;
     input.clipTime = m_clipTime;
@@ -753,12 +754,12 @@ void WaveView::updateDrawnSelection()
     const IWavePainter::Params params = hasView ? getWavePainterParams() : IWavePainter::Params {};
     if (hasView && params.selectionEndTime > params.selectionStartTime
         && wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, params.zoom) == IWavePainter::PlotType::Stem) {
-        const IMinMaxRMSPainter::ClipData clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
-        if (clipData.valid && clipData.samplesPerSecond > 0.0) {
+        const std::optional<IMinMaxRMSPainter::ClipData> clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
+        if (clipData && clipData->samplesPerSecond > 0.0) {
             // The same snapping and rounding as the samples painter applies to the selected background
-            const double samplesPerSecond = clipData.samplesPerSecond;
+            const double samplesPerSecond = clipData->samplesPerSecond;
             const auto toX = [&](double time) {
-                const double snapped = std::round((time - clipData.playStartTime) * samplesPerSecond) / samplesPerSecond;
+                const double snapped = std::round((time - clipData->playStartTime) * samplesPerSecond) / samplesPerSecond;
                 return std::clamp(std::floor(0.5 + params.zoom * (snapped - params.fromTime)), 0.0, width());
             };
             valid = true;
