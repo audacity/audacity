@@ -27,6 +27,14 @@ StyledDialogView {
 
     margins: 16
 
+    NavigationPanel {
+        id: rateNavPanel
+        name: "RateInput"
+        enabled: inputItem.enabled && inputItem.visible
+        section: root.navigationSection
+        order: 0
+    }
+
     Row {
         id: rateRow
 
@@ -55,6 +63,10 @@ StyledDialogView {
                 id: inputItem
 
                 anchors.fill: parent
+
+                navigation.panel: rateNavPanel
+                navigation.order: 1
+                navigation.name: "Sample rate"
 
                 currentText: root.rate > 0 ? root.rate.toString() : ""
 
@@ -128,6 +140,7 @@ StyledDialogView {
         id: bbox
 
         navigationPanel.section: root.navigationSection
+        navigationPanel.order: 1
 
         width: parent.width
         anchors.bottom: parent.bottom
