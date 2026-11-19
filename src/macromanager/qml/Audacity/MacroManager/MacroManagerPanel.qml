@@ -95,7 +95,7 @@ Rectangle {
 
             wrapMode: Text.WordWrap
 
-            text: qsTrc("macromanager", "You don't have any macros yet")
+            text: qsTrc("macromanager", "You don’t have any macros yet")
         }
 
         StyledListView {

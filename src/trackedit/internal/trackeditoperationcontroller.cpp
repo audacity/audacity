@@ -970,7 +970,7 @@ muse::RetVal<TrackId> TrackeditOperationController::mixAndRender(const TrackIdLi
 
     if (tracksIds.size() == 1) {
         const QString title = track ? track->title.toQString() : QString();
-        projectHistory()->pushHistoryState(muse::qtrc("trackedit", "Rendered all audio in track '%1'").arg(title).toStdString(),
+        projectHistory()->pushHistoryState(muse::qtrc("trackedit", "Rendered all audio in track ‘%1’").arg(title).toStdString(),
                                            muse::trc("trackedit", "Render"));
     } else {
         const bool stereo = track && track->type == TrackType::Stereo;

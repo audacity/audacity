@@ -199,8 +199,8 @@ bool MacroManagerModel::confirmReplace(const std::string& name) const
 {
     const IInteractive::Result result = interactive()->questionSync(
         trc("macromanager", "Replace macro?"),
-        qtrc("macromanager", "A macro named \"%1\" already exists. Do you want to replace it?").arg(QString::fromStdString(
-                                                                                                        name)).toStdString(),
+        qtrc("macromanager", "A macro named “%1” already exists. Do you want to replace it?").arg(QString::fromStdString(
+                                                                                                      name)).toStdString(),
         { IInteractive::Button::No, IInteractive::Button::Yes }, IInteractive::Button::Yes);
 
     return result.standardButton() == IInteractive::Button::Yes;
