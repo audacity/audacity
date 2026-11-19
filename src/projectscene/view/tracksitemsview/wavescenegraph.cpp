@@ -560,8 +560,7 @@ bool WaveSceneGraph::buildFrame(const Input& input, WaveMetrics waveMetrics, con
         const auto [displayMin, displayMax] = waveDisplayBounds(params);
         const float lastRow = static_cast<float>(channelHeight[ch]) - 1;
         const bool zeroLineVisible = displayMin <= 0.0f && displayMax >= 0.0f && displayMax > displayMin;
-        const float zeroLineY = displayMax > displayMin ? std::clamp(displayMax / (displayMax - displayMin) * lastRow, 0.0f, lastRow)
-                                : lastRow * 0.5f;
+        const float zeroLineY = std::clamp(displayValueToY(0.0f, displayMin, displayMax, lastRow + 1.0f), 0.0f, lastRow);
 
         if (window.hasPlaceholder) {
             for (const double pixel : { window.placeholderFromPixel, window.toPixelExact }) {
@@ -666,8 +665,7 @@ void WaveSceneGraph::buildSampleFrame(const Input& input, WaveMetrics waveMetric
 
         const auto [displayMin, displayMax] = waveDisplayBounds(params);
         const bool zeroLineVisible = displayMin <= 0.0f && displayMax >= 0.0f && displayMax > displayMin;
-        const float zeroLineY = channelTop + (displayMax == displayMin ? height * 0.5f
-                                              : std::clamp(displayMax / (displayMax - displayMin) * (height - 1.0f), -1.0f, height));
+        const float zeroLineY = channelTop + std::clamp(displayValueToY(0.0f, displayMin, displayMax, height), -1.0f, height);
 
         if (stems) {
             appendStems(m_frame, samples, channelTop, height, zeroLineY, params.style, params.showClipping);

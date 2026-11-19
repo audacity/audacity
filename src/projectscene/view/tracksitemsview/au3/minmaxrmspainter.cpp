@@ -21,24 +21,6 @@ graphics::Color ColorFromQColor(const QColor& color)
     return graphics::Color(color.red(), color.green(), color.blue(), color.alpha());
 }
 
-float getDBValue(float value, float dbRange)
-{
-    float sign = (value >= 0 ? 1 : -1);
-
-    if (value != 0.) {
-        float db = LINEAR_TO_DB(fabs(value));
-        value = (db + dbRange) / dbRange;
-
-        if (value < 0.0) {
-            value = 0.0;
-        }
-
-        value *= sign;
-    }
-
-    return value;
-}
-
 constexpr uint64_t fingerprintSeed = 14695981039346656037ull;
 
 void mixIntoFingerprint(uint64_t& hash, double value)
@@ -196,11 +178,9 @@ void MinMaxRMSPainter::samples(const trackedit::ClipKey& clipKey, size_t channel
         point.selected = hasSelection && time >= metrics.selectionStartTime && time <= metrics.selectionEndTime;
 
         if (dB) {
-            value = getDBValue(value, dBRange);
+            value = toDbDisplayValue(value, dBRange);
         }
-        const float y = displayMax == displayMin ? height * 0.5f
-                        : (displayMax - value) / (displayMax - displayMin) * (height - 1.0f);
-        point.y = std::clamp(y, -1.0f, height);
+        point.y = std::clamp(displayValueToY(value, displayMin, displayMax, height), -1.0f, height);
 
         samples.push_back(point);
     }
@@ -221,8 +201,7 @@ void MinMaxRMSPainter::paint(QPainter& painter, const trackedit::ClipKey& clipKe
         params.geometry.height * (1 - params.channelHeightRatio),
     };
 
-    const float zoomMin = dB ? getDBValue(params.displayBounds.first, dbRange) : params.displayBounds.first;
-    const float zoomMax = dB ? getDBValue(params.displayBounds.second, dbRange) : params.displayBounds.second;
+    const auto [zoomMin, zoomMax] = waveDisplayBounds(params);
 
     auto& waveformPainter = WaveformPainter::Get(*waveClip);
     WavePaintParameters paintParameters;

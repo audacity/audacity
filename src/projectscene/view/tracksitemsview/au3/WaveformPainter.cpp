@@ -7,6 +7,7 @@
 #include "au3-clip-processing/ClipFades.h"
 #include "au3-mixer/Envelope.h"
 #include "au3-utility/MemoryX.h"
+#include "../wavedisplaybounds.h"
 
 namespace au::projectscene {
 struct WaveBitmapCacheElementQt final : public WaveBitmapCacheElement
@@ -208,25 +209,8 @@ void WaveformPainter::GetColumnData(
     const float dbRange = static_cast<float>(params.DBRange);
     const bool showClipping = params.ShowClipping;
 
-    auto valueToY = [displayMin, displayMax, height](float value) -> float {
-        if (displayMax == displayMin) {
-            return height * 0.5f;
-        }
-        float normalized = (displayMax - value) / (displayMax - displayMin);
-        return normalized * (height - 1);
-    };
-
-    auto applyDB = [dbRange](float value) -> float {
-        float sign = (value >= 0 ? 1.0f : -1.0f);
-        if (value != 0.0f) {
-            float db = static_cast<float>(LINEAR_TO_DB(fabs(value)));
-            value = (db + dbRange) / dbRange;
-            if (value < 0.0f) {
-                value = 0.0f;
-            }
-            value *= sign;
-        }
-        return value;
+    const auto valueToY = [displayMin, displayMax, height](float value) {
+        return displayValueToY(value, displayMin, displayMax, height);
     };
 
     // Compute selection pixel range
@@ -277,9 +261,9 @@ void WaveformPainter::GetColumnData(
 
         // Apply dB scale
         if (dbScale) {
-            columnData.min = applyDB(columnData.min);
-            columnData.max = applyDB(columnData.max);
-            columnData.rms = applyDB(columnData.rms);
+            columnData.min = toDbDisplayValue(columnData.min, dbRange);
+            columnData.max = toDbDisplayValue(columnData.max, dbRange);
+            columnData.rms = toDbDisplayValue(columnData.rms, dbRange);
         }
 
         const bool clipping = showClipping
