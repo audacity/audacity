@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#include <QObject>
+
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
@@ -41,5 +43,7 @@ private:
 
     std::unique_ptr<CloudUrlHandler> m_urlHandler;
     std::vector<std::string> m_pendingUrls;
+
+    QObject m_queuedCallContext;
 };
 }

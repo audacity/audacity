@@ -6,6 +6,8 @@
 #include <functional>
 #include <optional>
 
+#include <QObject>
+
 #include "framework/rcommand/commandable.h"
 
 #include "framework/global/modularity/ioc.h"
@@ -185,5 +187,7 @@ private:
     context::IPlaybackStatePtr playbackState() const;
 
     DeleteBehaviorOnboardingScenario m_deleteBehaviorOnboardingScenario;
+
+    QObject m_queuedCallContext;
 };
 }

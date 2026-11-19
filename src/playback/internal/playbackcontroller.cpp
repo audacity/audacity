@@ -4,6 +4,7 @@
 #include "playbackcontroller.h"
 
 #include "record/recordcommands.h"
+#include "shared/commands/modalcommand.h"
 
 #include "../playbackcommands.h"
 #include "../playbacktypes.h"
@@ -88,7 +89,8 @@ void PlaybackController::init()
     });
     cd->onRequest(this, PLAYBACK_SET_LOOP_REGION_TO_SELECTION_COMMAND, [this]() { return setLoopRegionToSelection(); });
     cd->onRequest(this, PLAYBACK_SET_SELECTION_TO_LOOP_COMMAND, [this]() { return setSelectionToLoop(); });
-    cd->onRequest(this, PLAYBACK_SET_LOOP_REGION_IN_OUT_COMMAND, [this]() { return setLoopRegionInOut(); });
+    cd->onRequest(this, PLAYBACK_SET_LOOP_REGION_IN_OUT_COMMAND,
+                  shared::modalCommand(&m_queuedCallContext, [this]() { return setLoopRegionInOut(); }));
     cd->onRequest(this, PLAYBACK_TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_COMMAND, [this]() { return setSelectionFollowsLoopRegion(); });
 
     cd->onRequest(this, PLAYBACK_TOGGLE_MUTE_FOCUSED_TRACK_COMMAND, [this]() { return toggleMuteFocusedTrack(); });

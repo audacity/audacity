@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <QObject>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/rcommand/commandable.h"
@@ -200,5 +202,7 @@ private:
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;
+
+    QObject m_queuedCallContext;
 };
 }

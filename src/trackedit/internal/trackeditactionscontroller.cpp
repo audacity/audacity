@@ -12,6 +12,8 @@
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
 
+#include "shared/commands/modalcommand.h"
+
 #include "effects/effects_base/effectscommands.h"
 #include "playback/playbackcommands.h"
 #include "projectscene/projectscenecommands.h"
@@ -201,9 +203,11 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_TRACK_SWAP_CHANNELS_COMMAND, [this]() { return swapStereoChannels(); });
     cd->onRequest(this, TRACKEDIT_TRACK_SPLIT_STEREO_TO_LR_COMMAND, [this]() { return splitStereoToLR(); });
     cd->onRequest(this, TRACKEDIT_TRACK_SPLIT_STEREO_TO_CENTER_COMMAND, [this]() { return splitStereoToCenter(); });
-    cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND, [this]() { return setCustomTrackRate(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND,
+                  shared::modalCommand(&m_queuedCallContext, [this]() { return setCustomTrackRate(); }));
     cd->onRequest(this, TRACKEDIT_TRACK_MAKE_STEREO_COMMAND, [this]() { return makeStereoTrack(); });
-    cd->onRequest(this, TRACKEDIT_TRACK_RESAMPLE_COMMAND, [this]() { return resampleTracks(); });
+    cd->onRequest(this, TRACKEDIT_TRACK_RESAMPLE_COMMAND,
+                  shared::modalCommand(&m_queuedCallContext, [this]() { return resampleTracks(); }));
     cd->onRequest(this, TRACKEDIT_MIX_AND_RENDER_COMMAND, [this](const Params& params) {
         return mixAndRender(params.at(TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM, Val(false)).toBool());
     });
@@ -217,8 +221,10 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_SELECT_ALL_COMMAND, apply([this]() { selectionController()->setSelectedAllAudioData(); }));
     cd->onRequest(this, TRACKEDIT_CLEAR_SELECTION_COMMAND, [this]() { return selectNone(); });
     cd->onRequest(this, TRACKEDIT_SELECT_ALL_TRACKS_COMMAND, [this]() { return selectAllTracks(); });
-    cd->onRequest(this, TRACKEDIT_SELECT_LEFT_OF_PLAYBACK_POSITION_COMMAND, [this]() { return selectLeftOfPlaybackPos(); });
-    cd->onRequest(this, TRACKEDIT_SELECT_RIGHT_OF_PLAYBACK_POSITION_COMMAND, [this]() { return selectRightOfPlaybackPos(); });
+    cd->onRequest(this, TRACKEDIT_SELECT_LEFT_OF_PLAYBACK_POSITION_COMMAND,
+                  shared::modalCommand(&m_queuedCallContext, [this]() { return selectLeftOfPlaybackPos(); }));
+    cd->onRequest(this, TRACKEDIT_SELECT_RIGHT_OF_PLAYBACK_POSITION_COMMAND,
+                  shared::modalCommand(&m_queuedCallContext, [this]() { return selectRightOfPlaybackPos(); }));
     cd->onRequest(this, TRACKEDIT_SELECT_TRACK_START_TO_CURSOR_COMMAND, [this]() { return selectTrackStartToCursor(); });
     cd->onRequest(this, TRACKEDIT_SELECT_CURSOR_TO_TRACK_END_COMMAND, [this]() { return selectCursorToTrackEnd(); });
     cd->onRequest(this, TRACKEDIT_SELECT_TRACK_START_TO_END_COMMAND, [this]() { return selectTrackStartToEnd(); });

@@ -3,6 +3,8 @@
 */
 #include "effectsactionscontroller.h"
 
+#include "shared/commands/modalcommand.h"
+
 #include "effects/effects_base/effectscommands.h"
 #include "effects/effects_base/effectstypes.h"
 #include "wx/string.h"
@@ -36,7 +38,8 @@ void EffectsActionsController::registerActions()
     const EffectMetaList effects = effectsProvider()->effectMetaList();
     for (const EffectMeta& e : effects) {
         const EffectId effectId = e.id;
-        cd->onRequest(this, makeEffectOpenCommand(effectId), [this, effectId]() { return openEffect(effectId); });
+        cd->onRequest(this, makeEffectOpenCommand(effectId),
+                      shared::modalCommand(&m_queuedCallContext, [this, effectId]() { return openEffect(effectId); }));
         cd->onRequest(this, makeEffectApplyCommand(effectId), [this, effectId](const Params& params) {
             return applyEffect(effectId, params);
         });

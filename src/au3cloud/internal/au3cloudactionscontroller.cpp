@@ -5,6 +5,8 @@
 
 #include <variant>
 
+#include "shared/commands/modalcommand.h"
+
 #include "../cloudcommands.h"
 #include "cloudurlhandler.h"
 
@@ -23,7 +25,7 @@ void Au3CloudActionsController::init()
     m_urlHandler = std::make_unique<CloudUrlHandler>(iocContext());
 
     auto cd = commandDispatcher();
-    cd->onRequest(this, CLOUD_SHOW_TOUR_PAGE_COMMAND, [this]() { return showTourPage(); });
+    cd->onRequest(this, CLOUD_SHOW_TOUR_PAGE_COMMAND, shared::modalCommand(&m_queuedCallContext, [this]() { return showTourPage(); }));
     cd->onRequest(this, CLOUD_OPEN_PROJECT_PAGE_COMMAND, [this](const Params& params) { return openCloudProjectPage(params); });
     cd->onRequest(this, CLOUD_OPEN_AUDIO_PAGE_COMMAND, [this](const Params& params) { return openCloudAudioPage(params); });
     cd->onRequest(this, CLOUD_OPEN_PROFILE_PAGE_COMMAND, [this]() { return openCloudProfilePage(); });
