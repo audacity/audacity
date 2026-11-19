@@ -16,6 +16,7 @@
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-project-rate/ProjectRate.h"
 
+#include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -398,20 +399,9 @@ void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
     playRegion.SetEnd(end);
 }
 
-//! The furthest time playback can run to: the end of the last clip, or the end of the loop
-//! region when it lies past it. The loop region counts whether it is active or not: an
-//! inactive one still marks the play range (issue #11477)
 double Au3Player::playableEndTime() const
 {
-    Au3Project& project = projectRef();
-    const auto& playRegion = ViewInfo::Get(project).playRegion;
-
-    double end = Au3TrackList::Get(project).GetEndTime();
-    if (!playRegion.IsLastActiveRegionClear()) {
-        end = std::max(end, playRegion.GetLastActiveEnd());
-    }
-
-    return end;
+    return DomAccessor::playableEndTime(projectRef());
 }
 
 PlaybackRegion Au3Player::loopRegion() const

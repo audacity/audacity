@@ -192,6 +192,32 @@ TEST_F(Au3PlayerTests, Play_WithInactivePlayRegion_CoversFromCursorToTrackEnd)
 }
 
 /**
+ * @brief Play with an inactive loop region past the track end streams up to the loop region end
+ * @details SPEC (issue #11477): a loop region marks the play range even when looping is off,
+ *          so both the stream end and the mixer end are the loop region end, not the track end
+ */
+TEST_F(Au3PlayerTests, Play_WithInactiveLoopRegionPastTrackEnd_RunsToTheLoopEnd)
+{
+    //! [GIVEN] An inactive loop region {0.3, 0.8} reaching past the track end (0.5)
+    auto& playRegion = ViewInfo::Get(projectRef()).playRegion;
+    playRegion.SetAllTimes(0.3, 0.8);
+    playRegion.SetActive(false);
+
+    //! [GIVEN] The cursor is at 0.1 secs
+    m_player->seek(muse::secs_t(0.1));
+
+    //! [THEN] The transport runs from the cursor to the loop region end
+    EXPECT_CALL(*m_audioEngine, startTransport(_,
+                                               DoubleNear(0.1, TIME_TOLERANCE),
+                                               DoubleNear(0.8, TIME_TOLERANCE),
+                                               DoubleNear(0.8, TIME_TOLERANCE), _, _))
+    .WillOnce(Return(1));
+
+    //! [WHEN] Play
+    m_player->play();
+}
+
+/**
  * @brief playRange streams the exact range once, ignoring an active loop region
  * @details The mechanism behind "Play the selected time range" with looping enabled
  *          (issue #9393): a non-default policy stream bounded by the range itself

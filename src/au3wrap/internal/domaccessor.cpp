@@ -3,6 +3,8 @@
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
 
+#include "au3-time-frequency-selection/ViewInfo.h"
+
 using namespace au::au3;
 using namespace au::trackedit;
 using namespace muse;
@@ -332,4 +334,16 @@ void DomAccessor::clearAllLabelSelection(Au3Project& prj)
             }
         }
     }
+}
+
+double DomAccessor::playableEndTime(const Au3Project& prj)
+{
+    const auto& playRegion = ViewInfo::Get(prj).playRegion;
+
+    double end = Au3TrackList::Get(prj).GetEndTime();
+    if (!playRegion.IsLastActiveRegionClear()) {
+        end = std::max(end, playRegion.GetLastActiveEnd());
+    }
+
+    return end;
 }
