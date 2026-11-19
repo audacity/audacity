@@ -3523,9 +3523,12 @@ int AudioIoCallback::CallbackDoSeek()
     mPlaybackSchedule.SetSequenceTime(time);
     mSeek = 0.0;
 
-    // Reset mixer positions and flush buffers for all sequences
+    // Reset mixer bounds and positions, and flush buffers, for all sequences.
+    // Mixer::Reposition clamps to the mixer's bounds, which a looping policy narrows to the
+    // loop region (see DefaultPlaybackPolicy::RepositionPlayback): widen them so that a seek
+    // before the loop region lands there. [time, mT1] is what the policy sets when kicked.
     for (auto& mixer : mPlaybackMixers) {
-        mixer->Reposition(time, true);
+        mixer->SetTimes(time, mPlaybackSchedule.mT1, true);
     }
     for (auto& buffer : mPlaybackBuffers) {
         const auto toDiscard = buffer->AvailForGet();

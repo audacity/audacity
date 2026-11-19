@@ -14,8 +14,7 @@ namespace au::au3audio {
 class DefaultPlaybackPolicy final : public PlaybackPolicy, public NonInterferingBase
 {
 public:
-    DefaultPlaybackPolicy(AudacityProject& project, double playableEndTime, double loopEndTime, std::optional<double> pStartTime,
-                          bool loopEnabled, bool variableSpeed);
+    DefaultPlaybackPolicy(AudacityProject& project, double playableEndTime, double loopEndTime, bool loopEnabled, bool variableSpeed);
     ~DefaultPlaybackPolicy() override = default;
 
     void Initialize(PlaybackSchedule& schedule, double rate) override;
@@ -63,7 +62,6 @@ private:
     //! Where non-looped play ends: the last clip end, or a loop region end past it (see DomAccessor::playableEndTime)
     const double mPlayableEndTime;
     double mLoopEndTime;
-    std::optional<double> mpStartTime;
     size_t mRemaining{ 0 };
     bool mLoopEnabled{ true };
     bool mVariableSpeed{ false };

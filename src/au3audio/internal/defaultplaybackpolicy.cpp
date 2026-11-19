@@ -11,12 +11,11 @@
 
 namespace au::au3audio {
 DefaultPlaybackPolicy::DefaultPlaybackPolicy(AudacityProject& project,
-                                             double playableEndTime, double loopEndTime, std::optional<double> pStartTime,
+                                             double playableEndTime, double loopEndTime,
                                              bool loopEnabled, bool variableSpeed)
     : mProject{project}
     , mPlayableEndTime{playableEndTime}
     , mLoopEndTime{loopEndTime}
-    , mpStartTime{pStartTime}
     , mLoopEnabled{loopEnabled}
     , mVariableSpeed{variableSpeed}
 {}
@@ -82,20 +81,11 @@ bool DefaultPlaybackPolicy::Done(
 double DefaultPlaybackPolicy::OffsetSequenceTime(
     PlaybackSchedule& schedule, double offset)
 {
-    auto time = schedule.GetSequenceTime();
-
-    // Assuming that mpStartTime always has a value when this policy is used
-    if (mpStartTime) {
-        if (mLoopEnabled) {
-            if (time < schedule.mT0) {
-                time = std::clamp(time + offset, *mpStartTime, schedule.mT1);
-            } else {
-                time = std::clamp(time + offset, schedule.mT0, schedule.mT1);
-            }
-        } else {
-            time += offset;
-        }
-    }
+    //! NOTE: no lower bound: a seek before the loop region runs into it and loops from there,
+    //! exactly like a stream started from a cursor before the loop (RealTimeInit gives a
+    //! negative warped time). AU3 clamped into the loop region, which made a ruler click
+    //! before the loop land on the loop start. Past the end the schedule is done anyway
+    const double time = std::min(schedule.GetSequenceTime() + offset, schedule.mT1);
 
     schedule.RealTimeInit(time);
     return time;

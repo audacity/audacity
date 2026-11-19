@@ -38,8 +38,7 @@ AudioIOStartTransportOptions Au3AudioEngine::defaultTransportOptions(AudacityPro
         options.policyFactory = [&project, playableEndTime, loopEndTime](
             const AudioIOStartTransportOptions& options) -> std::unique_ptr<PlaybackPolicy>
         {
-            return std::make_unique<DefaultPlaybackPolicy>(project,
-                                                           playableEndTime, loopEndTime, options.pStartTime,
+            return std::make_unique<DefaultPlaybackPolicy>(project, playableEndTime, loopEndTime,
                                                            options.loopEnabled, options.variableSpeed);
         };
 
