@@ -521,6 +521,48 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_InsideActiveLoopPastProje
 }
 
 /**
+ * @brief Toggle play with the cursor on the end of an active loop region that ends the playable range
+ * @details The loop region {90, 120} is active and reaches past the project end (100); the
+ *          cursor and the playhead sit on its end. Nothing can be played from there, so
+ *          playback restarts from the project start, as with a cursor on the project end.
+ *          (Before, the loop exemption skipped the restart and Play did nothing)
+ */
+TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped_OnActiveLoopEndOnThePlayableEnd_RestartsFromStart)
+{
+    //! [GIVEN] Playback is stopped
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Stopped));
+
+    //! [GIVEN] An active loop region {90, 120} extends past the project end; the player's
+    //! play region is the loop region
+    ON_CALL(*m_player, loopRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
+    ON_CALL(*m_player, playbackRegion())
+    .WillByDefault(Return(PlaybackRegion { secs_t(90.0), secs_t(120.0) }));
+    ON_CALL(*m_player, isLoopRegionActive())
+    .WillByDefault(Return(true));
+
+    //! [GIVEN] The cursor and the playhead are on the loop region end
+    m_controller->setLastPlaybackSeekTime(120.0);
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillRepeatedly(Return(secs_t(120.0)));
+
+    //! [THEN] The playhead is moved to the project start
+    EXPECT_CALL(*m_player, seek(secs_t(0.0), false))
+    .Times(1);
+
+    //! [THEN] Player starts playing from the project start
+    EXPECT_CALL(*m_player, play(std::optional<muse::secs_t>(0.0)))
+    .Times(1);
+
+    //! [WHEN] Toggle play
+    togglePlayStop();
+
+    //! [THEN] The cursor is at the project start
+    EXPECT_EQ(m_controller->lastPlaybackSeekTime(), secs_t(0.0));
+}
+
+/**
  * @brief SPEC (issue #11477): an inactive loop region past the last clip extends the play range
  * @details The loop region {90, 120} exists but looping is off; the project ends at 100.
  *          A disabled loop region still marks how far playback goes, so playing from

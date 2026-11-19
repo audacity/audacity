@@ -306,8 +306,8 @@ void PlaybackController::onPlaybackPositionChanged()
         return;
     }
 
-    if (isPlaybackPositionAtOrAfter(totalPlayTime())) {
-        //! NOTE: reached (or ran past) the project end: return the playhead to the cursor,
+    if (isPlaybackPositionAtOrAfter(playableEndTime())) {
+        //! NOTE: reached (or ran past) the playable end: return the playhead to the cursor,
         //! as Stop does
         stopAndSeekToLastSeekTime();
     } else {
@@ -376,18 +376,16 @@ muse::Ret PlaybackController::togglePlay(TogglePlayMode mode)
     }
 
     if (isStopped()) {
-        if (hasReachedPlaybackEnd()) {
-            if (isPlaybackPositionAtOrAfter(totalPlayTime())) {
-                //! NOTE: on the project end — restart from the cursor; fall back to the
-                //! project start only when the cursor itself is at or past the end
-                //! (e.g. after "rewind to end")
-                doSeek(isPlaybackStartPositionValid() ? lastPlaybackSeekTime() : secs_t(0.0), false);
-            } else {
-                //! NOTE: reached the end of a played selection/region — continue from the
-                //! playhead rather than the region start, so the next play resumes where it
-                //! left off instead of jumping back
-                doSeek(playbackPosition(), false);
-            }
+        if (isPlaybackPositionAtOrAfter(playableEndTime())) {
+            //! NOTE: on the playable end (the project end, or a loop region end past it,
+            //! looping or not): restart from the cursor; fall back to the project start only
+            //! when the cursor itself is at or past the end (e.g. after "rewind to end")
+            doSeek(isPlaybackStartPositionValid() ? lastPlaybackSeekTime() : secs_t(0.0), false);
+        } else if (hasReachedPlaybackEnd()) {
+            //! NOTE: reached the end of a played selection/region — continue from the
+            //! playhead rather than the region start, so the next play resumes where it
+            //! left off instead of jumping back
+            doSeek(playbackPosition(), false);
         }
 
         doPlay();
