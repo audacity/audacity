@@ -126,6 +126,9 @@ StyledDialogView {
 
     ButtonBox {
         id: bbox
+
+        navigationPanel.section: root.navigationSection
+
         width: parent.width
         anchors.bottom: parent.bottom
 
