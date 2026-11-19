@@ -39,4 +39,6 @@ struct OggSettings {
 
 using ExportFormatSettings = std::variant<WavSettings, Mp3PresetSettings, Mp3VbrSettings, Mp3AbrSettings, Mp3CbrSettings,
                                           FlacSettings, OggSettings>;
+
+using ExportOptionValue = std::variant<WavEncoding, Mp3Preset, Mp3VbrQuality, Mp3BitRate, FlacBitDepth, FlacLevel, OggQuality>;
 }

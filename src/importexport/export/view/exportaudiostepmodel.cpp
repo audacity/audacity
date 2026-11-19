@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <array>
 #include <ranges>
+#include <string>
 #include <type_traits>
 #include <utility>
 
@@ -32,17 +33,17 @@ struct Choice {
 };
 
 constexpr std::array<Choice, 4> FORMATS { {
-    { "wav", "WAV" },
-    { "mp3", "MP3" },
-    { "flac", "FLAC" },
-    { "ogg", "Ogg Vorbis" },
+    { "wav", QT_TRANSLATE_NOOP("export", "WAV") },
+    { "mp3", QT_TRANSLATE_NOOP("export", "MP3") },
+    { "flac", QT_TRANSLATE_NOOP("export", "FLAC") },
+    { "ogg", QT_TRANSLATE_NOOP("export", "Ogg Vorbis") },
 } };
 
 constexpr std::array<Choice, 4> MP3_MODES { {
-    { "preset", "Preset" },
-    { "vbr", "Variable" },
-    { "abr", "Average" },
-    { "cbr", "Constant" },
+    { "preset", QT_TRANSLATE_NOOP("export", "Preset") },
+    { "vbr", QT_TRANSLATE_NOOP("export", "Variable") },
+    { "abr", QT_TRANSLATE_NOOP("export", "Average") },
+    { "cbr", QT_TRANSLATE_NOOP("export", "Constant") },
 } };
 
 QString toQString(std::string_view text)
@@ -70,7 +71,31 @@ QVariantList contractOptions()
 {
     QVariantList list;
     for (const auto& entry : C::table) {
-        list << option(toQString(entry.description), entry.sval);
+        list << option(qtrc("export", std::string(entry.description).c_str()), entry.sval);
+    }
+    return list;
+}
+
+template<typename C>
+QVariantList sampleRateOptions()
+{
+    QVariantList list;
+    for (const auto& entry : C::table) {
+        const QString text = entry.eval == decltype(entry.eval)::ProjectRate
+                             ? qtrc("export", "Project rate")
+                             : qtrc("export", "%1 Hz").arg(static_cast<int>(entry.eval));
+        list << option(text, entry.sval);
+    }
+    return list;
+}
+
+template<typename C>
+QVariantList exporterOptions(const IExporter& exporter)
+{
+    QVariantList list;
+    for (const auto& entry : C::table) {
+        const std::string label = exporter.optionLabel(entry.eval).value_or(std::string(entry.sval));
+        list << option(QString::fromStdString(label), entry.sval);
     }
     return list;
 }
@@ -285,46 +310,52 @@ std::vector<ExportAudioStepModel::Row> ExportAudioStepModel::formatRows() const
                         toQString(mp3ModeOf(m_settings)) };
 
     return std::visit(Overloaded {
-        [](const WavSettings& s) {
+        [this](const WavSettings& s) {
             return std::vector<Row> {
-                { Field::WavEncoding, Section::Format, qtrc("export", "Encoding"), contractOptions<WavEncodingContract>(), keyOf(
+                { Field::WavEncoding, Section::Format, qtrc("export", "Encoding"), exporterOptions<WavEncodingContract>(*exporter()), keyOf(
                       s.encoding) },
             };
         },
-        [&mp3Mode](const Mp3PresetSettings& s) {
+        [this, &mp3Mode](const Mp3PresetSettings& s) {
             return std::vector<Row> {
                 mp3Mode,
-                { Field::Mp3Value, Section::Format, qtrc("export", "Quality"), contractOptions<Mp3PresetContract>(), keyOf(s.preset) },
+                { Field::Mp3Value, Section::Format, qtrc("export", "Quality"), exporterOptions<Mp3PresetContract>(*exporter()), keyOf(
+                      s.preset) },
             };
         },
-        [&mp3Mode](const Mp3VbrSettings& s) {
+        [this, &mp3Mode](const Mp3VbrSettings& s) {
             return std::vector<Row> {
                 mp3Mode,
-                { Field::Mp3Value, Section::Format, qtrc("export", "Quality"), contractOptions<Mp3VbrQualityContract>(), keyOf(s.quality) },
+                { Field::Mp3Value, Section::Format, qtrc("export", "Quality"), exporterOptions<Mp3VbrQualityContract>(*exporter()),
+                  keyOf(s.quality) },
             };
         },
-        [&mp3Mode](const Mp3AbrSettings& s) {
+        [this, &mp3Mode](const Mp3AbrSettings& s) {
             return std::vector<Row> {
                 mp3Mode,
-                { Field::Mp3Value, Section::Format, qtrc("export", "Bit rate"), contractOptions<Mp3BitRateContract>(), keyOf(s.bitRate) },
+                { Field::Mp3Value, Section::Format, qtrc("export", "Bit rate"), exporterOptions<Mp3BitRateContract>(*exporter()),
+                  keyOf(s.bitRate) },
             };
         },
-        [&mp3Mode](const Mp3CbrSettings& s) {
+        [this, &mp3Mode](const Mp3CbrSettings& s) {
             return std::vector<Row> {
                 mp3Mode,
-                { Field::Mp3Value, Section::Format, qtrc("export", "Bit rate"), contractOptions<Mp3BitRateContract>(), keyOf(s.bitRate) },
+                { Field::Mp3Value, Section::Format, qtrc("export", "Bit rate"), exporterOptions<Mp3BitRateContract>(*exporter()),
+                  keyOf(s.bitRate) },
             };
         },
-        [](const FlacSettings& s) {
+        [this](const FlacSettings& s) {
             return std::vector<Row> {
-                { Field::FlacBitDepth, Section::Format, qtrc("export", "Bit depth"), contractOptions<FlacBitDepthContract>(),
+                { Field::FlacBitDepth, Section::Format, qtrc("export", "Bit depth"), exporterOptions<FlacBitDepthContract>(*exporter()),
                   keyOf(s.bitDepth) },
-                { Field::FlacLevel, Section::Format, qtrc("export", "Level"), contractOptions<FlacLevelContract>(), keyOf(s.level) },
+                { Field::FlacLevel, Section::Format, qtrc("export", "Level"), exporterOptions<FlacLevelContract>(*exporter()), keyOf(
+                      s.level) },
             };
         },
-        [](const OggSettings& s) {
+        [this](const OggSettings& s) {
             return std::vector<Row> {
-                { Field::OggQuality, Section::Format, qtrc("export", "Quality"), contractOptions<OggQualityContract>(), keyOf(s.quality) },
+                { Field::OggQuality, Section::Format, qtrc("export", "Quality"), exporterOptions<OggQualityContract>(*exporter()),
+                  keyOf(s.quality) },
             };
         },
     }, m_settings);
@@ -332,8 +363,8 @@ std::vector<ExportAudioStepModel::Row> ExportAudioStepModel::formatRows() const
 
 ExportAudioStepModel::Row ExportAudioStepModel::sampleRateRow() const
 {
-    const QVariantList options = isMp3(m_settings) ? contractOptions<Mp3SampleRateContract>()
-                                 : contractOptions<ExportSampleRateContract>();
+    const QVariantList options = isMp3(m_settings) ? sampleRateOptions<Mp3SampleRateContract>()
+                                 : sampleRateOptions<ExportSampleRateContract>();
 
     return { Field::SampleRate, Section::Audio, qtrc("export", "Sample rate"), options, QString::fromStdString(m_sampleRate) };
 }

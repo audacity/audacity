@@ -13,6 +13,7 @@
 #include "framework/global/types/val.h"
 
 #include "../exportcommands.h"
+#include "../iexporter.h"
 #include "../types/exportformatsettings.h"
 
 namespace au::importexport {
@@ -53,7 +54,7 @@ muse::RetVal<ExportFormatCommand> formatCommandFromVal(const muse::Val& val);
 muse::Val toVal(const ExportSimpleStep& step);
 muse::RetVal<ExportSimpleStep> simpleStepFromVal(const muse::Val& val);
 
-std::string formatSummary(const ExportFormatCommand& command);
+std::string formatSummary(const ExportFormatCommand& command, const IExporter& exporter);
 
 OutputPathContext macroOutputPathContext(const muse::io::path_t& exportDir, const muse::io::path_t& projectPath,
                                          const std::string& projectDisplayName);

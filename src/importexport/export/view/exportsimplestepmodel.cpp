@@ -28,7 +28,7 @@ QVariantList ExportSimpleStepModel::presetOptions() const
     QVariantList options;
     for (const auto& entry : ExportPresetContract::table) {
         options << QVariantMap {
-            { "text", QString::fromUtf8(entry.description.data(), static_cast<qsizetype>(entry.description.size())) },
+            { "text", qtrc("export", std::string(entry.description).c_str()) },
             { "value", QString::fromUtf8(entry.sval.data(), static_cast<qsizetype>(entry.sval.size())) },
             };
     }
@@ -44,7 +44,7 @@ QString ExportSimpleStepModel::presetResult() const
 {
     const ExportPresetSettings preset = presetSettings(m_preset);
     const ExportFormatCommand command = formatCommand(preset.settings, std::string(), preset.channels, m_folder, m_fileName);
-    const QString summary = QString::fromStdString(formatSummary(command));
+    const QString summary = QString::fromStdString(formatSummary(command, *exporter()));
 
     return preset.channels == ExportChannelLayout::Mono ? qtrc("export", "%1, mono").arg(summary) : summary;
 }

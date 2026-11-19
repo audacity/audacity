@@ -47,6 +47,7 @@ public:
     ExportParameters cloudExportParameters(const std::string& format) const override;
     muse::RetVal<ExportParameters> exportParameters(const ExportFormatSettings& settings, int sampleRate) const override;
     int defaultSampleRate(const ExportFormatSettings& settings) const override;
+    std::optional<std::string> optionLabel(const ExportOptionValue& value) const override;
     bool isCustomFFmpegExportFormat() const override;
     bool hasMetadata() const override;
 

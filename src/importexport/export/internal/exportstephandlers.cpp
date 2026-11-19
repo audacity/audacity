@@ -45,7 +45,7 @@ String ExportAudioStepHandler::summary(const Val& data) const
         return String::fromStdString(command.ret.text());
     }
 
-    return String::fromStdString(formatSummary(command.val));
+    return String::fromStdString(formatSummary(command.val, *exporter()));
 }
 
 Val ExportAudioStepHandler::defaultData() const
@@ -87,7 +87,7 @@ String ExportSimpleStepHandler::summary(const Val& data) const
 
     const auto& presets = ExportPresetContract::table;
     const auto it = std::ranges::find(presets, step.val.preset, [](const auto& entry) { return entry.eval; });
-    return String::fromStdString(std::string(it->description));
+    return mtrc("export", std::string(it->description).c_str());
 }
 
 Val ExportSimpleStepHandler::defaultData() const

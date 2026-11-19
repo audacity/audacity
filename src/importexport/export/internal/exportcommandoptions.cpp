@@ -3,8 +3,6 @@
 */
 #include "exportcommandoptions.h"
 
-#include <algorithm>
-
 #include "framework/global/log.h"
 #include "framework/global/translation.h"
 
@@ -26,11 +24,25 @@ void replaceAll(std::string& text, const std::string& from, const std::string& t
     }
 }
 
-template<typename C>
-std::string describe(decltype(C::def) value)
+std::string optionLabelOrValue(const IExporter& exporter, const ExportOptionValue& value)
 {
-    const auto it = std::ranges::find(C::table, value, [](const auto& entry) { return entry.eval; });
-    return it != C::table.end() ? std::string(it->description) : std::string();
+    const std::string rawValue = std::visit([](auto v) { return muse::rcommand::EnumContract<decltype(v)>::str_val(v); }, value);
+    return exporter.optionLabel(value).value_or(rawValue);
+}
+
+std::string mp3QualitySummary(Mp3Quality quality, const IExporter& exporter)
+{
+    const auto prefixed = [&exporter](const char* pattern, const ExportOptionValue& value) {
+        return mtrc("export", pattern).arg(String::fromStdString(optionLabelOrValue(exporter, value))).toStdString();
+    };
+
+    return std::visit(Overloaded {
+            [&](const Mp3PresetSettings& s) { return prefixed(QT_TRANSLATE_NOOP("export", "Preset: %1"), s.preset); },
+            [&](const Mp3VbrSettings& s) { return prefixed(QT_TRANSLATE_NOOP("export", "Variable: %1"), s.quality); },
+            [&](const Mp3AbrSettings& s) { return prefixed(QT_TRANSLATE_NOOP("export", "Average: %1"), s.bitRate); },
+            [&](const Mp3CbrSettings& s) { return prefixed(QT_TRANSLATE_NOOP("export", "Constant: %1"), s.bitRate); },
+            [](const auto&) { return std::string(); },
+        }, mp3Settings(quality));
 }
 
 template<typename C, typename Rate>
@@ -207,15 +219,15 @@ RetVal<ExportSimpleStep> au::importexport::simpleStepFromVal(const Val& val)
     });
 }
 
-std::string au::importexport::formatSummary(const ExportFormatCommand& command)
+std::string au::importexport::formatSummary(const ExportFormatCommand& command, const IExporter& exporter)
 {
     return std::visit(Overloaded {
-        [](const ExportWavCommand& c) { return "WAV, " + describe<WavEncodingContract>(c.encoding); },
-        [](const ExportMp3Command& c) { return "MP3, " + describe<Mp3QualityContract>(c.quality); },
-        [](const ExportFlacCommand& c) {
-            return "FLAC, " + describe<FlacBitDepthContract>(c.bitDepth) + ", " + describe<FlacLevelContract>(c.level);
+        [&](const ExportWavCommand& c) { return "WAV, " + optionLabelOrValue(exporter, c.encoding); },
+        [&](const ExportMp3Command& c) { return "MP3, " + mp3QualitySummary(c.quality, exporter); },
+        [&](const ExportFlacCommand& c) {
+            return "FLAC, " + optionLabelOrValue(exporter, c.bitDepth) + ", " + optionLabelOrValue(exporter, c.level);
         },
-        [](const ExportOggCommand& c) { return "Ogg Vorbis, " + describe<OggQualityContract>(c.quality); },
+        [&](const ExportOggCommand& c) { return "Ogg Vorbis, " + optionLabelOrValue(exporter, c.quality); },
     }, command);
 }
 

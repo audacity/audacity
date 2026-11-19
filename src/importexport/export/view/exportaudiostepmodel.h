@@ -16,6 +16,7 @@
 
 #include "../exportcommands.h"
 #include "../iexportconfiguration.h"
+#include "../iexporter.h"
 #include "../types/exportformatsettings.h"
 
 namespace au::importexport {
@@ -32,6 +33,7 @@ class ExportAudioStepModel : public QAbstractListModel, public muse::Contextable
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IExporter> exporter{ this };
 
 public:
     enum class Section {

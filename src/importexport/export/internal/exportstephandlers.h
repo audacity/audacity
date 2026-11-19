@@ -34,6 +34,8 @@ protected:
 
 class ExportAudioStepHandler : public ExportStepHandler
 {
+    muse::ContextInject<IExporter> exporter{ this };
+
 public:
     using ExportStepHandler::ExportStepHandler;
 

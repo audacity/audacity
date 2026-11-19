@@ -7,6 +7,7 @@
 #include <string_view>
 #include <tuple>
 
+#include "framework/global/translation.h"
 #include "framework/rcommand/commandtypes.h"
 #include "framework/rcommand/enumcontract.h"
 #include "framework/rcommand/typedcommand.h"
@@ -26,9 +27,9 @@ struct ExportChannelLayoutContract {
     static constexpr std::string_view key = "channels";
     static constexpr ExportChannelLayout def = ExportChannelLayout::Auto;
     static constexpr muse::rcommand::EnumTable<ExportChannelLayout, 3> table = { {
-        { "Auto", ExportChannelLayout::Auto, "Auto" },
-        { "Mono", ExportChannelLayout::Mono, "Mono" },
-        { "Stereo", ExportChannelLayout::Stereo, "Stereo" },
+        { "Auto", ExportChannelLayout::Auto, QT_TRANSLATE_NOOP("export", "Auto") },
+        { "Mono", ExportChannelLayout::Mono, QT_TRANSLATE_NOOP("export", "Mono") },
+        { "Stereo", ExportChannelLayout::Stereo, QT_TRANSLATE_NOOP("export", "Stereo") },
     } };
 };
 
@@ -53,7 +54,7 @@ struct ExportSampleRateContract {
     static constexpr std::string_view key = "sampleRate";
     static constexpr ExportSampleRate def = ExportSampleRate::ProjectRate;
     static constexpr muse::rcommand::EnumTable<ExportSampleRate, 14> table = { {
-        { "project", ExportSampleRate::ProjectRate, "Project rate" },
+        { "project", ExportSampleRate::ProjectRate, QT_TRANSLATE_NOOP("export", "Project rate") },
         { "8000", ExportSampleRate::Hz8000, "8000 Hz" },
         { "11025", ExportSampleRate::Hz11025, "11025 Hz" },
         { "16000", ExportSampleRate::Hz16000, "16000 Hz" },
@@ -87,7 +88,7 @@ struct Mp3SampleRateContract {
     static constexpr std::string_view key = "sampleRate";
     static constexpr Mp3SampleRate def = Mp3SampleRate::ProjectRate;
     static constexpr muse::rcommand::EnumTable<Mp3SampleRate, 10> table = { {
-        { "project", Mp3SampleRate::ProjectRate, "Project rate" },
+        { "project", Mp3SampleRate::ProjectRate, QT_TRANSLATE_NOOP("export", "Project rate") },
         { "8000", Mp3SampleRate::Hz8000, "8000 Hz" },
         { "11025", Mp3SampleRate::Hz11025, "11025 Hz" },
         { "12000", Mp3SampleRate::Hz12000, "12000 Hz" },
@@ -413,11 +414,11 @@ struct ExportPresetContract {
     static constexpr std::string_view key = "preset";
     static constexpr ExportPreset def = ExportPreset::Standard;
     static constexpr muse::rcommand::EnumTable<ExportPreset, 5> table = { {
-        { "lossless", ExportPreset::Lossless, "Lossless (FLAC)" },
-        { "high", ExportPreset::HighQuality, "High quality" },
-        { "standard", ExportPreset::Standard, "Standard" },
-        { "small", ExportPreset::SmallFile, "Small file" },
-        { "speech", ExportPreset::Speech, "Speech" },
+        { "lossless", ExportPreset::Lossless, QT_TRANSLATE_NOOP("export", "Lossless (FLAC)") },
+        { "high", ExportPreset::HighQuality, QT_TRANSLATE_NOOP("export", "High quality") },
+        { "standard", ExportPreset::Standard, QT_TRANSLATE_NOOP("export", "Standard") },
+        { "small", ExportPreset::SmallFile, QT_TRANSLATE_NOOP("export", "Small file") },
+        { "speech", ExportPreset::Speech, QT_TRANSLATE_NOOP("export", "Speech") },
     } };
 };
 }

@@ -59,6 +59,7 @@ public:
     virtual ExportParameters cloudExportParameters(const std::string& format) const = 0;
     virtual muse::RetVal<ExportParameters> exportParameters(const ExportFormatSettings& settings, int sampleRate) const = 0;
     virtual int defaultSampleRate(const ExportFormatSettings& settings) const = 0;
+    virtual std::optional<std::string> optionLabel(const ExportOptionValue& value) const = 0;
     virtual bool isCustomFFmpegExportFormat() const = 0;
     virtual bool hasMetadata() const = 0;
 

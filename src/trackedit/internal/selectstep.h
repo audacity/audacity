@@ -24,10 +24,10 @@ struct SelectAnchorContract {
     static constexpr std::string_view key = "anchor";
     static constexpr SelectAnchor def = SelectAnchor::ProjectStart;
     static constexpr muse::rcommand::EnumTable<SelectAnchor, 4> table = { {
-        { "ProjectStart", SelectAnchor::ProjectStart, "Project start" },
-        { "ProjectEnd", SelectAnchor::ProjectEnd, "Project end" },
-        { "SelectionStart", SelectAnchor::SelectionStart, "Selection start" },
-        { "SelectionEnd", SelectAnchor::SelectionEnd, "Selection end" },
+        { "ProjectStart", SelectAnchor::ProjectStart, QT_TRANSLATE_NOOP("trackedit", "Project start") },
+        { "ProjectEnd", SelectAnchor::ProjectEnd, QT_TRANSLATE_NOOP("trackedit", "Project end") },
+        { "SelectionStart", SelectAnchor::SelectionStart, QT_TRANSLATE_NOOP("trackedit", "Selection start") },
+        { "SelectionEnd", SelectAnchor::SelectionEnd, QT_TRANSLATE_NOOP("trackedit", "Selection end") },
     } };
 };
 
@@ -40,8 +40,8 @@ struct SelectTimeKindContract {
     static constexpr std::string_view key = "time";
     static constexpr SelectTimeKind def = SelectTimeKind::WholeProject;
     static constexpr muse::rcommand::EnumTable<SelectTimeKind, 2> table = { {
-        { "WholeProject", SelectTimeKind::WholeProject, "Whole project" },
-        { "Range", SelectTimeKind::Range, "Custom range" },
+        { "WholeProject", SelectTimeKind::WholeProject, QT_TRANSLATE_NOOP("trackedit", "Whole project") },
+        { "Range", SelectTimeKind::Range, QT_TRANSLATE_NOOP("trackedit", "Custom range") },
     } };
 };
 
@@ -54,8 +54,8 @@ struct SelectTracksKindContract {
     static constexpr std::string_view key = "tracks";
     static constexpr SelectTracksKind def = SelectTracksKind::All;
     static constexpr muse::rcommand::EnumTable<SelectTracksKind, 2> table = { {
-        { "All", SelectTracksKind::All, "All tracks" },
-        { "Range", SelectTracksKind::Range, "Track range" },
+        { "All", SelectTracksKind::All, QT_TRANSLATE_NOOP("trackedit", "All tracks") },
+        { "Range", SelectTracksKind::Range, QT_TRANSLATE_NOOP("trackedit", "Track range") },
     } };
 };
 }

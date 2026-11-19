@@ -5,6 +5,7 @@
 
 #include <ranges>
 
+#include "framework/global/translation.h"
 #include "framework/global/types/val.h"
 
 #include "../internal/selectstephandler.h"
@@ -21,7 +22,7 @@ QString toQString(std::string_view text)
 
 QVariantMap option(const auto& entry)
 {
-    return { { "text", toQString(entry.description) }, { "value", toQString(entry.sval) } };
+    return { { "text", muse::qtrc("trackedit", std::string(entry.description).c_str()) }, { "value", toQString(entry.sval) } };
 }
 
 template<typename C>
