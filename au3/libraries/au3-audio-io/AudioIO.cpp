@@ -62,6 +62,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "AudioIOExt.h"
 #include "AudioIOListener.h"
+#include "CaptureRouting.h"
 
 #include "au3-math/float_cast.h"
 #include "au3-math/Resample.h"
@@ -850,30 +851,9 @@ void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
         return;
     }
 
-    const auto captureChannelsCount = mCaptureChannelLayout.size();
-
-    mTrackChannelSourceMap.resize(captureChannelsCount);
-
-    // Only allow up/down mixing for mono<->stereo cases
-    const bool canMix = (inputChannelsCount <= 2 && captureChannelsCount <= 2);
-
-    if (canMix && inputChannelsCount == 2 && captureChannelsCount == 1) {
-        // Stereo input -> Mono track: mix both input channels to mono
-        mCaptureNeedsMixdown = true;
-        mTrackChannelSourceMap[0].push_back(0);
-        mTrackChannelSourceMap[0].push_back(1);
-    } else if (canMix && inputChannelsCount == 1 && captureChannelsCount == 2) {
-        // Mono input -> Stereo track: duplicate mono to both channels
-        mCaptureNeedsMixdown = false;
-        mTrackChannelSourceMap[0].push_back(0);
-        mTrackChannelSourceMap[1].push_back(0);
-    } else {
-        // 1 to 1 mapping
-        mCaptureNeedsMixdown = false;
-        for (size_t t = 0; t < std::min(captureChannelsCount, inputChannelsCount); ++t) {
-            mTrackChannelSourceMap[t].push_back(t);
-        }
-    }
+    CaptureRouting routing = MakeCaptureRouting(inputChannelsCount, mCaptureChannelLayout.size());
+    mTrackChannelSourceMap = std::move(routing.trackChannelSources);
+    mCaptureNeedsMixdown = routing.needsMixdown;
 }
 
 void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)

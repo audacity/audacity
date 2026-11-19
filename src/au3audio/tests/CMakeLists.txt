@@ -9,6 +9,7 @@ set(MODULE_TEST_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/au3audiodrivercontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3audioio_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/capturerouting_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/mocks/audioenginemock.h
     )
 
