@@ -120,7 +120,7 @@ public:
     Q_INVOKABLE void setIsolatedPoint(unsigned int x, unsigned int y);
 
     //! Called from QML instead of update() to repaint the waveform
-    Q_INVOKABLE void forceRepaint();
+    Q_INVOKABLE void scheduleRepaint();
 
     void paintFallback(QPainter* painter);
 
@@ -147,9 +147,7 @@ signals:
 
 private:
 
-    void updateView();
     bool releaseIfOffscreen();
-    void scheduleRepaint();
     void prepareSceneGraphData();
     void storePreparedData();
     void onWaveZoomChanged();
