@@ -18,32 +18,34 @@ using namespace au::au3audio;
 
 std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
 
-static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
-    [](au::au3::Au3Project& project, const bool newDefault) -> AudioIOStartTransportOptions {
-        auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
-        options.listener = s_audioIOListener;
+static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope { &Au3AudioEngine::defaultTransportOptions };
 
-        const auto& playRegion = ViewInfo::Get(project).playRegion;
-        const bool loopEnabled = playRegion.Active();
-        options.loopEnabled = loopEnabled;
+AudioIOStartTransportOptions Au3AudioEngine::defaultTransportOptions(AudacityProject& project, const bool newDefault)
+{
+    auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
+    options.listener = s_audioIOListener;
 
-        if (newDefault) {
-            const double trackEndTime = TrackList::Get(project).GetEndTime();
-            const double loopEndTime = playRegion.GetEnd();
-            options.policyFactory = [&project, trackEndTime, loopEndTime](
-                const AudioIOStartTransportOptions& options) -> std::unique_ptr<PlaybackPolicy>
-            {
-                return std::make_unique<DefaultPlaybackPolicy>(project,
-                                                               trackEndTime, loopEndTime, options.pStartTime,
-                                                               options.loopEnabled, options.variableSpeed);
-            };
+    const auto& playRegion = ViewInfo::Get(project).playRegion;
+    const bool loopEnabled = playRegion.Active();
+    options.loopEnabled = loopEnabled;
 
-            double startTime = playRegion.GetStart();
-            options.pStartTime.emplace(muse::RealIsEqualOrMore(startTime, 0.0) ? startTime : 0.0);
-        }
+    if (newDefault) {
+        const double trackEndTime = TrackList::Get(project).GetEndTime();
+        const double loopEndTime = playRegion.GetEnd();
+        options.policyFactory = [&project, trackEndTime, loopEndTime](
+            const AudioIOStartTransportOptions& options) -> std::unique_ptr<PlaybackPolicy>
+        {
+            return std::make_unique<DefaultPlaybackPolicy>(project,
+                                                           trackEndTime, loopEndTime, options.pStartTime,
+                                                           options.loopEnabled, options.variableSpeed);
+        };
 
-        return options;
-    } };
+        double startTime = playRegion.GetStart();
+        options.pStartTime.emplace(muse::RealIsEqualOrMore(startTime, 0.0) ? startTime : 0.0);
+    }
+
+    return options;
+}
 
 void Au3AudioEngine::init()
 {

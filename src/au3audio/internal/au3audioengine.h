@@ -10,6 +10,8 @@
 
 #include "au3-utility/Observer.h"
 
+struct AudioIOStartTransportOptions;
+
 namespace au::au3audio {
 class Au3AudioEngine final : public au::audio::IAudioEngine
 {
@@ -20,6 +22,10 @@ public:
 
     void init();
     void deinit();
+
+    //! The AudioIO transport options of a project (the ProjectAudioIO::DefaultOptions hook).
+    //! With `newDefault` the stream is driven by a DefaultPlaybackPolicy
+    static AudioIOStartTransportOptions defaultTransportOptions(AudacityProject& project, bool newDefault);
 
     bool isBusy() const override;
     bool isCapturing() const override;
