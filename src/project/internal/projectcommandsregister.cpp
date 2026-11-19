@@ -172,6 +172,14 @@ const std::vector<CommandInfo> commandInfos = {
         Decoration()
     },
     CommandInfo{
+        PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND,
+        TranslatableString("command", "Overwrite original"),
+        TranslatableString("command_description", "Export the project audio to the original imported file"),
+        InputSchema(),
+        Decoration(),
+        Availability::UI
+    },
+    CommandInfo{
         PROJECT_EXPORT_LABELS_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "&Export labels"),

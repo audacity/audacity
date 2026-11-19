@@ -46,6 +46,7 @@ public:
     TranslatableString GetFileDescription() override;
     double GetDuration() const override;
     int GetRequiredTrackCount() const override;
+    ImportSourceFormat GetSourceFormat() const override;
     ByteCount GetFileUncompressedBytes() override;
     void Import(
         ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
@@ -258,6 +259,21 @@ double MP3ImportFileHandle::GetDuration() const
 int MP3ImportFileHandle::GetRequiredTrackCount() const
 {
     return ImportUtils::RequiredTrackCountFromChannels(mNumChannels);
+}
+
+ImportSourceFormat MP3ImportFileHandle::GetSourceFormat() const
+{
+    struct mpg123_frameinfo frameInfo {};
+    if (mpg123_info(mHandle, &frameInfo) != MPG123_OK) {
+        return {};
+    }
+    if (frameInfo.layer == 3) {
+        return { wxT("MP3") };
+    }
+    if (frameInfo.layer == 2) {
+        return { wxT("MP2") };
+    }
+    return {};
 }
 
 auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount

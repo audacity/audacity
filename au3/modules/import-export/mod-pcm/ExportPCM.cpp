@@ -16,6 +16,8 @@
 
 #include <sndfile.h>
 
+#include <utility>
+
 #include "au3-math/Dither.h"
 #include "au3-file-formats/FileFormats.h"
 #include "au3-mixer/Mix.h"
@@ -80,6 +82,7 @@ class PCMExportProcessor final : public ExportProcessor
         wxFile f;
         SNDFILE* sf;
         int sf_format;
+        bool useSourceFormat;
         wxFileNameWrapper fName;
         int fileFormat;
         std::unique_ptr<Tags> metadata;
@@ -564,7 +567,13 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
         break;
     }
 
-    sf_format |= ExportPluginHelpers::GetParameterValue(parameters, sf_format, 0);
+    const int sourceFormat = ExportPluginHelpers::GetParameterValue(parameters, PcmExport::SourceFormat, 0);
+    context.useSourceFormat = sourceFormat != 0;
+    if (sourceFormat) {
+        sf_format = sourceFormat;
+    } else {
+        sf_format |= ExportPluginHelpers::GetParameterValue(parameters, sf_format, 0);
+    }
 
     // If subtype is still not specified, supply a default.
     if (!(sf_format & SF_FORMAT_SUBMASK)) {
@@ -611,7 +620,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
         // LLL: I don't think this is valid since libsndfile checks
         // for all allowed subtypes explicitly and doesn't provide
         // for an unspecified subtype.
-        if (!sf_format_check(&info)) {
+        if (!sourceFormat && !sf_format_check(&info)) {
             info.format = (info.format & SF_FORMAT_TYPEMASK);
         }
         if (!sf_format_check(&info)) {
@@ -631,6 +640,16 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
             //: %1 is the file path
             throw ExportException(au3::qtToWx(TranslatableString("import-export", "Cannot export audio to %1").arg(path).translated()));
         }
+        const auto channelMap = ExportPluginHelpers::GetParameterValue(parameters, PcmExport::SourceChannelMap, std::string {});
+        if (!channelMap.empty()) {
+            std::vector<int> channelPositions(channelMap.begin(), channelMap.end());
+            if (channelPositions.size() != numChannels
+                || !sf_command(sf, SFC_SET_CHANNEL_MAP_INFO, channelPositions.data(),
+                               static_cast<int>(channelPositions.size() * sizeof(int)))) {
+                throw ExportException(au3::qtToWx(TranslatableString("import-export", "Cannot preserve the source channel layout.").translated()));
+            }
+        }
+
         // Retrieve tags if not given a set
         if (metadata == NULL) {
             metadata = &Tags::Get(project);
@@ -729,6 +748,10 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
             }
 
             if (static_cast<size_t>(samplesWritten) != numSamples) {
+                if (context.useSourceFormat) {
+                    // The overwrite action's export progress UI reports this exception once.
+                    throw ExportDiskFullError(context.fName);
+                }
                 char buffer2[1000];
                 sf_error_str(context.sf, buffer2, 1000);
                 //Used to give this error message
@@ -767,13 +790,11 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
         }
     }
 
-    if (0 != sf_close(context.sf)) {
+    const int closeResult = sf_close(std::exchange(context.sf, nullptr));
+    if (!context.f.Close() || closeResult != 0) {
         // TODO: more precise message
         throw ExportErrorException("PCM:681");
     }
-
-    context.sf = nullptr;
-    context.f.Close();
 
     if (exportResult != ExportResult::Cancelled && exportResult != ExportResult::Error) {
         if ((context.fileFormat == SF_FORMAT_AIFF)

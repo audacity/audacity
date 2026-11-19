@@ -27,6 +27,8 @@ inline static const muse::rcommand::Command PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_F
     "command://project/update-cloud-audio-preview-for-project");
 
 inline static const muse::rcommand::Command PROJECT_EXPORT_AUDIO_COMMAND("command://project/export-audio");
+inline static const muse::rcommand::Command PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND(
+    "command://project/export-overwrite-original");
 inline static const muse::rcommand::Command PROJECT_EXPORT_LABELS_COMMAND("command://project/export-labels");
 inline static const muse::rcommand::Command PROJECT_EXPORT_MIDI_COMMAND("command://project/export-midi");
 

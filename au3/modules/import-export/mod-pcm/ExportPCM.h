@@ -6,6 +6,11 @@
 
 #include "au3-import-export/ExportPlugin.h"
 
+namespace PcmExport {
+inline constexpr ExportOptionID SourceFormat = -1;
+inline constexpr ExportOptionID SourceChannelMap = -2;
+}
+
 class ExportPCM final : public ExportPlugin
 {
 public:

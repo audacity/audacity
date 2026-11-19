@@ -35,6 +35,7 @@
 #include "au3-import-export/ImportProgressListener.h"
 
 #include "ImportWavPack.h"
+#include "ExportWavPack.h"
 
 #define DESC TranslatableString("import-export", "WavPack files")
 
@@ -49,6 +50,17 @@ public:
     TranslatableString GetFileDescription() override;
     double GetDuration() const override;
     int GetRequiredTrackCount() const override;
+    ImportSourceFormat GetSourceFormat() const override
+    {
+        const int mode = WavpackGetMode(mWavPackContext);
+        if (!(mode & MODE_LOSSLESS) || (mode & MODE_HYBRID) || WavpackGetNumErrors(mWavPackContext) != 0
+            || static_cast<unsigned>(WavpackGetChannelMask(mWavPackContext)) != DefaultWavPackChannelMask(mNumChannels)
+            || WavpackGetChannelLayout(mWavPackContext, nullptr) != 0
+            || (mBitsPerSample != 16 && mBitsPerSample != 24 && !(mode & MODE_FLOAT))) {
+            return {};
+        }
+        return { wxT("WavPack"), 0, mBitsPerSample };
+    }
     ByteCount GetFileUncompressedBytes() override;
     void Import(ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
                 std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;

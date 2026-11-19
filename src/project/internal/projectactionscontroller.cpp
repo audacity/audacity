@@ -1,8 +1,12 @@
 #include "projectactionscontroller.h"
 
 #include <QFileDialog>
+#include <QFileInfo>
+#include <QTemporaryDir>
 #include <QWindow>
 
+#include <algorithm>
+#include <optional>
 #include <variant>
 
 #include "framework/global/async/async.h"
@@ -18,6 +22,16 @@
 #include "appshell/appshellcommands.h"
 #include "au3cloud/au3clouderrors.h"
 #include "au3cloud/cloudcommands.h"
+
+#include "au3-import-export/Export.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportProgressUI.h"
+#include "au3-effects/MixAndRender.h"
+#include "au3-mixer/MixerOptions.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+#include "importexport/export/OriginalFileInfo.h"
 
 #include "audacityproject.h"
 #include "projecterrors.h"
@@ -104,6 +118,7 @@ void ProjectActionsController::init()
     });
 
     cd->onRequest(this, PROJECT_EXPORT_AUDIO_COMMAND, [this]() { return exportAudio(); });
+    cd->onRequest(this, PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND, [this]() { return exportOverwriteOriginal(); });
     cd->onRequest(this, PROJECT_EXPORT_LABELS_COMMAND, [this](const Params& params) { return exportLabels(params); });
     cd->onRequest(this, PROJECT_EXPORT_MIDI_COMMAND, [this]() { return exportMIDI(); });
 
@@ -474,7 +489,11 @@ bool ProjectActionsController::quitDiscardingUnsavedChanges()
 
 bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bool discardUnsavedChanges)
 {
-    if (m_isProjectClosing) {
+    const IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return true;
+    }
+    if (m_isProjectClosing || m_isProjectProcessing) {
         return false;
     }
 
@@ -482,11 +501,6 @@ bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bo
     DEFER {
         m_isProjectClosing = false;
     };
-
-    const IAudacityProjectPtr project = globalContext()->currentProject();
-    if (!project) {
-        return true;
-    }
 
     if (!discardUnsavedChanges && project->hasUnsavedChanges()) {
         const IInteractive::Button btn = askAboutSavingProject(project);
@@ -1603,6 +1617,121 @@ muse::Ret ProjectActionsController::exportAudio()
     }
 
     interactive()->open(EXPORT_URI);
+    return make_ok();
+}
+
+muse::Ret ProjectActionsController::exportOverwriteOriginal()
+{
+    const auto project = currentProject();
+    if (!project || recordController()->isRecording()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+    if (m_isProjectProcessing || m_isProjectClosing) {
+        return make_ret(Ret::Code::Busy);
+    }
+
+    auto* au3Project = reinterpret_cast<AudacityProject*>(project->au3ProjectPtr());
+    const auto trackeditProject = globalContext()->currentTrackeditProject();
+    if (!au3Project || !trackeditProject || !trackeditProject->hasAudioContent().val) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    const auto fileInfo = OriginalFileInfo::Get(*au3Project);
+    const auto& tracks = TrackList::Get(*au3Project);
+    if (!fileInfo.CanOverwriteOriginalFile(tracks)) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    const double endTime = tracks.GetEndTime();
+    if (endTime <= 0.0) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    const auto& codecSettings = fileInfo.GetCodecSettings();
+    const int channels = codecSettings.value("channels").toInt();
+    const double sampleRate = codecSettings.value("sampleRate").toDouble();
+    if (channels <= 0 || sampleRate <= 0.0) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    std::unique_ptr<MixerOptions::Downmix> channelMapping;
+    if (channels > 2) {
+        channelMapping = fileInfo.MakeChannelMapping(tracks);
+        if (!channelMapping || !GetMasterEffectStages(*au3Project).empty()) {
+            interactive()->error(muse::trc("project", "Overwrite Original"),
+                                 muse::trc("project", "The project cannot be exported with the original channel layout."));
+            return make_ret(Ret::Code::NotSupported);
+        }
+    }
+
+    ExportProcessor::Parameters parameters;
+    for (const auto& [id, value] : fileInfo.GetExportParameters()) {
+        parameters.emplace_back(id, std::visit([](const auto& option) -> ExportValue {
+            return option;
+        }, value));
+    }
+
+    const QFileInfo original(fileInfo.GetOriginalFilePath());
+    const auto fail = [this]() {
+        interactive()->error(muse::trc("project", "Overwrite Original"),
+                             muse::trc("project", "Failed to overwrite the original file. Please try again."));
+        return make_ret(Ret::Code::InternalError);
+    };
+
+    // The legacy exporter can open its output before it reports failure.
+    // Keep the original intact until the complete export succeeds.
+    QTemporaryDir outputDir(original.absolutePath() + "/.audacity-export-XXXXXX");
+    if (!outputDir.isValid()) {
+        return fail();
+    }
+
+    const QFileInfo output(outputDir.filePath(original.fileName()));
+    auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(wxString(fileInfo.GetExportFormatID().toStdWString()));
+    m_isProjectProcessing = true;
+    DEFER { m_isProjectProcessing = false;
+    };
+
+    ExportResult result = ExportResult::Error;
+    ExportProgressUI::ExceptionWrappedCall([&] {
+        auto builder = ExportTaskBuilder {}
+        .SetFileName(wxFileName(au3::wxFromPath(muse::io::path_t(output.absoluteFilePath()))))
+        .SetRange(0.0, endTime, false)
+        .SetParameters(parameters)
+        .SetPlugin(plugin, formatIndex)
+        .SetNumChannels(channels)
+        .SetSampleRate(sampleRate)
+        .SetMixerSpec(channelMapping.get());
+
+        result = ExportProgressUI::Show(builder.Build(*au3Project), /* honorLateCancellation */ true);
+    });
+    if (result == ExportResult::Stopped || result == ExportResult::Cancelled) {
+        return make_ret(Ret::Code::Cancel);
+    }
+    if (result != ExportResult::Success) {
+        return make_ret(Ret::Code::InternalError);
+    }
+
+    const auto replacement = fileInfo.ReplaceWithExport(output.absoluteFilePath());
+    if (!replacement.recoveryPath.isEmpty()) {
+        outputDir.setAutoRemove(false);
+        interactive()->error(muse::trc("project", "Overwrite Original"),
+                             muse::qtrc("project", "The overwrite could not be confirmed. The previous file is available at %1.")
+                             .arg(replacement.recoveryPath).toStdString());
+        return make_ret(Ret::Code::InternalError);
+    }
+    switch (replacement.result) {
+    case OriginalFileInfo::ReplaceResult::SourceChanged:
+        interactive()->error(muse::trc("project", "Overwrite Original"),
+                             muse::trc("project", "The original file changed or was removed since import."));
+        return make_ret(Ret::Code::Cancel);
+    case OriginalFileInfo::ReplaceResult::Error:
+        return fail();
+    case OriginalFileInfo::ReplaceResult::Success:
+        break;
+    }
+
+    toastService()->showSuccess(muse::trc("project", "Overwrite Original"),
+                                muse::qtrc("project", "Overwrote %1").arg(original.fileName()).toStdString());
     return make_ok();
 }
 

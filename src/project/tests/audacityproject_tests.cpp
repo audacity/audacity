@@ -23,6 +23,8 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
+#include <QScopeGuard>
+
 #include "sqlite3.h"
 
 #include "global/io/fileinfo.h"
@@ -57,13 +59,13 @@ public:
 
         switch (mode) {
         case AccessMode::Full:
-            testtools::copyFile(source, destination);
+            m_prepared = testtools::copyFile(source, destination);
             break;
         case AccessMode::ReadProtected:
-            testtools::copyFileAndRestrictRead(source, destination);
+            m_prepared = testtools::copyFileAndRestrictRead(source, destination);
             break;
         case AccessMode::WriteProtected:
-            testtools::copyFileAndRestrictWrite(source, destination);
+            m_prepared = testtools::copyFileAndRestrictWrite(source, destination);
             break;
         }
     }
@@ -74,9 +76,11 @@ public:
     }
 
     const std::string& getPath() const { return m_destinationPath; }
+    bool isPrepared() const { return m_prepared; }
 
 private:
     std::string m_destinationPath;
+    bool m_prepared = false;
 };
 
 class Project_Audacity4ProjectTests : public ::testing::Test
@@ -198,14 +202,27 @@ TEST_F(Project_Audacity4ProjectTests, Load_FileCannotBeOpened_ReturnsCantOpen)
     const std::string srcPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty.aup4").toStdString();
     const std::string dstPath = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/empty_read_protected.aup4").toStdString();
 
-    const ScopedTestFile tempFile{ srcPath, dstPath, AccessMode::ReadProtected };
+#ifdef _WIN32
+    // Windows file attributes cannot block reads. Hold the fixture open without sharing.
+    const ScopedTestFile tempFile { srcPath, dstPath, AccessMode::Full };
+    ASSERT_TRUE(tempFile.isPrepared());
+    const auto filePath = muse::String::fromUtf8(tempFile.getPath()).toQString().toStdWString();
+    const auto handle = CreateFileW(filePath.c_str(), GENERIC_READ, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+    ASSERT_NE(handle, INVALID_HANDLE_VALUE);
+    const auto unlock = qScopeGuard([handle] { CloseHandle(handle); });
+#else
+    const ScopedTestFile tempFile { srcPath, dstPath, AccessMode::ReadProtected };
+    ASSERT_TRUE(tempFile.isPrepared());
+#endif
 
     const muse::Ret ret = m_currentProject->load(muse::io::path_t(tempFile.getPath()), false, "");
+    if (ret.success()) {
+        m_currentProject->close();
+    }
 
     EXPECT_FALSE(ret.success());
     EXPECT_EQ(ret.code(), SQLITE_CANTOPEN);
     EXPECT_TRUE(!ret.data<std::string>("body", std::string("")).empty());
-    //can't close m_currentProject->close();
 }
 
 TEST_F(Project_Audacity4ProjectTests, Load_EmptyFileIsWriteProtected_ReturnsReadOnly)

@@ -6,6 +6,9 @@
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
 
+#include "importexport/export/OriginalFileInfo.h"
+#include "au3-track/Track.h"
+
 #include "../projectcommands.h"
 
 using namespace au::project;
@@ -30,6 +33,7 @@ const std::vector<Command> commandsDisabledDuringRecording {
     PROJECT_SAVE_TO_CLOUD_COMMAND,
     PROJECT_SAVE_AS_COMMAND,
     PROJECT_EXPORT_AUDIO_COMMAND,
+    PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND,
     PROJECT_EXPORT_LABELS_COMMAND,
     PROJECT_EXPORT_MIDI_COMMAND,
     PROJECT_SHARE_AUDIO_COMMAND,
@@ -45,6 +49,7 @@ const std::vector<Command> audioContentCommands {
     PROJECT_SHARE_AUDIO_COMMAND,
     PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_COMMAND,
     PROJECT_EXPORT_AUDIO_COMMAND,
+    PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND,
 };
 
 const std::vector<Command> labelsCommands {
@@ -69,6 +74,10 @@ void ProjectCommandsState::init()
         updateCommandStates();
     });
 
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
+        updateCommandStates({ PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND });
+    });
+
     recordController()->isRecordingChanged().onNotify(this, [this]() {
         updateCommandStates(commandsDisabledDuringRecording);
     });
@@ -81,10 +90,14 @@ void ProjectCommandsState::deinit()
 {
     globalContext()->currentTrackeditProjectChanged().disconnect(this);
     recordController()->isRecordingChanged().disconnect(this);
+    projectHistory()->historyChanged().disconnect(this);
 
     if (const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject()) {
         prj->hasAudioContent().ch.disconnect(this);
         prj->hasLabels().ch.disconnect(this);
+        prj->trackAdded().disconnect(this);
+        prj->trackChanged().disconnect(this);
+        prj->trackRemoved().disconnect(this);
     }
 
     if (const IAudacityProjectPtr prj = globalContext()->currentProject()) {
@@ -102,6 +115,13 @@ void ProjectCommandsState::listenProjectChanges()
         prj->hasLabels().ch.onReceive(this, [this](bool) {
             updateCommandStates(labelsCommands);
         }, muse::async::Asyncable::Mode::SetReplace);
+
+        const auto updateOverwrite = [this](const trackedit::Track&) {
+            updateCommandStates({ PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND });
+        };
+        prj->trackAdded().onReceive(this, updateOverwrite, muse::async::Asyncable::Mode::SetReplace);
+        prj->trackChanged().onReceive(this, updateOverwrite, muse::async::Asyncable::Mode::SetReplace);
+        prj->trackRemoved().onReceive(this, updateOverwrite, muse::async::Asyncable::Mode::SetReplace);
     }
 
     if (const IAudacityProjectPtr prj = globalContext()->currentProject()) {
@@ -150,6 +170,11 @@ CommandState ProjectCommandsState::commandState(const Command& command) const
 
     if (muse::contains(commandsDisabledDuringRecording, command) && recordController()->isRecording()) {
         return CommandState(false);
+    }
+
+    if (command == PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND) {
+        auto* au3Project = reinterpret_cast<AudacityProject*>(project->au3ProjectPtr());
+        return CommandState(au3Project && OriginalFileInfo::Get(*au3Project).CanOverwriteOriginalFile(TrackList::Get(*au3Project)));
     }
 
     return CommandState(true);

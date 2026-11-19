@@ -51,6 +51,7 @@ but little else.
 #include "au3-strings/wxArrayStringEx.h"
 #include <memory>
 #include <optional>
+#include <vector>
 
 class AudacityProject;
 class WaveTrackFactory;
@@ -106,6 +107,13 @@ protected:
 class WaveTrack;
 using TrackHolders = std::vector<std::shared_ptr<Track> >;
 
+struct ImportSourceFormat {
+    wxString exportFormat;
+    int pcmFormat = 0;
+    int bitDepth = 0;
+    std::vector<int> channelMap;
+};
+
 class IMPORT_EXPORT_API ImportFileHandle /* not final */
 {
 public:
@@ -119,6 +127,9 @@ public:
     virtual double GetDuration() const = 0;
 
     virtual int GetRequiredTrackCount() const = 0;
+
+    // The format actually decoded, when there is a corresponding export format.
+    virtual ImportSourceFormat GetSourceFormat() const { return {}; }
 
     virtual TranslatableString GetErrorMessage() const;
 

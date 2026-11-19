@@ -16,6 +16,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/exportcommands.h
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/OriginalFileInfo.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/OriginalFileInfo.h
+    ${CMAKE_CURRENT_LIST_DIR}/overwriteoriginalsettings.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/overwriteoriginalsettings.h
 
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.cpp
@@ -59,6 +63,7 @@ set(MODULE_LINK
         au3-mod-ffmpeg
         au3-mixer
         au3-project-rate
+        au3-project-history
         au3-strings
         au3-tags
         au3-track

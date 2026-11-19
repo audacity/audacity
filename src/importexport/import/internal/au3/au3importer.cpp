@@ -6,6 +6,10 @@
 
 #include "../legacyaupimporter.h"
 
+#include "importexport/export/OriginalFileInfo.h"
+#include "importexport/export/overwriteoriginalsettings.h"
+#include "mod-pcm/ExportPCM.h"
+
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-label-track/LabelTrack.h"
 #include "au3-clip-processing/TempoChange.h"
@@ -14,6 +18,10 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
+#include "au3-import-export/ExportPlugin.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
@@ -27,25 +35,147 @@
 #include "trackedit/internal/au3/au3trackdata.h"
 
 #include "tempodetection.h"
+
+#include <QFileInfo>
+#include <QVariantMap>
+#include <sndfile.h>
+
+#include <algorithm>
+#include <cmath>
+#include <variant>
+
 using au::trackedit::ITrackDataPtr;
 using au::trackedit::Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 using namespace au::au3;
 
+namespace {
+std::optional<au::importexport::ExportParameters> exportParametersFor(ExportPlugin& plugin, int formatIndex,
+                                                                      const ImportSourceFormat& sourceFormat,
+                                                                      const QVariantMap& codecSettings)
+{
+    au::importexport::ExportParameters parameters;
+
+    if (sourceFormat.pcmFormat) {
+        SF_INFO source {};
+        source.format = sourceFormat.pcmFormat;
+        source.channels = codecSettings.value("channels").toInt();
+        source.samplerate = codecSettings.value("sampleRate").toInt();
+        if (!sf_format_check(&source)) {
+            return std::nullopt;
+        }
+        parameters.emplace_back(PcmExport::SourceFormat, source.format);
+        if (!sourceFormat.channelMap.empty()) {
+            std::string channelMap(sourceFormat.channelMap.begin(), sourceFormat.channelMap.end());
+            parameters.emplace_back(PcmExport::SourceChannelMap, std::move(channelMap));
+        }
+        return parameters;
+    }
+
+    auto editor = plugin.CreateOptionsEditor(formatIndex, nullptr);
+    if (!editor) {
+        return parameters;
+    }
+
+    if (gPrefs) {
+        editor->Load(*gPrefs);
+    }
+
+    if (!au::importexport::ApplyCodecSettingsToExportOptions(*editor, codecSettings)) {
+        return std::nullopt;
+    }
+
+    for (const auto& [id, value] : ExportUtils::ParametersFromEditor(*editor)) {
+        parameters.emplace_back(id, std::visit([](const auto& v) -> au::importexport::OptionValue {
+            return v;
+        }, value));
+    }
+
+    return parameters;
+}
+
+double importedAudioDuration(const std::vector<WaveTrack*>& tracks)
+{
+    double duration = 0.0;
+    for (const auto* track : tracks) {
+        duration = std::max(duration, track->GetEndTime() - track->GetStartTime());
+    }
+    return duration;
+}
+
+void recordOriginalFileImport(AudacityProject& project, const muse::io::path_t& fileName,
+                              const std::vector<WaveTrack*>& importedTracks, const au::trackedit::TrackIdList& destinationTracks,
+                              double importedDuration, const ImportSourceFormat& sourceFormat,
+                              const std::optional<OriginalFileInfo::FileVersion>& importStamp)
+{
+    auto& fileInfo = OriginalFileInfo::Get(project);
+    const bool captureOriginalFileInfo = fileInfo.GetImportedFileCount() == 0;
+    fileInfo.IncrementImportedFileCount();
+    if (!captureOriginalFileInfo || !importStamp || sourceFormat.exportFormat.empty() || importedTracks.empty()
+        || importedTracks.size() != destinationTracks.size()) {
+        return;
+    }
+
+    int channels = 0;
+    for (const auto* wt : importedTracks) {
+        channels += static_cast<int>(wt->NChannels());
+    }
+    const auto channelCount = static_cast<size_t>(channels);
+    if (channels > 2 && importedTracks.size() != channelCount) {
+        return;
+    }
+    // WAV is the PCM exporter's stable registry entry. Its processor takes the exact source format.
+    const auto exportFormat = sourceFormat.pcmFormat ? wxString(wxT("WAV")) : sourceFormat.exportFormat;
+    auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(exportFormat);
+    if (!plugin || channels <= 0 || static_cast<unsigned>(channels) > plugin->GetFormatInfo(formatIndex).maxChannels) {
+        return;
+    }
+
+    const auto format = wxToString(sourceFormat.exportFormat).toQString();
+    QVariantMap codecSettings {
+        { "format", format },
+        { "channels", channels },
+        { "sampleRate", static_cast<int>(std::lround(importedTracks.front()->GetRate())) }
+    };
+    if (sourceFormat.bitDepth) {
+        codecSettings.insert("bitDepth", sourceFormat.bitDepth);
+    }
+    if (importStamp->size > 0 && importedDuration > 0.0) {
+        codecSettings.insert("bitRate", static_cast<qlonglong>((importStamp->size * 8.0) / importedDuration));
+    }
+
+    const auto parameters = exportParametersFor(*plugin, formatIndex, sourceFormat, codecSettings);
+    if (!parameters) {
+        return;
+    }
+    const QString path = fileName.toQString();
+    auto version = OriginalFileInfo::ReadFileVersion(path, importStamp);
+    if (!version) {
+        return;
+    }
+    fileInfo.SetOriginalFile(path, QFileInfo(path).fileName(), std::move(version));
+    fileInfo.SetExportFormatID(wxToString(exportFormat).toQString());
+    fileInfo.SetCodecSettings(codecSettings);
+    fileInfo.SetExportParameters(*parameters);
+    fileInfo.SetSourceChannelTracks(destinationTracks);
+}
+}
+
 class ImportProgress final : public ImportProgressListener
 {
 public:
 
-    ImportProgress(AudacityProject& project)
-    {
-        //! TODO: AU4
-        UNUSED(project);
-    }
+    explicit ImportProgress(bool rememberSource)
+        : mRememberSource(rememberSource)
+    {}
+
+    ImportSourceFormat sourceFormat;
 
     bool OnImportFileOpened(ImportFileHandle& importFileHandle) override
     {
         mImportFileHandle = &importFileHandle;
+        sourceFormat = {};
         //! TODO AU4: handle more than one stream
         // // File has more than one stream - display stream selector
         // if (importFileHandle.GetStreamCount() > 1)
@@ -80,14 +210,16 @@ public:
 
     void OnImportResult(ImportResult result) override
     {
-        //! TODO: AU4
-        UNUSED(result);
+        if (mRememberSource && result == ImportResult::Success) {
+            sourceFormat = mImportFileHandle->GetSourceFormat();
+        }
     }
 
 private:
 
     ImportFileHandle* mImportFileHandle { nullptr };
     std::unique_ptr<BasicUI::ProgressDialog> mProgressDialog;
+    const bool mRememberSource;
 };
 
 au::importexport::Au3Importer::Au3Importer(const muse::modularity::ContextPtr& ctx)
@@ -159,8 +291,11 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     TrackHolders newTracks;
     TranslatableString errorMessage;
     std::optional<LibFileFormats::AcidizerTags> acidTags;
+    ImportSourceFormat sourceFormat;
+    const auto importStamp = projectWasEmpty && OriginalFileInfo::Get(*project).GetImportedFileCount() == 0
+                             ? OriginalFileInfo::ReadFileStamp(filePath.toQString()) : std::nullopt;
     {
-        ImportProgress importProgress(*project);
+        ImportProgress importProgress(importStamp.has_value());
         bool success = Importer::Get().Import(
             *project, wxFromPath(filePath), &importProgress, &WaveTrackFactory::Get(*project),
             newTracks, newTags.get(), acidTags, errorMessage);
@@ -168,7 +303,16 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
         if (!success) {
             return false;
         }
+        sourceFormat = std::move(importProgress.sourceFormat);
     } // ImportProgress (and its dialog) destroyed here, before tempo detection
+
+    std::vector<WaveTrack*> importedWaveTracks;
+    for (const auto& track : newTracks) {
+        if (auto* waveTrack = dynamic_cast<WaveTrack*>(track.get())) {
+            importedWaveTracks.push_back(waveTrack);
+        }
+    }
+    const double importedDuration = importedAudioDuration(importedWaveTracks);
 
     const auto projectTempo = ProjectTimeSignature::Get(*project).GetTempo();
     for (auto track : newTracks) {
@@ -178,13 +322,13 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     // no more errors, commit
     committed = true;
 
-    std::vector<WaveTrack*> importedWaveTracks;
-    addImportedTracks(filePath, std::move(newTracks), &importedWaveTracks);
+    addImportedTracks(filePath, std::move(newTracks));
 
     std::vector<trackedit::TrackId> dstTrackIds;
     for (const auto* wt : importedWaveTracks) {
         dstTrackIds.push_back(static_cast<trackedit::TrackId>(wt->GetId()));
     }
+    recordOriginalFileImport(*project, filePath, importedWaveTracks, dstTrackIds, importedDuration, sourceFormat, importStamp);
 
     m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, dstTrackIds, acidTags, projectWasEmpty);
 
@@ -204,6 +348,11 @@ bool au::importexport::Au3Importer::importLegacyAup(const muse::io::path_t& file
         LOGW() << "Legacy .aup import warning: " << warning;
     }
 
+    auto* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    auto& tracks = Au3TrackList::Get(*project);
+    auto& originalFile = OriginalFileInfo::Get(*project);
+    const auto trackeditProject = globalContext()->currentTrackeditProject();
+    bool recordedLegacyImport = false;
     for (const LegacyAupImporter::Track& track : legacyProject.tracks) {
         const trackedit::TrackId trackId = tracksInteraction()->addWaveTrack(track.channels);
         if (trackId < 0) {
@@ -215,15 +364,20 @@ bool au::importexport::Au3Importer::importLegacyAup(const muse::io::path_t& file
         }
 
         for (const LegacyAupImporter::Clip& clip : track.clips) {
-            if (!importIntoTrackInternal(clip.filePath, trackId, clip.startTime, false, false)) {
+            const bool imported = importIntoTrackInternal(clip.filePath, trackId, clip.startTime, false, false);
+            const auto* destination = dynamic_cast<const WaveTrack*>(tracks.FindById(Au3TrackId(trackId)));
+            if (!recordedLegacyImport && destination && !destination->IsEmpty()) {
+                originalFile.IncrementImportedFileCount();
+                recordedLegacyImport = true;
+                if (trackeditProject) {
+                    trackeditProject->notifyAboutTrackChanged(DomConverter::track(destination));
+                }
+            }
+            if (!imported) {
                 return false;
             }
         }
     }
-
-    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
-    auto& tracks = Au3TrackList::Get(*project);
-    const auto trackeditProject = globalContext()->currentTrackeditProject();
 
     for (const LegacyAupImporter::LabelTrack& track : legacyProject.labelTracks) {
         Au3LabelTrack* labelTrack = !track.title.empty()
@@ -245,6 +399,9 @@ bool au::importexport::Au3Importer::importLegacyAup(const muse::io::path_t& file
         }
     }
 
+    if (!recordedLegacyImport) {
+        originalFile.IncrementImportedFileCount();
+    }
     applyImportedProjectTitleIfNeeded(filePath);
     return true;
 }
@@ -278,9 +435,12 @@ bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path
     Tags::Set(*project, newTags);
     std::optional<LibFileFormats::AcidizerTags> acidTags;
     TranslatableString errorMessage;
+    ImportSourceFormat sourceFormat;
+    const auto importStamp = applyProjectTitle && projectWasEmpty && OriginalFileInfo::Get(*project).GetImportedFileCount() == 0
+                             ? OriginalFileInfo::ReadFileStamp(filePath.toQString()) : std::nullopt;
 
     {
-        ImportProgress importProgressListener(*project);
+        ImportProgress importProgressListener(importStamp.has_value());
         const wxString wxPath = wxFromPath(filePath);
         const bool ok = Importer::Get().Import(
             *project,
@@ -296,6 +456,7 @@ bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path
         if (!ok || tmpTracks.empty()) {
             return false;
         }
+        sourceFormat = std::move(importProgressListener.sourceFormat);
     } // ImportProgress (and its dialog) destroyed here, before tempo detection
 
     wxString baseName = wxFromPath(muse::io::filename(filePath, false));
@@ -313,6 +474,7 @@ bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path
         importedData.push_back(std::make_shared<Au3TrackData>(holder));
     }
 
+    const double importedDuration = importedAudioDuration(importedWaveTracks);
     bool modifiedState = false;
     selectionController()->setSelectedTracks({ dstTrackId }, true);
     muse::Ret pasteRet = tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
@@ -325,6 +487,9 @@ bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path
     committed = true;
 
     if (applyProjectTitle) {
+        // Paste selects its destination tracks in the same order as the source.
+        recordOriginalFileImport(*project, filePath, importedWaveTracks, selectionController()->selectedTracks(),
+                                 importedDuration, sourceFormat, importStamp);
         applyImportedProjectTitleIfNeeded(filePath);
     }
 
@@ -435,14 +600,13 @@ bool au::importexport::Au3Importer::isProjectEmpty() const
     return !trackeditProject->hasAudioContent().val;
 }
 
-void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks,
-                                                      std::vector<WaveTrack*>* outWaveTracks)
+void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     auto& tracks = TrackList::Get(*project);
     auto& projectFileIO = ProjectFileIO::Get(*project);
 
-    std::vector<Track*> results;
+    std::vector<WaveTrack*> results;
 
     wxFileName fn(wxFromPath(fileName));
 
@@ -466,9 +630,6 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
     for (auto& group : newTracks) {
         if (auto pTrack = dynamic_cast<WaveTrack*>(group.get())) {
             results.push_back(pTrack);
-            if (outWaveTracks) {
-                outWaveTracks->push_back(pTrack);
-            }
         }
         tracks.Add(group);
     }

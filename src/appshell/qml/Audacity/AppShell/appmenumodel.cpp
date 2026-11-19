@@ -21,6 +21,8 @@
  */
 #include "appmenumodel.h"
 
+#include <QFileInfo>
+
 #include "framework/global/containers.h"
 #include "framework/global/types/translatablestring.h"
 #include "framework/diagnostics/diagnosticscommands.h"
@@ -32,6 +34,8 @@
 #include "shared/types/workspacetitles.h"
 #include "appshell/appshellcommands.h"
 #include "effects/effects_base/effectscommands.h"
+#include "importexport/export/OriginalFileInfo.h"
+#include "project/iaudacityproject.h"
 #include "playback/playbackcommands.h"
 #include "project/projectcommands.h"
 #include "projectscene/projectscenecommands.h"
@@ -155,7 +159,13 @@ void AppMenuModel::setupConnections()
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateUndoRedoItems();
+        updateOverwriteOriginalTitle();
     });
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        updateOverwriteOriginalTitle();
+    });
+    updateOverwriteOriginalTitle();
 
     extensionsProvider()->manifestListChanged().onNotify(this, [this]() {
         findMenu("menu-tools").setSubitems(makeToolItems());
@@ -177,6 +187,10 @@ void AppMenuModel::onCommandStateChanged(const Command& command, const CommandSt
     if (command == trackedit::TRACKEDIT_RENAME_ITEM_COMMAND) {
         updateRenameItemsState();
     }
+
+    if (command == PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND) {
+        updateOverwriteOriginalTitle();
+    }
 }
 
 void AppMenuModel::updateUndoRedoItems()
@@ -192,6 +206,27 @@ void AppMenuModel::updateUndoRedoItems()
     redoItem.setTitle(redoActionName.isEmpty()
                       ? TranslatableString("action", "Redo")
                       : TranslatableString("action", "Redo ‘%1’").arg(redoActionName));
+}
+
+void AppMenuModel::updateOverwriteOriginalTitle()
+{
+    MenuItem& item = findItem(PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND);
+    if (!item.isValid()) {
+        return;
+    }
+
+    const auto project = globalContext()->currentProject();
+    auto* au3Project = project ? reinterpret_cast<AudacityProject*>(project->au3ProjectPtr()) : nullptr;
+    if (au3Project) {
+        const auto& info = OriginalFileInfo::Get(*au3Project);
+        if (info.HasOriginalFile()) {
+            const QString displayName = info.GetOriginalFileName().isEmpty() ? info.GetOriginalFilePath() : info.GetOriginalFileName();
+            item.setTitle(TranslatableString("action", "Overwrite %1").arg(QFileInfo(displayName).fileName()));
+            return;
+        }
+    }
+
+    item.setTitle(TranslatableString("command", "Overwrite original"));
 }
 
 void AppMenuModel::updateRenameItemsState()
@@ -255,6 +290,7 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeSeparator(),
 
         makeMenuItem(PROJECT_EXPORT_AUDIO_COMMAND),
+        makeMenuItem(PROJECT_EXPORT_OVERWRITE_ORIGINAL_COMMAND),
         makeMenuItem(PROJECT_EXPORT_LABELS_COMMAND),
         makeMenuItem(PROJECT_SHARE_AUDIO_COMMAND),
 

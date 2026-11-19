@@ -42,7 +42,7 @@ private:
     bool importIntoTrackInternal(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, muse::secs_t startTime,
                                  bool applyProjectTitle, bool runTempoDetection);
     void applyImportedProjectTitleIfNeeded(const muse::io::path_t& filePath);
-    void addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks, std::vector<WaveTrack*>* outWaveTracks = nullptr);
+    void addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks);
 
     const std::unique_ptr<TempoDetection> m_tempoDetection;
 };

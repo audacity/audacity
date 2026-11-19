@@ -6,6 +6,14 @@
 
 #include "au3-import-export/ExportPlugin.h"
 
+inline unsigned DefaultWavPackChannelMask(unsigned channels)
+{
+    if (channels <= 2) {
+        return 0x5 - channels;
+    }
+    return channels <= 18 ? (1U << channels) - 1 : 0x3FFFF;
+}
+
 class ExportWavPack final : public ExportPlugin
 {
 public:

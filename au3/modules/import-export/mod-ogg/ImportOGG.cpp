@@ -56,6 +56,10 @@ public:
     TranslatableString GetFileDescription() override;
     double GetDuration() const override;
     int GetRequiredTrackCount() const override;
+    ImportSourceFormat GetSourceFormat() const override
+    {
+        return mDecodeComplete ? ImportSourceFormat { wxT("OGG") } : ImportSourceFormat {};
+    }
     ByteCount GetFileUncompressedBytes() override;
     void Import(
         ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
@@ -71,6 +75,7 @@ private:
     ArrayOf<int> mStreamUsage;
     TranslatableStrings mStreamInfo;
     std::vector<TrackListHolder> mStreams;
+    bool mDecodeComplete = false;
 };
 
 static const auto exts = {
@@ -170,6 +175,7 @@ void OggImportFileHandle::Import(
     std::optional<LibFileFormats::AcidizerTags>&)
 {
     BeginImport();
+    mDecodeComplete = false;
 
     outTracks.clear();
 
@@ -204,6 +210,7 @@ void OggImportFileHandle::Import(
 #define SAMPLES_PER_CALLBACK 100000
 
     long bytesRead = 0;
+    bool decodeGap = false;
     {
         ArrayOf<short> mainBuffer{ CODEC_TRANSFER_SIZE };
 
@@ -225,7 +232,7 @@ void OggImportFileHandle::Import(
         // my hard drive that have malformed headers, and this added call
         // causes them to be read correctly.  Otherwise they have lots of
         // zeros inserted at the beginning
-        ov_pcm_seek(mVorbisFile.get(), 0);
+        decodeGap = ov_pcm_seek(mVorbisFile.get(), 0) != 0;
 
         do {
             /* get data from the decoder */
@@ -237,6 +244,7 @@ void OggImportFileHandle::Import(
                                 &bitstream);
 
             if (bytesRead == OV_HOLE) {
+                decodeGap = true;
                 wxFileName ff(GetFilename());
                 wxLogError(wxT("Ogg Vorbis importer: file %s is malformed, ov_read() reported a hole"),
                            ff.GetFullName());
@@ -292,6 +300,8 @@ void OggImportFileHandle::Import(
             }
         } while (!IsCancelled() && !IsStopped() && bytesRead != 0);
     }
+
+    mDecodeComplete = mVorbisFile->links == 1 && !decodeGap && bytesRead == 0 && !IsCancelled() && !IsStopped();
 
     if (bytesRead < 0) {
         progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
