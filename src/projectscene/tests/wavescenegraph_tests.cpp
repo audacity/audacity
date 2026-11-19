@@ -18,7 +18,6 @@ IMinMaxRMSPainter::ClipData makeClipData(double playStartTime, double playEndTim
                                          double sequenceEndTime = -1.0)
 {
     IMinMaxRMSPainter::ClipData data;
-    data.valid = true;
     data.channelCount = 1;
     data.playStartTime = playStartTime;
     data.playEndTime = playEndTime;
