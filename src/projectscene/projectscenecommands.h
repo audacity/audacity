@@ -24,6 +24,7 @@ inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMA
 inline static const muse::rcommand::Command PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND("command://projectscene/clip-pitch-and-speed");
 inline static const std::string PROJECTSCENE_CLIP_PITCH_AND_SPEED_TRACK_ID_PARAM("trackId");
 inline static const std::string PROJECTSCENE_CLIP_PITCH_AND_SPEED_CLIP_ID_PARAM("clipId");
+inline static const muse::rcommand::Command PROJECTSCENE_CLIP_EDIT_FADES_COMMAND("command://projectscene/clip-edit-fades");
 inline static const muse::rcommand::Command PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND("command://projectscene/open-label-editor");
 
 inline static const muse::rcommand::Command PROJECTSCENE_ZOOM_IN_COMMAND("command://projectscene/zoom-in");

@@ -366,6 +366,11 @@ double trimCovering(const au::au3::Au3WaveClip& clip, double overlap)
 void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& project, au3::Au3WaveTrack* waveTrack,
                                                    secs_t begin, secs_t end, std::shared_ptr<au3::Au3WaveClip> otherClip)
 {
+    // Only touching: no edge is cut, so no fade must go
+    if (muse::RealIsEqualOrLess(end, otherClip->GetPlayStartTime()) || muse::RealIsEqualOrMore(begin, otherClip->GetPlayEndTime())) {
+        return;
+    }
+
     if (muse::RealIsEqualOrLess(begin, otherClip->GetPlayStartTime())
         && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
         auto clipInfo = au::au3::DomConverter::clip(waveTrack, otherClip.get());
@@ -384,10 +389,13 @@ void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& p
         waveTrack->InsertInterval(std::move(leftClip), false);
 
         otherClip->TrimLeft(trimCovering(*otherClip, end - otherClip->GetPlayStartTime()));
+        // Like a split: the fade of a cut side belonged to the edge that is gone
+        otherClip->OnSplit(::ClipSide::Left);
         project->notifyAboutClipChanged(au::au3::DomConverter::clip(waveTrack, otherClip.get()));
 
         leftClip->SetPlayStartTime(otherClipStartTime);
         leftClip->TrimRight(trimCovering(*leftClip, otherClipEndTime - begin));
+        leftClip->OnSplit(::ClipSide::Right);
         project->notifyAboutClipAdded(au::au3::DomConverter::clip(waveTrack, leftClip.get()));
 
         project->notifyAboutTrackChanged(au::au3::DomConverter::track(waveTrack));
@@ -398,6 +406,7 @@ void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& p
         && !muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())
         && muse::RealIsEqualOrMore(end, otherClip->GetPlayStartTime())) {
         otherClip->TrimLeft(trimCovering(*otherClip, end - otherClip->GetPlayStartTime()));
+        otherClip->OnSplit(::ClipSide::Left);
         project->notifyAboutClipChanged(au::au3::DomConverter::clip(waveTrack, otherClip.get()));
         return;
     }
@@ -406,6 +415,7 @@ void au::trackedit::utils::trimOrDeleteOverlapping(const ITrackeditProjectPtr& p
         && muse::RealIsEqualOrLess(begin, otherClip->GetPlayEndTime())
         && muse::RealIsEqualOrMore(end, otherClip->GetPlayEndTime())) {
         otherClip->TrimRight(trimCovering(*otherClip, otherClip->GetPlayEndTime() - begin));
+        otherClip->OnSplit(::ClipSide::Right);
         project->notifyAboutClipChanged(au::au3::DomConverter::clip(waveTrack, otherClip.get()));
         return;
     }

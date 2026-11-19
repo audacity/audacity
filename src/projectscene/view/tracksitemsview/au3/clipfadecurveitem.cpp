@@ -26,6 +26,14 @@ const QColor highlightColor = Qt::white;
     switch (type) {
     case FadeTypes::Type::LOGARITHMIC:
         return ::FadeType::Logarithmic;
+    case FadeTypes::Type::SQUARE_ROOT:
+        return ::FadeType::SquareRoot;
+    case FadeTypes::Type::EQUAL_POWER:
+        return ::FadeType::EqualPower;
+    case FadeTypes::Type::S_CURVE:
+        return ::FadeType::SCurve;
+    case FadeTypes::Type::EXPONENTIAL:
+        return ::FadeType::Exponential;
     case FadeTypes::Type::LINEAR:
     default:
         return ::FadeType::Linear;
@@ -131,9 +139,4 @@ void ClipFadeCurveItem::drawCurve(QPainter& painter) const
     painter.setBrush(Qt::NoBrush);
     painter.setPen(QPen(lineColor, 1, Qt::SolidLine, Qt::FlatCap));
     painter.drawPolyline(line);
-
-    if (m_highlighted) {
-        painter.setPen(QPen(highlightColor, 1.5, Qt::SolidLine, Qt::FlatCap));
-        painter.drawPolyline(line);
-    }
 }

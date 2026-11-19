@@ -603,20 +603,40 @@ TrackItemsContainer {
                                     clipsContainer.resetTargetHeightRatio()
                                 }
 
-                                onFadeEditStarted: {
-                                    clipsModel.startClipFadeEdit(itemData.key)
+                                onFadeEditStarted: function (side) {
+                                    clipsModel.startClipFadeEdit(itemData.key, side)
                                 }
 
-                                onFadeInDurationChangeRequested: function (duration, completed) {
-                                    clipsModel.changeClipFadeIn(itemData.key, duration, completed)
-                                }
-
-                                onFadeOutDurationChangeRequested: function (duration, completed) {
-                                    clipsModel.changeClipFadeOut(itemData.key, duration, completed)
+                                onFadeDurationChangeRequested: function (duration, completed) {
+                                    clipsModel.changeClipFade(itemData.key, duration, completed)
                                 }
 
                                 onFadeEditCanceled: {
                                     clipsModel.cancelClipFadeEdit()
+                                }
+
+                                onFadeInTypeChangeRequested: function (type) {
+                                    clipsModel.changeClipFadeInType(itemData.key, type)
+                                }
+
+                                onFadeOutTypeChangeRequested: function (type) {
+                                    clipsModel.changeClipFadeOutType(itemData.key, type)
+                                }
+
+                                onFadeInLengthEditRequested: {
+                                    Qt.callLater(clipsModel.openClipFadeInLengthEdit, itemData.key)
+                                }
+
+                                onFadeOutLengthEditRequested: {
+                                    Qt.callLater(clipsModel.openClipFadeOutLengthEdit, itemData.key)
+                                }
+
+                                onFadeInRemoveRequested: {
+                                    clipsModel.removeClipFadeIn(itemData.key)
+                                }
+
+                                onFadeOutRemoveRequested: {
+                                    clipsModel.removeClipFadeOut(itemData.key)
                                 }
 
                                 onPitchChangeRequested: {

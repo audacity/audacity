@@ -16,6 +16,8 @@ class Au3ProjectHistory : public IProjectHistory, public muse::Contextable
 {
     muse::ContextInject<context::IGlobalContext> globalContext { this };
 
+    friend class Au3ClipsInteractionTests;
+
 public:
     Au3ProjectHistory(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}

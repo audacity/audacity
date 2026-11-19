@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <memory>
+#include <optional>
 #include <vector>
 
 #include "framework/global/async/asyncable.h"
@@ -83,6 +85,19 @@ private:
     void notifyAboutRecordClipsChanged();
 
     void rebuildRecordingClipKeys();
+
+    //! What splitting a clip at the recording start changed, to undo it if the recording doesn't start
+    struct RecordingStartSplit {
+        au3::Au3WaveTrack* track = nullptr;
+        //! The clip that was split
+        std::shared_ptr<au3::Au3WaveClip> left;
+        std::shared_ptr<au3::Au3WaveClip> right;
+        double leftTrimRight = 0.0;
+        double leftFadeOut = 0.0;
+    };
+
+    std::optional<RecordingStartSplit> splitClipAtRecordingStart(au3::Au3WaveTrack& track, double recordingStart);
+    void undoSplitAtRecordingStart(const RecordingStartSplit& split);
 
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
 

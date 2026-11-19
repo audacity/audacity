@@ -170,6 +170,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectionviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/pitchandspeedchangemodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/pitchandspeedchangemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipfadeseditmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipfadeseditmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/fadetypeconversion.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectioncontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/selectioncontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/canvascontextmenumodel.cpp

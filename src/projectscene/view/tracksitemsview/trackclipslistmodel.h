@@ -3,7 +3,7 @@
 */
 #pragma once
 
-#include <functional>
+#include <memory>
 #include <optional>
 
 #include "framework/global/modularity/ioc.h"
@@ -17,6 +17,7 @@
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
+#include "trackedit/clipfadedrag.h"
 
 namespace au::projectscene {
 class TrackClipsListModel : public TrackItemsListModel
@@ -37,6 +38,8 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
     muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
 
+    friend class TrackClipsFadeEditTests;
+
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);
 
@@ -55,10 +58,15 @@ public:
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
     Q_INVOKABLE void titleEditRequestHandled(const ClipKey& key);
 
-    Q_INVOKABLE void startClipFadeEdit(const ClipKey& key);
-    Q_INVOKABLE bool changeClipFadeIn(const ClipKey& key, double duration, bool completed);
-    Q_INVOKABLE bool changeClipFadeOut(const ClipKey& key, double duration, bool completed);
+    Q_INVOKABLE void startClipFadeEdit(const ClipKey& key, ClipSides::Side side);
+    Q_INVOKABLE bool changeClipFade(const ClipKey& key, double duration, bool completed);
     Q_INVOKABLE void cancelClipFadeEdit();
+    Q_INVOKABLE bool changeClipFadeInType(const ClipKey& key, FadeTypes::Type type);
+    Q_INVOKABLE bool changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type);
+    Q_INVOKABLE void openClipFadeInLengthEdit(const ClipKey& key);
+    Q_INVOKABLE void openClipFadeOutLengthEdit(const ClipKey& key);
+    Q_INVOKABLE bool removeClipFadeIn(const ClipKey& key);
+    Q_INVOKABLE bool removeClipFadeOut(const ClipKey& key);
 
     Q_INVOKABLE void openClipPitchEdit(const ClipKey& key);
     Q_INVOKABLE void resetClipPitch(const ClipKey& key);
@@ -81,6 +89,7 @@ signals:
     void contentXChanged();
 
 private:
+    void openClipFadesEdit(const ClipKey& key, ClipSides::Side focusedFade);
     void onInit() override;
     void onReload() override;
 
@@ -91,18 +100,18 @@ private:
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
+    trackedit::ClipKeyList clipsForFadeEdit(const ClipKey& key) const;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
 
     bool isKeyboardTriggered() const;
 
-    bool changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change);
+    bool removeClipFades(const ClipKey& key, trackedit::ClipSide side);
 
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
-    //! As it was before the fade edit
-    std::optional<trackedit::Clip> m_fadeEditedClip;
+    std::unique_ptr<trackedit::ClipFadeDrag> m_fadeDrag;
     trackedit::ClipKeyList m_clipsMovingWithSelection;
 };
 }

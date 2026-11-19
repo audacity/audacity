@@ -17,16 +17,23 @@ Item {
     required property int fadeInType
     required property int fadeOutType
 
+    property bool clipSelected: false
+    property bool clipHovered: false
+
     //! The fades span the whole item, the handles only a band of it, starting at `handlesY`
     property real handlesY: 0
     //! Above it, the fades aren't drawn
     property real drawingTop: 0
-    property bool handlesVisible: false
 
-    signal fadeEditStarted
-    signal fadeInWidthChangeRequested(real width, bool completed)
-    signal fadeOutWidthChangeRequested(real width, bool completed)
+    signal fadeEditStarted(int side)
+    signal fadeWidthChangeRequested(real width, bool completed)
     signal fadeEditCanceled
+    signal fadeInTypeChangeRequested(int type)
+    signal fadeOutTypeChangeRequested(int type)
+    signal fadeInLengthEditRequested
+    signal fadeOutLengthEditRequested
+    signal fadeInRemoveRequested
+    signal fadeOutRemoveRequested
 
     // mouse position event is not propagated on overlapping mouse areas
     // so we are handling it manually
@@ -72,15 +79,22 @@ Item {
         handleX: prv.handleX(prv.fadeInLineCenter - prv.collisionPush)
         handleY: root.handlesY
         handleSize: prv.handleSize
-        handleVisible: root.handlesVisible
+        handleVisible: root.clipSelected || (root.clipHovered && root.fadeInWidth > 0)
 
-        onFadeEditStarted: root.fadeEditStarted()
+        onFadeEditStarted: root.fadeEditStarted(ClipSide.Left)
 
         onFadeWidthChangeRequested: function (width, completed) {
-            root.fadeInWidthChangeRequested(width, completed)
+            root.fadeWidthChangeRequested(width, completed)
         }
 
         onFadeEditCanceled: root.fadeEditCanceled()
+
+        onFadeTypeChangeRequested: function (type) {
+            root.fadeInTypeChangeRequested(type)
+        }
+
+        onFadeLengthEditRequested: root.fadeInLengthEditRequested()
+        onFadeRemoveRequested: root.fadeInRemoveRequested()
 
         onMousePositionChanged: function (mouseX, mouseY) {
             root.fadeHandlesMousePositionChanged(mouseX, mouseY)
@@ -102,15 +116,22 @@ Item {
         handleX: prv.handleX(prv.fadeOutLineCenter + prv.collisionPush)
         handleY: root.handlesY
         handleSize: prv.handleSize
-        handleVisible: root.handlesVisible
+        handleVisible: root.clipSelected || (root.clipHovered && root.fadeOutWidth > 0)
 
-        onFadeEditStarted: root.fadeEditStarted()
+        onFadeEditStarted: root.fadeEditStarted(ClipSide.Right)
 
         onFadeWidthChangeRequested: function (width, completed) {
-            root.fadeOutWidthChangeRequested(width, completed)
+            root.fadeWidthChangeRequested(width, completed)
         }
 
         onFadeEditCanceled: root.fadeEditCanceled()
+
+        onFadeTypeChangeRequested: function (type) {
+            root.fadeOutTypeChangeRequested(type)
+        }
+
+        onFadeLengthEditRequested: root.fadeOutLengthEditRequested()
+        onFadeRemoveRequested: root.fadeOutRemoveRequested()
 
         onMousePositionChanged: function (mouseX, mouseY) {
             root.fadeHandlesMousePositionChanged(mouseX, mouseY)

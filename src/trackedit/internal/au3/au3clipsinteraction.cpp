@@ -41,6 +41,25 @@ using namespace au::au3;
 
 namespace {
 static const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono…");
+
+::FadeType au3FadeType(au::trackedit::FadeType type)
+{
+    switch (type) {
+    case au::trackedit::FadeType::Exponential:
+        return ::FadeType::Exponential;
+    case au::trackedit::FadeType::Logarithmic:
+        return ::FadeType::Logarithmic;
+    case au::trackedit::FadeType::SquareRoot:
+        return ::FadeType::SquareRoot;
+    case au::trackedit::FadeType::EqualPower:
+        return ::FadeType::EqualPower;
+    case au::trackedit::FadeType::SCurve:
+        return ::FadeType::SCurve;
+    case au::trackedit::FadeType::Linear:
+    default:
+        return ::FadeType::Linear;
+    }
+}
 }
 
 Au3ClipsInteraction::Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx)
@@ -253,8 +272,7 @@ bool Au3ClipsInteraction::changeClipColor(const ClipKey& clipKey, ClipColorIndex
     return true;
 }
 
-// a fade pushes the other one back when it runs into it
-bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t duration)
+bool Au3ClipsInteraction::changeClipFades(const ClipKey& clipKey, const std::function<void(ClipFades&)>& change)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -266,7 +284,7 @@ bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t durati
         return false;
     }
 
-    ClipFades::Get(*clip).setFadeIn(duration.to_double());
+    change(ClipFades::Get(*clip));
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
@@ -274,24 +292,33 @@ bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t durati
     return true;
 }
 
+// a fade pushes the other one back when it runs into it
+bool Au3ClipsInteraction::changeClipFadeIn(const ClipKey& clipKey, secs_t duration)
+{
+    return changeClipFades(clipKey, [duration](ClipFades& fades) {
+        fades.setFadeIn(duration.to_double());
+    });
+}
+
 bool Au3ClipsInteraction::changeClipFadeOut(const ClipKey& clipKey, secs_t duration)
 {
-    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
+    return changeClipFades(clipKey, [duration](ClipFades& fades) {
+        fades.setFadeOut(duration.to_double());
+    });
+}
 
-    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
+bool Au3ClipsInteraction::changeClipFadeInType(const ClipKey& clipKey, FadeType type)
+{
+    return changeClipFades(clipKey, [type](ClipFades& fades) {
+        fades.setFadeInType(au3FadeType(type));
+    });
+}
 
-    ClipFades::Get(*clip).setFadeOut(duration.to_double());
-
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-
-    return true;
+bool Au3ClipsInteraction::changeClipFadeOutType(const ClipKey& clipKey, FadeType type)
+{
+    return changeClipFades(clipKey, [type](ClipFades& fades) {
+        fades.setFadeOutType(au3FadeType(type));
+    });
 }
 
 bool Au3ClipsInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize)
@@ -1298,7 +1325,7 @@ bool Au3ClipsInteraction::applyClipEdit(const ClipKeyList& clipKeys, bool comple
 bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Left);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Left);
         return clip.TrimLeft(deltaSec);
     });
 }
@@ -1306,7 +1333,7 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
 bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
 {
     return applyClipEdit(clipKeys, completed, [deltaSec](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Right);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Right);
         return clip.TrimRight(deltaSec);
     });
 }
@@ -1315,7 +1342,7 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
 {
     const secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Left);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Left);
         clip.StretchLeftTo(clip.GetPlayStartTime() + adjustedDelta);
         return true;
     });
@@ -1325,7 +1352,7 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
 {
     const secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
     return applyClipEdit(clipKeys, completed, [adjustedDelta](Au3WaveClip& clip) {
-        ClipFades::Get(clip).setDraggingSide(ClipSide::Right);
+        ClipFades::Get(clip).setDraggingSide(::ClipSide::Right);
         clip.StretchRightTo(clip.GetPlayEndTime() - adjustedDelta);
         return true;
     });

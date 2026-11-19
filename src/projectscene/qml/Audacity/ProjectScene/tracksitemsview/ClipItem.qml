@@ -95,10 +95,15 @@ Rectangle {
     signal clipLeftStretchRequested(bool completed, int action)
     signal clipRightStretchRequested(bool completed, int action)
 
-    signal fadeEditStarted
-    signal fadeInDurationChangeRequested(real duration, bool completed)
-    signal fadeOutDurationChangeRequested(real duration, bool completed)
+    signal fadeEditStarted(int side)
+    signal fadeDurationChangeRequested(real duration, bool completed)
     signal fadeEditCanceled
+    signal fadeInTypeChangeRequested(int type)
+    signal fadeOutTypeChangeRequested(int type)
+    signal fadeInLengthEditRequested
+    signal fadeOutLengthEditRequested
+    signal fadeInRemoveRequested
+    signal fadeOutRemoveRequested
 
     signal requestSelected
     signal requestSelectionReset
@@ -1213,6 +1218,8 @@ Rectangle {
         y: viewsColumn.y
         width: root.width
         height: viewsColumn.height
+        clipSelected: root.clipSelected && !root.moveActive
+        clipHovered: root.hover
         // The header covers the top of a collapsed clip when shown
         drawingTop: header.visible ? Math.max(0, header.y + header.height - y) : 0
         // Level with the trim and stretch handles, but dropping down with the header of a collapsed clip
@@ -1225,20 +1232,29 @@ Rectangle {
         fadeOutWidth: root.fadeOutDuration * root.context.zoom
         fadeInType: root.fadeInType
         fadeOutType: root.fadeOutType
-        // Shown on selected clips, like the trim and stretch handles; elsewhere, the mouse cursor turns into a fade handle over the hit areas
-        handlesVisible: root.clipSelected && !root.moveActive
 
-        onFadeEditStarted: root.fadeEditStarted()
-
-        onFadeInWidthChangeRequested: function (width, completed) {
-            root.fadeInDurationChangeRequested(width / root.context.zoom, completed)
+        onFadeEditStarted: function (side) {
+            root.fadeEditStarted(side)
         }
 
-        onFadeOutWidthChangeRequested: function (width, completed) {
-            root.fadeOutDurationChangeRequested(width / root.context.zoom, completed)
+        onFadeWidthChangeRequested: function (width, completed) {
+            root.fadeDurationChangeRequested(width / root.context.zoom, completed)
         }
 
         onFadeEditCanceled: root.fadeEditCanceled()
+
+        onFadeInTypeChangeRequested: function (type) {
+            root.fadeInTypeChangeRequested(type)
+        }
+
+        onFadeOutTypeChangeRequested: function (type) {
+            root.fadeOutTypeChangeRequested(type)
+        }
+
+        onFadeInLengthEditRequested: root.fadeInLengthEditRequested()
+        onFadeOutLengthEditRequested: root.fadeOutLengthEditRequested()
+        onFadeInRemoveRequested: root.fadeInRemoveRequested()
+        onFadeOutRemoveRequested: root.fadeOutRemoveRequested()
 
         onFadeHandlesMousePositionChanged: function (xWithinFadeHandles, yWithinFadeHandles) {
             clipItemMousePositionChanged(xWithinFadeHandles, fades.y + yWithinFadeHandles)
