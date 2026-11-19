@@ -7,6 +7,8 @@
 #include <cmath>
 #include <string>
 
+#include "framework/global/translation.h"
+
 using namespace au::trackedit;
 using namespace muse;
 using namespace muse::rcommand;
@@ -34,11 +36,11 @@ bool isEndAnchor(SelectAnchor anchor)
     return anchor == SelectAnchor::ProjectEnd || anchor == SelectAnchor::SelectionEnd;
 }
 
-std::string describe(SelectAnchor anchor)
+String describe(SelectAnchor anchor)
 {
     const auto& table = SelectAnchorContract::table;
     const auto it = std::ranges::find(table, anchor, [](const auto& entry) { return entry.eval; });
-    return it != table.end() ? std::string(it->description) : std::string();
+    return it != table.end() ? mtrc("trackedit", std::string(it->description).c_str()) : String();
 }
 
 Ret badArgs(const std::string& text)
@@ -133,40 +135,41 @@ TrackArgs trackArgs(const SelectTrackSpec& spec, int projectTrackCount)
         }, spec);
 }
 
-std::string edgeText(SelectAnchor anchor, double offset)
+String edgeText(SelectAnchor anchor, double offset)
 {
-    const std::string anchorText = describe(anchor);
+    const String anchorText = describe(anchor);
     if (offset == 0.0) {
         return anchorText;
     }
 
-    const std::string sign = offset > 0.0 ? " + " : " - ";
-    return anchorText + sign + String::number(std::abs(offset), 3).toStdString() + " s";
+    const String seconds = String::number(std::abs(offset), 3);
+    return offset > 0.0
+           ? mtrc("trackedit", "%1 + %2 s").arg(anchorText, seconds)
+           : mtrc("trackedit", "%1 - %2 s").arg(anchorText, seconds);
 }
 
-std::string timeText(const SelectTimeSpec& spec)
+String timeText(const SelectTimeSpec& spec)
 {
     return std::visit(Overloaded {
-            [](const WholeProjectTime&) { return std::string("Whole project"); },
+            [](const WholeProjectTime&) { return mtrc("trackedit", "Whole project"); },
             [](const SelectTimeRange& range) {
-            return edgeText(startAnchorOf(range.relativeTo), range.startOffset) + " to "
-                   + edgeText(endAnchorOf(range.relativeTo), range.endOffset);
+            return mtrc("trackedit", "%1 to %2").arg(edgeText(startAnchorOf(range.relativeTo), range.startOffset),
+                                                     edgeText(endAnchorOf(range.relativeTo), range.endOffset));
         },
         }, spec);
 }
 
-std::string trackText(const SelectTrackSpec& spec)
+String trackText(const SelectTrackSpec& spec)
 {
     return std::visit(Overloaded {
-            [](const AllTracks&) { return std::string("all tracks"); },
+            [](const AllTracks&) { return mtrc("trackedit", "all tracks"); },
             [](const SelectTrackRange& range) {
-            const std::string first = std::to_string(range.firstTrack);
-            const std::string tracks = range.trackCount == 1
-                                       ? "track " + first
-                                       : "tracks " + first + "-" + std::to_string(range.firstTrack + range.trackCount - 1);
+            const String tracks = range.trackCount == 1
+                                  ? mtrc("trackedit", "track %1").arg(range.firstTrack)
+                                  : mtrc("trackedit", "tracks %1-%2").arg(range.firstTrack, range.firstTrack + range.trackCount - 1);
             switch (range.mode) {
-                case SelectTracksMode::Add: return "add " + tracks;
-                case SelectTracksMode::Remove: return "remove " + tracks;
+                case SelectTracksMode::Add: return mtrc("trackedit", "add %1").arg(tracks);
+                case SelectTracksMode::Remove: return mtrc("trackedit", "remove %1").arg(tracks);
                 case SelectTracksMode::Set: break;
             }
             return tracks;
@@ -281,5 +284,5 @@ SelectCommand au::trackedit::selectStepCommand(const SelectEnhancedStep& step, i
 
 String au::trackedit::selectStepSummary(const SelectEnhancedStep& step)
 {
-    return String::fromStdString(timeText(step.time) + ", " + trackText(step.tracks));
+    return mtrc("trackedit", "%1, %2").arg(timeText(step.time), trackText(step.tracks));
 }

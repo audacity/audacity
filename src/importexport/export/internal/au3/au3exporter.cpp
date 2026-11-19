@@ -810,6 +810,11 @@ int Au3Exporter::defaultSampleRate(const ExportFormatSettings& settings) const
     return au3DefaultSampleRate(settings, projectSampleRate());
 }
 
+std::optional<std::string> Au3Exporter::optionLabel(const ExportOptionValue& value) const
+{
+    return au3OptionLabel(value);
+}
+
 bool Au3Exporter::isCustomFFmpegExportFormat() const
 {
     OptionsEditorUPtr editor = optionsEditor();

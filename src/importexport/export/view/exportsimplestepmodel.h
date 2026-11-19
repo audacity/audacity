@@ -15,6 +15,7 @@
 
 #include "../exportcommands.h"
 #include "../iexportconfiguration.h"
+#include "../iexporter.h"
 
 namespace au::importexport {
 class ExportSimpleStepModel : public QObject, public muse::Contextable
@@ -33,6 +34,7 @@ class ExportSimpleStepModel : public QObject, public muse::Contextable
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IExporter> exporter{ this };
 
 public:
     explicit ExportSimpleStepModel(QObject* parent = nullptr);

@@ -3,11 +3,18 @@
 */
 #include <gtest/gtest.h>
 
+#include <QQmlContext>
+#include <QQmlEngine>
 #include <QStringList>
+
+#include "global/modularity/ioc.h"
 
 #include "importexport/export/view/exportaudiostepmodel.h"
 
+#include "mocks/exportermock.h"
+
 using namespace au::importexport;
+using ::testing::NiceMock;
 
 namespace {
 QStringList titles(const ExportAudioStepModel& model)
@@ -25,7 +32,36 @@ int rowOf(const ExportAudioStepModel& model, const QString& title)
 }
 }
 
-TEST(ExportAudioStepModelTests, StepDataGivesBackTheLoadedData)
+class ExportAudioStepModelTests : public ::testing::Test
+{
+protected:
+    void SetUp() override
+    {
+        m_exporter = std::make_shared<NiceMock<ExporterMock> >();
+        m_testCtx = std::make_shared<muse::modularity::Context>(999);
+        muse::modularity::ioc(m_testCtx)->registerExportNoDelete<IExporter>("utests", m_exporter.get());
+
+        m_qmlIoc = new muse::QmlIoCContext(&m_engine);
+        m_qmlIoc->ctx = m_testCtx;
+        m_engine.rootContext()->setContextProperty("ioc_context", QVariant::fromValue(m_qmlIoc));
+
+        QQmlEngine::setContextForObject(&m_model, m_engine.rootContext());
+    }
+
+    void TearDown() override
+    {
+        muse::modularity::ioc(m_testCtx)->unregister<IExporter>("utests");
+        muse::modularity::removeIoC(m_testCtx);
+    }
+
+    QQmlEngine m_engine;
+    muse::QmlIoCContext* m_qmlIoc = nullptr;
+    muse::modularity::ContextPtr m_testCtx;
+    std::shared_ptr<ExporterMock> m_exporter;
+    ExportAudioStepModel m_model;
+};
+
+TEST_F(ExportAudioStepModelTests, StepDataGivesBackTheLoadedData)
 {
     const QVariantMap stored {
         { "format", "mp3" },
@@ -36,47 +72,43 @@ TEST(ExportAudioStepModelTests, StepDataGivesBackTheLoadedData)
         { "fileName", "{ProjectName}-x" },
     };
 
-    ExportAudioStepModel model;
-    model.load(stored);
+    m_model.load(stored);
 
-    EXPECT_EQ(model.stepData(), stored);
+    EXPECT_EQ(m_model.stepData(), stored);
 }
 
-TEST(ExportAudioStepModelTests, FormatChangeRebuildsTheRows)
+TEST_F(ExportAudioStepModelTests, FormatChangeRebuildsTheRows)
 {
-    ExportAudioStepModel model;
-    model.load({});
-    EXPECT_EQ(titles(model), QStringList({ "Format", "Encoding", "Channels", "Sample rate" }));
+    m_model.load({});
+    EXPECT_EQ(titles(m_model), QStringList({ "Format", "Encoding", "Channels", "Sample rate" }));
 
-    model.setValue(rowOf(model, "Format"), "flac");
+    m_model.setValue(rowOf(m_model, "Format"), "flac");
 
-    EXPECT_EQ(titles(model), QStringList({ "Format", "Bit depth", "Level", "Channels", "Sample rate" }));
-    EXPECT_EQ(model.stepData().value("format"), "flac");
-    EXPECT_EQ(model.stepData().value("bitDepth"), "16");
-    EXPECT_EQ(model.stepData().value("level"), "5");
+    EXPECT_EQ(titles(m_model), QStringList({ "Format", "Bit depth", "Level", "Channels", "Sample rate" }));
+    EXPECT_EQ(m_model.stepData().value("format"), "flac");
+    EXPECT_EQ(m_model.stepData().value("bitDepth"), "16");
+    EXPECT_EQ(m_model.stepData().value("level"), "5");
 }
 
-TEST(ExportAudioStepModelTests, Mp3ModeChangeReplacesTheValueList)
+TEST_F(ExportAudioStepModelTests, Mp3ModeChangeReplacesTheValueList)
 {
-    ExportAudioStepModel model;
-    model.load({ { "format", "mp3" } });
-    EXPECT_EQ(titles(model), QStringList({ "Format", "Bit rate mode", "Quality", "Channels", "Sample rate" }));
+    m_model.load({ { "format", "mp3" } });
+    EXPECT_EQ(titles(m_model), QStringList({ "Format", "Bit rate mode", "Quality", "Channels", "Sample rate" }));
 
-    model.setValue(rowOf(model, "Bit rate mode"), "cbr");
+    m_model.setValue(rowOf(m_model, "Bit rate mode"), "cbr");
 
-    const int bitRateRow = rowOf(model, "Bit rate");
+    const int bitRateRow = rowOf(m_model, "Bit rate");
     ASSERT_GE(bitRateRow, 0);
-    EXPECT_EQ(model.data(model.index(bitRateRow), ExportAudioStepModel::OptionsRole).toList().size(),
+    EXPECT_EQ(m_model.data(m_model.index(bitRateRow), ExportAudioStepModel::OptionsRole).toList().size(),
               static_cast<qsizetype>(Mp3BitRateContract::table.size()));
-    EXPECT_EQ(model.stepData().value("quality"), "cbr-192");
+    EXPECT_EQ(m_model.stepData().value("quality"), "cbr-192");
 }
 
-TEST(ExportAudioStepModelTests, Mp3FormatResetsASampleRateMp3DoesNotSupport)
+TEST_F(ExportAudioStepModelTests, Mp3FormatResetsASampleRateMp3DoesNotSupport)
 {
-    ExportAudioStepModel model;
-    model.load({ { "format", "wav" }, { "sampleRate", "96000" } });
+    m_model.load({ { "format", "wav" }, { "sampleRate", "96000" } });
 
-    model.setValue(rowOf(model, "Format"), "mp3");
+    m_model.setValue(rowOf(m_model, "Format"), "mp3");
 
-    EXPECT_EQ(model.stepData().value("sampleRate"), "project");
+    EXPECT_EQ(m_model.stepData().value("sampleRate"), "project");
 }

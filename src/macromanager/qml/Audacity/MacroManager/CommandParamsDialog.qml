@@ -148,7 +148,7 @@ StyledDialogView {
                             currentText: row.value
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 1
+                            navigation.order: includedCheckBox.navigation.order + 1
 
                             onTextChanged: function (newTextValue) {
                                 paramsModel.setValue(row.index, newTextValue)
@@ -167,7 +167,7 @@ StyledDialogView {
                             step: 1
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 1
+                            navigation.order: includedCheckBox.navigation.order + 1
 
                             onValueEdited: function (newValue) {
                                 paramsModel.setValue(row.index, newValue)
@@ -182,7 +182,7 @@ StyledDialogView {
                             checked: row.value
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 1
+                            navigation.order: includedCheckBox.navigation.order + 1
 
                             onClicked: {
                                 paramsModel.setValue(row.index, !checked)
@@ -200,7 +200,7 @@ StyledDialogView {
                             currentIndex: dropdown.indexOfValue(row.value)
 
                             navigation.panel: row.navigationPanel
-                            navigation.order: 1
+                            navigation.order: includedCheckBox.navigation.order + 1
 
                             onActivated: function (index, value) {
                                 paramsModel.setValue(row.index, value)

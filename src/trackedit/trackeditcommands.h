@@ -6,6 +6,7 @@
 #include <limits>
 #include <tuple>
 
+#include "framework/global/translation.h"
 #include "framework/rcommand/commandtypes.h"
 #include "framework/rcommand/enumcontract.h"
 #include "framework/rcommand/typedcommand.h"
@@ -194,9 +195,9 @@ struct SelectTracksModeContract {
     static constexpr std::string_view key = "mode";
     static constexpr SelectTracksMode def = SelectTracksMode::Set;
     static constexpr muse::rcommand::EnumTable<SelectTracksMode, 3> table = { {
-        { "Set", SelectTracksMode::Set, "Set" },
-        { "Add", SelectTracksMode::Add, "Add" },
-        { "Remove", SelectTracksMode::Remove, "Remove" },
+        { "Set", SelectTracksMode::Set, QT_TRANSLATE_NOOP("trackedit", "Set") },
+        { "Add", SelectTracksMode::Add, QT_TRANSLATE_NOOP("trackedit", "Add") },
+        { "Remove", SelectTracksMode::Remove, QT_TRANSLATE_NOOP("trackedit", "Remove") },
     } };
 };
 }
