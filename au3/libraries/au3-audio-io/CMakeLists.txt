@@ -16,6 +16,8 @@ set( SOURCES
    AudioIOExt.h
    AudioIOListener.cpp
    AudioIOListener.h
+   CaptureRouting.cpp
+   CaptureRouting.h
    PlaybackSchedule.cpp
    PlaybackSchedule.h
    ProjectAudioIO.cpp
