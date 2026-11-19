@@ -162,21 +162,16 @@ double dataCacheZoom(double zoom, double sampleRate)
 }
 }
 
-void WaveformPainter::GetColumnData(
+bool WaveformPainter::GetColumnData(
     size_t channelIndex,
     const WavePaintParameters& params,
     const au::projectscene::WaveMetrics& metrics,
-    std::vector<WaveColumnVertex>& columns,
-    bool* dataComplete)
+    std::vector<WaveColumnVertex>& columns)
 {
     columns.clear();
 
-    if (dataComplete) {
-        *dataComplete = true;
-    }
-
     if (channelIndex >= mChannelCaches.size() || metrics.height <= 0 || metrics.zoom <= 0.0 || !mWaveClip) {
-        return;
+        return true;
     }
 
     auto& dataCache = mChannelCaches[channelIndex].DataCache;
@@ -189,15 +184,13 @@ void WaveformPainter::GetColumnData(
 
     auto range = dataCache->PerformLookup(dataZoomInfo, metrics.fromTime, metrics.toTime);
 
-    if (dataComplete) {
-        *dataComplete = !(range.begin() == range.end() && metrics.width > 0);
-    }
+    bool dataComplete = !(range.begin() == range.end() && metrics.width > 0);
 
     // Display pixels of the window, as the lookup at the display zoom would give them
     const int64_t firstPixel = zoomInfo.TimeToPosition(metrics.fromTime);
     const int64_t lastPixel = zoomInfo.TimeToPosition(metrics.toTime);
     if (lastPixel < firstPixel) {
-        return;
+        return dataComplete;
     }
 
     columns.reserve(static_cast<size_t>(lastPixel - firstPixel) + 1);
@@ -321,9 +314,8 @@ void WaveformPainter::GetColumnData(
         // The final element of a clip is never IsComplete (it nominally spans
         // past the clip's end); only report incompleteness when columns are
         // missing within the requested window.
-        if (dataComplete && !element.IsComplete
-            && element.AvailableColumns < tileWidth - rightOffset) {
-            *dataComplete = false;
+        if (!element.IsComplete && element.AvailableColumns < tileWidth - rightOffset) {
+            dataComplete = false;
         }
 
         for (size_t col = leftOffset; col < endCol; ++col) {
@@ -353,6 +345,7 @@ void WaveformPainter::GetColumnData(
     }
 
     flushPending();
+    return dataComplete;
 }
 
 void WaveformPainter::MarkChanged() noexcept
