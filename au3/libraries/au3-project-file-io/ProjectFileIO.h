@@ -107,6 +107,8 @@ public:
     bool IsModified() const;
     bool IsTemporary() const;
     bool IsRecovered() const;
+    bool HasDocument();
+    bool HasSampleBlocks();
 
     void MarkTemporary();
 

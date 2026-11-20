@@ -852,6 +852,7 @@ bool Sequence::HandleXMLTag(const std::string_view& tag, const AttributesList& a
         }
 
         mBlock.push_back(wb);
+        mBlockCount.store(mBlock.size(), std::memory_order_release);
         return true;
     }
 

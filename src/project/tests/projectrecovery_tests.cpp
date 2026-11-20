@@ -16,6 +16,7 @@
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "project/projecterrors.h"
 #include "global/settings.h"
 #include "testing/testcontext.h"
 
@@ -46,6 +47,34 @@ protected:
     {
         muse::settings()->setLocalValue(tempDirKey(), m_previousTempDir);
         TempDirectory::ResetTempDir();
+    }
+
+    static int64_t countRows(const QString& path, const char* table)
+    {
+        sqlite3* db = nullptr;
+        EXPECT_EQ(sqlite3_open(path.toUtf8().constData(), &db), SQLITE_OK);
+        sqlite3_stmt* statement = nullptr;
+        const std::string sql = std::string("SELECT count(*) FROM ") + table + ";";
+        EXPECT_EQ(sqlite3_prepare_v2(db, sql.c_str(), -1, &statement, nullptr), SQLITE_OK);
+        int64_t count = -1;
+        if (sqlite3_step(statement) == SQLITE_ROW) {
+            count = sqlite3_column_int64(statement, 0);
+        }
+        sqlite3_finalize(statement);
+        sqlite3_close(db);
+        return count;
+    }
+
+    static void insertSampleBlock(const QString& path)
+    {
+        sqlite3* db = nullptr;
+        ASSERT_EQ(sqlite3_open(path.toUtf8().constData(), &db), SQLITE_OK);
+        const int result = sqlite3_exec(db,
+                                        "INSERT INTO sampleblocks(sampleformat, summin, summax, sumrms, summary256, summary64k, samples)"
+                                        " VALUES(262159, 0, 0, 0, zeroblob(12), zeroblob(12), zeroblob(4096));",
+                                        nullptr, nullptr, nullptr);
+        sqlite3_close(db);
+        ASSERT_EQ(result, SQLITE_OK);
     }
 
     static muse::Settings::Key tempDirKey()
@@ -94,6 +123,29 @@ TEST_P(ProjectRecoveryTests, DiscardDoesNotCreateAnotherTemporaryDatabase)
         FAIL() << exception.ErrorMessage().translated().toStdString();
     }
     EXPECT_FALSE(QFile::exists(m_path));
+}
+
+TEST_P(ProjectRecoveryTests, AudioWithoutDocumentIsRefused)
+{
+    //! [GIVEN] A recording session that died before any document was written
+    insertSampleBlock(m_path);
+
+    //! [WHEN] It is opened
+    const auto context = testutils::makeTestContext();
+    au3::Au3ProjectAccessor project(context);
+    const muse::Ret ret = project.load(m_path, false);
+
+    if (GetParam()) {
+        //! [THEN] With an autosave document it opens as a recovered project
+        ASSERT_TRUE(ret);
+        project.close();
+    } else {
+        //! [THEN] Without any document the load is refused instead of opening an empty project
+        EXPECT_EQ(ret.code(), int(Err::NoDocument));
+    }
+
+    //! [THEN] The audio is untouched either way
+    EXPECT_EQ(countRows(m_path, "sampleblocks"), 1);
 }
 
 INSTANTIATE_TEST_SUITE_P(WithAndWithoutAutosave, ProjectRecoveryTests, ::testing::Bool());
