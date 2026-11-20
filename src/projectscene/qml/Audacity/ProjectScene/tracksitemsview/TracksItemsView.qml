@@ -233,6 +233,7 @@ Rectangle {
         playRegionController.init()
         playCursorController.init()
         tracksViewState.init()
+        tracksViewState.setTracksViewportHeight(tracksItemsView.height)
         itemsMoveController.init()
         project.init()
 
@@ -894,6 +895,7 @@ Rectangle {
 
                 onHeightChanged: {
                     timeline.context.onResizeFrameHeight(tracksItemsView.height)
+                    tracksViewState.setTracksViewportHeight(tracksItemsView.height)
                 }
 
                 Connections {

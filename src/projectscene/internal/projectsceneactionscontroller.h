@@ -13,11 +13,13 @@
 #include "framework/ui/inavigationcontroller.h"
 
 #include "context/iglobalcontext.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "../iprojectsceneactionscontroller.h"
 #include "../iplaypositionviewcontroller.h"
 #include "../itimelineviewcontroller.h"
 #include "../iprojectsceneconfiguration.h"
 #include "../iprojectsceneuistate.h"
+#include "../iprojectviewstate.h"
 
 namespace au::projectscene {
 class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::rcommand::Commandable,
@@ -30,6 +32,7 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController { this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 public:
     ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)
@@ -66,6 +69,9 @@ private:
     muse::Ret togglePlaybackOnRulerClickEnabled();
     muse::Ret toggleAutomation();
     muse::Ret toggleTrackHalfWave(const muse::rcommand::Params& params);
+
+    muse::Ret changeTrackHeight(void (IProjectViewState::*change)());
+    muse::Ret changeTrackHeight(const muse::rcommand::Params& params, void (IProjectViewState::*change)(const trackedit::TrackId&));
 
     void changeFontForLabels();
 
