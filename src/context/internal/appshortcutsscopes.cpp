@@ -48,6 +48,8 @@ void AppShortcutsScopes::init()
     resolver->setScope({ "TRACK-NAVIGATION", TranslatableString("shortcuts", "Track navigation"), 0, whenProjectPageShown });
     //: Group heading in Preferences > Shortcuts for shortcuts that open or apply effects
     resolver->setScope({ "EFFECTS", TranslatableString("shortcuts", "Effects"), 0, whenProjectPageShown });
+    //: Group heading in Preferences > Shortcuts for shortcuts that run macros (saved sequences of commands)
+    resolver->setScope({ "MACROS", TranslatableString("shortcuts", "Macros"), 0, whenProjectPageShown });
     //: Group heading in Preferences > Shortcuts for shortcuts of the spectrogram view
     resolver->setScope({ "SPECTROGRAM", TranslatableString("shortcuts", "Spectrogram"), 0, whenProjectPageShown });
 
