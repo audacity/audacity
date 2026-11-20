@@ -45,6 +45,35 @@ Item {
         return knob.stepSize
     }
 
+    function decimalsForStep(step) {
+        const absStep = Math.abs(step)
+
+        if (!isFinite(absStep) || absStep === 0) {
+            return 0
+        }
+
+        // Count the decimal places without relying on a decimal separator
+        // character, which depends on the user's locale.
+        for (let decimals = 0; decimals <= 6; ++decimals) {
+            const scaled = absStep * Math.pow(10, decimals)
+            if (Math.abs(scaled - Math.round(scaled)) < 1e-9) {
+                return decimals
+            }
+        }
+
+        return 6
+    }
+
+    function displayDecimals() {
+        const parameterDecimals = Number(parameter["decimals"])
+
+        if (isFinite(parameterDecimals) && parameterDecimals >= 0) {
+            return parameterDecimals
+        }
+
+        return decimalsForStep(precisionStepSize())
+    }
+
     function normalizedValue(value) {
         return Number(value.toFixed(textEdit.decimals))
     }
@@ -161,12 +190,7 @@ Item {
 
             minValue: root.parameter["limitMin"] !== undefined ? root.parameter["limitMin"] : knob.from
             maxValue: root.parameter["limitMax"] !== undefined ? root.parameter["limitMax"] : knob.to
-            decimals: {
-                let s = root.precisionStepSize().toString()
-                if (s.indexOf('.') >= 0)
-                    return s.split('.')[1].length
-                return 0
-            }
+            decimals: root.displayDecimals()
             step: root.precisionStepSize()
 
             currentValue: +warper.value.toFixed(decimals)
