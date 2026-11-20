@@ -196,9 +196,8 @@ Item {
 
             property bool isDragging: false
 
-            mouseArea.cursorShape: Qt.OpenHandCursor
+            mouseArea.cursorShape: Qt.SizeHorCursor
             mouseArea.onPressed: function (e) {
-                mouseArea.cursorShape = Qt.ClosedHandCursor
                 resizeGrip.isDragging = true
             }
 
@@ -210,7 +209,6 @@ Item {
             }
 
             mouseArea.onReleased: function (e) {
-                mouseArea.cursorShape = Qt.OpenHandCursor
                 resizeGrip.isDragging = false
             }
 
