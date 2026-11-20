@@ -627,7 +627,22 @@ TEST_F(TrackItemsMoveControllerTests, KeyboardStillReordersFocusedTrack)
     m_focus = trackedit::TrackFocus::track(1);
     EXPECT_CALL(*m_interaction, moveTracks(trackedit::TrackIdList { 1 }, trackedit::TrackMoveDirection::Down));
     m_requests->requestItemMove(0.0, 1);
+    expectFinished();
+}
+
+TEST_F(TrackItemsMoveControllerTests, KeyboardMovesSelectedClipWhenTrackHasFocus)
+{
+    selectClip();
+    m_focus = trackedit::TrackFocus::track(1);
     m_requests->requestItemMove(0.5, 0);
+
+    const trackedit::ClipKeyList original { m_clip.key };
+    EXPECT_TRUE(m_controller->keyboardActive());
+    EXPECT_TRUE(m_controller->isDragged(m_clip.key));
+
+    EXPECT_CALL(*m_interaction, moveClips(original, trackedit::secs_t(0.5), 0))
+    .WillOnce(Return(muse::RetVal<trackedit::ClipKeyList>::make_ok(original)));
+    m_viewState->modifiersReleased().notify();
     expectFinished();
 }
 
