@@ -382,14 +382,19 @@ void Mixer::Reposition(double t, bool bSkipping)
     }
 }
 
+void Mixer::SetTimes(double t0, double t1, bool bSkipping)
+{
+    auto&[mT0, mT1, _, __] = *mTimesAndSpeed;
+    mT0 = t0;
+    mT1 = t1;
+    Reposition(t0, bSkipping);
+}
+
 void Mixer::SetTimesAndSpeed(double t0, double t1, double speed, bool bSkipping)
 {
     wxASSERT(std::isfinite(speed));
-    auto&[mT0, mT1, mSpeed, _] = *mTimesAndSpeed;
-    mT0 = t0;
-    mT1 = t1;
-    mSpeed = fabs(speed);
-    Reposition(t0, bSkipping);
+    mTimesAndSpeed->mSpeed = fabs(speed);
+    SetTimes(t0, t1, bSkipping);
 }
 
 void Mixer::SetSpeedForKeyboardScrubbing(double speed, double startTime)
