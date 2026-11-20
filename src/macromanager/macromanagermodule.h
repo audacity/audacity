@@ -12,6 +12,7 @@ class MacrosCommandsRegister;
 class MacrosRepository;
 class RunOnFilesRequests;
 class MacroRunner;
+class MacrosCommandsController;
 class MacroStepHandlersRegister;
 class RunOnFilesStarter;
 
@@ -46,5 +47,6 @@ private:
     std::shared_ptr<MacroRunner> m_runner;
     std::shared_ptr<MacroStepHandlersRegister> m_stepHandlersRegister;
     std::shared_ptr<RunOnFilesStarter> m_runOnFilesStarter;
+    std::shared_ptr<MacrosCommandsController> m_commandsController;
 };
 }
