@@ -9,6 +9,7 @@
 #include "framework/rcommand/icommandsstate.h"
 
 #include "internal/macrorunner.h"
+#include "internal/macroscommandscontroller.h"
 #include "internal/macroscommandsregister.h"
 #include "internal/macroscommandsstate.h"
 #include "internal/macrostephandlersregister.h"
@@ -93,4 +94,7 @@ void MacroManagerContext::onAllInited(const IApplication::RunMode& mode)
 
     m_runOnFilesStarter = std::make_shared<RunOnFilesStarter>(iocContext());
     m_runOnFilesStarter->init();
+
+    m_commandsController = std::make_shared<MacrosCommandsController>(iocContext());
+    m_commandsController->init();
 }

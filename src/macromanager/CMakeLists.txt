@@ -18,6 +18,8 @@ target_sources(macromanager PRIVATE
 
     internal/macrooutputnames.cpp
     internal/macrooutputnames.h
+    internal/macroscommandscontroller.cpp
+    internal/macroscommandscontroller.h
     internal/macroscommandsregister.cpp
     internal/macroscommandsregister.h
     internal/macroscommandsstate.cpp
