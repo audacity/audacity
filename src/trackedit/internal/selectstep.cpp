@@ -144,7 +144,9 @@ String edgeText(SelectAnchor anchor, double offset)
 
     const String seconds = String::number(std::abs(offset), 3);
     return offset > 0.0
+           //: Part of a macro step summary: a time after a time point. %1 is the time point, for example "Project start". %2 is a number of seconds. "s" is the abbreviation for seconds
            ? mtrc("trackedit", "%1 + %2 s").arg(anchorText, seconds)
+           //: Part of a macro step summary: a time before a time point. %1 is the time point, for example "Project end". %2 is a number of seconds. "s" is the abbreviation for seconds
            : mtrc("trackedit", "%1 - %2 s").arg(anchorText, seconds);
 }
 
@@ -153,6 +155,7 @@ String timeText(const SelectTimeSpec& spec)
     return std::visit(Overloaded {
             [](const WholeProjectTime&) { return mtrc("trackedit", "Whole project"); },
             [](const SelectTimeRange& range) {
+            //: Part of a macro step summary: a time range. %1 is the start time, %2 is the end time, for example "Selection start + 1.000 s"
             return mtrc("trackedit", "%1 to %2").arg(edgeText(startAnchorOf(range.relativeTo), range.startOffset),
                                                      edgeText(endAnchorOf(range.relativeTo), range.endOffset));
         },
@@ -165,10 +168,14 @@ String trackText(const SelectTrackSpec& spec)
             [](const AllTracks&) { return mtrc("trackedit", "all tracks"); },
             [](const SelectTrackRange& range) {
             const String tracks = range.trackCount == 1
+                                  //: Part of a macro step summary: one track to select. %1 is the track number
                                   ? mtrc("trackedit", "track %1").arg(range.firstTrack)
+                                  //: Part of a macro step summary: a range of tracks to select. %1 is the first track number, %2 is the last track number
                                   : mtrc("trackedit", "tracks %1-%2").arg(range.firstTrack, range.firstTrack + range.trackCount - 1);
             switch (range.mode) {
+                //: Part of a macro step summary: add tracks to the current selection. %1 is the tracks, for example "track 2" or "tracks 2-4"
                 case SelectTracksMode::Add: return mtrc("trackedit", "add %1").arg(tracks);
+                //: Part of a macro step summary: remove tracks from the current selection. %1 is the tracks, for example "track 2" or "tracks 2-4"
                 case SelectTracksMode::Remove: return mtrc("trackedit", "remove %1").arg(tracks);
                 case SelectTracksMode::Set: break;
             }
@@ -284,5 +291,6 @@ SelectCommand au::trackedit::selectStepCommand(const SelectEnhancedStep& step, i
 
 String au::trackedit::selectStepSummary(const SelectEnhancedStep& step)
 {
+    //: Summary of a "Select" macro step, shown in the macro step list. %1 is the time range, for example "Project start to Project end". %2 is the tracks, for example "all tracks" or "add track 2"
     return mtrc("trackedit", "%1, %2").arg(timeText(step.time), trackText(step.tracks));
 }
