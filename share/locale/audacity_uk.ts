@@ -62,7 +62,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
         <source>Repeat %1</source>
-        <translation type="unfinished"/>
+        <translation>Повторити %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
@@ -231,7 +231,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="434"/>
         <source>Macro manager</source>
-        <translation type="unfinished"/>
+        <translation>Керування макросами</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="476"/>
@@ -501,7 +501,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
         <source>Mix and render to new track</source>
-        <translation type="unfinished"/>
+        <translation>Змікшувати і обробити нову доріжку</translation>
     </message>
 </context>
 <context>
@@ -697,7 +697,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="17"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="168"/>
         <source>Automatic crash recovery</source>
-        <translation type="unfinished"/>
+        <translation>Автоматичне відновлення після аварії</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="62"/>
@@ -716,12 +716,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
         <source>Not selected</source>
-        <translation type="unfinished"/>
+        <translation>Не позначено</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="157"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Вийти з Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
@@ -731,12 +731,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
         <source>Discard selected</source>
-        <translation type="unfinished"/>
+        <translation>Відкинути позначене</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="209"/>
         <source>Recover selected</source>
-        <translation type="unfinished"/>
+        <translation>Відновити позначене</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="30"/>
@@ -753,12 +753,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="164"/>
         <source>Are you sure you want to discard the selected projects?</source>
-        <translation type="unfinished"/>
+        <translation>Ви справді хочете відкинути позначені проєкти?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
         <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
-        <translation type="unfinished"/>
+        <translation>Вибір варіанта «Так» призведе до негайного і остаточного вилучення позначених проєктів.</translation>
     </message>
 </context>
 <context>
@@ -3439,7 +3439,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="133"/>
         <source>Editing</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Редагування</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="143"/>
@@ -3470,7 +3470,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="193"/>
         <source>&amp;Macro manager</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Керування макросами</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="202"/>
@@ -3525,7 +3525,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
         <source>Show audio.com tour</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Показати гід audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="28"/>
@@ -3543,7 +3543,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="52"/>
         <source>View profile on audio.com</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Переглянути профіль на audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="62"/>
@@ -20127,7 +20127,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="524"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Вийти з Audacity</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
@@ -20622,7 +20622,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
         <source>Editing</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that edit audio, clips, labels and tracks</extracomment>
-        <translation type="unfinished"/>
+        <translation>Редагування</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>

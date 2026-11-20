@@ -62,7 +62,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
         <source>Repeat %1</source>
-        <translation type="unfinished"/>
+        <translation>Repetir %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
@@ -231,7 +231,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="434"/>
         <source>Macro manager</source>
-        <translation type="unfinished"/>
+        <translation>Gestor de Macros</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="476"/>
@@ -501,7 +501,7 @@ Esta ação não excluirá nenhum dos seus projetos.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
         <source>Mix and render to new track</source>
-        <translation type="unfinished"/>
+        <translation>Mixar e renderizar para a nova faixa</translation>
     </message>
 </context>
 <context>
@@ -693,7 +693,7 @@ Comentários e sugestões são sempre bem-vindos.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="17"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="168"/>
         <source>Automatic crash recovery</source>
-        <translation type="unfinished"/>
+        <translation>Recuperação Automática de Falhas</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="62"/>
@@ -712,12 +712,12 @@ Após a recuperação, guarde os projetos para garantir que as alterações seja
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
         <source>Not selected</source>
-        <translation type="unfinished"/>
+        <translation>Não selecionado</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="157"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Sair do Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
@@ -727,12 +727,12 @@ Após a recuperação, guarde os projetos para garantir que as alterações seja
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
         <source>Discard selected</source>
-        <translation type="unfinished"/>
+        <translation>Descartar selecionado</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="209"/>
         <source>Recover selected</source>
-        <translation type="unfinished"/>
+        <translation>Recuperar selecionado</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="30"/>
@@ -749,12 +749,12 @@ Após a recuperação, guarde os projetos para garantir que as alterações seja
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="164"/>
         <source>Are you sure you want to discard the selected projects?</source>
-        <translation type="unfinished"/>
+        <translation>Tem a certeza que quer descartar os projetos selecionados?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
         <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
-        <translation type="unfinished"/>
+        <translation>Escolher &quot;Sim&quot; elimina permanentemente os projetos selecionados imediatamente.</translation>
     </message>
 </context>
 <context>
@@ -3435,7 +3435,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="133"/>
         <source>Editing</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Editando</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="143"/>
@@ -3466,7 +3466,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="193"/>
         <source>&amp;Macro manager</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Gestor de &amp;Macros</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="202"/>
@@ -3521,7 +3521,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
         <source>Show audio.com tour</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Mostrar o guia audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="28"/>
@@ -3539,13 +3539,13 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="52"/>
         <source>View profile on audio.com</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ver perfil em audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="62"/>
         <source>Open audacity URL</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Abrir audacity URL</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
@@ -3924,7 +3924,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="57"/>
         <source>Play tracks</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Reproduzir faixas</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="66"/>
@@ -3956,13 +3956,13 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="102"/>
         <source>Seek</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Buscar</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="115"/>
         <source>Change play region</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Alterar região de reprodução</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="128"/>
@@ -4136,7 +4136,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
         <source>Timed recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Gravação temporizada</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
@@ -4184,19 +4184,19 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="76"/>
         <source>Cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Cortar clipe</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="89"/>
         <source>Copy clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Copiar clipe</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="102"/>
         <source>Delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eliminar clipe</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="115"/>
@@ -4347,13 +4347,13 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="361"/>
         <source>Group</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Agrupar</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="370"/>
         <source>Ungroup</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Desagrupar</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="379"/>
@@ -4407,13 +4407,13 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
         <source>Set selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Definir seleção</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="464"/>
         <source>Select track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Selecionar faixa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="476"/>
@@ -4749,19 +4749,19 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="170"/>
         <source>Apply %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aplicar %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="181"/>
         <source>Configure %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Configurar %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="19"/>
         <source>Export as MP3</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Exportar como MP3</translation>
     </message>
 </context>
 <context>
@@ -5328,7 +5328,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="59"/>
         <source>Play the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Reproduzir as faixas oferecidas</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="68"/>
@@ -5815,7 +5815,7 @@ Tente redefinir quaisquer clips esticados, ou misturar e renderizar as faixas an
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="453"/>
         <source>Set the time selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Definir a seleção de tempo</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="466"/>
@@ -20060,7 +20060,7 @@ Ligue um dispositivo de entrada e faça uma nova verificação.</translation>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
         <source>Timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Gravação temporizada</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>
@@ -20129,7 +20129,7 @@ Ligue um dispositivo de entrada e faça uma nova verificação.</translation>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="524"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Sair do Audacity</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
@@ -20624,7 +20624,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
         <source>Editing</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that edit audio, clips, labels and tracks</extracomment>
-        <translation type="unfinished"/>
+        <translation>Editando</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>

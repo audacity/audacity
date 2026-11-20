@@ -325,7 +325,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Skip this time</source>
-        <translation type="unfinished"/>
+        <translation>Прапусціць гэтым разам</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="44"/>
@@ -335,7 +335,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="48"/>
         <source>Audio plugin validation</source>
-        <translation type="unfinished"/>
+        <translation>Праверка аўдыяплагінаў</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="94"/>
@@ -351,7 +351,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="96"/>
         <source>Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
@@ -582,7 +582,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
         <source>Audacity Team Members</source>
-        <translation type="unfinished"/>
+        <translation>Удзельнікі каманды Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
@@ -592,7 +592,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
         <source>Distinguished Audacity Team members, not currently active</source>
-        <translation type="unfinished"/>
+        <translation>Заслужаныя ўдзельнікі Audacity Team, якія зараз не актыўныя</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
@@ -627,7 +627,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
         <source>Special Thanks</source>
-        <translation type="unfinished"/>
+        <translation>Асобная падзяка</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
@@ -637,7 +637,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
         <source>Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="47"/>
@@ -657,17 +657,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
         <source>Audacity website: %1</source>
-        <translation type="unfinished"/>
+        <translation>Вэб-сайт Audacity: %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Праграмнае забеспячэнне Audacity®&lt;/b&gt; — аўтарскае права © 1999–%1 Audacity Team.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
-        <translation type="unfinished"/>
+        <translation>Назва &lt;b&gt;Audacity&lt;/b&gt; з’яўляецца зарэгістраваным таварным знакам.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="27"/>
@@ -1049,7 +1049,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="110"/>
         <source>Preview of how audio clips will appear with the selected visualization style</source>
-        <translation type="unfinished"/>
+        <translation>Папярэдні прагляд таго, як будуць выглядаць аўдыякліпы з выбраным стылем візуалізацыі</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="115"/>
@@ -1091,7 +1091,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="169"/>
         <source>Choose your preferred theme, follow system theme option, and accent color</source>
-        <translation type="unfinished"/>
+        <translation>Выберыце патрэбную тэму, параметр выкарыстання сістэмнай тэмы і колер акцэнту</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="174"/>
@@ -1116,7 +1116,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="194"/>
         <source>Follow system theme</source>
-        <translation type="unfinished"/>
+        <translation>Выкарыстоўваць сістэмную тэму</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="199"/>
@@ -1126,13 +1126,13 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="204"/>
         <source>Enable high-contrast</source>
-        <translation type="unfinished"/>
+        <translation>Уключыць высокую кантраснасць</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
         <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Уключыце рэжым высокай кантраснасці для лепшай бачнасці. %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="220"/>
@@ -1142,7 +1142,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="225"/>
         <source>Further options for high contrast mode can be found in Preferences</source>
-        <translation type="unfinished"/>
+        <translation>Іншыя опцыі рэжыму высокай кантраснасці даступныя ў Наладах</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="230"/>
@@ -1174,13 +1174,13 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="249"/>
         <source>%1. Following system theme</source>
         <extracomment>%1 is the base description with current theme</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. Выкарыстоўваецца сістэмная тэма</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="254"/>
         <source>%1. High contrast enabled</source>
         <extracomment>%1 is the base description with current theme and system theme status</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. Высокая кантраснасць уключана</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="257"/>
@@ -1330,7 +1330,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="44"/>
         <source>Check to see if a new version of Audacity is available</source>
-        <translation type="unfinished"/>
+        <translation>Праверыць наяўнасць новай версіі Audacity</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
@@ -1375,7 +1375,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/DefaultFilesSection.qml" line="33"/>
         <source>Default files</source>
-        <translation type="unfinished"/>
+        <translation>Файлы па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FoldersSection.qml" line="33"/>
@@ -1592,7 +1592,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
         <source>Default zoom:</source>
-        <translation type="unfinished"/>
+        <translation>Маштаб па змаўчанні:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
@@ -1697,7 +1697,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="257"/>
         <source>MilliSeconds</source>
-        <translation type="unfinished"/>
+        <translation>Мілісекунды</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="258"/>
@@ -1717,12 +1717,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
         <source>Automatic crash reports</source>
-        <translation type="unfinished"/>
+        <translation>Аўтаматычныя справаздачы пра збоі</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="25"/>
         <source>Send crash reports</source>
-        <translation type="unfinished"/>
+        <translation>Адпраўляць справаздачы пра збоі</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="39"/>
@@ -1922,7 +1922,8 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="851"/>
         <source>Default recording device number: %1
 </source>
-        <translation type="unfinished"/>
+        <translation>Нумар прылады запісу па змаўчанні: %1
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="852"/>
@@ -2285,7 +2286,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation type="unfinished"/>
+        <translation>Плагін &quot;%1&quot; не падтрымлівае патрабаваны памер блока</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
@@ -3209,7 +3210,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1503"/>
         <source>Updating cloud audio preview…</source>
-        <translation type="unfinished"/>
+        <translation>Абнаўляецца воблачны папярэдні прагляд аўдыя...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
@@ -3583,7 +3584,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="147"/>
         <source>Update cloud audio preview</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Абнавіць воблачны папярэдні прагляд аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="156"/>
@@ -4101,19 +4102,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
         <source>Timed recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Запіс па таймеры</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Уключыць запіс з актывацыяй гукам</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="113"/>
         <source>Set sound activation level…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Задаць адчувальнасць актывацыі...</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="23"/>
@@ -4372,13 +4373,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
         <source>Set selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Задаць вылучэнне</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="464"/>
         <source>Select track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вылучыць дарожку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="476"/>
@@ -4660,7 +4661,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1009"/>
         <source>Open ruler context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Адкрыць кантэкстнае меню лінейкі</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
@@ -4981,13 +4982,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="137"/>
         <source>Open cloud audio file</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Адкрыць воблачны аудыяфайл</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="149"/>
         <source>Update cloud audio preview</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Абнавіць воблачны папярэдні прагляд аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="158"/>
@@ -5510,13 +5511,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
         <source>Set up a timed recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Наладзіць запіс па таймеры</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="106"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Уключыць запіс з актывацыяй гукам</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
@@ -6732,7 +6733,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="1001"/>
         <source>Effect preview</source>
-        <translation type="unfinished"/>
+        <translation>Папярэдні прагляд эфекту</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="41"/>
@@ -7060,7 +7061,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="55"/>
         <source>Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Audacity</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="72"/>
@@ -7127,57 +7128,57 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="341"/>
         <source>Volume and compression</source>
-        <translation type="unfinished"/>
+        <translation>Гучнасць і кампрэсія</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="343"/>
         <source>Fading</source>
-        <translation type="unfinished"/>
+        <translation>Затуханне і нарастанне</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="345"/>
         <source>Pitch and tempo</source>
-        <translation type="unfinished"/>
+        <translation>Вышыня тону і тэмп</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="347"/>
         <source>EQ and filters</source>
-        <translation type="unfinished"/>
+        <translation>Эквалайзер і фільтры</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="349"/>
         <source>Noise removal and repair</source>
-        <translation type="unfinished"/>
+        <translation>Выдаленне шуму і аднаўленне</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="351"/>
         <source>Delay and reverb</source>
-        <translation type="unfinished"/>
+        <translation>Затрымка і рэверб</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="353"/>
         <source>Distortion and modulation</source>
-        <translation type="unfinished"/>
+        <translation>Скажэнне і мадуляцыя</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="355"/>
         <source>Special</source>
-        <translation type="unfinished"/>
+        <translation>Спецыяльныя</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="357"/>
         <source>Spectral tools</source>
-        <translation type="unfinished"/>
+        <translation>Спектральныя інструменты</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="359"/>
         <source>Legacy</source>
-        <translation type="unfinished"/>
+        <translation>Састарэлыя</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="361"/>
         <source>Third-party</source>
-        <translation type="unfinished"/>
+        <translation>Іншых вытворцаў</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="385"/>
@@ -7192,7 +7193,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="387"/>
         <source>Effect</source>
-        <translation type="unfinished"/>
+        <translation>Эфект</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="388"/>
@@ -7596,7 +7597,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="139"/>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="65"/>
         <source>Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Audacity</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="490"/>
@@ -8993,7 +8994,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>Measure RMS</source>
-        <translation type="unfinished"/>
+        <translation>Вымераць RMS</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
@@ -10167,7 +10168,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="205"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"/>
+        <translation>%1 Гц</translation>
     </message>
 </context>
 <context>
@@ -10772,7 +10773,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="727"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="888"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>Экспартаваць аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="91"/>
@@ -10999,7 +11000,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="56"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="70"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation>Мова</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="83"/>
@@ -11079,7 +11080,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="76"/>
         <source>Set as default</source>
-        <translation type="unfinished"/>
+        <translation>Усталяваць па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="96"/>
@@ -11521,13 +11522,13 @@ Master effects will be turned back on after export.</source>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="25"/>
         <source>Audacity failed to open a file in %1.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Праграме Audacity не ўдалося адкрыць файл у %1.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="29"/>
         <source>Audacity failed to read from a file in %1.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>Праграме Audacity не ўдалося прачытаць файл у %1.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="36"/>
@@ -13828,7 +13829,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="310"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Audio</source>
-        <translation type="unfinished"/>
+        <translation>Аўдыя</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="310"/>
@@ -15505,7 +15506,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
         <source>Audio files</source>
-        <translation type="unfinished"/>
+        <translation>Аўдыяфайлы</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="56"/>
@@ -16260,7 +16261,7 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="694"/>
         <source>seconds + milliseconds</source>
         <extracomment>Name of time display format that shows time in seconds * and milliseconds (1/1000 second)</extracomment>
-        <translation type="unfinished"/>
+        <translation>секунды + мілісекунды</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="700"/>
@@ -16587,17 +16588,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="47"/>
         <source>Top bar (horizontal)</source>
-        <translation type="unfinished"/>
+        <translation>Верхняя панэль (гарызантальная)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="51"/>
         <source>Side bar (vertical)</source>
-        <translation type="unfinished"/>
+        <translation>Бакавая панэль (вертыкальная)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="85"/>
         <source>Default</source>
-        <translation type="unfinished"/>
+        <translation>Па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="89"/>
@@ -16622,7 +16623,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="129"/>
         <source>Linear (amp)</source>
-        <translation type="unfinished"/>
+        <translation>Лінейная (амплітуда)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="162"/>
@@ -16798,12 +16799,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1000"/>
         <source>Audio devices</source>
-        <translation type="unfinished"/>
+        <translation>Аўдыяпрылады</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1014"/>
         <source>Unable to change audio settings</source>
-        <translation type="unfinished"/>
+        <translation>Немагчыма змяніць налады аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1023"/>
@@ -16914,7 +16915,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="38"/>
         <source>Clip style</source>
-        <translation type="unfinished"/>
+        <translation>Стыль кліпу</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="69"/>
@@ -17004,12 +17005,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="52"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation>Мова</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="67"/>
         <source>Language %1</source>
-        <translation type="unfinished"/>
+        <translation>Мова %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="80"/>
@@ -17039,12 +17040,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="44"/>
         <source>Number format</source>
-        <translation type="unfinished"/>
+        <translation>Фармат лікаў</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="58"/>
         <source>Number format %1</source>
-        <translation type="unfinished"/>
+        <translation>Фармат лікаў %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
@@ -17099,7 +17100,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="66"/>
         <source>Default sample format</source>
-        <translation type="unfinished"/>
+        <translation>Фармат сэмплаў па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="89"/>
@@ -17139,7 +17140,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
         <source>High-contrast theme</source>
-        <translation type="unfinished"/>
+        <translation>Высокакантрасная тэма</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
@@ -17149,12 +17150,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="80"/>
         <source>Follow system theme</source>
-        <translation type="unfinished"/>
+        <translation>Выкарыстоўваць сістэмную тэму</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="95"/>
         <source>Enable high-contrast</source>
-        <translation type="unfinished"/>
+        <translation>Уключыць высокую кантраснасць</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="34"/>
@@ -17185,17 +17186,17 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="199"/>
         <source>Appearance</source>
-        <translation type="unfinished"/>
+        <translation>Знешні выгляд</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="44"/>
         <source>Font face</source>
-        <translation type="unfinished"/>
+        <translation>Гарнітура шрыфта</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="59"/>
         <source>Body text size</source>
-        <translation type="unfinished"/>
+        <translation>Памер асноўнага тэксту</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PreferencesDialog.qml" line="31"/>
@@ -17402,7 +17403,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="205"/>
         <source>Audio editing</source>
-        <translation type="unfinished"/>
+        <translation>Рэдагаванне аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="208"/>
@@ -17417,7 +17418,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
         <source>Spectral display</source>
-        <translation type="unfinished"/>
+        <translation>Паказ спектра</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
@@ -17572,12 +17573,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="15"/>
         <source>Sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Запіс з актывацыяй гукам</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="22"/>
         <source>Turn on sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Уключыць запіс з актывацыяй гукам</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="14"/>
@@ -17587,17 +17588,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="33"/>
         <source>Default track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Візуалізацыя дарожкі па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="56"/>
         <source>Default ruler format</source>
-        <translation type="unfinished"/>
+        <translation>Фармат лінейкі па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="85"/>
         <source>Default audio track name</source>
-        <translation type="unfinished"/>
+        <translation>Назва аўдыядарожкі па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="65"/>
@@ -17617,7 +17618,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="75"/>
         <source>Linear (amp)</source>
-        <translation type="unfinished"/>
+        <translation>Лінейная (амплітуда)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="76"/>
@@ -17852,7 +17853,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="171"/>
         <source>Cloud audio files</source>
-        <translation>Воблачныя аудыёфайлы</translation>
+        <translation>Воблачныя аудыяфайлы</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="197"/>
@@ -18005,19 +18006,19 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Audacity project files</source>
-        <translation type="unfinished"/>
+        <translation>Файлы праектаў Audacity</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
         <source>Audacity 3 files</source>
-        <translation type="unfinished"/>
+        <translation>Файлы Audacity 3</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="181"/>
         <source>Audacity 4 files</source>
-        <translation type="unfinished"/>
+        <translation>Файлы Audacity 4</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="564"/>
@@ -18088,7 +18089,7 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="769"/>
         <source>Audio files</source>
-        <translation type="unfinished"/>
+        <translation>Аўдыяфайлы</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="770"/>
@@ -18138,7 +18139,7 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="987"/>
         <source>Use default location</source>
-        <translation type="unfinished"/>
+        <translation>Выкарыстоўваць размяшчэнне па змаўчанні</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="990"/>
@@ -18151,7 +18152,9 @@ You can manage this file from your updated projects page on audio.com</source>
         <source>The temporary files location is not accessible: %1
 
 Use the default location instead? It can be changed later in Preferences.</source>
-        <translation type="unfinished"/>
+        <translation>Размяшчэнне часовых файлаў недаступнае: %1
+
+Выкарыстоўваць размяшчэнне па змаўчанні? Пазней яго можна змяніць у Наладах.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1006"/>
@@ -18733,7 +18736,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>Экспартаваць аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
@@ -19827,7 +19830,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
         <source>Timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Запіс па таймеры</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>
@@ -19885,7 +19888,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="501"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>Экспартаваць аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="506"/>
@@ -19901,7 +19904,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
         <source>Start timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Пачаць запіс па таймеры</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="116"/>
@@ -19950,7 +19953,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="222"/>
         <source>Timed recording couldn’t start</source>
-        <translation type="unfinished"/>
+        <translation>Не ўдалося пачаць запіс па таймеры</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="246"/>
@@ -19960,17 +19963,17 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="249"/>
         <source>Stop timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Спыніць запіс па таймеры</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="250"/>
         <source>Your timed recording will be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>Ваш запіс па таймеры будзе спынены.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="287"/>
         <source>Timed recording complete</source>
-        <translation type="unfinished"/>
+        <translation>Запіс па таймеры завершаны</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="289"/>
@@ -19981,7 +19984,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="293"/>
         <source>Timed recording stopped</source>
-        <translation type="unfinished"/>
+        <translation>Запіс па таймеры спынены</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="328"/>
@@ -20075,13 +20078,13 @@ Do you want to overwrite them?</source>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="58"/>
         <source>Starts when you press Start timed recording and ends %1 (%2).</source>
         <extracomment>%1 is when the recording ends, e.g. &quot;today at 16:28:20&quot;, and %2 its duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Пачынаецца пасля націскання «Пачаць запіс па таймеры» і завяршаецца %1 (%2).</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="63"/>
         <source>Starts when you press Start timed recording and records for %1.</source>
         <extracomment>%1 is the duration of the recording, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Пачынаецца пасля націскання «Пачаць запіс па таймеры» і доўжыцца %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="67"/>
@@ -20433,7 +20436,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="61"/>
         <source>Audio</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the audio engine and audio devices</extracomment>
-        <translation type="unfinished"/>
+        <translation>Аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="63"/>
@@ -21268,7 +21271,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Візуалізацыя дарожкі</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="65"/>
@@ -21281,7 +21284,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="67"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="92"/>
         <source>Meters &amp;&amp; monitoring</source>
-        <translation type="unfinished"/>
+        <translation>Індыкатары &amp;&amp; маніторынг</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="73"/>
@@ -21310,7 +21313,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="459"/>
         <source>%1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 Гц</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="52"/>
@@ -21456,7 +21459,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="48"/>
         <source>Trim Audio</source>
-        <translation type="unfinished"/>
+        <translation>Абрэзаць аўдыя</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="59"/>
@@ -21498,17 +21501,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="110"/>
         <source>Pitch Shift</source>
-        <translation type="unfinished"/>
+        <translation>Зрух вышыні тону</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="110"/>
         <source>Changed Pitch Shift</source>
-        <translation type="unfinished"/>
+        <translation>Зменены зрух вышыні тону</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="119"/>
         <source>Reset Clip Pitch</source>
-        <translation type="unfinished"/>
+        <translation>Скінуць вышыню тону</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="128"/>
@@ -21530,7 +21533,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="191"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="192"/>
         <source>Reset Clip Pitch and Speed</source>
-        <translation type="unfinished"/>
+        <translation>Скінуць вышыню тону і хуткасць кліпа</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="201"/>
@@ -21676,17 +21679,17 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="615"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="638"/>
         <source>Split cut</source>
-        <translation type="unfinished"/>
+        <translation>Выразаць з падзелам</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="668"/>
         <source>Trim items left</source>
-        <translation type="unfinished"/>
+        <translation>Абрэзаць элементы злева</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="668"/>
         <source>Trim clip left</source>
-        <translation type="unfinished"/>
+        <translation>Абрэзаць кліп злева</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="670"/>
@@ -21698,12 +21701,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Trim items right</source>
-        <translation type="unfinished"/>
+        <translation>Абрэзаць элементы справа</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Trim clip right</source>
-        <translation type="unfinished"/>
+        <translation>Абрэзаць кліп справа</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="753"/>
@@ -21796,18 +21799,18 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
         <source>Changed track format</source>
-        <translation type="unfinished"/>
+        <translation>Зменены фармат дарожкі</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="903"/>
         <source>Changed track rate</source>
-        <translation type="unfinished"/>
+        <translation>Зменена частата дарожкі</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="912"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Swapped stereo channels</source>
-        <translation type="unfinished"/>
+        <translation>Стэрэаканалы памяняныя месцамі</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="922"/>
@@ -21876,27 +21879,27 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1018"/>
         <source>Label low frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Зменена ніжняя частата меткі</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1019"/>
         <source>Change label low frequency</source>
-        <translation type="unfinished"/>
+        <translation> Змяніць ніжнюю частату меткі</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1028"/>
         <source>Label high frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>Зменена верхняя частата меткі</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Change label high frequency</source>
-        <translation type="unfinished"/>
+        <translation>Змяніць верхнюю частату меткі</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1043"/>
         <source>Cut label</source>
-        <translation type="unfinished"/>
+        <translation>Выразаць метку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
@@ -21916,13 +21919,13 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1097"/>
         <source>Labels moved</source>
-        <translation type="unfinished"/>
+        <translation>Меткі перамешчаны</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1106"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1138"/>
         <source>Label stretched</source>
-        <translation type="unfinished"/>
+        <translation>Метка расцягнута</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1106"/>
@@ -21979,7 +21982,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1344"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>Аб&apos;яднана %1 секунд у %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1347"/>
@@ -22001,18 +22004,18 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1359"/>
         <source>Split-deleted clips</source>
-        <translation type="unfinished"/>
+        <translation>Кліпы выдалены з падзелам</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1359"/>
         <source>Split delete</source>
-        <translation type="unfinished"/>
+        <translation>Выдаліць з падзелам</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1367"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>Выдалена %1 с у пазіцыі %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
@@ -22027,17 +22030,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="506"/>
         <source>Tempo changed</source>
-        <translation type="unfinished"/>
+        <translation>Тэмп зменены</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="531"/>
         <source>Upper time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Зменены верхні памер такту</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="536"/>
         <source>Lower time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>Зменены ніжні памер такту</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3interactionutils.cpp" line="320"/>
@@ -22444,7 +22447,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="20"/>
         <source>seconds + milliseconds</source>
-        <translation type="unfinished"/>
+        <translation>секунды + мілісекунды</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="23"/>
@@ -22929,7 +22932,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditconfiguration.cpp" line="62"/>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="383"/>
         <source>Audio</source>
-        <translation type="unfinished"/>
+        <translation>Аўдыя</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="683"/>
@@ -22958,7 +22961,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="33"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="207"/>
         <source>Linear (amp)</source>
-        <translation type="unfinished"/>
+        <translation>Лінейная (амплітуда)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="34"/>
@@ -23037,7 +23040,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
         <source>Save layout as new workspace</source>
-        <translation>Захаваць кампаноўку як новую працоўную прастору</translation>
+        <translation>Захаваць макет як новую працоўную прастору</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
