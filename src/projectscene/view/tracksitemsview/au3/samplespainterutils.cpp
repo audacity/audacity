@@ -266,7 +266,7 @@ SampleData getSampleData(const au::au3::Au3WaveClip& clip, int channelIndex, con
         const double xx = zoomInfo.TimeToPositionF(time);
         xpos[s] = xx;
 
-        const double value = clip.GetEnvelope().GetValue(time, invRate) * fades.gainAt(time);
+        const double value = clip.GetEnvelope().GetValue(clip.GetPlayStartTime() + time, invRate) * fades.gainAt(time);
         const double tt = buffer[s] * value;
 
         if ((tt <= -MAX_AUDIO) || (tt >= MAX_AUDIO)) {
@@ -343,8 +343,8 @@ std::optional<int> hitNearestSampleChannelIndex(std::shared_ptr<au::project::IAu
     std::map<int, int> channelSampleDistance;
     int top = 0;
 
-    const auto value = waveClip->GetEnvelope().GetValue(adjustedTime, (1 / waveClip->GetRate())) * ClipFades::Get(*waveClip).gainAt(
-        adjustedTime);
+    const auto value = waveClip->GetEnvelope().GetValue(waveClip->GetPlayStartTime() + adjustedTime, (1 / waveClip->GetRate()))
+                       * ClipFades::Get(*waveClip).gainAt(adjustedTime);
 
     for (size_t i = 0; i < waveClip->NChannels(); i++) {
         waveMetrics.height = channelHeight[i];

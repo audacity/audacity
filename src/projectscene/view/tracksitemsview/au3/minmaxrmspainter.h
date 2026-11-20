@@ -17,5 +17,14 @@ public:
     MinMaxRMSPainter(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params) override;
+
+    std::optional<ClipData> clipData(const trackedit::ClipKey& clipKey) override;
+    bool columns(const trackedit::ClipKey& clipKey, size_t channelIndex, const IWavePainter::Params& params, const WaveMetrics& metrics,
+                 std::vector<WaveColumnVertex>& columns) override;
+    void samples(const trackedit::ClipKey& clipKey, size_t channelIndex, const IWavePainter::Params& params, const WaveMetrics& metrics,
+                 std::vector<WaveSamplePoint>& samples) override;
+
+private:
+    std::shared_ptr<au::au3::Au3WaveClip> findClip(const trackedit::ClipKey& clipKey) const;
 };
 }

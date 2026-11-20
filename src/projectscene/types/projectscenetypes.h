@@ -70,12 +70,12 @@ public:
 
     inline bool operator==(const TrackItemTime& other) const
     {
-        return muse::is_equal(startTime, other.startTime)
-               && muse::is_equal(endTime, other.endTime)
-               && muse::is_equal(itemStartTime, other.itemStartTime)
-               && muse::is_equal(itemEndTime, other.itemEndTime)
-               && muse::is_equal(selectionStartTime, other.selectionStartTime)
-               && muse::is_equal(selectionEndTime, other.selectionEndTime);
+        return startTime == other.startTime
+               && endTime == other.endTime
+               && itemStartTime == other.itemStartTime
+               && itemEndTime == other.itemEndTime
+               && selectionStartTime == other.selectionStartTime
+               && selectionEndTime == other.selectionEndTime;
     }
 
     inline bool operator!=(const TrackItemTime& other) const { return !this->operator==(other); }
