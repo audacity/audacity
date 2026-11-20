@@ -346,13 +346,12 @@ Item {
                         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
 
                         onWheel: function (wheelEvent) {
-                            let headerHeight = view.headerItem ? view.headerItem.height : 0
                             let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
                             let offset = view.contentY - delta
 
-                            let maxContentY = view.contentHeight - view.height
+                            let maxContentY = view.originY + view.contentHeight - view.height
                             maxContentY = Math.max(maxContentY, view.contentY)
-                            offset = Math.max(Math.min(offset, maxContentY), -headerHeight)
+                            offset = Math.max(Math.min(offset, maxContentY), view.originY)
 
                             view.contentY = offset
                         }
@@ -380,7 +379,7 @@ Item {
                                 let loader = view.itemAtIndex(dragHandler.dropIndex)
                                 return Boolean(loader) ? loader.y - view.contentY : 0
                             }
-                            return view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
+                            return view.originY + view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
                         }
                     }
 

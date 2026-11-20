@@ -131,7 +131,7 @@ Rectangle {
             let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
             timeline.context.onResizeFrameContentHeight(totalContentHeight)
 
-            let maxContentY = Math.max(totalContentHeight - tracksItemsView.height, 0)
+            let maxContentY = Math.max(totalContentHeight - tracksItemsView.height, 0) + tracksItemsView.originY + tracksItemsView.listHeaderHeight
             if (tracksItemsView.contentY > maxContentY) {
                 tracksItemsView.contentY = maxContentY
             }
@@ -243,7 +243,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - tracksItemsView.listHeaderHeight)
+        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset + tracksItemsView.originY)
     }
 
     Rectangle {
@@ -885,7 +885,7 @@ Rectangle {
 
                 onContentYChanged: {
                     if (!verticalScrollLocked) {
-                        timeline.context.startVerticalScrollPosition = tracksItemsView.contentY
+                        timeline.context.startVerticalScrollPosition = tracksItemsView.contentY - tracksItemsView.originY - tracksItemsView.listHeaderHeight
                         if (tracksItemsView.mouseMoveActive) {
                             itemsMoveController.update()
                         }
@@ -909,9 +909,9 @@ Rectangle {
 
                         let contentYOffset = tracksItemsView.contentY + delta
 
-                        let maxContentY = totalContentHeight - tracksItemsView.height
+                        let maxContentY = totalContentHeight - tracksItemsView.height + tracksItemsView.originY + tracksItemsView.listHeaderHeight
                         maxContentY = Math.max(maxContentY, tracksItemsView.contentY)
-                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), -prv.headerHeight)
+                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), tracksItemsView.originY)
 
                         tracksItemsView.contentY = contentYOffset
                     }
