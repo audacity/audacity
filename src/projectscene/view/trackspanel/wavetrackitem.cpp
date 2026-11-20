@@ -7,6 +7,9 @@
 #include <QMetaType>
 #include <QString>
 
+#include "framework/global/containers.h"
+#include "framework/global/types/ratio.h"
+
 #include "playback/playbacktypes.h"
 #include "playback/iaudiooutput.h"
 
@@ -28,10 +31,6 @@ WaveTrackItem::WaveTrackItem(QObject* parent)
             resetAudioChannelsVolumePressure();
         }
     });
-
-    connect(this, &WaveTrackItem::isFocusedChanged, this, [this]() {
-        checkMainAudioInput();
-    });
 }
 
 void WaveTrackItem::init(const trackedit::Track& track)
@@ -48,17 +47,15 @@ void WaveTrackItem::init(const trackedit::Track& track)
 
     record()->audioInput()->recordTrackSignalChanges(trackId())
     .onReceive(this, [this](audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
+        // The level left from the last recording keeps decaying; the live input takes over once it arrives
+        if (m_inputSignalLive) {
+            return;
+        }
         setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
         setAudioChannelRMS(channel, meterSignal.rms.pressure);
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta& delta) {
-        if (!delta.contains(audio::AudioConfigurationField::InputChannels)) {
-            return;
-        }
-        const int inputChannelsCount = audioDriverController()->configuration().inputChannels;
-        m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
-                                      || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
+    record()->audioInput()->monitoredTracksChanged().onNotify(this, [this]() {
         checkMainAudioInput();
     }, muse::async::Asyncable::Mode::SetReplace);
 
@@ -79,10 +76,6 @@ void WaveTrackItem::init(const trackedit::Track& track)
         }
         muteOrSoloChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
-
-    const int inputChannelsCount = audioDriverController()->configuration().inputChannels;
-    m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
-                                  || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
 
     checkMainAudioInput();
 }
@@ -278,6 +271,8 @@ void WaveTrackItem::resetAudioChannelsVolumePressure()
 {
     setLeftChannelPressure(playback::MIN_DISPLAYED_DBFS);
     setRightChannelPressure(playback::MIN_DISPLAYED_DBFS);
+    setLeftChannelRMS(playback::MIN_DISPLAYED_DBFS);
+    setRightChannelRMS(playback::MIN_DISPLAYED_DBFS);
 }
 
 const AudioOutputParams& WaveTrackItem::outputParams() const
@@ -287,15 +282,60 @@ const AudioOutputParams& WaveTrackItem::outputParams() const
 
 void WaveTrackItem::checkMainAudioInput()
 {
-    if (isFocused() && m_recordStreamChannelsMatch) {
-        record()->audioInput()->recordSignalChanges().onReceive(this,
-                                                                [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
-            setAudioChannelVolumePressure(audioChNum,
-                                          meterSignal.peak.pressure);
-            setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
-        }, muse::async::Asyncable::Mode::SetReplace);
-    } else {
-        record()->audioInput()->recordSignalChanges().disconnect(this);
+    const bool wasMonitored = !m_inputChannels.empty();
+    m_inputChannels = record()->audioInput()->monitoredInputChannels(trackId());
+    m_mixedInputPressure.fill(0.f);
+    m_mixedInputRMS.fill(0.f);
+
+    if (m_inputChannels.empty()) {
+        m_inputSignalLive = false;
+        record()->audioInput()->recordInputChannelSignalChanges().disconnect(this);
+        if (wasMonitored) {
+            resetAudioChannelsVolumePressure();
+        }
+        return;
+    }
+
+    record()->audioInput()->recordInputChannelSignalChanges().onReceive(this,
+                                                                        [this](const audioch_t inputChannel,
+                                                                               const audio::MeterSignal& meterSignal) {
+        showInputSignal(inputChannel, meterSignal);
+    }, muse::async::Asyncable::Mode::SetReplace);
+}
+
+void WaveTrackItem::showInputSignal(const audioch_t inputChannel, const audio::MeterSignal& meterSignal)
+{
+    m_inputSignalLive = true;
+
+    if (inputChannel < m_mixedInputPressure.size()) {
+        m_mixedInputPressure[inputChannel] = meterSignal.peak.amplitude;
+        m_mixedInputRMS[inputChannel] = meterSignal.rms.amplitude;
+    }
+
+    for (audioch_t channel = 0; channel < m_inputChannels.size(); ++channel) {
+        const std::vector<audioch_t>& sources = m_inputChannels[channel];
+        if (!muse::contains(sources, inputChannel)) {
+            continue;
+        }
+
+        if (sources.size() == 1) {
+            setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
+            setAudioChannelRMS(channel, meterSignal.rms.pressure);
+            continue;
+        }
+
+        // Input channels mixed into one track channel show their average, as recorded
+        float peak = 0.f;
+        float rms = 0.f;
+        for (const audioch_t source : sources) {
+            if (source < m_mixedInputPressure.size()) {
+                peak += m_mixedInputPressure[source];
+                rms += m_mixedInputRMS[source];
+            }
+        }
+        const float gain = 1.f / static_cast<float>(sources.size());
+        setAudioChannelVolumePressure(channel, muse::linear_to_db(peak * gain));
+        setAudioChannelRMS(channel, muse::linear_to_db(rms * gain));
     }
 }
 

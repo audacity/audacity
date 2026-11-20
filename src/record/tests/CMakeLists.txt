@@ -10,8 +10,10 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/../../au3audio/tests/mocks/audioenginemock.h
     ${CMAKE_CURRENT_LIST_DIR}/../../audio/tests/mocks/audiodrivercontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/../../playback/tests/mocks/playbackconfigurationmock.h
+    ${CMAKE_CURRENT_LIST_DIR}/../../playback/tests/mocks/playbackcontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/recordconfigurationmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/recordcontrollermock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/recordmetercontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/recordmock.h
 
     ${CMAKE_CURRENT_LIST_DIR}/../qml/Audacity/Record/timedrecordingviewformatter.cpp
@@ -19,6 +21,7 @@ set(MODULE_TEST_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/recordcontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3record_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3audioinput_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/timedrecordingformatter_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/timedrecordingschedule_tests.cpp
     )
