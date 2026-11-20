@@ -132,6 +132,8 @@ StyledDialogView {
         ButtonBox {
             id: buttonBox
 
+            navigationPanel.section: root.navigationSection
+
             Layout.fillWidth: true
             Layout.rightMargin: 8
             Layout.bottomMargin: 8
