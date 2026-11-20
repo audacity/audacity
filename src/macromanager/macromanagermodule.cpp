@@ -5,8 +5,12 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/rcommand/icommandsregister.h"
+#include "framework/rcommand/icommandsstate.h"
 
 #include "internal/macrorunner.h"
+#include "internal/macroscommandsregister.h"
+#include "internal/macroscommandsstate.h"
 #include "internal/macrostephandlersregister.h"
 #include "internal/macrosrepository.h"
 #include "internal/runonfilesrequests.h"
@@ -41,6 +45,11 @@ void MacroManagerModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://macromanager/commandparams"), "Audacity.MacroManager", "CommandParamsDialog");
         ir->registerQmlUri(muse::Uri("audacity://macromanager/runonfiles"), "Audacity.MacroManager", "RunOnFilesDialog");
     }
+
+    auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
+    if (cr) {
+        cr->reg(std::make_shared<MacrosCommandsRegister>());
+    }
 }
 
 void MacroManagerModule::onInit(const IApplication::RunMode& mode)
@@ -64,6 +73,14 @@ void MacroManagerContext::registerExports()
 
     ioc()->registerExport<IMacroRunner>(mname, m_runner);
     ioc()->registerExport<IMacroStepHandlersRegister>(mname, m_stepHandlersRegister);
+}
+
+void MacroManagerContext::resolveImports()
+{
+    auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
+    if (cs) {
+        cs->reg(std::make_shared<MacrosCommandsState>(iocContext()));
+    }
 }
 
 void MacroManagerContext::onAllInited(const IApplication::RunMode& mode)
