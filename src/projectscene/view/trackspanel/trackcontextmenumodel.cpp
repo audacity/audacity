@@ -63,6 +63,7 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString("trackcontextmenu", "Track height"), makeTrackHeightItems()),
         makeMenuItem(PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
@@ -88,6 +89,7 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString("trackcontextmenu", "Track height"), makeTrackHeightItems()),
         makeMenuItem(PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
@@ -110,6 +112,7 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString("trackcontextmenu", "Track height"), makeTrackHeightItems()),
         makeSeparator(),
         makeMenuItem(make_query(project::PROJECT_EXPORT_LABELS_COMMAND, {
             { project::PROJECT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) },
@@ -464,6 +467,23 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
     items << makeSeparator();
     items << makeMenuItem(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND);
     return items;
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackHeightItems()
+{
+    const auto onThisTrack = [this](const Command& command, const muse::TranslatableString& title) {
+        return makeMenuItem(make_query(command, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) },
+        }), title);
+    };
+
+    return {
+        onThisTrack(PROJECTSCENE_COLLAPSE_TRACKS_COMMAND, muse::TranslatableString("trackcontextmenu", "Collapse")),
+        onThisTrack(PROJECTSCENE_EXPAND_TRACKS_COMMAND, muse::TranslatableString("trackcontextmenu", "Expand")),
+        onThisTrack(PROJECTSCENE_FIT_TRACKS_TO_HEIGHT_COMMAND, muse::TranslatableString("trackcontextmenu", "Fit to height")),
+        makeSeparator(),
+        onThisTrack(PROJECTSCENE_RESET_TRACK_HEIGHT_COMMAND, muse::TranslatableString("trackcontextmenu", "Reset height")),
+    };
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackMoveItems()

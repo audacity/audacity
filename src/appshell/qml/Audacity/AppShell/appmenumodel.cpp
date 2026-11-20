@@ -609,8 +609,11 @@ MenuItemList AppMenuModel::makeZoomItems()
         makeMenuItem(projectscene::PROJECTSCENE_ZOOM_TOGGLE_COMMAND),
         makeSeparator(),
         makeMenuItem(projectscene::PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND),
-        // makeMenuItem("collapse-all-tracks"),
-        // makeMenuItem("expand-all-tracks")
+        makeSeparator(),
+        makeMenuItem(projectscene::PROJECTSCENE_FIT_ALL_TRACKS_TO_HEIGHT_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND),
+        makeMenuItem(projectscene::PROJECTSCENE_RESET_ALL_TRACK_HEIGHTS_COMMAND),
     };
 
     return items;

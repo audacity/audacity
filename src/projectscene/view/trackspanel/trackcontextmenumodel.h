@@ -51,6 +51,7 @@ private:
     muse::uicomponents::MenuItemList makeLabelTrackItems();
 
     muse::uicomponents::MenuItemList makeTrackColorItems();
+    muse::uicomponents::MenuItemList makeTrackHeightItems();
     muse::uicomponents::MenuItemList makeTrackFormatItems();
     muse::uicomponents::MenuItemList makeTrackRateItems();
     muse::uicomponents::MenuItemList makeTrackMoveItems();
