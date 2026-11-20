@@ -182,6 +182,37 @@ TEST_F(TrackHeightControllerTests, FitSomeTracksCollapsesTheOthers)
     EXPECT_EQ(m_heights[3], 256);
 }
 
+TEST_F(TrackHeightControllerTests, FitScrollsToTheTopWhenAllTracksFit)
+{
+    //! [EXPECT] The view scrolls to the first track
+    EXPECT_CALL(*m_viewState, changeTracksVerticalOffset(0));
+
+    //! [WHEN] One track is fitted
+    m_controller->fitToHeight({ 3 });
+
+    //! [THEN] It takes what the three collapsed tracks leave
+    EXPECT_EQ(m_heights[3], VIEWPORT_HEIGHT - 3 * MIN_HEIGHT);
+}
+
+TEST_F(TrackHeightControllerTests, FitScrollsToTheFirstFittedTrackWhenTheTracksDontFit)
+{
+    //! [GIVEN] A view too short for the collapsed and the fitted tracks
+    ON_CALL(*m_viewState, tracksViewportHeight()).WillByDefault(Return(100));
+
+    //! [GIVEN] The view is scrolled by 100 px and track 2 starts 44 px below its top
+    muse::ValCh<int> offset;
+    offset.val = 100;
+    ON_CALL(*m_viewState, tracksVerticalOffset()).WillByDefault(Return(offset));
+    ON_CALL(*m_viewState, trackVerticalPosition(2)).WillByDefault(Return(44));
+    ON_CALL(*m_viewState, trackVerticalPosition(3)).WillByDefault(Return(344));
+
+    //! [EXPECT] The view scrolls so that track 2, the upper of the fitted tracks, is at its top
+    EXPECT_CALL(*m_viewState, changeTracksVerticalOffset(144));
+
+    //! [WHEN] Tracks 3 and 2 are fitted
+    m_controller->fitToHeight({ 3, 2 });
+}
+
 TEST_F(TrackHeightControllerTests, FitKeepsTheMinimumHeight)
 {
     //! [GIVEN] A view too short for all tracks
@@ -204,6 +235,7 @@ TEST_F(TrackHeightControllerTests, FitDoesNothingWithoutAView)
     //! [EXPECT] No track changes
     EXPECT_CALL(*m_viewState, collapseTrack(_)).Times(0);
     EXPECT_CALL(*m_viewState, setTrackHeight(_, _)).Times(0);
+    EXPECT_CALL(*m_viewState, changeTracksVerticalOffset(_)).Times(0);
 
     //! [WHEN] Tracks are fitted
     m_controller->fitToHeight({ 1 });

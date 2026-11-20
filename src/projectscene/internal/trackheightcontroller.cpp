@@ -169,6 +169,18 @@ void TrackHeightController::fitToHeight(const trackedit::TrackIdList& tracks)
     for (int i = 0; i < count; ++i) {
         state->setTrackHeight(tracks.at(i), std::max(height + (i < remainder ? 1 : 0), state->trackMinHeight()));
     }
+
+    if (availableHeight >= count * state->trackMinHeight()) {
+        state->changeTracksVerticalOffset(0);
+        return;
+    }
+
+    for (const trackedit::TrackId trackId : allTracks()) {
+        if (muse::contains(tracks, trackId)) {
+            state->changeTracksVerticalOffset(state->tracksVerticalOffset().val + state->trackVerticalPosition(trackId));
+            break;
+        }
+    }
 }
 
 IProjectViewStatePtr TrackHeightController::viewState() const
