@@ -269,7 +269,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Collapse all tracks"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::TRACKS_COLLAPSE)
     },
     CommandInfo{
         PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND,
@@ -278,7 +278,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Expand all collapsed tracks back to their height before collapsing"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::TRACKS_EXPAND)
     },
     CommandInfo{
         PROJECTSCENE_FIT_TRACKS_TO_HEIGHT_COMMAND,
@@ -298,7 +298,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Share the height of the view between all tracks"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::TRACKS_FIT_HEIGHT)
     },
     CommandInfo{
         PROJECTSCENE_RESET_TRACK_HEIGHT_COMMAND,
