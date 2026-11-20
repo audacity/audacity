@@ -33,7 +33,7 @@ Page {
         readonly property int contentMargins: 24
         readonly property int contentTextSpacing: 16
 
-        readonly property string preferencesLink: "<a href=\"preferences\">%1</a>".arg(qsTrc("appshell/gettingstarted", "Preferences → General"))
+        readonly property string preferencesLink: "<a href=\"preferences\">%1</a>".arg(qsTrc("appshell/gettingstarted", "Preferences > General"))
         readonly property string preferencesUrl: "audacity://preferences?currentPageId=general"
         readonly property string updatesTitleText: qsTrc("appshell/gettingstarted", "App updates")
         readonly property string updatesBodyText1: qsTrc("appshell/gettingstarted", "Audacity notifies you in-app when a new version is available to download.")
