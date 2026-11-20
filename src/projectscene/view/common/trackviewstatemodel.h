@@ -49,6 +49,7 @@ public:
 
     int trackHeight() const;
     Q_INVOKABLE void changeTrackHeight(int deltaY);
+    Q_INVOKABLE void resetTrackHeight();
 
     bool isTrackCollapsed() const;
     double channelHeightRatio() const;
