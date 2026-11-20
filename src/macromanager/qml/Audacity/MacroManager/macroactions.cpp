@@ -4,8 +4,11 @@
 #include "macroactions.h"
 
 #include "framework/global/io/path.h"
+#include "framework/global/log.h"
 #include "framework/global/stringutils.h"
 #include "framework/global/translation.h"
+
+#include "macromanager/macromanagercommands.h"
 
 using namespace au::macromanager;
 using namespace muse;
@@ -31,9 +34,27 @@ void MacroActions::rename(const std::string& name) const
         return;
     }
 
+    const muse::shortcuts::Shortcut shortcut = commandShortcutsRegister()->shortcut(makeMacroRunCommand(name));
+
     const Ret ret = repository()->rename(name, *newName);
     if (!ret) {
         interactive()->error(trc("macromanager", "The macro could not be renamed"), ret.text());
+        return;
+    }
+
+    moveShortcut(shortcut, *newName);
+}
+
+void MacroActions::moveShortcut(muse::shortcuts::Shortcut shortcut, const std::string& newName) const
+{
+    if (shortcut.sequences.empty()) {
+        return;
+    }
+
+    shortcut.command = makeMacroRunCommand(newName);
+    const Ret ret = commandShortcutsRegister()->updateShortcuts({ shortcut });
+    if (!ret) {
+        LOGE() << "failed to move the shortcut of the renamed macro " << newName << ": " << ret.toString();
     }
 }
 

@@ -9,6 +9,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/iglobalconfiguration.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/shortcuts_v2/icommandshortcutsregister.h"
 #include "macromanager/imacrosrepository.h"
 
 #include "macromanager/macromanagertypes.h"
@@ -18,6 +19,7 @@ class MacroActions : public muse::Contextable
 {
     muse::GlobalInject<IMacrosRepository> repository;
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<muse::shortcuts::ICommandShortcutsRegister> commandShortcutsRegister;
 
     muse::ContextInject<muse::IInteractive> interactive{ this };
 
@@ -33,6 +35,7 @@ public:
 
 private:
     std::optional<std::string> requestName(muse::UriQuery uri) const;
+    void moveShortcut(muse::shortcuts::Shortcut shortcut, const std::string& newName) const;
     std::vector<std::string> macroFileFilter() const;
 };
 }
