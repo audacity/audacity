@@ -19,6 +19,12 @@ public:
     MOCK_METHOD(int, trackVerticalPosition, (const trackedit::TrackId&), (const, override));
     MOCK_METHOD(void, changeTrackHeight, (const trackedit::TrackId&, int), (override));
     MOCK_METHOD(void, setTrackHeight, (const trackedit::TrackId&, int), (override));
+    MOCK_METHOD(void, decreaseAllTrackHeights, (), (override));
+    MOCK_METHOD(void, increaseAllTrackHeights, (), (override));
+    MOCK_METHOD(void, decreaseTrackHeight, (const trackedit::TrackId&), (override));
+    MOCK_METHOD(void, increaseTrackHeight, (const trackedit::TrackId&), (override));
+    MOCK_METHOD(void, autoFitTrackHeights, (), (override));
+    MOCK_METHOD(void, setTracksViewportHeight, (int), (override));
     MOCK_METHOD(void, setChannelHeightRatio, (const trackedit::TrackId&, double), (override));
     MOCK_METHOD(trackedit::TrackId, trackAtPosition, (double), (const, override));
     MOCK_METHOD(trackedit::TrackIdList, tracksInRange, (double, double), (const, override));
