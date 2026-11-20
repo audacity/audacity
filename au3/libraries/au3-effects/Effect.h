@@ -85,6 +85,10 @@ public:
     // If no audio is selected, the host may automatically select the whole project.
     virtual bool applyEffectToAllAudio() const { return true; }
 
+    // If clips are selected, the host may process them one by one (false),
+    // or as one time range from the first selected clip's start to the last one's end (true).
+    virtual bool processClipSelectionAsTimeRange() const { return false; }
+
     bool CanExportPresets() const override;
     bool HasOptions() const override;
 

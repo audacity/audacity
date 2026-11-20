@@ -17,6 +17,8 @@
 #include "EffectPlugin.h" // to inherit
 
 #include <any>
+#include <cstdint>
+#include <vector>
 
 // Internal name should be stable across versions
 #define NYQUIST_PROMPT_ID wxT("Nyquist prompt")
@@ -129,6 +131,9 @@ public:
     double mT0{ 0. };
     double mT1{ 0. };
     bool mIsPreview{ false };
+    //! Au4: if not empty, only these clips (by ID) are selected within [mT0, mT1]
+    //! (see Effect::processClipSelectionAsTimeRange())
+    std::vector<int64_t> mSelectedClipIds;
 
     // Some public members that only change "context" fields
 
