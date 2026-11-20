@@ -63,6 +63,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/changedetection.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/deletebehavioronboardingscenario.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/selectstep.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/selectstep.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/selectstephandler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/selectstephandler.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.cpp
@@ -107,6 +111,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/pastebehaviorpanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/selectstepparamsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/selectstepparamsmodel.h
     )
 
 set(MODULE_LINK

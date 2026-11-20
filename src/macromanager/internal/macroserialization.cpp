@@ -20,6 +20,8 @@ const std::string STEPS_KEY("steps");
 const std::string COMMAND_KEY("command");
 const std::string PARAMS_KEY("params");
 const std::string MACRO_KEY("macro");
+const std::string CUSTOM_KEY("custom");
+const std::string DATA_KEY("data");
 
 const std::string FILE_VERSION("1.0");
 
@@ -57,12 +59,15 @@ std::optional<MacroMetadata> metadataFromJson(const JsonObject& object)
 JsonObject au::macromanager::toJson(const Macro& macro)
 {
     JsonArray steps;
-    for (const MacroItem& item : macro.steps) {
+    for (const MacroStep& item : macro.steps) {
         JsonObject stepObject;
 
-        if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
+        if (const CommandStep* step = std::get_if<CommandStep>(&item)) {
             stepObject.set(COMMAND_KEY, step->command.toString());
             stepObject.set(PARAMS_KEY, JsonValue::fromVal(Val(ValMap(step->params))));
+        } else if (const CustomStep* custom = std::get_if<CustomStep>(&item)) {
+            stepObject.set(CUSTOM_KEY, custom->handlerId);
+            stepObject.set(DATA_KEY, JsonValue::fromVal(custom->data));
         } else {
             stepObject.set(MACRO_KEY, std::get<MacroReference>(item).name);
         }
@@ -103,12 +108,22 @@ RetVal<Macro> au::macromanager::macroFromJson(const JsonObject& object)
             continue;
         }
 
+        if (stepObject.contains(CUSTOM_KEY)) {
+            const std::string handlerId = stepObject.value(CUSTOM_KEY).toStdString();
+            if (handlerId.empty()) {
+                return RetVal<Macro>(make_ret(Ret::Code::UnknownError, trc("macromanager", "custom macro step has no id")));
+            }
+
+            macro.steps.push_back(CustomStep { handlerId, stepObject.value(DATA_KEY).toVal() });
+            continue;
+        }
+
         const Command command(stepObject.value(COMMAND_KEY).toStdString());
         if (!command.isValid()) {
             return RetVal<Macro>(make_ret(Ret::Code::UnknownError, trc("macromanager", "macro step has an invalid command")));
         }
 
-        macro.steps.push_back(MacroStep { command, Params(stepObject.value(PARAMS_KEY).toVal().toMap()) });
+        macro.steps.push_back(CommandStep { command, Params(stepObject.value(PARAMS_KEY).toVal().toMap()) });
     }
 
     return RetVal<Macro>::make_ok(macro);

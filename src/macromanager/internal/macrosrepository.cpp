@@ -24,7 +24,7 @@ const std::string MACRO_FILE_SUFFIX(".aumacro");
 
 bool references(const Macro& macro, const std::string& name)
 {
-    return std::ranges::any_of(macro.steps, [&name](const MacroItem& item) {
+    return std::ranges::any_of(macro.steps, [&name](const MacroStep& item) {
         const MacroReference* reference = std::get_if<MacroReference>(&item);
         return reference && reference->name == name;
     });
@@ -113,7 +113,7 @@ Ret MacrosRepository::validateReferences(const Macro& macro) const
 
 Ret MacrosRepository::visitReferences(const Macro& macro, std::vector<std::string>& path) const
 {
-    for (const MacroItem& item : macro.steps) {
+    for (const MacroStep& item : macro.steps) {
         const MacroReference* reference = std::get_if<MacroReference>(&item);
         if (!reference) {
             continue;
@@ -186,7 +186,7 @@ Ret MacrosRepository::remove(const std::string& name)
         }
 
         Macro updated = *macro(referencingName);
-        std::erase_if(updated.steps, [&name](const MacroItem& item) {
+        std::erase_if(updated.steps, [&name](const MacroStep& item) {
             const MacroReference* reference = std::get_if<MacroReference>(&item);
             return reference && reference->name == name;
         });
@@ -230,7 +230,7 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
         }
 
         Macro updated = dependent;
-        for (MacroItem& item : updated.steps) {
+        for (MacroStep& item : updated.steps) {
             MacroReference* reference = std::get_if<MacroReference>(&item);
             if (reference && reference->name == oldName) {
                 reference->name = newName;

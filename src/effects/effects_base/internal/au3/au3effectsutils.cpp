@@ -32,6 +32,7 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.category = utils::effectCategoryToString(toAu4EffectCategory(desc.GetEffectGroup()));
     meta.isRealtimeCapable = desc.IsEffectRealtime();
     meta.paramsAreInputAgnostic = desc.ParamsAreInputAgnostic();
+    meta.isInteractive = desc.IsEffectInteractive();
     meta.isActivated = desc.IsEnabled();
     meta.state = desc.IsValid()
                  ? muse::audioplugins::AudioPluginState::Validated

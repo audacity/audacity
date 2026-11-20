@@ -13,7 +13,6 @@
 #include "framework/global/io/path.h"
 #include "framework/global/log.h"
 
-#include "importexport/export/exportcommands.h"
 #include "trackedit/trackeditcommands.h"
 
 #include "macrooutputnames.h"
@@ -97,6 +96,15 @@ size_t MacroRunner::currentFileIndex() const
     return m_fileResults.size();
 }
 
+std::optional<std::string> MacroRunner::currentFileName() const
+{
+    if (m_fileResults.size() >= m_outputNames.size()) {
+        return std::nullopt;
+    }
+
+    return m_outputNames.at(m_fileResults.size());
+}
+
 std::vector<Ret> MacroRunner::fileResults() const
 {
     return m_fileResults;
@@ -162,11 +170,18 @@ void MacroRunner::collectMissingSteps(const Macro& macro, std::vector<MissingSte
     };
 
     for (size_t index = 0; index < macro.steps.size(); ++index) {
-        const MacroItem& item = macro.steps.at(index);
+        const MacroStep& item = macro.steps.at(index);
 
-        if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
+        if (const CommandStep* step = std::get_if<CommandStep>(&item)) {
             if (!commandsRegister()->commandInfo(step->command).isValid()) {
                 addMissing({ macro.name, index + 1, QString::fromStdString(step->command.toString()) });
+            }
+            continue;
+        }
+
+        if (const CustomStep* custom = std::get_if<CustomStep>(&item)) {
+            if (!stepHandlersRegister()->handler(custom->handlerId)) {
+                addMissing({ macro.name, index + 1, QString::fromStdString(custom->handlerId) });
             }
             continue;
         }
@@ -235,11 +250,11 @@ async::Promise<Ret> MacroRunner::runFile(const Macro& macro, const io::path_t& f
     });
 }
 
-async::Promise<Ret> MacroRunner::runSteps(const std::vector<MacroItem>& items)
+async::Promise<Ret> MacroRunner::runSteps(const std::vector<MacroStep>& items)
 {
     async::Promise<Ret> chain = resolved(make_ok());
 
-    for (const MacroItem& item : items) {
+    for (const MacroStep& item : items) {
         chain = chain.then<Ret>(this, [this, item](const Ret& previous, auto resolve) {
             if (!previous) {
                 return resolve(previous);
@@ -260,21 +275,43 @@ async::Promise<Ret> MacroRunner::runSteps(const std::vector<MacroItem>& items)
     return chain;
 }
 
-async::Promise<Ret> MacroRunner::runItem(const MacroItem& item)
+async::Promise<Ret> MacroRunner::runItem(const MacroStep& item)
 {
-    const MacroStep* step = std::get_if<MacroStep>(&item);
-    if (!step) {
-        return runMacro(std::get<MacroReference>(item));
+    if (const MacroReference* reference = std::get_if<MacroReference>(&item)) {
+        return runMacro(*reference);
     }
 
-    return commandDispatcher()->dispatch(step->command, stepParams(*step))
-           .then<Ret>(this, [this](const Response& response, auto resolve) {
-        if (response.ret) {
+    async::Promise<Ret> applied = std::holds_alternative<CommandStep>(item)
+                                  ? runCommand(std::get<CommandStep>(item))
+                                  : runCustomStep(std::get<CustomStep>(item));
+
+    return applied.then<Ret>(this, [this](const Ret& ret, auto resolve) {
+        if (ret) {
             ++m_appliedStepCount;
         }
 
+        return resolve(ret);
+    });
+}
+
+async::Promise<Ret> MacroRunner::runCommand(const CommandStep& step)
+{
+    return commandDispatcher()->dispatch(step.command, step.params)
+           .then<Ret>(this, [](const Response& response, auto resolve) {
         return resolve(response.ret);
     });
+}
+
+async::Promise<Ret> MacroRunner::runCustomStep(const CustomStep& step)
+{
+    const IMacroStepHandlerPtr handler = stepHandlersRegister()->handler(step.handlerId);
+    if (!handler) {
+        const QString name = QString::fromStdString(step.handlerId);
+        return resolved(make_ret(Ret::Code::NotSupported,
+                                 qtrc("macromanager", "The step type “%1” is not available").arg(name).toStdString()));
+    }
+
+    return handler->execute(step.data);
 }
 
 async::Promise<Ret> MacroRunner::runMacro(const MacroReference& reference)
@@ -307,17 +344,6 @@ async::Promise<Ret> MacroRunner::resetProject()
 
         return async::Promise<Ret>::dummy_result();
     });
-}
-
-Params MacroRunner::stepParams(const MacroStep& step) const
-{
-    Params params = step.params;
-
-    if (!m_outputNames.empty() && importexport::isExportCommand(step.command)) {
-        params[importexport::EXPORT_NAME_PARAM] = Val(m_outputNames.at(m_fileResults.size()));
-    }
-
-    return params;
 }
 
 void MacroRunner::undoToState(size_t stateIndex)

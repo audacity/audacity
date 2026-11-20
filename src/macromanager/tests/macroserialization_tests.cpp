@@ -16,7 +16,7 @@ using namespace au::macromanager;
 namespace {
 Params roundTrip(const Params& params)
 {
-    const Macro macro { "macro", { MacroStep { Command("command://test/step"), params } } };
+    const Macro macro { "macro", { CommandStep { Command("command://test/step"), params } } };
 
     std::string error;
     const JsonDocument document = JsonDocument::fromJson(JsonDocument(toJson(macro)).toJson(), &error);
@@ -26,7 +26,7 @@ Params roundTrip(const Params& params)
     EXPECT_TRUE(result.ret);
     EXPECT_EQ(result.val.steps.size(), 1);
 
-    return std::get<MacroStep>(result.val.steps.front()).params;
+    return std::get<CommandStep>(result.val.steps.front()).params;
 }
 }
 

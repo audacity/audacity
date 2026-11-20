@@ -50,61 +50,16 @@ TEST(ExportUtilsTests, SanitizeFileNameKeepsUnicodeAndPunctuation)
     EXPECT_EQ(utils::sanitizeFileName("Ärger & Éclat's (take 2).wav"), "Ärger & Éclat's (take 2).wav");
 }
 
-TEST(ExportUtilsTests, UniqueFileNamesKeepFirstOccurrence)
-{
-    utils::UniqueFileNames names;
-    EXPECT_EQ(names.registerName("Vocals"), "Vocals");
-}
-
-TEST(ExportUtilsTests, UniqueFileNamesNumberDuplicates)
-{
-    utils::UniqueFileNames names;
-    names.registerName("Vocals");
-    EXPECT_EQ(names.registerName("Vocals"), "Vocals-2");
-    EXPECT_EQ(names.registerName("Vocals"), "Vocals-3");
-}
-
-TEST(ExportUtilsTests, UniqueFileNamesIgnoreCase)
-{
-    utils::UniqueFileNames names;
-    names.registerName("Vocals");
-    EXPECT_EQ(names.registerName("VOCALS"), "VOCALS-2");
-}
-
-TEST(ExportUtilsTests, UniqueFileNamesSkipTakenSuffixes)
-{
-    utils::UniqueFileNames names;
-    names.registerName("Vocals");
-    names.registerName("Vocals-2");
-    EXPECT_EQ(names.registerName("Vocals"), "Vocals-3");
-}
-
-TEST(ExportUtilsTests, UniqueFileNamesIgnoreUnicodeCase)
-{
-    utils::UniqueFileNames names;
-    names.registerName("Ä");
-    EXPECT_EQ(names.registerName("ä"), "ä-2");
-    names.registerName("Ünïcødé");
-    EXPECT_EQ(names.registerName("ünïcødé"), "ünïcødé-2");
-}
-
-TEST(ExportUtilsTests, UniqueFileNamesTreatCanonicallyEquivalentNamesAsDuplicates)
-{
-    utils::UniqueFileNames names;
-    names.registerName("\u00e9");
-    EXPECT_EQ(names.registerName("e\u0301"), "e\u0301-2");
-}
-
 TEST(ExportUtilsTests, MakeFileNameFormatsSanitizesAndDeduplicates)
 {
-    utils::UniqueFileNames names;
+    au::shared::UniqueFileNames names;
     EXPECT_EQ(utils::makeFileName("Song", 1, "A/B", names), "Song.01.A_B");
     EXPECT_EQ(utils::makeFileName("Song", 1, "a\\b", names), "Song.01.a_b-2");
 }
 
 TEST(ExportUtilsTests, MakeFileNameDeduplicatesNormalizedReservedNames)
 {
-    utils::UniqueFileNames names;
+    au::shared::UniqueFileNames names;
     EXPECT_EQ(utils::makeFileName("", std::nullopt, "CON", names), "CON_");
     EXPECT_EQ(utils::makeFileName("", std::nullopt, "con", names), "con_-2");
 }

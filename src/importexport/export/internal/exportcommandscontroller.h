@@ -12,8 +12,10 @@
 #include "framework/global/io/ifilesystem.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "context/iglobalcontext.h"
+#include "macromanager/imacrorunner.h"
 #include "../iexportconfiguration.h"
 #include "../iexporter.h"
+#include "exportcommandoptions.h"
 
 namespace au::importexport {
 class ExportCommandsController : public muse::rcommand::Commandable, public muse::Contextable
@@ -24,6 +26,7 @@ class ExportCommandsController : public muse::rcommand::Commandable, public muse
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<IExporter> exporter{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<macromanager::IMacroRunner> macroRunner{ this };
 
 public:
     explicit ExportCommandsController(const muse::modularity::ContextPtr& ctx)
@@ -32,9 +35,12 @@ public:
     void init();
 
 private:
-    muse::Ret exportToMacroOutput(const std::string& extension, const muse::rcommand::Params& params);
+    muse::Ret exportAudio(const ExportFormatSettings& settings, const std::string& folder, std::optional<int> sampleRate,
+                          ExportChannelLayout channels, const std::string& fileName);
+    muse::Ret exportWithSavedOptions(const ExportFormatSettings& format, const std::string& folder, const std::string& fileName);
+    muse::Ret runExport(const std::string& extension, int sampleRate, ExportChannelLayout channels, const std::string& folder,
+                        const std::string& fileName, const std::optional<muse::Val>& parameters);
 
     std::optional<std::string> formatForExtension(const std::string& extension) const;
-    std::string outputBaseName() const;
 };
 }
