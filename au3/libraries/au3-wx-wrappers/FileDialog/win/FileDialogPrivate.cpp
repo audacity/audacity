@@ -361,11 +361,16 @@ void FileDialog::MSWOnInitDone(HWND hDlg, LPOPENFILENAME pOfn)
 
 void FileDialog::MSWOnFolderChange(HWND hDlg, LPOPENFILENAME pOfn)
 {
+    // set HWND for wx
+    SetHWND(mChildDlg);
+
     FilterFiles(mParentDlg, true);
 
     wxChar path[wxMAXPATH];
     int result = CommDlg_OpenSave_GetFolderPath(::GetParent(hDlg), path, WXSIZEOF(path));
     if (result < 0 || result > WXSIZEOF(path)) {
+        // we shouldn't destroy this HWND
+        SetHWND(NULL);
         return;
     }
 
@@ -374,6 +379,9 @@ void FileDialog::MSWOnFolderChange(HWND hDlg, LPOPENFILENAME pOfn)
     wxFileCtrlEvent event(wxEVT_FILECTRL_FOLDERCHANGED, this, GetId());
     event.SetDirectory(m_dir);
     GetEventHandler()->ProcessEvent(event);
+
+    // we shouldn't destroy this HWND
+    SetHWND(NULL);
 }
 
 void FileDialog::MSWOnSelChange(HWND hDlg, LPOPENFILENAME pOfn)
@@ -384,12 +392,16 @@ void FileDialog::MSWOnSelChange(HWND hDlg, LPOPENFILENAME pOfn)
     // Get pointer to the ListView control
     HWND lv = ::GetDlgItem(::GetDlgItem(mParentDlg, lst2), 1);
     if (lv == NULL) {
+        // we shouldn't destroy this HWND
+        SetHWND(NULL);
         return;
     }
 
     wxChar path[wxMAXPATH];
     int result = CommDlg_OpenSave_GetFilePath(::GetParent(hDlg), path, WXSIZEOF(path));
     if (result < 0 || result > WXSIZEOF(path)) {
+        // we shouldn't destroy this HWND
+        SetHWND(NULL);
         return;
     }
 
