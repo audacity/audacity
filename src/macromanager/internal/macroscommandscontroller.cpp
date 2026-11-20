@@ -28,6 +28,8 @@ void MacrosCommandsController::registerHandlers()
             return runMacro(name);
         }));
     }
+
+    commandShortcutsRegister()->reload();
 }
 
 async::Promise<Ret> MacrosCommandsController::runMacro(const std::string& name)
