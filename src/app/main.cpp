@@ -85,9 +85,11 @@ int main(int argc, char** argv)
         qputenv("QT_QPA_PLATFORMTHEME", "gtk3");
     }
 
-    //! NOTE Forced X11, with Wayland there are a number of problems now
-    if (qEnvironmentVariable("AU_QT_QPA_PLATFORM") == "") {
-        qputenv("QT_QPA_PLATFORM", "xcb");
+    //! NOTE Prefer native Wayland, falling back to X11 (xcb) when no Wayland
+    //! compositor is available. An explicit QT_QPA_PLATFORM (or AU_QT_QPA_PLATFORM)
+    //! from the user is respected, e.g. QT_QPA_PLATFORM=xcb to force X11/XWayland.
+    if (qEnvironmentVariable("AU_QT_QPA_PLATFORM") == "" && !qEnvironmentVariableIsSet("QT_QPA_PLATFORM")) {
+        qputenv("QT_QPA_PLATFORM", "wayland;xcb");
     }
 #endif
 
