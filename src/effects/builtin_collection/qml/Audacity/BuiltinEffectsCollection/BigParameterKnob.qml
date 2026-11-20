@@ -46,13 +46,22 @@ Item {
     }
 
     function decimalsForStep(step) {
-        const text = step.toString()
+        const absStep = Math.abs(step)
 
-        if (text.indexOf(".") >= 0) {
-            return text.split(".")[1].length
+        if (!isFinite(absStep) || absStep === 0) {
+            return 0
         }
 
-        return 0
+        // Count the decimal places without relying on a decimal separator
+        // character, which depends on the user's locale.
+        for (let decimals = 0; decimals <= 6; ++decimals) {
+            const scaled = absStep * Math.pow(10, decimals)
+            if (Math.abs(scaled - Math.round(scaled)) < 1e-9) {
+                return decimals
+            }
+        }
+
+        return 6
     }
 
     function displayDecimals() {
