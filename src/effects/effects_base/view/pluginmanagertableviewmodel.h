@@ -61,6 +61,8 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(muse::uicomponents::MenuItemList statusOptions READ statusOptions NOTIFY statusSelectedIndexChanged)
     Q_PROPERTY(int statusSelectedIndex READ statusSelectedIndex WRITE setStatusSelectedIndex NOTIFY statusSelectedIndexChanged)
 
+    Q_PROPERTY(QString initialCategory READ initialCategory WRITE setInitialCategory)
+
     Q_PROPERTY(int totalWidth READ totalWidth CONSTANT)
     Q_PROPERTY(
         bool alsoRescanBrokenPlugins READ alsoRescanBrokenPlugins WRITE setAlsoRescanBrokenPlugins NOTIFY alsoRescanBrokenPluginsChanged)
@@ -92,6 +94,9 @@ public:
     muse::uicomponents::MenuItemList statusOptions();
     int statusSelectedIndex() const { return m_statusSelectedIndex; }
     void setStatusSelectedIndex(int index);
+
+    QString initialCategory() const { return m_initialCategory; }
+    void setInitialCategory(const QString& category);
 
     int totalWidth() const;
 
@@ -142,6 +147,7 @@ private:
     std::unordered_set<EffectId> m_editedEffects;
     bool m_changesConfirmed = false;
     QString m_searchText;
+    QString m_initialCategory;
 
     using EffectFilter = std::function<bool (const EffectMeta&)>;
     static const EffectFilter allPassFilter;

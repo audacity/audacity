@@ -646,7 +646,7 @@ muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& t
 MenuItemList AppMenuModel::makeEffectsItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_PROCESSORS_COMMAND),
         makeMenuItem(projectscene::PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND,
                      TranslatableString("appshell-menu-effect", "Add track effects")),
         makeSeparator(),
@@ -665,7 +665,7 @@ MenuItemList AppMenuModel::makeEffectsItems()
 MenuItemList AppMenuModel::makeGeneratorItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_GENERATORS_COMMAND),
         makeSeparator(),
     };
 
@@ -680,7 +680,7 @@ MenuItemList AppMenuModel::makeGeneratorItems()
 MenuItemList AppMenuModel::makeToolItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_TOOLS_COMMAND),
         makeSeparator(),
         makeMenuItem(APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND),
         makeSeparator(),
@@ -713,7 +713,7 @@ MenuItemList AppMenuModel::makeToolItems()
 MenuItemList AppMenuModel::makeAnalyzeItems()
 {
     MenuItemList items {
-        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
+        makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_ANALYZERS_COMMAND),
         makeSeparator(),
         // makeMenuItem("contrast-analyzer"),
         // makeMenuItem("plot-spectrum"),

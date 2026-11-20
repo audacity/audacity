@@ -14,6 +14,10 @@
 namespace au::effects {
 inline static const muse::rcommand::Command EFFECTS_REPEAT_LAST_EFFECT_COMMAND("command://effects/repeat-last-effect");
 inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_COMMAND("command://effects/plugin-manager");
+inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_PROCESSORS_COMMAND("command://effects/plugin-manager/processors");
+inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_GENERATORS_COMMAND("command://effects/plugin-manager/generators");
+inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_ANALYZERS_COMMAND("command://effects/plugin-manager/analyzers");
+inline static const muse::rcommand::Command EFFECTS_PLUGIN_MANAGER_TOOLS_COMMAND("command://effects/plugin-manager/tools");
 inline static const muse::rcommand::Command EFFECTS_GET_EFFECTS_COMMAND("command://effects/get-effects");
 inline static const muse::rcommand::Command EFFECTS_TOGGLE_VENDOR_UI_COMMAND("command://effects/toggle-vendor-ui");
 
@@ -27,6 +31,7 @@ inline static const muse::rcommand::Command EFFECTS_PRESET_EXPORT_COMMAND("comma
 inline static const std::string EFFECTS_EFFECT_ID_PARAM("effectId");
 inline static const std::string EFFECTS_INSTANCE_ID_PARAM("instanceId");
 inline static const std::string EFFECTS_PRESET_ID_PARAM("presetId");
+inline static const std::string EFFECTS_PLUGIN_MANAGER_CATEGORY_PARAM("category");
 
 constexpr std::string_view EFFECTS_SCHEME = "effects";
 constexpr std::string_view EFFECT_OPEN_COMMAND = "open";

@@ -1,4 +1,4 @@
-﻿/*
+/*
 * Audacity: A Digital Audio Editor
 */
 
@@ -19,6 +19,7 @@
 #include "../ieffectpresetsscenario.h"
 #include "../ieffectsconfiguration.h"
 #include "../ieffectinstancesregister.h"
+#include "../effectstypes.h"
 
 namespace au::effects {
 class EffectsActionsController : public muse::rcommand::Commandable, public muse::async::Asyncable, public muse::Contextable
@@ -55,7 +56,7 @@ private:
     muse::Ret importPreset(const muse::rcommand::Params& params);
     muse::Ret exportPreset(const muse::rcommand::Params& params);
     muse::Ret toggleVendorUI(const muse::rcommand::Params& params);
-    muse::Ret openPluginManager();
+    muse::Ret openPluginManager(EffectType initialCategory = EffectType::Unknown);
 
     QObject m_queuedCallContext;
 };
