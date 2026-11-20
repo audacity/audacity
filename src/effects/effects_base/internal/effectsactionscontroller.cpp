@@ -17,6 +17,17 @@ using namespace muse::rcommand;
 using namespace au::effects;
 
 static const muse::Uri PLUGIN_MANAGER_URI("audacity://effects/plugin_manager");
+static std::string effectTypeName(EffectType type)
+{
+    switch (type) {
+    case EffectType::Analyzer: return "analyzer";
+    case EffectType::Generator: return "generator";
+    case EffectType::Processor: return "processor";
+    case EffectType::Tool: return "tool";
+    default: return std::string();
+    }
+}
+
 
 void EffectsActionsController::init()
 {
@@ -51,6 +62,10 @@ void EffectsActionsController::registerActions()
 
     cd->onRequest(this, EFFECTS_REPEAT_LAST_EFFECT_COMMAND, [this]() { return repeatLastEffect(); });
     cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_COMMAND, [this]() { return openPluginManager(); });
+    cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_PROCESSORS_COMMAND, [this]() { return openPluginManager(EffectType::Processor); });
+    cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_GENERATORS_COMMAND, [this]() { return openPluginManager(EffectType::Generator); });
+    cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_ANALYZERS_COMMAND, [this]() { return openPluginManager(EffectType::Analyzer); });
+    cd->onRequest(this, EFFECTS_PLUGIN_MANAGER_TOOLS_COMMAND, [this]() { return openPluginManager(EffectType::Tool); });
     cd->onRequest(this, EFFECTS_TOGGLE_VENDOR_UI_COMMAND, [this](const Params& params) { return toggleVendorUI(params); });
     cd->onRequest(this, EFFECTS_PRESET_APPLY_COMMAND, [this](const Params& params) { return applyPreset(params); });
     cd->onRequest(this, EFFECTS_PRESET_SAVE_COMMAND, [this](const Params& params) { return savePreset(params); });
@@ -224,8 +239,12 @@ muse::Ret EffectsActionsController::toggleVendorUI(const Params& params)
     return make_ok();
 }
 
-muse::Ret EffectsActionsController::openPluginManager()
+muse::Ret EffectsActionsController::openPluginManager(EffectType initialCategory)
 {
-    interactive()->open(PLUGIN_MANAGER_URI);
+    muse::UriQuery query(PLUGIN_MANAGER_URI);
+    if (initialCategory != EffectType::Unknown) {
+        query.addParam(EFFECTS_PLUGIN_MANAGER_CATEGORY_PARAM, muse::Val(effectTypeName(initialCategory)));
+    }
+    interactive()->open(query);
     return make_ok();
 }

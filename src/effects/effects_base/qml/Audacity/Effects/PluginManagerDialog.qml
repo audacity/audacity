@@ -29,7 +29,12 @@ StyledDialogView {
         topPanel.readInfo()
     }
 
-    property PluginManagerTableViewModel tableViewModel: PluginManagerTableViewModel {}
+    // Category filter preset passed via the opening URI ("analyzer" | "generator" | "processor" | "tool")
+    property string initialCategory: ""
+
+    property PluginManagerTableViewModel tableViewModel: PluginManagerTableViewModel {
+        initialCategory: root.initialCategory
+    }
 
     ColumnLayout {
         anchors.fill: parent
