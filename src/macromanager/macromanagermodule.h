@@ -8,6 +8,7 @@
 #include "framework/global/modularity/imodulesetup.h"
 
 namespace au::macromanager {
+class MacrosCommandsRegister;
 class MacrosRepository;
 class RunOnFilesRequests;
 class MacroRunner;
@@ -27,6 +28,7 @@ public:
 
 private:
     std::shared_ptr<MacrosRepository> m_repository;
+    std::shared_ptr<MacrosCommandsRegister> m_commandsRegister;
     std::shared_ptr<RunOnFilesRequests> m_runOnFilesRequests;
 };
 

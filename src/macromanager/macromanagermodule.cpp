@@ -46,9 +46,10 @@ void MacroManagerModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://macromanager/runonfiles"), "Audacity.MacroManager", "RunOnFilesDialog");
     }
 
+    m_commandsRegister = std::make_shared<MacrosCommandsRegister>();
     auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
     if (cr) {
-        cr->reg(std::make_shared<MacrosCommandsRegister>());
+        cr->reg(m_commandsRegister);
     }
 }
 
@@ -59,6 +60,7 @@ void MacroManagerModule::onInit(const IApplication::RunMode& mode)
     }
 
     m_repository->init();
+    m_commandsRegister->init();
 }
 
 IContextSetup* MacroManagerModule::newContext(const ContextPtr& ctx) const
