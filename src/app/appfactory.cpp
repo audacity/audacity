@@ -42,6 +42,7 @@
 #include "context/contextmodule.h"
 #include "preferences/preferencesmodule.h"
 #include "project/projectmodule.h"
+#include "projectrecovery/projectrecoverymodule.h"
 #include "projectscene/projectscenemodule.h"
 #include "audio/audiomodule.h"
 #include "au3audio/au3audiomodule.h"
@@ -188,6 +189,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new au::macromanager::MacroManagerModule());
     app->addModule(new au::spectrogram::SpectrogramModule());
     app->addModule(new au::project::ProjectModule());
+    app->addModule(new au::projectrecovery::ProjectRecoveryModule());
     app->addModule(new au::importexport::ExporterModule());
     app->addModule(new au::importexport::ImporterModule());
     app->addModule(new au::importexport::LabelsModule());
