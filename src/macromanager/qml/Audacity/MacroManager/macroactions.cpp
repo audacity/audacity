@@ -51,10 +51,27 @@ void MacroActions::moveShortcut(muse::shortcuts::Shortcut shortcut, const std::s
         return;
     }
 
-    shortcut.command = makeMacroRunCommand(newName);
-    const Ret ret = commandShortcutsRegister()->updateShortcuts({ shortcut });
+    muse::shortcuts::Shortcut moved = shortcut;
+    moved.command = makeMacroRunCommand(newName);
+    shortcut.clear();
+
+    const Ret ret = commandShortcutsRegister()->updateShortcuts({ shortcut, moved });
     if (!ret) {
         LOGE() << "failed to move the shortcut of the renamed macro " << newName << ": " << ret.toString();
+    }
+}
+
+void MacroActions::clearShortcut(muse::shortcuts::Shortcut shortcut) const
+{
+    if (shortcut.sequences.empty()) {
+        return;
+    }
+
+    shortcut.clear();
+
+    const Ret ret = commandShortcutsRegister()->updateShortcuts({ shortcut });
+    if (!ret) {
+        LOGE() << "failed to clear the shortcut of the deleted macro " << shortcut.command.toString() << ": " << ret.toString();
     }
 }
 
@@ -80,10 +97,15 @@ void MacroActions::remove(const std::string& name) const
         return;
     }
 
+    const muse::shortcuts::Shortcut shortcut = commandShortcutsRegister()->shortcut(makeMacroRunCommand(name));
+
     const Ret ret = repository()->remove(name);
     if (!ret) {
         interactive()->error(trc("macromanager", "The macro could not be deleted"), ret.text());
+        return;
     }
+
+    clearShortcut(shortcut);
 }
 
 void MacroActions::exportMacro(const Macro& macro) const

@@ -36,6 +36,7 @@ public:
 private:
     std::optional<std::string> requestName(muse::UriQuery uri) const;
     void moveShortcut(muse::shortcuts::Shortcut shortcut, const std::string& newName) const;
+    void clearShortcut(muse::shortcuts::Shortcut shortcut) const;
     std::vector<std::string> macroFileFilter() const;
 };
 }
