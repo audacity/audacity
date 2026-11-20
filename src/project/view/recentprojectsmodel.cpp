@@ -82,6 +82,11 @@ void RecentProjectsModel::updateRecentProjects()
     items.push_back(addItem);
 
     for (const RecentFile& file : recentProjects) {
+        //! NOTE Recent audio files are only shown in the "Open recent" menu
+        if (!isAudacityFile(file.path)) {
+            continue;
+        }
+
         QVariantMap obj;
 
         std::string suffix = io::suffix(file.path);
