@@ -188,6 +188,16 @@ const std::vector<CommandInfo> s_commandInfos = {
         Availability::UI
     },
     CommandInfo{
+        APP_TOGGLE_VIDEO_PANEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "&Video"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show/hide video"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
+    },
+    CommandInfo{
         APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "&Macro manager"),

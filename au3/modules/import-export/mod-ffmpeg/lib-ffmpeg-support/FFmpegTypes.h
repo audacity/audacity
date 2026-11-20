@@ -125,6 +125,52 @@ typedef struct AVInputFormat AVInputFormat;
 typedef struct AVIOContext AVIOContext;
 typedef struct AVCodecContext AVCodecContext;
 
+#define AUDACITY_AV_PKT_FLAG_KEY 0x0001
+#define AUDACITY_AVSEEK_FLAG_BACKWARD 1
+
+//! Seek by byte position rather than timestamp. Value is ABI stable across
+//! every bundled header, 2.3.6 through 9.0.0.
+#define AUDACITY_AVSEEK_FLAG_BYTE 2
+
+//! AVMEDIA_TYPE_VIDEO. The AVMediaType enumeration is ABI frozen at zero for
+//! video, so this needs no per-version mapping.
+#define AUDACITY_AVMEDIA_TYPE_VIDEO 0
+
+#define AUDACITY_AV_DISPOSITION_ATTACHED_PIC 0x0400
+
+//! Pixel formats the video preview knows how to convert. Raw AVPixelFormat
+//! values are not stable across FFmpeg major versions, so frames report one of
+//! these instead and anything else is reported as unsupported rather than
+//! being misread as a format it is not.
+enum AudacityAVPixelFormat {
+    AUDACITY_AV_PIX_FMT_NONE = -1,
+    AUDACITY_AV_PIX_FMT_YUV420P,
+    AUDACITY_AV_PIX_FMT_YUVJ420P,
+    AUDACITY_AV_PIX_FMT_UNSUPPORTED,
+};
+
+//! Only the distinctions the colour conversion actually makes.
+enum AudacityAVColorSpace {
+    AUDACITY_AVCOL_SPC_UNSPECIFIED = 0,
+    AUDACITY_AVCOL_SPC_BT709,
+    AUDACITY_AVCOL_SPC_BT601,
+};
+
+//! Only the distinction that matters: whether the frame is encoded with a
+//! transfer function the converter can treat as ordinary gamma.
+enum AudacityAVColorTransfer {
+    AUDACITY_AVCOL_TRC_UNSPECIFIED = 0,
+    AUDACITY_AVCOL_TRC_SDR,
+    AUDACITY_AVCOL_TRC_SMPTE2084,   //!< PQ
+    AUDACITY_AVCOL_TRC_ARIB_STD_B67, //!< HLG
+};
+
+enum AudacityAVColorRange {
+    AUDACITY_AVCOL_RANGE_UNSPECIFIED = 0,
+    AUDACITY_AVCOL_RANGE_MPEG,   //!< limited, 16..235
+    AUDACITY_AVCOL_RANGE_JPEG,   //!< full, 0..255
+};
+
 using AVCodecIDFwd = int;
 using AVCodecConfigFwd = int;
 using AVMediaTypeFwd = int;

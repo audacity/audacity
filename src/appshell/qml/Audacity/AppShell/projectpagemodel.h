@@ -14,6 +14,7 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackuistate.h"
 #include "appshell/iapplicationactioncontroller.h"
+#include "video/ivideoservice.h"
 
 #include <QtQml/qqmlregistration.h>
 
@@ -24,6 +25,8 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     QML_ELEMENT
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
+    muse::ContextInject<video::IVideoService> videoService { this };
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher { this };
     muse::ContextInject<IApplicationActionController> applicationActionController { this };
@@ -44,6 +47,7 @@ public:
 
     Q_INVOKABLE QString tracksPanelName() const;
     Q_INVOKABLE QString historyPanelName() const;
+    Q_INVOKABLE QString videoPanelName() const;
     Q_INVOKABLE QString playbackMeterPanelName() const;
     Q_INVOKABLE QString macroManagerPanelName() const;
 
@@ -53,6 +57,7 @@ private:
     void toggleDock(const QString& name);
 
     void updatePlaybackMeterVisibility();
+    void revealVideoPanelIfAttached();
 
     bool m_inited = false;
 };

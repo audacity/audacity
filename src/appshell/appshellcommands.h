@@ -34,6 +34,7 @@ inline static const muse::rcommand::Command APP_CONTEXT_MENU_COMMAND("command://
 inline static const muse::rcommand::Command APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND("command://app/toggle-transport-toolbar");
 inline static const muse::rcommand::Command APP_TOGGLE_TRACKS_PANEL_COMMAND("command://app/toggle-tracks-panel");
 inline static const muse::rcommand::Command APP_TOGGLE_HISTORY_PANEL_COMMAND("command://app/toggle-history-panel");
+inline static const muse::rcommand::Command APP_TOGGLE_VIDEO_PANEL_COMMAND("command://app/toggle-video-panel");
 inline static const muse::rcommand::Command APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND("command://app/toggle-macro-manager-panel");
 inline static const muse::rcommand::Command APP_TOGGLE_STATUSBAR_COMMAND("command://app/toggle-statusbar");
 
@@ -43,6 +44,7 @@ inline const std::map<muse::rcommand::Command, DockName>& toggleDockCommands()
         { APP_TOGGLE_TRANSPORT_TOOLBAR_COMMAND, PLAYBACK_TOOLBAR_NAME },
         { APP_TOGGLE_TRACKS_PANEL_COMMAND, TRACKS_PANEL_NAME },
         { APP_TOGGLE_HISTORY_PANEL_COMMAND, HISTORY_PANEL_NAME },
+        { APP_TOGGLE_VIDEO_PANEL_COMMAND, VIDEO_PANEL_NAME },
         { APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND, MACRO_MANAGER_PANEL_NAME },
         { APP_TOGGLE_STATUSBAR_COMMAND, PROJECT_STATUSBAR_NAME },
     };
