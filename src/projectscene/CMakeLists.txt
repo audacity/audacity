@@ -39,6 +39,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackheightcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackheightcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.h

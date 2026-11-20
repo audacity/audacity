@@ -36,6 +36,8 @@ public:
 
 private:
     void updateCommandStates(const std::vector<muse::rcommand::Command>& commands = {});
+    void subscribeToTrackHeights();
+    bool anyTrackInCollapsedState(bool collapsed) const;
 
     muse::rcommand::IModuleCommandsRegisterPtr m_moduleRegister;
     std::map<muse::rcommand::Command, muse::rcommand::CommandState> m_commandStates;

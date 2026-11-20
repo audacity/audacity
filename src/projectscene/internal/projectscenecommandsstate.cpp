@@ -3,13 +3,35 @@
 */
 #include "projectscenecommandsstate.h"
 
+#include <algorithm>
+
+#include "framework/global/containers.h"
 #include "framework/global/log.h"
+
+#include "project/iaudacityproject.h"
 
 #include "../projectscenecommands.h"
 
 using namespace au::projectscene;
 using namespace muse;
 using namespace muse::rcommand;
+
+namespace {
+const std::vector<Command> TRACK_HEIGHT_COMMANDS {
+    PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND,
+    PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND,
+    PROJECTSCENE_INCREASE_ALL_TRACK_HEIGHTS_COMMAND,
+    PROJECTSCENE_DECREASE_ALL_TRACK_HEIGHTS_COMMAND,
+    PROJECTSCENE_COLLAPSE_TRACKS_COMMAND,
+    PROJECTSCENE_EXPAND_TRACKS_COMMAND,
+    PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND,
+    PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND,
+    PROJECTSCENE_FIT_TRACKS_TO_HEIGHT_COMMAND,
+    PROJECTSCENE_FIT_ALL_TRACKS_TO_HEIGHT_COMMAND,
+    PROJECTSCENE_RESET_TRACK_HEIGHT_COMMAND,
+    PROJECTSCENE_RESET_ALL_TRACK_HEIGHTS_COMMAND,
+};
+}
 
 std::string ProjectSceneCommandsState::moduleName() const
 {
@@ -24,8 +46,10 @@ void ProjectSceneCommandsState::init()
     }
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        subscribeToTrackHeights();
         updateCommandStates();
     });
+    subscribeToTrackHeights();
 
     projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this]() {
         updateCommandStates({ PROJECTSCENE_MINUTES_SECONDS_RULER_COMMAND, PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND });
@@ -73,6 +97,35 @@ void ProjectSceneCommandsState::deinit()
     configuration()->pinnedPlayHeadEnabledChanged().disconnect(this);
     configuration()->playbackOnRulerClickEnabledChanged().disconnect(this);
     configuration()->isEffectsPanelVisibleChanged().disconnect(this);
+}
+
+void ProjectSceneCommandsState::subscribeToTrackHeights()
+{
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = project ? project->viewState() : nullptr;
+    if (!viewState) {
+        return;
+    }
+
+    // Collapsing, expanding, adding or removing a track changes the total height
+    viewState->totalTrackHeight().ch.onReceive(this, [this](int) {
+        updateCommandStates(TRACK_HEIGHT_COMMANDS);
+    }, muse::async::Asyncable::Mode::SetReplace);
+}
+
+bool ProjectSceneCommandsState::anyTrackInCollapsedState(bool collapsed) const
+{
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = project ? project->viewState() : nullptr;
+    const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
+    if (!viewState || !trackeditProject) {
+        return false;
+    }
+
+    const trackedit::TrackIdList tracks = trackeditProject->trackIdList();
+    return std::any_of(tracks.begin(), tracks.end(), [&viewState, collapsed](const trackedit::TrackId trackId) {
+        return viewState->isTrackCollapsed(trackId).val == collapsed;
+    });
 }
 
 void ProjectSceneCommandsState::updateCommandStates(const std::vector<Command>& commands)
@@ -132,6 +185,19 @@ CommandState ProjectSceneCommandsState::commandState(const Command& command) con
 
     if (command == PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND) {
         return CommandState(true, configuration()->isEffectsPanelVisible());
+    }
+
+    if (command == PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND) {
+        return CommandState(anyTrackInCollapsedState(false), false);
+    }
+
+    if (command == PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND) {
+        return CommandState(anyTrackInCollapsedState(true), false);
+    }
+
+    if (muse::contains(TRACK_HEIGHT_COMMANDS, command)) {
+        const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
+        return CommandState(trackeditProject && !trackeditProject->trackIdList().empty(), false);
     }
 
     return CommandState(true, false);

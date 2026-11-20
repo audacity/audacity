@@ -18,6 +18,7 @@
 #include "internal/projectsceneconfiguration.h"
 #include "internal/projectviewstatecreator.h"
 #include "internal/realtimeeffectpaneltrackselection.h"
+#include "internal/trackheightcontroller.h"
 
 #include "view/common/tracksviewstatemodel.h"
 #include "view/common/trackviewstatemodel.h"
@@ -242,6 +243,7 @@ void ProjectSceneContext::registerExports()
     m_projectSceneActionsController = std::make_shared<ProjectSceneActionsController>(iocContext());
     m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>(iocContext());
     m_uiState = std::make_shared<ProjectSceneUiState>(iocContext());
+    m_trackHeightController = std::make_shared<TrackHeightController>(iocContext());
 
     ioc()->registerExport<IProjectSceneActionsController>(mname, m_projectSceneActionsController);
     ioc()->registerExport<IProjectSceneUiState>(mname, m_uiState);
@@ -269,6 +271,7 @@ void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)
     m_projectSceneActionsController->init();
     m_realtimeEffectPanelTrackSelection->init();
     m_uiState->init();
+    m_trackHeightController->init();
 }
 
 void ProjectSceneContext::onDeinit()
