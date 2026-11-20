@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <optional>
+#include <string>
 #include <vector>
 
 #include "framework/global/modularity/imoduleinterface.h"
@@ -30,6 +32,7 @@ public:
     virtual muse::async::Notification isRunningChanged() const = 0;
 
     virtual size_t currentFileIndex() const = 0;
+    virtual std::optional<std::string> currentFileName() const = 0;
     virtual std::vector<muse::Ret> fileResults() const = 0;
     virtual muse::async::Notification currentFileChanged() const = 0;
 };

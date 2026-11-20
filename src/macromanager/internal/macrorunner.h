@@ -19,6 +19,7 @@
 
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
+#include "macromanager/imacrostephandlersregister.h"
 
 namespace au::macromanager {
 class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::async::Asyncable
@@ -36,6 +37,7 @@ class MacroRunner : public IMacroRunner, public muse::Contextable, public muse::
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
 
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
+    muse::ContextInject<IMacroStepHandlersRegister> stepHandlersRegister{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
@@ -55,6 +57,7 @@ public:
     muse::async::Notification isRunningChanged() const override;
 
     size_t currentFileIndex() const override;
+    std::optional<std::string> currentFileName() const override;
     std::vector<muse::Ret> fileResults() const override;
     muse::async::Notification currentFileChanged() const override;
 
@@ -66,12 +69,13 @@ private:
 
     muse::async::Promise<muse::Ret> runFiles(const Macro& macro, const muse::io::paths_t& files);
     muse::async::Promise<muse::Ret> runFile(const Macro& macro, const muse::io::path_t& file);
-    muse::async::Promise<muse::Ret> runSteps(const std::vector<MacroItem>& items);
-    muse::async::Promise<muse::Ret> runItem(const MacroItem& item);
+    muse::async::Promise<muse::Ret> runSteps(const std::vector<MacroStep>& items);
+    muse::async::Promise<muse::Ret> runItem(const MacroStep& item);
+    muse::async::Promise<muse::Ret> runCommand(const CommandStep& step);
+    muse::async::Promise<muse::Ret> runCustomStep(const CustomStep& step);
     muse::async::Promise<muse::Ret> runMacro(const MacroReference& reference);
     muse::async::Promise<muse::Ret> resetProject();
 
-    muse::rcommand::Params stepParams(const MacroStep& step) const;
     void undoToState(size_t stateIndex);
     void showCompleted(const std::string& macroName);
     void showError(const muse::Ret& ret, const std::string& macroName);

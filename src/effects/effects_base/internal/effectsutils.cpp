@@ -425,6 +425,9 @@ muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
     museMeta.attributes.emplace(EFFECT_DESCRIPTION_ATTRIBUTE, meta.description);
     museMeta.attributes.emplace(EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, meta.paramsAreInputAgnostic ? u"true" : u"false");
     museMeta.attributes.emplace(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, meta.isRealtimeCapable ? u"true" : u"false");
+    if (meta.isInteractive) {
+        museMeta.attributes.emplace(EFFECT_IS_INTERACTIVE_ATTRIBUTE, *meta.isInteractive ? u"true" : u"false");
+    }
     museMeta.attributes.emplace(EFFECT_TYPE_ATTRIBUTE, utils::effectTypeToString(meta.type));
     museMeta.attributes.emplace(EFFECT_VERSION_ATTRIBUTE, meta.version);
     museMeta.attributes.emplace(EFFECT_MODULE_ATTRIBUTE, meta.module);
@@ -508,6 +511,10 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, isLoadable);
     effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, isLoadable);
     effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, isLoadable);
+    const muse::String isInteractive = meta.attributeVal(EFFECT_IS_INTERACTIVE_ATTRIBUTE);
+    if (!isInteractive.empty()) {
+        effectMeta.isInteractive = value<bool>(isInteractive);
+    }
     effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, isLoadable);
     effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, isLoadable);
     effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, isLoadable);

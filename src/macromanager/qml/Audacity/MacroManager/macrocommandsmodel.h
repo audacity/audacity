@@ -15,10 +15,13 @@
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
 #include "framework/rcommand/icommandsregister.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "macromanager/imacrorunner.h"
 #include "macromanager/imacrosrepository.h"
+#include "macromanager/imacrostephandlersregister.h"
 
 #include "macromanager/macromanagertypes.h"
+#include "commanddisplay.h"
 #include "macroactions.h"
 #include "runonfileslauncher.h"
 
@@ -34,8 +37,10 @@ class MacroCommandsModel : public QAbstractListModel, public muse::Contextable, 
 
     muse::GlobalInject<IMacrosRepository> repository;
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
 
     muse::ContextInject<IMacroRunner> runner = { this };
+    muse::ContextInject<IMacroStepHandlersRegister> stepHandlersRegister = { this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher = { this };
     muse::ContextInject<muse::IInteractive> interactive = { this };
 
@@ -76,23 +81,29 @@ private:
         StepRole = Qt::UserRole + 1,
         CodeRole,
         TitleRole,
+        SubtitleRole,
         HasParamsRole,
         IsMacroRole
     };
 
     using OnParams = std::function<void (const muse::rcommand::Params&)>;
+    using OnData = std::function<void (const muse::Val&)>;
 
     bool isRowValid(int row) const;
-    QString titleOf(const muse::rcommand::Command& command) const;
+    CommandDisplay displayOf(const muse::rcommand::Command& command) const;
+    CommandDisplay displayOf(const CustomStep& step) const;
+    QString subtitleOf(const CommandStep& step) const;
     bool hasParams(const muse::rcommand::Command& command) const;
     void notifyStepsChanged(int fromRow, int toRow);
     void syncFromRepository();
-    void insertStep(int row, const MacroItem& item);
+    void insertStep(int row, const MacroStep& item);
     void setStepParams(int row, const muse::rcommand::Params& params);
+    void setStepData(int row, const muse::Val& data);
     void persist();
     void requestParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
     void requestEffectParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
     void requestSchemaParams(const muse::rcommand::Command& command, const muse::rcommand::Params& current, const OnParams& onParams);
+    void requestStepData(const IMacroStepHandler& handler, const muse::Val& current, const OnData& onData);
 
     std::optional<MacroId> m_macroId;
     Macro m_macro;

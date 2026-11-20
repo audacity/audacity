@@ -12,10 +12,12 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/rcommand/icommandsregister.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "macromanager/imacrosrepository.h"
+#include "macromanager/imacrostephandlersregister.h"
 
 namespace au::macromanager {
-class AvailableCommandsModel : public QAbstractListModel, public muse::async::Asyncable
+class AvailableCommandsModel : public QAbstractListModel, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     QML_ELEMENT;
@@ -24,6 +26,9 @@ class AvailableCommandsModel : public QAbstractListModel, public muse::async::As
 
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
     muse::GlobalInject<IMacrosRepository> repository;
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
+
+    muse::ContextInject<IMacroStepHandlersRegister> stepHandlersRegister = { this };
 
 public:
     explicit AvailableCommandsModel(QObject* parent = nullptr);
@@ -45,12 +50,16 @@ private:
     enum Roles {
         CodeRole = Qt::UserRole + 1,
         TitleRole,
+        HighlightedTitleRole,
+        SubtitleRole,
         IsMacroRole
     };
 
     struct Item {
         QString code;
         QString title;
+        QString subtitle;
+        QString highlightedTitle;
         bool isMacro = false;
 
         bool operator==(const Item&) const = default;
@@ -58,8 +67,8 @@ private:
 
     void reload();
     void appendCommands();
+    void appendStepHandlers();
     void appendMacros();
-    bool matchesSearch(const Item& item) const;
 
     std::optional<MacroId> m_editedMacroId;
     QString m_searchText;

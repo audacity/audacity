@@ -8,9 +8,12 @@
 #include "framework/global/modularity/imodulesetup.h"
 
 namespace au::macromanager {
+class MacrosCommandsRegister;
 class MacrosRepository;
 class RunOnFilesRequests;
 class MacroRunner;
+class MacrosCommandsController;
+class MacroStepHandlersRegister;
 class RunOnFilesStarter;
 
 class MacroManagerModule : public muse::modularity::IModuleSetup
@@ -26,6 +29,7 @@ public:
 
 private:
     std::shared_ptr<MacrosRepository> m_repository;
+    std::shared_ptr<MacrosCommandsRegister> m_commandsRegister;
     std::shared_ptr<RunOnFilesRequests> m_runOnFilesRequests;
 };
 
@@ -36,10 +40,13 @@ public:
         : muse::modularity::IContextSetup(ctx) {}
 
     void registerExports() override;
+    void resolveImports() override;
     void onAllInited(const muse::IApplication::RunMode& mode) override;
 
 private:
     std::shared_ptr<MacroRunner> m_runner;
+    std::shared_ptr<MacroStepHandlersRegister> m_stepHandlersRegister;
     std::shared_ptr<RunOnFilesStarter> m_runOnFilesStarter;
+    std::shared_ptr<MacrosCommandsController> m_commandsController;
 };
 }

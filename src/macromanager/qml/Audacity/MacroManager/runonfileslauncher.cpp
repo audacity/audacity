@@ -29,7 +29,7 @@ void RunOnFilesLauncher::launch(const Macro& macro)
     requests()->push(ctx, { macro, files });
 }
 
-io::paths_t RunOnFilesLauncher::selectFiles() const
+io::paths_t RunOnFilesLauncher::selectFiles()
 {
     std::string extensions;
     for (const std::string& ext : importer()->supportedExtensions()) {
@@ -53,5 +53,11 @@ io::paths_t RunOnFilesLauncher::selectFiles() const
         defaultDir = projectConfiguration()->userProjectsPath();
     }
 
-    return interactive()->selectOpeningFilesSync(trc("macromanager", "Select files"), defaultDir, filter);
+    io::paths_t filePaths = interactive()->selectOpeningFilesSync(trc("macromanager", "Select files"), defaultDir, filter);
+
+    if (!filePaths.empty()) {
+        projectConfiguration()->setLastOpenedProjectsPath(io::dirpath(filePaths.front()));
+    }
+
+    return filePaths;
 }
