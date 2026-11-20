@@ -21,13 +21,10 @@ String escapeMnemonics(String text)
 
 CommandInfo macroCommandInfo(const Macro& macro)
 {
-    const String name = String::fromStdString(macro.name);
-
     return CommandInfo {
         makeMacroRunCommand(macro.name),
-        TranslatableString::untranslatable(escapeMnemonics(name)),
-        //: Command description: shown as a tooltip; can be a full sentence. %1 is the macro name
-        TranslatableString("command_description", "Run the macro “%1”").arg(name),
+        TranslatableString::untranslatable(escapeMnemonics(String::fromStdString(macro.name))),
+        TranslatableString(),
         InputSchema(),
         Decoration(),
         Availability::UI
