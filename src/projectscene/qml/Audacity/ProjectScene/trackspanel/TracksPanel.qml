@@ -35,10 +35,23 @@ Item {
         id: tracksViewState
     }
 
+    TracksPanelContextMenuModel {
+        id: panelContextMenuModel
+    }
+
+    ContextMenuLoader {
+        id: panelContextMenuLoader
+
+        onHandleMenuItem: function (itemId) {
+            panelContextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
     Component.onCompleted: {
         tracksViewState.init()
         tracksModel.load()
         effectSectionModel.load()
+        panelContextMenuModel.load()
     }
 
     QtObject {
@@ -50,6 +63,20 @@ Item {
     Rectangle {
         anchors.fill: parent
         color: ui.theme.backgroundSecondaryColor
+    }
+
+    // Under the track list: only right clicks on its empty part, below the tracks, reach it
+    MouseArea {
+        x: contentColumn.x
+        y: contentColumn.y
+        width: contentColumn.width
+        height: contentColumn.height
+
+        acceptedButtons: Qt.RightButton
+
+        onClicked: function (e) {
+            panelContextMenuLoader.show(Qt.point(e.x + x, e.y + y), panelContextMenuModel.items)
+        }
     }
 
     RowLayout {

@@ -37,6 +37,7 @@
 #include "view/trackspanel/realtimeeffectrowactionscontroller.h"
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
+#include "view/trackspanel/trackspanelcontextmenumodel.h"
 #include "view/trackspanel/trackitem.h"
 #include "view/trackspanel/volumepressuremeteritem.h"
 
@@ -175,6 +176,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<RealtimeEffectRowActionsController>("Audacity.ProjectScene", 1, 0, "RealtimeEffectRowActionsController");
     qmlRegisterType<RealtimeEffectSectionModel>("Audacity.ProjectScene", 1, 0, "RealtimeEffectSectionModel");
     qmlRegisterType<TrackContextMenuModel>("Audacity.ProjectScene", 1, 0, "TrackContextMenuModel");
+    qmlRegisterType<TracksPanelContextMenuModel>("Audacity.ProjectScene", 1, 0, "TracksPanelContextMenuModel");
     qmlRegisterType<VolumePressureMeterItem>("Audacity.ProjectScene", 1, 0, "VolumePressureMeterItem");
 
     // clips view
