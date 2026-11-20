@@ -57,6 +57,7 @@ private:
    void UpdateUI();                 // Enable / disable OK / preview.
 
    wxWeakRef<wxWindow> mUIParent {};
+   double mPercentChangeText {};
 
    // controls
    wxTextCtrl* mpTextCtrl_PercentChange;
