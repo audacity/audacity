@@ -13,7 +13,10 @@ module.exports = {
         "command://playback/toggle-loop-region",
         "command://projectscene/toggle-clip-gain-automation",
         "command://projectscene/zoom-in",
-        "command://projectscene/zoom-out"
+        "command://projectscene/zoom-out",
+        "command://projectscene/decrease-all-track-heights",
+        "command://projectscene/increase-all-track-heights",
+        "command://projectscene/fit-v"
     ],
     classicOnly: [
         "command://trackedit/cut",

@@ -190,21 +190,21 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command", "Auto-fit height"),
         TranslatableString("command_description", "Auto-fit height"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::TRACKS_FIT_HEIGHT)
     },
     CommandInfo{
         PROJECTSCENE_DECREASE_ALL_TRACK_HEIGHTS_COMMAND,
         TranslatableString("command", "Decrease all track heights"),
         TranslatableString("command_description", "Decrease all track heights"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::TRACKS_COLLAPSE)
     },
     CommandInfo{
         PROJECTSCENE_INCREASE_ALL_TRACK_HEIGHTS_COMMAND,
         TranslatableString("command", "Increase all track heights"),
         TranslatableString("command_description", "Increase all track heights"),
         InputSchema(),
-        Decoration()
+        Decoration(IconCode::Code::TRACKS_EXPAND)
     },
     CommandInfo{
         PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND,
@@ -213,7 +213,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
             }),
-        Decoration(),
+        Decoration(IconCode::Code::TRACKS_COLLAPSE),
         Availability::Internal | Availability::API
     },
     CommandInfo{
@@ -223,7 +223,7 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema({
                 { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
             }),
-        Decoration(),
+        Decoration(IconCode::Code::TRACKS_EXPAND),
         Availability::Internal | Availability::API
     },
     CommandInfo{
