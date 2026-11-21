@@ -375,6 +375,18 @@ enum : int {
 };
 
 namespace {
+// MPEG1 Audio Layer 3 supports sample rates 32000 to 48000 Hz and bitrates 32 to 320 kbps (excluding 144 kbps).
+// MPEG2 / MPEG2.5 Audio Layer 3 supports sample rates 8000 to 24000 Hz and bitrates 8 to 160 kbps.
+constexpr int MP3_MIN_SAMPLERATE = 8000;
+constexpr int MPEG2_MAX_SAMPLERATE = 24000;
+constexpr int MPEG1_MIN_SAMPLERATE = 32000;
+constexpr int MPEG1_MAX_SAMPLERATE = 48000;
+
+constexpr int MPEG1_MIN_BITRATE = 32;
+constexpr int MPEG2_SPECIFIC_BITRATE = 144;
+constexpr int MPEG2_MAX_BITRATE = 160;
+constexpr int DEFAULT_MP3_BITRATE = 128;
+
 /*: kbps is the bitrate of the MP3 file, kilobits per second*/
 inline TranslatableString n_kbps(int n) { return TranslatableString("import-export", "%1 kbps").arg(n); }
 }
@@ -608,25 +620,25 @@ bool MP3ExportOptionsEditor::GetValue(int id, ExportValue& value) const
 MP3ExportOptionsEditor::SampleRateList MP3ExportOptionsEditor::GetSampleRateList() const
 {
     // Retrieve preferences
-    int highrate = 48000;
-    int lowrate = 8000;
+    int highrate = MPEG1_MAX_SAMPLERATE;
+    int lowrate = MP3_MIN_SAMPLERATE;
 
     const auto rmode = *std::get_if<std::string>(&mValues.find(MP3OptionIDMode)->second);
 
     if (rmode == "ABR") {
         auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityABR)->second);
-        if (bitrate > 160) {
-            lowrate = 32000;
-        } else if (bitrate < 32 || bitrate == 144) {
-            highrate = 24000;
+        if (bitrate > MPEG2_MAX_BITRATE) {
+            lowrate = MPEG1_MIN_SAMPLERATE;
+        } else if (bitrate < MPEG1_MIN_BITRATE || bitrate == MPEG2_SPECIFIC_BITRATE) {
+            highrate = MPEG2_MAX_SAMPLERATE;
         }
     } else if (rmode == "CBR") {
         auto bitrate = *std::get_if<int>(&mValues.find(MP3OptionIDQualityCBR)->second);
 
-        if (bitrate > 160) {
-            lowrate = 32000;
-        } else if (bitrate < 32 || bitrate == 144) {
-            highrate = 24000;
+        if (bitrate > MPEG2_MAX_BITRATE) {
+            lowrate = MPEG1_MIN_SAMPLERATE;
+        } else if (bitrate < MPEG1_MIN_BITRATE || bitrate == MPEG2_SPECIFIC_BITRATE) {
+            highrate = MPEG2_MAX_SAMPLERATE;
         }
     }
 
@@ -745,7 +757,7 @@ MP3Exporter::MP3Exporter()
     }
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
-    mBitrate = 128;
+    mBitrate = DEFAULT_MP3_BITRATE;
     mQuality = QUALITY_2;
     mMode = MODE_CBR;
     //mRoutine = ROUTINE_FAST;
@@ -1641,8 +1653,8 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
     // Retrieve preferences
-    int highrate = 48000;
-    int lowrate = 8000;
+    int highrate = MPEG1_MAX_SAMPLERATE;
+    int lowrate = MP3_MIN_SAMPLERATE;
     int bitrate = 0;
     int quality;
 
@@ -1669,23 +1681,26 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
         bitrate = ExportPluginHelpers::GetParameterValue(
             parameters,
             MP3OptionIDQualityABR,
-            128);
+            DEFAULT_MP3_BITRATE);
         exporter.SetMode(MODE_ABR);
         exporter.SetBitrate(bitrate);
-        if (bitrate > 160) {
-            lowrate = 32000;
-        } else if (bitrate < 32 || bitrate == 144) {
-            highrate = 24000;
+        if (bitrate > MPEG2_MAX_BITRATE) {
+            lowrate = MPEG1_MIN_SAMPLERATE;
+        } else if (bitrate < MPEG1_MIN_BITRATE || bitrate == MPEG2_SPECIFIC_BITRATE) {
+            highrate = MPEG2_MAX_SAMPLERATE;
         }
     } else {
-        bitrate = ExportPluginHelpers::GetParameterValue(parameters, MP3OptionIDQualityCBR, 128);
+        bitrate = ExportPluginHelpers::GetParameterValue(
+            parameters,
+            MP3OptionIDQualityCBR,
+            DEFAULT_MP3_BITRATE);
         exporter.SetMode(MODE_CBR);
         exporter.SetBitrate(bitrate);
 
-        if (bitrate > 160) {
-            lowrate = 32000;
-        } else if (bitrate < 32 || bitrate == 144) {
-            highrate = 24000;
+        if (bitrate > MPEG2_MAX_BITRATE) {
+            lowrate = MPEG1_MIN_SAMPLERATE;
+        } else if (bitrate < MPEG1_MIN_BITRATE || bitrate == MPEG2_SPECIFIC_BITRATE) {
+            highrate = MPEG2_MAX_SAMPLERATE;
         }
     }
 
