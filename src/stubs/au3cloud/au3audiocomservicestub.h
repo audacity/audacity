@@ -23,8 +23,7 @@ public:
     void clearAudioListCache() override;
     muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const override;
 
-    muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                  std::function<bool()> projectSaveCallback = nullptr,
+    muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name, LocalState localState,
                                                   UploadMode uploadMode = UploadMode::NormalUpdate) override;
     muse::RetVal<muse::ProgressPtr> updateAudioPreview(au::project::IAudacityProjectPtr project) override;
     muse::RetVal<muse::ProgressPtr> shareAudio(const std::string& title) override;

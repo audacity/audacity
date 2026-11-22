@@ -601,20 +601,30 @@ muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& c
                                                                     au::project::AUP4);
     }
 
-    auto [uploadRet, progress] = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
-        return doSaveProjectLocally(projectFilePath, SaveMode::Save);
-    }, toUploadMode(cloudSaveMode));
-
-    if (!uploadRet) {
-        handleCloudSaveError(uploadRet);
-        return uploadRet;
+    const bool localChanged = project->needSave().val || project->path() != projectFilePath;
+    if (localChanged && !doSaveProjectLocally(projectFilePath, SaveMode::Save)) {
+        const Ret ret = au3cloud::make_ret(au3cloud::Err::ProjectNotSaved);
+        handleCloudSaveError(ret);
+        return ret;
     }
 
-    if (!progress) {
+    auto [uploadRet, progress] = audioComService()->uploadProject(project, cloudInfo.name.toStdString(),
+                                                                  localChanged ? au3cloud::LocalState::AheadOfCloud
+                                                                  : au3cloud::LocalState::Unchanged,
+                                                                  toUploadMode(cloudSaveMode));
+
+    const bool nothingToUpload = uploadRet.code() == static_cast<int>(au3cloud::Err::ProjectUpToDate)
+                                 || uploadRet.code() == static_cast<int>(au3cloud::Err::SyncAlreadyInProgress);
+    if (nothingToUpload) {
         if (onSuccess) {
             onSuccess();
         }
         return make_ok();
+    }
+
+    if (!uploadRet) {
+        handleCloudSaveError(uploadRet);
+        return uploadRet;
     }
 
     progress->finished().onReceive(this, [this, projectFilePath, onSuccess](const ProgressResult& result) {

@@ -166,6 +166,18 @@ bool ProjectCloudExtension::ResumeSync(const std::string& name)
     return true;
 }
 
+void ProjectCloudExtension::CancelSync()
+{
+    mQueue->Pause();
+}
+
+bool ProjectCloudExtension::IsSyncing() const
+{
+    auto lock = std::lock_guard { mStatusMutex };
+
+    return mLastStatus.Status == ProjectSyncStatus::Syncing;
+}
+
 void ProjectCloudExtension::OnSyncStarted()
 {
     auto element = std::make_shared<UploadQueueElement>();
@@ -411,35 +423,6 @@ void ProjectCloudExtension::OnSyncCompleted(
               ProjectSyncStatus::Local },
             false);
     }
-}
-
-void ProjectCloudExtension::CancelSync()
-{
-    std::vector<std::shared_ptr<UploadQueueElement> > queue;
-
-    {
-        auto lock = std::lock_guard { mUploadQueueMutex };
-        std::swap(queue, mUploadQueue);
-    }
-
-    if (queue.empty()) {
-        return;
-    }
-
-    for (auto& item : queue) {
-        if (!item->Operation) {
-            continue;
-        }
-
-        item->Operation->Cancel();
-    }
-}
-
-bool ProjectCloudExtension::IsSyncing() const
-{
-    auto lock = std::lock_guard { mStatusMutex };
-
-    return mLastStatus.Status == ProjectSyncStatus::Syncing;
 }
 
 std::string ProjectCloudExtension::GetCloudProjectId() const
