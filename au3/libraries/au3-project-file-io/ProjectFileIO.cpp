@@ -1991,6 +1991,65 @@ bool ProjectFileIO::AutoSaveDelete(sqlite3* db /* = nullptr */)
     return true;
 }
 
+bool ProjectFileIO::ReadDoc(const char* table,
+                            std::vector<uint8_t>& dict,
+                            std::vector<uint8_t>& doc,
+                            const char* schema /* = "main" */)
+{
+    auto db = DB();
+    std::lock_guard<std::mutex> lock(CurrConn()->TransactionMutex());
+
+    char sql[256];
+    sqlite3_snprintf(
+        sizeof(sql), sql,
+        "SELECT dict, doc FROM %s.%s WHERE id = 1;",
+        schema, table);
+
+    sqlite3_stmt* stmt = nullptr;
+    auto cleanup = finally([&]
+    {
+        if (stmt) {
+            sqlite3_finalize(stmt);
+        }
+    });
+
+    int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr);
+    if (rc != SQLITE_OK) {
+        ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
+        ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+        ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectFileIO::ReadDoc::prepare");
+
+        SetDBError(
+            //: %1 is the SQL command that could not be prepared
+            TranslatableString("project-file-io", "Unable to prepare project file command:\n\n%1").arg(sql)
+            );
+        return false;
+    }
+
+    rc = sqlite3_step(stmt);
+    if (rc != SQLITE_ROW) {
+        ADD_EXCEPTION_CONTEXT("sqlite3.query", sql);
+        ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
+        ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectFileIO::ReadDoc::step");
+
+        SetDBError(
+            //: %1 is the SQL command that failed
+            TranslatableString("project-file-io", "Failed to read the project file.\nThe following command failed:\n\n%1").Format(sql));
+        return false;
+    }
+
+    const auto readBlob = [stmt](int column, std::vector<uint8_t>& out) {
+        const auto* bytes = static_cast<const uint8_t*>(sqlite3_column_blob(stmt, column));
+        const int size = sqlite3_column_bytes(stmt, column);
+        out.assign(bytes, bytes + std::max(size, 0));
+    };
+
+    readBlob(0, dict);
+    readBlob(1, doc);
+
+    return true;
+}
+
 bool ProjectFileIO::WriteDoc(const char* table,
                              const ProjectSerializer& autosave,
                              const char* schema /* = "main" */)
