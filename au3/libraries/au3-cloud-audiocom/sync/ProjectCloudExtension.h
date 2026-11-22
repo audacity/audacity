@@ -35,6 +35,7 @@ enum class AudiocomTrace;
 
 namespace audacity::cloud::audiocom::sync {
 class ProjectUploadOperation;
+class SnapshotUploadQueue;
 
 enum class ProjectSyncStatus
 {
@@ -118,6 +119,8 @@ public:
     void SetFirstSyncDialogShown(bool shown = true);
 
 private:
+    friend class SnapshotUploadQueue;
+
     struct UploadQueueElement;
     struct CloudStatusChangedNotifier;
 

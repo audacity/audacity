@@ -48,6 +48,8 @@ set( SOURCES
    sync/ResumedSnaphotUploadOperation.h
    sync/SnapshotReconcile.cpp
    sync/SnapshotReconcile.h
+   sync/SnapshotUploadQueue.cpp
+   sync/SnapshotUploadQueue.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )
