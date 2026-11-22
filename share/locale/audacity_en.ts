@@ -358,6 +358,7 @@ This action will not delete any of your projects.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
+        <extracomment>%1 is the project title, %2 is the modified marker (&quot;*&quot;) shown when there are unsaved changes, %3 is the app name</extracomment>
         <translation>%1 %2 - %3</translation>
     </message>
     <message>
@@ -760,17 +761,17 @@ After recovery, save the projects to ensure changes are written to disk.</transl
 <context>
     <name>appshell/dock</name>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="65"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
         <source>Close</source>
         <translation>Close</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="120"/>
         <source>Dock</source>
         <translation>Dock</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="121"/>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="120"/>
         <source>Undock</source>
         <translation>Undock</translation>
     </message>
@@ -1852,7 +1853,7 @@ After recovery, save the projects to ensure changes are written to disk.</transl
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="727"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="746"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
@@ -2175,8 +2176,8 @@ After recovery, save the projects to ensure changes are written to disk.</transl
         <translation>Audacity Audio</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1512"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1547"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1513"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1548"/>
         <source>Out of memory!</source>
         <translation>Out of memory!</translation>
     </message>
@@ -3885,12 +3886,6 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation type="unfinished">Move realtime effect down</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="21"/>
-        <source>Record on current track</source>
-        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished">Record on current track</translation>
-    </message>
-    <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="30"/>
         <source>Record on new track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
@@ -3928,14 +3923,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="66"/>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="39"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="50"/>
         <source>Pause</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Pause</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="75"/>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="48"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="59"/>
         <source>Stop</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Stop</translation>
@@ -4109,43 +4104,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation type="unfinished">Time signature</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="57"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="21"/>
+        <source>Record</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished">Record</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="40"/>
+        <source>Record (second choice)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short. Records the other way than Record: on a new track, or on the current track when &quot;Record on a new track&quot; is turned on</extracomment>
+        <translation type="unfinished">Record (second choice)</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="68"/>
         <source>Record level</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Record level</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="67"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="78"/>
         <source>Show mic metering</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Show mic metering</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="76"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="87"/>
         <source>Turn on input monitoring</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Turn on input monitoring</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="85"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
         <source>Lead-in Recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Lead-in Recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="105"/>
         <source>Timed recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Timed recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Turn on sound activated recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="113"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="124"/>
         <source>Set sound activation level…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation type="unfinished">Set sound activation level…</translation>
@@ -5289,12 +5296,6 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation type="unfinished">Move realtime effect down</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="23"/>
-        <source>Record on current track</source>
-        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished">Record on current track</translation>
-    </message>
-    <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="32"/>
         <source>Record on new track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
@@ -5332,7 +5333,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="68"/>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="41"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="52"/>
         <source>Pause</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Pause</translation>
@@ -5512,49 +5513,61 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation type="unfinished">Set playback time signature</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="50"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="23"/>
+        <source>Record</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Record</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="42"/>
+        <source>Record on a new track, or on the current track when “Record on a new track” is turned on in Preferences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished">Record on a new track, or on the current track when “Record on a new track” is turned on in Preferences</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="61"/>
         <source>Stop record</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Stop record</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="59"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="70"/>
         <source>Set record level</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Set record level</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="69"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="80"/>
         <source>Show mic metering</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Show mic metering</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="78"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="89"/>
         <source>Turn on input monitoring</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Turn on input monitoring</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="87"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="98"/>
         <source>Start lead-in recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Start lead-in recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="107"/>
         <source>Set up a timed recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Set up a timed recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="106"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="117"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Turn on sound activated recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="126"/>
         <source>Set sound activation level</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation type="unfinished">Set sound activation level</translation>
@@ -6193,19 +6206,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
 <context>
     <name>diagnostics</name>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="43"/>
         <source>Save diagnostic files?</source>
         <translation>Save diagnostic files?</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="44"/>
         <source>This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
         <translation type="unfinished">This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="36"/>
-        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="54"/>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="71"/>
         <source>Save diagnostic files</source>
         <translation>Save diagnostic files</translation>
     </message>
@@ -7559,6 +7572,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="160"/>
         <source>Analyzing second track of stereo pair: %1</source>
+        <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>Analyzing second track of stereo pair: %1</translation>
     </message>
     <message>
@@ -7570,6 +7584,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="176"/>
         <source>Processing stereo channels independently: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>Processing stereo channels independently: %1</translation>
     </message>
     <message>
@@ -7581,6 +7596,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="206"/>
         <source>Processing second track of stereo pair: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>Processing second track of stereo pair: %1</translation>
     </message>
 </context>
@@ -12285,6 +12301,11 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <source>Unpacking %1…</source>
         <translation>Unpacking %1…</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
+        <source>percent</source>
+        <translation type="unfinished">percent</translation>
+    </message>
 </context>
 <context>
     <name>global/noteName</name>
@@ -14165,7 +14186,9 @@ You can configure it at Preferences &gt; General.</translation>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1455"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="676"/>
         <source>Exporting the audio as %1</source>
-        <extracomment>%1 is format description</extracomment>
+        <extracomment>%1 is format description
+----------
+%1 is a format description</extracomment>
         <translation>Exporting the audio as %1</translation>
     </message>
     <message>
@@ -16150,6 +16173,19 @@ It will not be loaded.</translation>
         <translation>Failed to register:
 %1</translation>
     </message>
+    <message numerus="yes">
+        <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="471"/>
+        <source>Enable this plug-in?
+</source>
+        <comment>plug-ins</comment>
+        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
+        <translation type="unfinished">
+            <numerusform>Enable this plug-in?
+</numerusform>
+            <numerusform>Enable this plug-in?
+</numerusform>
+        </translation>
+    </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="479"/>
         <source>Enable new plug-ins</source>
@@ -17280,11 +17316,27 @@ It will not be loaded.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="27"/>
+        <source>Hear other tracks while recording (overdub)</source>
+        <translation type="unfinished">Hear other tracks while recording (overdub)</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="45"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
         <translation>Turn on input monitoring (hear yourself while recording)</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="45"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="63"/>
+        <source>Record on a new track</source>
+        <translation type="unfinished">Record on a new track</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="82"/>
+        <source>Detect dropouts</source>
+        <extracomment>A dropout is a loss of a short sequence of audio sample data from the recording</extracomment>
+        <translation type="unfinished">Detect dropouts</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="100"/>
         <source>Show mic metering when not recording</source>
         <translation>Show mic metering when not recording</translation>
     </message>
@@ -19994,28 +20046,55 @@ Please try again and select an original name.</translation>
         <translation>Show mic metering when not recording</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="984"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="1003"/>
+        <source>Dropouts</source>
+        <extracomment>Name of the label track marking where recorded audio was lost. Keep it short, about 11 Latin characters at most. A dropout is a loss of a short sequence of audio sample data from the recording</extracomment>
+        <translation type="unfinished">Dropouts</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="1019"/>
+        <source>Turn off dropout detection</source>
+        <translation type="unfinished">Turn off dropout detection</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="1023"/>
+        <source>Recorded audio was lost at the labeled locations. Possible causes:
+
+• Other applications are competing with Audacity for processor time
+• You are saving directly to a slow external storage device</source>
+        <translation type="unfinished">Recorded audio was lost at the labeled locations. Possible causes:
+
+• Other applications are competing with Audacity for processor time
+• You are saving directly to a slow external storage device</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="1027"/>
+        <source>Recorded audio was lost</source>
+        <translation type="unfinished">Recorded audio was lost</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="1039"/>
         <source>Record</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Record</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="982"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="1037"/>
         <source>Recorded audio</source>
         <translation>Recorded audio</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="114"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="147"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="167"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="183"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="199"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="125"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="158"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="178"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="194"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="210"/>
         <source>Recording error</source>
         <extracomment>Title of an error dialog</extracomment>
         <translation>Recording error</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="223"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="234"/>
         <source>Lead-in Recording error</source>
         <translation>Lead-in Recording error</translation>
     </message>
@@ -21774,10 +21853,12 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="119"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="119"/>
         <source>Reset Clip Pitch</source>
         <translation>Reset Clip Pitch</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="128"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="128"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <source>Changed Speed</source>
@@ -21785,10 +21866,12 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="137"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="137"/>
         <source>Reset Clip Speed</source>
         <translation>Reset Clip Speed</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="175"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="175"/>
         <source>Changed track color</source>
         <translation>Changed track color</translation>
@@ -21911,6 +21994,7 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="533"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="533"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Split</translation>
@@ -21929,6 +22013,8 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="560"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="560"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="569"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="569"/>
         <source>Split into new track</source>
         <translation>Split into new track</translation>
@@ -22041,31 +22127,38 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Delete track</source>
         <translation>Delete track</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="817"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="817"/>
         <source>Duplicate track</source>
         <translation>Duplicate track</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="826"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="826"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="833"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="833"/>
         <source>Move track</source>
         <translation>Move track</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="880"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="880"/>
         <source>Insert silence</source>
         <translation>Insert silence</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
         <source>Changed track format</source>
         <translation>Changed track format</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="903"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="903"/>
         <source>Changed track rate</source>
         <translation>Changed track rate</translation>
@@ -22089,6 +22182,7 @@ Do you wish to continue?</translation>
         <translation>Split stereo tracks to center mono</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="942"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="942"/>
         <source>Make stereo track</source>
         <translation>Make stereo track</translation>
@@ -22234,10 +22328,12 @@ Do you wish to continue?</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1317"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1317"/>
         <source>Items grouped</source>
         <translation type="unfinished">Items grouped</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1326"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1326"/>
         <source>Items ungrouped</source>
         <translation type="unfinished">Items ungrouped</translation>
@@ -22679,6 +22775,21 @@ Do you wish to continue?</translation>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
         <translation>collapsed</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
+        <source>Red</source>
+        <translation type="unfinished">Red</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
+        <source>Green</source>
+        <translation type="unfinished">Green</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
+        <source>Blue</source>
+        <translation type="unfinished">Blue</translation>
     </message>
 </context>
 <context>
