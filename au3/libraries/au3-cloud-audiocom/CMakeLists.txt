@@ -46,6 +46,8 @@ set( SOURCES
    sync/RemoteProjectSnapshot.h
    sync/ResumedSnaphotUploadOperation.cpp
    sync/ResumedSnaphotUploadOperation.h
+   sync/SnapshotReconcile.cpp
+   sync/SnapshotReconcile.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )
