@@ -36,2066 +36,81 @@
 <context>
     <name>action</name>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
-        <source>Exit</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Avsluta</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="55"/>
-        <source>Restart</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Starta om</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="61"/>
-        <source>&amp;Full screen</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Helskärm</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="238"/>
-        <source>Shift+&amp;Enter</source>
-        <translation>Shift+&amp;Enter</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="239"/>
-        <source>Trigger the focused control or make a range selection of track items</source>
-        <translation>Aktivera den fokuserade kontrollen eller gör ett intervallval av spårobjekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="245"/>
-        <source>Open item context menu</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Öppna objektets snabbmeny</translation>
-    </message>
-    <message>
-        <source>Full screen</source>
-        <translation type="vanished">Helskärm</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
-        <source>About &amp;Qt…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Om Qt…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
-        <source>Online &amp;handbook</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Handbok online</translation>
-    </message>
-    <message>
-        <source>Open online handbook</source>
-        <translation type="vanished">Öppna handbok online</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="90"/>
-        <source>As&amp;k for help</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Be om hjälp</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="96"/>
-        <source>Revert to &amp;factory settings</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Återgå till fabriksinställningarna</translation>
-    </message>
-    <message>
-        <source>Revert to factory settings</source>
-        <translation type="vanished">Återgå till fabriksinställningarna</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="106"/>
-        <source>Restore the &amp;default layout</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Återställ standardlayouten</translation>
-    </message>
-    <message>
-        <source>Restore the default layout</source>
-        <translation type="vanished">Återställ standardlayouten</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
-        <source>&amp;Playback controls</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Uppspelningskontroller</translation>
-    </message>
-    <message>
-        <source>Show/hide playback controls</source>
-        <translation type="vanished">Visa/dölj uppspelningskontroller</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
-        <source>&amp;Tracks</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Spår</translation>
-    </message>
-    <message>
-        <source>Show/hide tracks</source>
-        <translation type="vanished">Visa/dölj spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="70"/>
-        <source>&amp;About Audacity…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Om Audacity…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="136"/>
-        <source>&amp;Status bar</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Statusfält</translation>
-    </message>
-    <message>
-        <source>Show/hide status bar</source>
-        <translation type="vanished">Visa/dölj statusfältet</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
-        <source>&amp;Preferences</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Inställningar</translation>
-    </message>
-    <message>
-        <source>Preferences…</source>
-        <translation type="vanished">Inställningar…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="33"/>
-        <source>Copy</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kopiera</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="42"/>
-        <source>Cut</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klipp ut</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="175"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="336"/>
-        <source>&amp;Paste</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>K&amp;listra in</translation>
-    </message>
-    <message>
-        <source>Paste</source>
-        <translation type="vanished">Klistra in</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="185"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="51"/>
-        <source>&amp;Undo</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Ångra</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="187"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="58"/>
         <source>Undo</source>
         <translation>Ångra</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="195"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
-        <source>&amp;Redo</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Gör om</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="202"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="193"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="66"/>
         <source>Redo</source>
         <translation>Gör om</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="205"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="69"/>
-        <source>De&amp;lete</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ra&amp;dera</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="210"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="217"/>
-        <source>Delete</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Radera</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="214"/>
-        <source>&amp;Cancel</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Avbryt</translation>
-    </message>
-    <message>
-        <source>Cancel</source>
-        <translation type="vanished">Avbryt</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="223"/>
-        <source>&amp;Trigger</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Aktivera</translation>
-    </message>
-    <message>
-        <source>Trigger</source>
-        <translation type="vanished">Aktivera</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="231"/>
-        <source>&amp;Enter</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Retur</translation>
-    </message>
-    <message>
-        <source>Trigger the focused control or select the focused track item</source>
-        <translation type="vanished">Aktivera den fokuserade kontrollen eller välj objektet för det fokuserade spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="197"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="188"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
         <translation>Ångra &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="203"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="194"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
         <translation>Gör om &apos;%1&apos;</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="294"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
+        <source>Repeat %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
         <source>Silence audio</source>
         <translation>Tysta ljudet</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
-        <source>View project on audio.com</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Se projektet på audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="24"/>
-        <source>View on audio.com</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa på audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="27"/>
-        <source>Repeat last effect</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Upprepa senaste effekten</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="33"/>
-        <source>Remove realtime effect</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ta bort realtidseffekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="41"/>
-        <source>&amp;Apply preset</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Använd förinställning</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="47"/>
-        <source>Save preset as…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spara förinställning som…</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="53"/>
-        <source>&amp;Save preset</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Spara förinställning</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="59"/>
-        <source>&amp;Delete preset</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Ta bort förinställning</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="66"/>
-        <source>&amp;Import…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Import…</translation>
-    </message>
-    <message>
-        <source>Import preset</source>
-        <translation type="vanished">Importera förinställning</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="74"/>
-        <source>&amp;Export…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Export…</translation>
-    </message>
-    <message>
-        <source>Export preset</source>
-        <translation type="vanished">Exportera förinställning</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="40"/>
-        <source>Play/Pause</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spela upp/pausa</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
-        <source>Play/Stop</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spela upp/stoppa</translation>
-    </message>
-    <message>
-        <source>Play/Pause from cursor</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="vanished">Spela upp/pausa från markören</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="65"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="66"/>
-        <source>Play selection</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spela upp markeringen</translation>
-    </message>
-    <message>
-        <source>Play the selected time range</source>
-        <translation type="vanished">Spela upp det markerade tidsintervallet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="73"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="39"/>
-        <source>Pause</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Pausa</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="82"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="48"/>
-        <source>Stop</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Stoppa</translation>
-    </message>
-    <message>
-        <source>Stop playback</source>
-        <translation type="vanished">Stoppa uppspelningen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="91"/>
-        <source>Rewind to start</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hoppa till början</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="100"/>
-        <source>Rewind to end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hoppa till slutet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="109"/>
-        <source>Loop playback</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Loopad uppspelning</translation>
-    </message>
-    <message>
-        <source>Toggle ‘Loop playback’</source>
-        <translation type="vanished">Växla ”loopad uppspelning”</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
-        <source>Audio setup</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ljudkonfiguration</translation>
-    </message>
-    <message>
-        <source>Open audio setup context menu</source>
-        <translation type="vanished">Öppna snabbmenyn för ljudkonfiguration</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="128"/>
-        <source>Get effects</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hämta effekter</translation>
-    </message>
-    <message>
-        <source>Open Get effects dialog</source>
-        <translation type="vanished">Öppna dialogrutan Hämta effekter</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="137"/>
-        <source>Audio settings</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ljudinställningar</translation>
-    </message>
-    <message>
-        <source>Open audio setup dialog</source>
-        <translation type="vanished">Öppna dialogrutan Ljudinställningar</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="145"/>
-        <source>Rescan audio devices</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Återskanna ljudenheter</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="153"/>
-        <source>Metronome</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Metronom</translation>
-    </message>
-    <message>
-        <source>Toggle metronome playback</source>
-        <translation type="vanished">Växla metronomuppspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="163"/>
-        <source>Timecode</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tidskod</translation>
-    </message>
-    <message>
-        <source>Set playback time</source>
-        <translation type="vanished">Ställ in uppspelningstid</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="172"/>
-        <source>Tempo</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tempo</translation>
-    </message>
-    <message>
-        <source>Set playback tempo</source>
-        <translation type="vanished">Ställ in uppspelningstempo</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
-        <source>Time signature</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Taktart</translation>
-    </message>
-    <message>
-        <source>Set playback time signature</source>
-        <translation type="vanished">Ställ in uppspelningstaktart</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="190"/>
-        <source>Playback level</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Uppspelningsnivå</translation>
-    </message>
-    <message>
-        <source>Set playback level</source>
-        <translation type="vanished">Ställ in uppspelningsnivå</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="58"/>
-        <source>Play/Stop and set cursor</source>
-        <translation>Spela upp/stoppa och sätt markören</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
-        <source>Change audio host</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Byt ljudvärd</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="208"/>
-        <source>Change playback device</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Byt uppspelningsenhet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
-        <source>Change recording device</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Byt inspelningsenhet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="226"/>
-        <source>Change input channels</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ändra ingångskanaler</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="235"/>
-        <source>Toggle loop region</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Växla loopområde</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="244"/>
-        <source>Clear loop region</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Rensa loopområde</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="252"/>
-        <source>Set loop region to selection</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ställ in loopområdet efter markeringen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="260"/>
-        <source>Set selection to loop</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ställ in markeringen efter loopen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="268"/>
-        <source>Set loop region in out</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ställ in loopområdets början och slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="276"/>
-        <source>Creating a loop also selects audio</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>När en loop skapas markeras även ljudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="284"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="285"/>
-        <source>Mute/unmute focused track</source>
-        <translation>Tysta/avtysta fokuserat spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="291"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="292"/>
-        <source>Solo/unsolo focused track</source>
-        <translation>Solo/avsolo fokuserat spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="298"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="299"/>
-        <source>Mute all tracks</source>
-        <translation>Tysta alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="305"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="306"/>
-        <source>Unmute all tracks</source>
-        <translation>Avtysta alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="312"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="313"/>
-        <source>Mute selected tracks</source>
-        <translation>Tysta markerade spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="319"/>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="320"/>
-        <source>Unmute selected tracks</source>
-        <translation>Avtysta markerade spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="330"/>
-        <source>Play repeats</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Upprepa uppspelningen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="340"/>
-        <source>Pan automatically</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Panorera automatiskt</translation>
-    </message>
-    <message>
-        <source>Pan automatically during playback</source>
-        <translation type="vanished">Panorera automatiskt under uppspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
-        <source>&amp;New…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Ny…</translation>
-    </message>
-    <message>
-        <source>New…</source>
-        <translation type="vanished">Ny…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
-        <source>&amp;Open…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Öppna…</translation>
-    </message>
-    <message>
-        <source>Open…</source>
-        <translation type="vanished">Öppna…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="61"/>
-        <source>Open recent</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Öppna senaste</translation>
-    </message>
-    <message>
-        <source>Open recent project</source>
-        <translation type="vanished">Öppna senaste projekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="69"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="77"/>
-        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="33"/>
+        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="57"/>
         <source>Open</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Öppna</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
-        <source>&amp;Clear recent files</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Rensa de senaste filerna</translation>
-    </message>
-    <message>
-        <source>Clear recent files</source>
-        <translation type="vanished">Rensa de senaste filerna</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
-        <source>Save &amp;as…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Spara som…</translation>
-    </message>
-    <message>
-        <source>Save as…</source>
-        <translation type="vanished">Spara som…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="125"/>
-        <source>&amp;Export labels</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Exportera &amp;etiketter</translation>
-    </message>
-    <message>
-        <source>Export labels</source>
-        <translation type="vanished">Exportera etiketter</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
-        <source>&amp;Export MIDI</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Exportera MIDI</translation>
-    </message>
-    <message>
-        <source>Export MIDI</source>
-        <translation type="vanished">Exportera MIDI</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
-        <source>&amp;Close project</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Stäng projekt</translation>
-    </message>
-    <message>
-        <source>Close project</source>
-        <translation type="vanished">Stäng projekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="192"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
-        <source>Duplicate</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Duplicera</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
-        <source>Insert</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Infoga</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="167"/>
-        <source>Trim clip</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Beskär klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
-        <source>Split into new track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dela upp till nytt spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
-        <source>Paste new label</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klistra in ny etikett</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="648"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="569"/>
         <source>Manage labels</source>
         <translation>Hantera etiketter</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="296"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
         <source>Metadata editor</source>
         <translation>Metadataredigerare</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="192"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
-        <source>Select all</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Markera allt</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
-        <source>Select all tracks</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Markera alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
-        <source>Left of playback position</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Till vänster om uppspelningsposition</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="216"/>
-        <source>Right of playback position</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Höger om uppspelningsposition</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="224"/>
-        <source>Track start to cursor</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Från spårets början till markören</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
-        <source>Cursor to track end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Från markören till spårets slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
-        <source>Track start to end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spårets början till slutet</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="248"/>
-        <source>Previous clip boundary to cursor</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Från föregående klippgräns till markören</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
-        <source>Cursor to next clip boundary</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Från markören till nästa klippgräns</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
-        <source>Previous clip</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Föregående klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
-        <source>Next clip</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nästa klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
-        <source>Toggle spectral selection</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Aktivera/inaktivera spektrumsmarkering</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="288"/>
-        <source>Move cursor to closest zero crossing</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta markören till närmaste nollkorsning</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="41"/>
-        <source>Zoom in</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Zooma in</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
-        <source>Zoom out</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Zooma ut</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="59"/>
-        <source>Zoom default</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Standardzoom</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="67"/>
-        <source>Zoom to selection</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Zooma till markering</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="85"/>
-        <source>Zoom toggle</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Växla zoom</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
-        <source>Collapse all tracks</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Minimera alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="306"/>
-        <source>Expand all tracks</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Expandera alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
-        <source>Skip to selection start</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hoppa till markeringens början</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="322"/>
-        <source>Skip to selection end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hoppa till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
-        <source>Show metadata editor</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa metadataredigerare</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="347"/>
-        <source>Show history</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa historik</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="93"/>
-        <source>Record on current track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spela in på aktuellt spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="101"/>
-        <source>Record on new track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spela in på nytt spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="358"/>
-        <source>Set up timed recording</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ställ in tidsinställd inspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
-        <source>Enable sound activating recording</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Aktivera ljudaktiverande inspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="374"/>
-        <source>Set sound activation level</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ställ in ljudaktiveringsnivå</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
-        <source>Remove tracks</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ta bort spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
-        <source>Mix-down to…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Mixa ned till…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="408"/>
-        <source>Align end to end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Justera kant i kant</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
-        <source>Align together</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Justera tillsammans</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
-        <source>Align start to zero</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Justera början till noll</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
-        <source>Align start to playhead</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Justera början till spelhuvudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="440"/>
-        <source>Align start to selection end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Justera början till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
-        <source>Align end to playhead</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Justera slutet till spelhuvudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="456"/>
-        <source>Align end to selection end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Justera slutet till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
-        <source>Sort by time</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sortera efter tid</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
-        <source>Sort by name</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sortera efter namn</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
-        <source>Plugin manager</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Insticksmodulhanterare</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
-        <source>Fav effect #1</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Favoriteffekt #1</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="515"/>
-        <source>Fav effect #2</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Favoriteffekt #2</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
-        <source>Fav effect #3</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Favoriteffekt #3</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="93"/>
-        <source>Import…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Importera…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="46"/>
+        <location filename="../../src/project/view/cloudprojectcontextmenumodel.cpp" line="20"/>
+        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="23"/>
         <source>Show in Finder</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Visa i Finder</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="51"/>
+        <location filename="../../src/project/view/cloudprojectcontextmenumodel.cpp" line="22"/>
+        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="25"/>
         <source>Show in Explorer</source>
         <translation>Visa i Explorer</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
+        <location filename="../../src/project/view/cloudprojectcontextmenumodel.cpp" line="24"/>
+        <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="27"/>
         <source>Show in File Manager</source>
         <translation>Visa i filhanteraren</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="101"/>
-        <source>&amp;Save</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Spara</translation>
-    </message>
-    <message>
-        <source>Save</source>
-        <translation type="vanished">Spara</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
-        <source>&amp;Export audio…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Exportera ljud…</translation>
-    </message>
-    <message>
-        <source>Export audio…</source>
-        <translation type="vanished">Exportera ljud…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
-        <source>Show effects panel</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa effektpanelen</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="480"/>
-        <source>Keep tracks synchronized</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Håll spår synkroniserade</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="499"/>
-        <source>Add track effects</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lägg till spåreffekter</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
-        <source>Contrast analyzer</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kontrastanalysator</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
-        <source>Plot spectrum</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Rita ut spektrum</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="551"/>
-        <source>Manage macros</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Hantera makron</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
-        <source>Apply macros palette</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Använd makropaletten</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
-        <source>Macro fade ends</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Makro: tona ut ändar</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="575"/>
-        <source>Macro MP3 conversion</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Makro MP3-konvertering</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
-        <source>Nyquist plugin installer</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Installationsprogram för Nyquist-insticksmoduler</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="591"/>
-        <source>Nyquist prompt</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nyquist-inmatning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
-        <source>Sample data export</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Exportera sampeldata</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
-        <source>Sample data import</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Importera sampeldata</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="615"/>
-        <source>Raw data import</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Importera rådata</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
-        <source>Reset configuration</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Återställ konfiguration</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="633"/>
-        <source>Previous window</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Föregående fönster</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="641"/>
-        <source>Next window</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nästa fönster</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="649"/>
-        <source>Benchmark</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Prestandatest</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="657"/>
-        <source>Regular interval labels</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Etiketter med regelbundet intervall</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="667"/>
-        <source>Tutorials</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Handledningar</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="675"/>
-        <source>Device info</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Enhetsinformation</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="683"/>
-        <source>MIDI device info</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>MIDI-enhetsinfo</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="691"/>
-        <source>Log</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Logg</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
-        <source>Crash report</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kraschrapport</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="707"/>
-        <source>Raise segfault</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Utlös segmenteringsfel</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="715"/>
-        <source>Throw exception</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Kasta undantag</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="723"/>
-        <source>Violate assertion</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Utlös kontrollfel</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="731"/>
-        <source>Menu tree</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Menyträd</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="739"/>
-        <source>Frame statistics</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Bildrutestatistik</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="747"/>
-        <source>Link account</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Länk konto</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
-        <source>Save to clo&amp;ud…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Spara i molnet…</translation>
-    </message>
-    <message>
-        <source>Save to cloud…</source>
-        <translation type="vanished">Spara i molnet…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="764"/>
-        <source>Share audio</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dela ljud</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="773"/>
-        <source>Update cloud audio preview</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Uppdatera förhandsvisning av molnljud</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="781"/>
-        <source>Update audio preview</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Uppdatera ljudförhandsvisning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="790"/>
-        <source>Project propert&amp;ies…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Projektegenskaper…</translation>
-    </message>
-    <message>
-        <source>Project properties…</source>
-        <translation type="vanished">Projektegenskaper…</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="23"/>
-        <source>Clip gain</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klippförstärkning</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="32"/>
-        <source>Split tool</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Delningsverktyg</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="76"/>
-        <source>Zoom to fit project</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Zooma för att passa projekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="94"/>
-        <source>Center view on playhead</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Centrera vyn på spelhuvudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="102"/>
-        <source>Toggle spectral view</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Växla spektral vy</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="120"/>
-        <source>Spectral box select</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spektral rutmarkering</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="129"/>
-        <source>Snapping</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Snapping</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="138"/>
-        <source>Minutes &amp;&amp; seconds</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Minuter &amp;&amp; sekunder</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
-        <source>Beats &amp;&amp; measures</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Slag &amp;&amp; takter</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
-        <source>Show vertical rulers</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa vertikala linjaler</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="165"/>
-        <source>Show master track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa masterspår</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
-        <source>Update display while playing</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Uppdatera vyn under uppspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="192"/>
-        <source>Click ruler to start playback</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klicka på linjalen för att starta uppspelningen</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="202"/>
-        <source>Clip properties</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klippegenskaper</translation>
-    </message>
-    <message>
-        <source>Show clip properties</source>
-        <translation type="vanished">Visa klippegenskaper</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
-        <source>Follow track color</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Följ spårfärg</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
-        <source>Pinned playhead</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Fäst spelhuvud</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="229"/>
-        <source>Move playhead left</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta spelhuvudet åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="237"/>
-        <source>Move playhead right</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta spelhuvudet åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
-        <source>Extend selection left</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Utöka markeringen åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="253"/>
-        <source>Extend selection right</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Utöka markeringen åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="261"/>
-        <source>Contract selection from left</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Minska markeringen från vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="269"/>
-        <source>Contract selection from right</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Minska markeringen från höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="277"/>
-        <source>Move playhead to selection start</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta spelhuvudet till markeringens början</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="285"/>
-        <source>Move playhead to selection end</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta spelhuvudet till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="293"/>
-        <source>Pitch and speed</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
-        <source>Show RMS in waveform</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa RMS i vågform</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="310"/>
-        <source>Show clipping in waveform</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa överstyrning i vågformen</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="319"/>
-        <source>Half-wave</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Halvvåg</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="329"/>
-        <source>Show label editor</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa etikettredigerare</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="337"/>
-        <source>Move realtime effect up</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta upp realtidseffekten</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="345"/>
-        <source>Move realtime effect down</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta ner realtidseffekten</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="372"/>
-        <source>Change clip color</source>
-        <translation>Byt färg på klippet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="384"/>
-        <source>Change track color</source>
-        <translation>Ändra spårfärg</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
-        <source>Record</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spela in</translation>
-    </message>
-    <message>
-        <source>Stop record</source>
-        <translation type="vanished">Stoppa inspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
-        <source>Record level</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Inspelningsnivå</translation>
-    </message>
-    <message>
-        <source>Set record level</source>
-        <translation type="vanished">Ställ in inspelningsnivå</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="66"/>
-        <source>Show mic metering</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Visa mikrofonmätare</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="75"/>
-        <source>Turn on input monitoring</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Slå på ingångsövervakning</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="84"/>
-        <source>Lead-in Recording</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Inspelning med förberedelsetid</translation>
-    </message>
-    <message>
-        <source>Start lead-in recording</source>
-        <translation type="vanished">Starta inspelning med förberedelsetid</translation>
-    </message>
-    <message>
-        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="19"/>
-        <source>Spectrogram settings…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spektrograminställningar…</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
-        <source>Clear selection</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Rensa markering</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="95"/>
-        <source>Cut and leave gap</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klipp ut och lämna mellanrum</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="104"/>
-        <source>Cut and close gap (per clip)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klipp ut och stäng mellanrum (per klipp)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="113"/>
-        <source>Cut and close gap (per track)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klipp ut och stäng mellanrum (per spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
-        <source>Cut and close gap (all tracks)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klipp ut och stäng mellanrum (alla spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="131"/>
-        <source>Delete and leave gap</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ta bort och lämna mellanrum</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
-        <source>Delete and close gap (per clip)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ta bort och stäng mellanrum (per klipp)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="149"/>
-        <source>Delete and close gap (per track)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ta bort och stäng mellanrum (per spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="158"/>
-        <source>Delete and close gap (all tracks)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Ta bort och stäng mellanrum (alla spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="167"/>
-        <source>Split</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dela</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="176"/>
-        <source>Join selected clips</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sammanfoga markerade klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="184"/>
-        <source>Split clips at silences</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dela klipp vid tystnad</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="201"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="50"/>
         <source>Rename</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Byt namn</translation>
-    </message>
-    <message>
-        <source>Rename track</source>
-        <translation type="vanished">Döp om spår</translation>
-    </message>
-    <message>
-        <source>Duplicate track</source>
-        <translation type="vanished">Duplicera spår</translation>
-    </message>
-    <message>
-        <source>Delete track</source>
-        <translation type="vanished">Ta bort spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="225"/>
-        <source>Move track up</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta upp spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
-        <source>Move track down</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta ned spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
-        <source>Move track to top</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta spåret längst upp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
-        <source>Move track to bottom</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta spåret längst ned</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
-        <source>Other…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Övrigt…</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="266"/>
-        <source>Make stereo track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Skapa stereospår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="274"/>
-        <source>Swap stereo channels</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Byt plats på stereokanaler</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="282"/>
-        <source>Split stereo to L/R mono</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dela stereo till L/R mono</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
-        <source>Split stereo to center mono</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dela stereo till mittmono</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="298"/>
-        <source>Resample track…</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Omsampla spår…</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="306"/>
-        <source>Waveform</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Vågform</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
-        <source>Spectrogram</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Spektrogram</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="586"/>
-        <source>Above item</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Objektet ovanför</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="594"/>
-        <source>Below item</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Objektet nedanför</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="326"/>
-        <source>Multi-view</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flervy</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
-        <source>Rename item (clip/label)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Byt namn på objekt (klipp/etikett)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
-        <source>Paste (pushes clips on selected track)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klistra in (skjuter klipp på markerat spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="354"/>
-        <source>Paste (overlaps other clips)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klistra in (överlappar andra klipp)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="363"/>
-        <source>Paste (preserves synchronization on all tracks)</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Klistra in (bevarar synkronisering på alla spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="372"/>
-        <source>Merge selected clips</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Slå samman markerade klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="380"/>
-        <source>Duplicate selected</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Duplicera markerat</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="388"/>
-        <source>Duplicate clip</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Duplicera klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="396"/>
-        <source>Export clip</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Exportera klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="404"/>
-        <source>Stretch with tempo changes</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sträck utifrån tempoändringar</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="413"/>
-        <source>Open pitch and speed dialog</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Öppna dialogrutan för tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="421"/>
-        <source>Render pitch and speed</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Rendera tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="429"/>
-        <source>Reset pitch and speed</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Återställ tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="437"/>
-        <source>New mono track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nytt monospår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="445"/>
-        <source>New stereo track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nytt stereospår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
-        <source>New label track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nytt etikettspår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="461"/>
-        <source>Add label</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lägg till etikett</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="469"/>
-        <source>Trim</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Beskär</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
-        <source>Silence</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tystnad</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="487"/>
-        <source>Group clips</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Gruppera klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="495"/>
-        <source>Ungroup clips</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Dela upp klippgruppen</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="503"/>
-        <source>Move item left</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta objektet åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="511"/>
-        <source>Move item right</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta objektet åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="519"/>
-        <source>Extend item left</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Förläng objektet åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="527"/>
-        <source>Extend item right</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Förläng objektet åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="535"/>
-        <source>Reduce item left</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Förkorta objektet från vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="543"/>
-        <source>Reduce item right</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Förkorta objektet från höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="551"/>
-        <source>Move item up</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta objektet uppåt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="559"/>
-        <source>Move item down</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Flytta objektet nedåt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="569"/>
-        <source>Next panel</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nästa panel</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="577"/>
-        <source>Previous panel</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Föregående panel</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="603"/>
-        <source>First track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Första spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="611"/>
-        <source>Last track</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Sista spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="620"/>
-        <source>Select track/track item</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Markera spår/spårobjekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="628"/>
-        <source>Add track or track item to selection</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Lägg till spår eller spårobjekt i markeringen</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="636"/>
-        <source>Track range selection</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Markering av spårintervall</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="644"/>
-        <source>Multi track selection previous</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Föregående flerspårsmarkering</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="652"/>
-        <source>Multi track selection next</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Nästa flerspårsmarkering</translation>
-    </message>
-    <message>
-        <source>Open item’s context menu</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="vanished">Öppna objektets snabbmeny</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="675"/>
-        <source>Change track format</source>
-        <translation>Ändra spårformat</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="688"/>
-        <source>Change track sample rate</source>
-        <translation>Ändra spårsamplingsfrekvens</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="37"/>
-        <source>Save diagnostic files</source>
-        <translation>Spara diagnostikfiler</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
-        <source>Show p&amp;aths…</source>
-        <translation>Visa sökväg&amp;ar…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
-        <source>Show paths</source>
-        <translation>Visa sökvägar</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
-        <source>Show pr&amp;ofiler…</source>
-        <translation>Visa pr&amp;ofiler…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
-        <source>Show profiler</source>
-        <translation>Visa profilhanterare</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
-        <source>Show g&amp;raphics info…</source>
-        <translation>Visa g&amp;rafikinfo…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
-        <source>Show graphics info</source>
-        <translation>Visa grafikinfo</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
-        <source>Show &amp;navigation tree…</source>
-        <translation>Visa &amp;navigationsträd…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
-        <source>Show navigation tree</source>
-        <translation>Visa navigationsträd</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
-        <source>Show &amp;accessibility tree…</source>
-        <translation>Visa &amp;accessibility tree</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
-        <source>Show accessibility tree</source>
-        <translation>Visa tillgänglighetsträd</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
-        <source>&amp;Dump accessibility tree to console</source>
-        <translation>&amp;Dumpa accessibility tree till konsolen</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
-        <source>Dump accessibility tree to console</source>
-        <translation>Dumpa tillgänglighetsträd till konsol</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
-        <source>Show engraving &amp;elements</source>
-        <translation>Visa tryck&amp;element</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
-        <source>Show engraving elements</source>
-        <translation>Visa tryckelement</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
-        <source>Show engraving &amp;undo stack</source>
-        <translation>Visa &amp;ångrastack för tryck</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
-        <source>Show engraving undo stack</source>
-        <translation>Visa ångrastack för tryck</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
-        <source>Show engraving &amp;style options list</source>
-        <translation>Visa lista med &amp;stilalternativ för tryck</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
-        <source>Show engraving style options list</source>
-        <translation>Visa lista med stilalternativ för tryck</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
-        <source>Show &amp;actions list</source>
-        <translation>Vis&amp;a åtgärdslista</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
-        <source>Show actions list</source>
-        <translation>Visa åtgärdslista</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="102"/>
-        <source>Show &amp;rcommands list</source>
-        <translation>Visa lista över &amp;r-kommandon</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="103"/>
-        <source>Show rcommands list</source>
-        <translation>Visa lista över r-kommandon</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
-        <source>&amp;Manage plugins…</source>
-        <translation>&amp;Hantera insticksmoduler…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
-        <source>Manage plugins…</source>
-        <translation>Hantera insticksmoduler…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
-        <source>Show API dump</source>
-        <translation>Visa API-dump</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
-        <source>&amp;Multiinstances</source>
-        <translation>M&amp;ultiinstanser</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
-        <source>Show &amp;scripts…</source>
-        <translation>Visa &amp;skript…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
-        <source>Show scripts</source>
-        <translation>Visa skript</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
         <source>Check for &amp;update</source>
         <translation>Leta efter &amp;uppdatering</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
-        <source>Use old view</source>
-        <translation>Använd gammal vy</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
-        <source>Use new view</source>
-        <translation>Använd ny vy</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
@@ -2121,1600 +136,29 @@
 <context>
     <name>action_description</name>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
-        <source>Exit</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Avsluta</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="63"/>
-        <source>Full screen</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Helskärm</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="84"/>
-        <source>Open online handbook</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna handbok online</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="98"/>
-        <source>Revert to factory settings</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Återgå till fabriksinställningarna</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
-        <source>Restore the default layout</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Återställ standardlayouten</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
-        <source>Show/hide playback controls</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa/dölj uppspelningskontroller</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="128"/>
-        <source>Show/hide tracks</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa/dölj spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
-        <source>Show/hide status bar</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa/dölj statusfältet</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
-        <source>Preferences…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Inställningar…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="35"/>
-        <source>Copy</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Kopiera</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="167"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="44"/>
-        <source>Cut</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klipp ut</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="177"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
-        <source>Paste</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klistra in</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
-        <source>Undo</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ångra</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="197"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="62"/>
-        <source>Redo</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Gör om</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="207"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="212"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="71"/>
-        <source>Delete</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Radera</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="216"/>
-        <source>Cancel</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Avbryt</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
-        <source>Trigger</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Aktivera</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
-        <source>Trigger the focused control or select the focused track item</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Aktivera den fokuserade kontrollen eller välj det fokuserade spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="247"/>
-        <source>Open the context menu of the focused item</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna snabbmenyn för det fokuserade objektet</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="18"/>
-        <source>View project on audio.com</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Se projektet på audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="26"/>
-        <source>View on audio.com</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa på audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
-        <source>Remove realtime effect</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ta bort realtidseffekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
-        <source>Import preset</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Importera förinställning</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="76"/>
-        <source>Export preset</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Exportera förinställning</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
-        <source>Play/Pause</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spela upp/pausa</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="51"/>
-        <source>Play/Stop</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spela upp/stoppa</translation>
-    </message>
-    <message>
-        <source>Play/Pause from cursor</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="vanished">Spela upp/pausa från markören</translation>
-    </message>
-    <message>
-        <source>Play the selected time range</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="vanished">Spela upp det markerade tidsintervallet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="75"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="41"/>
-        <source>Pause</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Pausa</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="84"/>
-        <source>Stop playback</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Stoppa uppspelningen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
-        <source>Rewind to start</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Hoppa till början</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="102"/>
-        <source>Rewind to end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Hoppa till slutet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="111"/>
-        <source>Toggle ‘Loop playback’</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Växla ”loopad uppspelning”</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="121"/>
-        <source>Open audio setup context menu</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna snabbmenyn för ljudkonfiguration</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="130"/>
-        <source>Open Get effects dialog</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna dialogrutan Hämta effekter</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="139"/>
-        <source>Open audio setup dialog</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna dialogrutan Ljudinställningar</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
-        <source>Rescan audio devices</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Återskanna ljudenheter</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
-        <source>Toggle metronome playback</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Växla metronomuppspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="165"/>
-        <source>Set playback time</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in uppspelningstid</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="174"/>
-        <source>Set playback tempo</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in uppspelningstempo</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="183"/>
-        <source>Set playback time signature</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in uppspelningstaktart</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="192"/>
-        <source>Set playback level</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in uppspelningsnivå</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="201"/>
-        <source>Change audio host</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Byt ljudvärd</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
-        <source>Change playback device</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Byt uppspelningsenhet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="219"/>
-        <source>Change recording device</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Byt inspelningsenhet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="228"/>
-        <source>Change input channels</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ändra ingångskanaler</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="237"/>
-        <source>Toggle loop region</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Växla loopområde</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="246"/>
-        <source>Clear loop region</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Rensa loopområde</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="254"/>
-        <source>Set loop region to selection</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in loopområdet efter markeringen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="262"/>
-        <source>Set selection to loop</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in markeringen efter loopen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="270"/>
-        <source>Set loop region in out</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in loopområdets början och slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="278"/>
-        <source>Creating a loop also selects audio</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>När en loop skapas markeras även ljudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="332"/>
-        <source>Play repeats</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Upprepa uppspelningen</translation>
-    </message>
-    <message>
-        <location filename="../../src/playback/internal/playbackuiactions.cpp" line="342"/>
-        <source>Pan automatically during playback</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Panorera automatiskt under uppspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="31"/>
-        <source>New…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ny…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
-        <source>Open…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
-        <source>Show in Finder</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa i Finder</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="63"/>
-        <source>Open recent project</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna senaste projekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
-        <source>Open</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppen</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="87"/>
-        <source>Clear recent files</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Rensa de senaste filerna</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
-        <source>Import…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Importera…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
-        <source>Save</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spara</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="111"/>
-        <source>Save as…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spara som…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="119"/>
-        <source>Export audio…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Exportera ljud…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
-        <source>Export labels</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Exportera etiketter</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
-        <source>Export MIDI</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Exportera MIDI</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="143"/>
-        <source>Close project</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Stäng projekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="386"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
-        <source>Duplicate</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Duplicera</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="161"/>
-        <source>Insert</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Infoga</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
-        <source>Trim clip</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Beskär klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
-        <source>Split into new track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Dela upp till nytt spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="185"/>
-        <source>Paste new label</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klistra in ny etikett</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="81"/>
-        <source>Select all</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Markera allt</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
-        <source>Select all tracks</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Markera alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="210"/>
-        <source>Left of playback position</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Till vänster om uppspelningsposition</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="218"/>
-        <source>Right of playback position</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Höger om uppspelningsposition</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
-        <source>Track start to cursor</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Från spårets början till markören</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
-        <source>Cursor to track end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Från markören till spårets slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="242"/>
-        <source>Track start to end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spårets början till slutet</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
-        <source>Previous clip boundary to cursor</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Från föregående klippgräns till markören</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
-        <source>Cursor to next clip boundary</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Från markören till nästa klippgräns</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="266"/>
-        <source>Previous clip</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Föregående klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
-        <source>Next clip</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nästa klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="282"/>
-        <source>Toggle spectral selection</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Aktivera/inaktivera spektrumsmarkering</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="290"/>
-        <source>Move cursor to closest zero crossing</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta markören till närmaste nollkorsning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
-        <source>Collapse all tracks</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Minimera alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
-        <source>Expand all tracks</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Expandera alla spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="316"/>
-        <source>Skip to selection start</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Hoppa till markeringens början</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
-        <source>Skip to selection end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Hoppa till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="332"/>
-        <source>Show effects panel</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa effektpanelen</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="341"/>
-        <source>Show metadata editor</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa metadataredigerare</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
-        <source>Show history</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa historik</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
-        <source>Set up timed recording</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in tidsinställd inspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="368"/>
-        <source>Enable sound activating recording</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Aktivera ljudaktiverande inspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="376"/>
-        <source>Set sound activation level</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in ljudaktiveringsnivå</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="394"/>
-        <source>Remove tracks</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ta bort spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="402"/>
-        <source>Mix-down to…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Mixa ned till…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
-        <source>Align end to end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Justera kant i kant</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
-        <source>Align together</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Justera tillsammans</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="426"/>
-        <source>Align start to zero</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Justera början till noll</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="434"/>
-        <source>Align start to playhead</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Justera början till spelhuvudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="442"/>
-        <source>Align start to selection end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Justera början till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="450"/>
-        <source>Align end to playhead</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Justera slutet till spelhuvudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
-        <source>Align end to selection end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Justera slutet till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="466"/>
-        <source>Sort by time</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Sortera efter tid</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="474"/>
-        <source>Sort by name</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Sortera efter namn</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
-        <source>Keep tracks synchronized</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Håll spår synkroniserade</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="491"/>
-        <source>Plugin manager</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Insticksmodulhanterare</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
-        <source>Add track effects</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Lägg till spåreffekter</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
-        <source>Fav effect #1</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Favoriteffekt #1</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="517"/>
-        <source>Fav effect #2</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Favoriteffekt #2</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="525"/>
-        <source>Fav effect #3</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Favoriteffekt #3</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="535"/>
-        <source>Contrast analyzer</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Kontrastanalysator</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="543"/>
-        <source>Plot spectrum</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Rita ut spektrum</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="553"/>
-        <source>Manage macros</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Hantera makron</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="561"/>
-        <source>Apply macros palette</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Använd makropaletten</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="569"/>
-        <source>Macro fade ends</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Makro: tona ut ändar</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
-        <source>Macro MP3 conversion</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Makro MP3-konvertering</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="585"/>
-        <source>Nyquist plugin installer</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Installationsprogram för Nyquist-insticksmoduler</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
-        <source>Nyquist prompt</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nyquist-inmatning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
-        <source>Sample data export</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Exportera sampeldata</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="609"/>
-        <source>Sample data import</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Importera sampeldata</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
-        <source>Raw data import</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Importera rådata</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="625"/>
-        <source>Reset configuration</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Återställ konfiguration</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="635"/>
-        <source>Previous window</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Föregående fönster</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="643"/>
-        <source>Next window</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nästa fönster</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="651"/>
-        <source>Benchmark</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Prestandatest</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="659"/>
-        <source>Regular interval labels</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Etiketter med regelbundet intervall</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="669"/>
-        <source>Tutorials</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Handledningar</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="677"/>
-        <source>Device info</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Enhetsinformation</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="685"/>
-        <source>MIDI device info</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>MIDI-enhetsinfo</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="693"/>
-        <source>Log</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Logg</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="701"/>
-        <source>Crash report</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Kraschrapport</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="709"/>
-        <source>Raise segfault</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Utlös segmenteringsfel</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="717"/>
-        <source>Throw exception</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Kasta undantag</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="725"/>
-        <source>Violate assertion</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Utlös kontrollfel</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="733"/>
-        <source>Menu tree</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Menyträd</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="741"/>
-        <source>Frame statistics</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Bildrutestatistik</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="749"/>
-        <source>Link account</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Länk konto</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="757"/>
-        <source>Save to cloud…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spara i molnet…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="766"/>
-        <source>Share audio</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Dela ljud</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="775"/>
-        <source>Update cloud audio preview</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Uppdatera förhandsvisning av molnljud</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="783"/>
-        <source>Update audio preview</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Uppdatera ljudförhandsvisning</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="792"/>
-        <source>Project properties…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Projektegenskaper…</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="25"/>
-        <source>Clip gain</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klippförstärkning</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="34"/>
-        <source>Split tool</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Delningsverktyg</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
-        <source>Zoom in</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Zooma in</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="52"/>
-        <source>Zoom out</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Zooma ut</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="61"/>
-        <source>Zoom default</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Standardzoom</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="69"/>
-        <source>Zoom to selection</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Zooma till markering</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
-        <source>Zoom to fit project</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Zooma för att passa projekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="87"/>
-        <source>Zoom toggle</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Växla zoom</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="96"/>
-        <source>Center view on playhead</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Centrera vyn på spelhuvudet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
-        <source>Toggle spectral view</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Växla spektral vy</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="113"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="122"/>
-        <source>Spectral box select</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spektral rutmarkering</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="131"/>
-        <source>Snapping</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Snapping</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
-        <source>Minutes &amp;&amp; seconds</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Minuter &amp;&amp; sekunder</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="149"/>
-        <source>Beats &amp;&amp; measures</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Slag &amp;&amp; takter</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="158"/>
-        <source>Show vertical rulers</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa vertikala linjaler</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
-        <source>Show master track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa masterspår</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="176"/>
-        <source>Update display while playing</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Uppdatera vyn under uppspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="185"/>
-        <source>Pinned playhead</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Fäst spelhuvud</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="194"/>
-        <source>Click ruler to start playback</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klicka på linjalen för att starta uppspelningen</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="204"/>
-        <source>Show clip properties</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa klippegenskaper</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="222"/>
-        <source>Follow track color</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Följ spårfärg</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
-        <source>Move playhead left</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta spelhuvudet åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
-        <source>Move playhead right</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta spelhuvudet åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="247"/>
-        <source>Extend selection left</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Utöka markeringen åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="255"/>
-        <source>Extend selection right</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Utöka markeringen åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="263"/>
-        <source>Contract selection from left</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Minska markeringen från vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="271"/>
-        <source>Contract selection from right</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Minska markeringen från höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="279"/>
-        <source>Move playhead to selection start</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta spelhuvudet till markeringens början</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="287"/>
-        <source>Move playhead to selection end</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta spelhuvudet till markeringens slut</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="295"/>
-        <source>Pitch and speed</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="303"/>
-        <source>Show RMS in waveform</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa RMS i vågform</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="312"/>
-        <source>Show clipping in waveform</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa överstyrning i vågformen</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="321"/>
-        <source>Half-wave</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Halvvåg</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="331"/>
-        <source>Show label editor</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa etikettredigerare</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="339"/>
-        <source>Move realtime effect up</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta upp realtidseffekten</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="347"/>
-        <source>Move realtime effect down</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta ned realtidseffekten</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="371"/>
-        <source>Change clip color</source>
-        <translation>Byt färg på klippet</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="383"/>
-        <source>Change track color</source>
-        <translation>Ändra spårfärg</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="32"/>
-        <source>Record</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spela in</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
-        <source>Stop record</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Stoppa inspelning</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="59"/>
-        <source>Set record level</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ställ in inspelningsnivå</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="68"/>
-        <source>Show mic metering</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Visa mikrofonmätare</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="77"/>
-        <source>Turn on input monitoring</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Slå på ingångsövervakning</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="86"/>
-        <source>Start lead-in recording</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Starta inspelning med förberedelsetid</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="95"/>
-        <source>Record on current track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spela in på aktuellt spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="103"/>
-        <source>Record on new track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spela in på nytt spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="21"/>
-        <source>Spectrogram settings…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spektrograminställningar…</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="27"/>
-        <source>Rename item (clip/label)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Byt namn på objekt (klipp/etikett)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="89"/>
-        <source>Clear selection</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Rensa markering</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="97"/>
-        <source>Cut and leave gap</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klipp ut och lämna mellanrum</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="106"/>
-        <source>Cut and close gap (per clip)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klipp ut och stäng mellanrum (per klipp)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
-        <source>Cut and close gap (per track)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klipp ut och stäng mellanrum (per spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="124"/>
-        <source>Cut and close gap (all tracks)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klipp ut och stäng mellanrum (alla spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="133"/>
-        <source>Delete and leave gap</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ta bort och lämna mellanrum</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="142"/>
-        <source>Delete and close gap (per clip)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ta bort och stäng mellanrum (per klipp)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
-        <source>Delete and close gap (per track)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ta bort och stäng mellanrum (per spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
-        <source>Delete and close gap (all tracks)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ta bort och stäng mellanrum (alla spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
-        <source>Split</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Dela</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
-        <source>Join selected clips</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Sammanfoga markerade klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="186"/>
-        <source>Split clips at silences</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Dela klipp vid tystnad</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="51"/>
         <source>Rename track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Döp om spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="211"/>
-        <source>Duplicate track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Duplicera spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="219"/>
-        <source>Delete track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Ta bort spår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
-        <source>Move track up</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta upp spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="235"/>
-        <source>Move track down</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta ned spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="243"/>
-        <source>Move track to top</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta spåret längst upp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="251"/>
-        <source>Move track to bottom</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta spåret längst ned</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="259"/>
-        <source>Other…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Övrigt…</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="268"/>
-        <source>Make stereo track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Skapa stereospår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="276"/>
-        <source>Swap stereo channels</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Byt plats på stereokanaler</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
-        <source>Split stereo to L/R mono</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Dela stereo till L/R mono</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="292"/>
-        <source>Split stereo to center mono</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Dela stereo till mittmono</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="300"/>
-        <source>Resample track…</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Omsampla spår…</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
-        <source>Waveform</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Vågform</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="318"/>
-        <source>Spectrogram</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Spektrogram</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
-        <source>Multi-view</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flervy</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="347"/>
-        <source>Paste (pushes clips on selected track)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klistra in (skjuter klipp på markerat spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="356"/>
-        <source>Paste (overlaps other clips)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klistra in (överlappar andra klipp)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
-        <source>Paste (preserves synchronization on all tracks)</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Klistra in (bevarar synkronisering på alla spår)</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="374"/>
-        <source>Merge selected clips</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Slå samman markerade klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="382"/>
-        <source>Duplicate selected</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Duplicera markerat</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="390"/>
-        <source>Duplicate clip</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Duplicera klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="398"/>
-        <source>Export clip</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Exportera klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="406"/>
-        <source>Stretch with tempo changes</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Sträck utifrån tempoändringar</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="415"/>
-        <source>Open pitch and speed dialog</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Öppna dialogrutan för tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="423"/>
-        <source>Render pitch and speed</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Rendera tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="431"/>
-        <source>Reset pitch and speed</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Återställ tonhöjd och hastighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="439"/>
-        <source>New mono track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nytt monospår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
-        <source>New stereo track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nytt stereospår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="455"/>
-        <source>New label track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nytt etikettspår</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="463"/>
-        <source>Add label</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Lägg till etikett</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
-        <source>Trim</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Beskär</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
-        <source>Silence</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Tystnad</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="489"/>
-        <source>Group clips</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Gruppera klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
-        <source>Ungroup clips</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Dela upp klippgruppen</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="505"/>
-        <source>Move item left</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta objektet åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="513"/>
-        <source>Move item right</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta objektet åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="521"/>
-        <source>Extend item left</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Förläng objektet åt vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="529"/>
-        <source>Extend item right</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Förläng objektet åt höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="537"/>
-        <source>Reduce item left</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Förkorta objektet från vänster</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="545"/>
-        <source>Reduce item right</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Förkorta objektet från höger</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="553"/>
-        <source>Move item up</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta objektet uppåt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="561"/>
-        <source>Move item down</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Flytta objektet nedåt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="571"/>
-        <source>Next panel</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nästa panel</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="579"/>
-        <source>Previous panel</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Föregående panel</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="588"/>
-        <source>Above item</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Objektet ovanför</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="596"/>
-        <source>Below item</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Objektet nedanför</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="605"/>
-        <source>First track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Första spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="613"/>
-        <source>Last track</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Sista spåret</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="622"/>
-        <source>Select track/track item</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Markera spår/spårobjekt</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="630"/>
-        <source>Add track or track item to selection</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Lägg till spår eller spårobjekt i markeringen</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="638"/>
-        <source>Track range selection</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Markering av spårintervall</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="646"/>
-        <source>Multi track selection previous</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Föregående flerspårsmarkering</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="654"/>
-        <source>Multi track selection next</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Nästa flerspårsmarkering</translation>
-    </message>
-    <message>
-        <source>Open item’s context menu</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="vanished">Öppna objektets snabbmeny</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="674"/>
-        <source>Change track format</source>
-        <translation>Ändra spårformat</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="687"/>
-        <source>Change track sample rate</source>
-        <translation>Ändra spårsamplingsfrekvens</translation>
     </message>
 </context>
 <context>
     <name>appshell</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="65"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
         <source>Cloud account</source>
         <translation>Molnkonto</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="55"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
         <source>Home menu</source>
         <translation>Hemmeny</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="95"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
         <translation>Projekt</translation>
-    </message>
-    <message>
-        <source>Learn</source>
-        <translation type="vanished">Lärande</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
@@ -3750,42 +194,47 @@
         <translation>Programmeny</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="76"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="77"/>
         <source>Real-time effects panel</source>
         <translation>Panel för realtidseffekter</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="170"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="172"/>
         <source>Project toolbar</source>
         <translation>Projektverktygsfält</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="193"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="195"/>
         <source>Workspaces toolbar</source>
         <translation>Verktygsfält för arbetsytor</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="216"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="218"/>
         <source>Undo/redo toolbar</source>
         <translation>Verktygsfält för ångra och gör om</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="238"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="240"/>
         <source>Play toolbar</source>
         <translation>Uppspelningsverktygsfält</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="304"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="306"/>
         <source>Tracks</source>
         <translation>Spår</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="405"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="407"/>
         <source>Playback meter</source>
         <translation>Uppspelningsmätare</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="429"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="434"/>
+        <source>Macro manager</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="476"/>
         <source>History</source>
         <translation>Historik</translation>
     </message>
@@ -3795,12 +244,12 @@
         <translation>Producera MIDI 2.0-utgång om det stöds av mottagaren</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="447"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="449"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Är du säker på att du vill återgå till fabriksinställningarna?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="448"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="450"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -3809,32 +258,32 @@ This action will not delete any of your projects.</source>
 Åtgärden tar inte bort några av dina projekt.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="460"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="462"/>
         <source>Revert</source>
         <translation>Återställ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="462"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="464"/>
         <source>Revert to factory settings</source>
         <translation>Återgå till fabriksinställningarna</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="474"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="476"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Vill du starta om Audacity nu?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="475"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="477"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Audacity måste startas om för att dessa ändringar ska träda i kraft.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="481"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="483"/>
         <source>Restart</source>
         <translation>Starta om</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="483"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="485"/>
         <source>Restart Audacity</source>
         <translation>Starta om Audacity</translation>
     </message>
@@ -3889,21 +338,6 @@ This action will not delete any of your projects.</source>
         <translation>Validering av ljudinsticksmoduler</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="306"/>
-        <source>The previous session quit unexpectedly.</source>
-        <translation>Den föregående sessionen avslutades oväntat.</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="307"/>
-        <source>Do you want to restore the session?</source>
-        <translation>Vill du återställa sessionen?</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="310"/>
-        <source>Restore session</source>
-        <translation>Återställ session</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="94"/>
         <source>Home</source>
         <translation>Hem</translation>
@@ -3941,16 +375,9 @@ This action will not delete any of your projects.</source>
     </message>
 </context>
 <context>
-    <name>appshell-menu-align</name>
-    <message>
-        <source>Align content</source>
-        <translation type="vanished">Justera innehåll</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-analyze</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="421"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="400"/>
         <source>&amp;Analyze</source>
         <translation>A&amp;nalysera</translation>
     </message>
@@ -3958,83 +385,45 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-clip</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="289"/>
         <source>Clip</source>
         <translation>Klipp</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="619"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="539"/>
         <source>Rename clip</source>
         <translation>Byt namn på klipp</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-cursor</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
-        <source>Cursor</source>
-        <translation>Markör</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-device</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="472"/>
-        <source>Device</source>
-        <translation>Enhet</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-diagnostic</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="786"/>
-        <source>&amp;System</source>
-        <translation>&amp;System</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="796"/>
-        <source>&amp;Accessibility</source>
-        <translation>&amp;Tillgänglighet</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="803"/>
-        <source>Test&amp;flow</source>
-        <translation>&amp;Testflöde</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-diagnostics</name>
     <message>
-        <source>Diagnostics</source>
-        <translation type="vanished">Diagnostik</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="529"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
         <source>&amp;System</source>
         <translation>&amp;System</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="551"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="492"/>
         <source>A&amp;ctions</source>
         <translation>&amp;Åtgärder</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="552"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="493"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Tillgänglighet</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="553"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="494"/>
         <source>E&amp;xtensions</source>
         <translation>&amp;Tillägg</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="554"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="495"/>
         <source>Test&amp;flow</source>
         <translation>&amp;Testflöde</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="559"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="500"/>
         <source>&amp;Diagnostics</source>
         <translation>&amp;Diagnostik</translation>
     </message>
@@ -4042,7 +431,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-edit</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="303"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="300"/>
         <source>&amp;Edit</source>
         <translation>&amp;Redigera</translation>
     </message>
@@ -4050,75 +439,33 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-effect</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="416"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="395"/>
         <source>&amp;Effect</source>
         <translation>&amp;Effekt</translation>
     </message>
-</context>
-<context>
-    <name>appshell-menu-export-other</name>
     <message>
-        <source>&amp;Export other</source>
-        <translation type="vanished">Expo&amp;rtera annat</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-extra</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="493"/>
-        <source>&amp;Extra</source>
-        <translation>Ext&amp;ra</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-extraedit</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
-        <source>Edit</source>
-        <translation>Redigera</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-extraselect</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="473"/>
-        <source>Select</source>
-        <translation>Markera</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-extratools</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
-        <source>Tools</source>
-        <translation>Verktyg</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="651"/>
+        <source>Add track effects</source>
+        <translation>Lägg till spåreffekter</translation>
     </message>
 </context>
 <context>
     <name>appshell-menu-file</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="244"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="242"/>
         <source>Open &amp;recent</source>
         <translation>&amp;Öppna senaste</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="267"/>
         <source>&amp;File</source>
         <translation>&amp;Arkiv</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-focus</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
-        <source>Focus</source>
-        <translation>Fokus</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-generate</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="411"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="390"/>
         <source>&amp;Generate</source>
         <translation>&amp;Generera</translation>
     </message>
@@ -4126,164 +473,75 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="516"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="457"/>
         <source>&amp;Help</source>
         <translation>&amp;Hjälp</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-images</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
-        <source>Images</source>
-        <translation>Bilder</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-label</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="290"/>
         <source>Label</source>
         <translation>Etikett</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="640"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="561"/>
         <source>Rename label</source>
         <translation>Byt namn på etikett</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-macros</name>
+    <name>appshell-menu-mix</name>
     <message>
-        <source>&amp;Macros</source>
-        <translation type="vanished">&amp;Makron</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="382"/>
+        <source>Mix</source>
+        <translation>Mixa</translation>
     </message>
-</context>
-<context>
-    <name>appshell-menu-mixer</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
-        <source>Mixer</source>
-        <translation>Mixer</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-play</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="465"/>
-        <source>Play</source>
-        <extracomment>Title of the Play menu; a noun rather than a verb</extracomment>
-        <translation>Spela upp</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-playatspeed</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
-        <source>Play at speed</source>
-        <translation>Spela upp med vald hastighet</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
+        <source>Mix and render to new track</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>appshell-menu-record</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="369"/>
         <source>&amp;Record</source>
         <translation>Spela &amp;in</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-scriptables1</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="480"/>
-        <source>Scriptables1</source>
-        <translation>Scriptables1</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-scriptables2</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="482"/>
-        <source>Scriptables2</source>
-        <translation>Scriptables2</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-scrubbing</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
-        <source>Scrubbing</source>
-        <translation>Scrubbing</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-select</name>
     <message>
-        <source>Audio clips</source>
-        <translation type="vanished">Ljudklipp</translation>
-    </message>
-    <message>
-        <source>Spectral</source>
-        <translation type="vanished">Spektral</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="323"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="312"/>
         <source>Region</source>
         <translation>Område</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="327"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="314"/>
         <source>Looping</source>
         <translation>Loopar</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="331"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="318"/>
         <source>&amp;Select</source>
         <translation>&amp;Markera</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-settings</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="487"/>
-        <source>Settings</source>
-        <translation>Inställningar</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-skip</name>
-    <message>
-        <source>Skip to</source>
-        <translation type="vanished">Hoppa till</translation>
-    </message>
-</context>
-<context>
-    <name>appshell-menu-sort</name>
-    <message>
-        <source>Sort tracks</source>
-        <translation type="vanished">Sortera spår</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-tools</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="426"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="405"/>
         <source>&amp;Tools</source>
         <translation>&amp;Verktyg</translation>
     </message>
 </context>
 <context>
-    <name>appshell-menu-track</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
-        <source>Track</source>
-        <translation>Spår</translation>
-    </message>
-</context>
-<context>
     <name>appshell-menu-tracks</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="406"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="385"/>
         <source>&amp;Tracks</source>
         <translation>&amp;Spår</translation>
     </message>
@@ -4291,12 +549,12 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-view</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="359"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="340"/>
         <source>W&amp;orkspaces</source>
         <translation>&amp;Arbetsytor</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="354"/>
         <source>&amp;View</source>
         <translation>&amp;Visa</translation>
     </message>
@@ -4304,7 +562,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell-menu-zoom</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="344"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="326"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
@@ -4428,6 +686,76 @@ This action will not delete any of your projects.</source>
     </message>
 </context>
 <context>
+    <name>appshell/autorecovery</name>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="17"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="168"/>
+        <source>Automatic crash recovery</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="62"/>
+        <source>The following projects were not saved properly the last time Audacity was run and can be automatically recovered.
+
+After recovery, save the projects to ensure changes are written to disk.</source>
+        <translation>Några projekt sparades inte ordentligt förra gången Audacity kördes och kan återskapas automatiskt.
+
+Efter återskapadet, spara projekten för att försäkra dig om att ändringarna sparas på hårddisken.</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
+        <source>Selected</source>
+        <translation>Markerad</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
+        <source>Not selected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="157"/>
+        <source>Quit Audacity</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
+        <source>Skip</source>
+        <translation>Hoppa över</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
+        <source>Discard selected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="209"/>
+        <source>Recover selected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="30"/>
+        <source>Select</source>
+        <extracomment>Column header of the automatic crash recovery dialog. Here &quot;Select&quot; is a verb.</extracomment>
+        <translation>Välj</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="32"/>
+        <source>Name</source>
+        <extracomment>Column header of the automatic crash recovery dialog. Here &quot;Name&quot; is a noun.</extracomment>
+        <translation>Namn</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="164"/>
+        <source>Are you sure you want to discard the selected projects?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
+        <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>appshell/dock</name>
     <message>
         <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="65"/>
@@ -4448,14 +776,6 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell/gettingstarted</name>
     <message>
-        <source>Preferences → Application</source>
-        <translation type="vanished">Inställningar → Program</translation>
-    </message>
-    <message>
-        <source>App Updates</source>
-        <translation type="vanished">Programuppdateringar</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="39"/>
         <source>Audacity notifies you in-app when a new version is available to download.</source>
         <translation>Audacity meddelar dig i programmet när en ny version finns att hämta.</translation>
@@ -4465,10 +785,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
         <translation>Du kan stänga av detta när som helst i %1.</translation>
-    </message>
-    <message>
-        <source>Usage Info</source>
-        <translation type="vanished">Användningsinformation</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
@@ -4559,10 +875,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
         <source>Continue with Google</source>
         <translation>Fortsätt med Google</translation>
-    </message>
-    <message>
-        <source>Continue with Facebook</source>
-        <translation type="vanished">Fortsätt med Facebook</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
@@ -4759,17 +1071,17 @@ This action will not delete any of your projects.</source>
         <translation>Tillgängligt alternativ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="122"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Getting started</source>
         <translation>Komma igång</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="144"/>
         <source>Accept &amp; continue</source>
         <translation>Acceptera och fortsätt</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="146"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="150"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
         <translation>%1 av %2</translation>
@@ -4945,38 +1257,38 @@ This action will not delete any of your projects.</source>
         <translation>Förhandsgranskning av den valda arbetsytans layout som visar arrangemanget av gränssnittselement</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="120"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="131"/>
         <source>Authorization failed</source>
         <translation>Behörighetskontrollen misslyckades</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="34"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="42"/>
         <source>No access token</source>
         <translation>Ingen åtkomsttoken</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="84"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="90"/>
         <source>Not authorized</source>
         <translation>Inte behörig</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="141"/>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="148"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="152"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="159"/>
         <source>Registration failed. Please try again.</source>
         <translation>Registreringen misslyckades. Försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="162"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="173"/>
         <source>Incorrect email or password. Please try again.</source>
         <translation>Felaktig e-postadress eller lösenord. Försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="170"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="181"/>
         <source>Authentication failed. Please try again.</source>
         <translation>Autentisering misslyckades. Försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="178"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="189"/>
         <source>Could not start the sign-in process. Please try again.</source>
         <translation>Det gick inte att starta inloggningen. Försök igen.</translation>
     </message>
@@ -4984,7 +1296,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="712"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="717"/>
         <source>Edit metadata</source>
         <translation>Redigera metadata</translation>
     </message>
@@ -5420,10 +1732,6 @@ This action will not delete any of your projects.</source>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
         <translation>Kraschrapporter kräver nätverksåtkomst. När Audacity kraschar skickas en rapport som hjälper oss att hitta och åtgärda orsaken. Rapporterna innehåller inte ditt ljud eller några personuppgifter. Mer information finns i vår &lt;a href=&quot;%1&quot;&gt;integritetspolicy&lt;/a&gt;.</translation>
     </message>
-    <message>
-        <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don&apos;t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="vanished">Kraschrapporter kräver nätverksåtkomst. När Audacity kraschar skickas en rapport som hjälper oss att hitta och åtgärda orsaken. Rapporterna innehåller inte ditt ljud eller några personuppgifter. Mer information finns i vår &lt;a href=&quot;%1&quot;&gt;integritetspolicy&lt;/a&gt;.</translation>
-    </message>
 </context>
 <context>
     <name>appshell/preferences/spectrogram</name>
@@ -5471,52 +1779,52 @@ This action will not delete any of your projects.</source>
         <translation>Visa inte välkomstdialogrutan vid start</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="47"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="49"/>
         <source>Video: find out what’s new in Audacity 4</source>
         <translation>Video: ta reda på vad som är nytt i Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="50"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="52"/>
         <source>Watch video</source>
         <translation>Se video</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="56"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="58"/>
         <source>Complete your Audacity cloud setup with Audio.com</source>
         <translation>Slutför din Audacity-molninstallation med Audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="77"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="83"/>
         <source>Help us decide the future of Audacity</source>
         <translation>Hjälp oss att forma Audacitys framtid</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="80"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="86"/>
         <source>Take part in survey</source>
         <translation>Delta i undersökningen</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="86"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="92"/>
         <source>Soap Voice Cleaner: studio-quality voice-over sound</source>
         <translation>Soap Voice Cleaner: voice-over-ljud med studiokvalitet</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="89"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="95"/>
         <source>Get it on MuseHub</source>
         <translation>Hämta via MuseHub</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="59"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="61"/>
         <source>Continue</source>
         <translation>Fortsätt</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="67"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="71"/>
         <source>Explore free plugins for sculpting your audio</source>
         <translation>Utforska kostnadsfria insticksmoduler för att forma ditt ljud</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="70"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="74"/>
         <source>View free plugins</source>
         <translation>Visa kostnadsfria insticksmoduler</translation>
     </message>
@@ -5542,7 +1850,7 @@ This action will not delete any of your projects.</source>
 <context>
     <name>audacity</name>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="717"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="727"/>
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
@@ -5564,7 +1872,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="85"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
-        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="193"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="208"/>
         <source>Validating audio plugins</source>
         <translation>Validerar ljudinsticksmoduler</translation>
     </message>
@@ -5572,35 +1880,35 @@ This action will not delete any of your projects.</source>
 <context>
     <name>audio setup</name>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="59"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="71"/>
         <source>Host</source>
         <translation>Värd</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="60"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="72"/>
         <source>Playback device</source>
         <translation>Uppspelningsenhet</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="61"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="73"/>
         <source>Recording device</source>
         <translation>Inspelningsenhet</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="62"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="74"/>
         <source>Recording channels</source>
         <translation>Inspelningskanaler</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="119"/>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="169"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="113"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="152"/>
         <source>System default</source>
         <extracomment>%1 is the device the system default currently resolves to</extracomment>
         <translation>Systemets förval</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="120"/>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="170"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="114"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="153"/>
         <source>System default: %1</source>
         <translation>Systemstandard: %1</translation>
     </message>
@@ -5608,35 +1916,35 @@ This action will not delete any of your projects.</source>
 <context>
     <name>audio-devices</name>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="833"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="838"/>
         <source>Stream is active … unable to gather information.
 </source>
         <translation>Ljudströmmen är aktiv … information kan inte hämtas.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="846"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="851"/>
         <source>Default recording device number: %1
 </source>
         <translation>Förinställd inspelningsenhet nummer: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="847"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="852"/>
         <source>Default playback device number: %1
 </source>
         <translation>Förinställd uppspelningsenhet nummer: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="855"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="860"/>
         <source>No devices found
 </source>
         <translation>Inga enheter hittades
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="867"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="872"/>
         <source>Device info unavailable for: %1
 </source>
         <extracomment>%1 is the device index number</extracomment>
@@ -5644,70 +1952,70 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="872"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="877"/>
         <source>Device ID: %1
 </source>
         <translation>Enhet ID:%1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="873"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="878"/>
         <source>Device name: %1
 </source>
         <translation>Enhetsnamn: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="874"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="879"/>
         <source>Host name: %1
 </source>
         <translation>Värd namn: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="875"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="880"/>
         <source>Recording channels: %1
 </source>
         <translation>Inspelningskanaler: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="876"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="881"/>
         <source>Playback channels: %1
 </source>
         <translation>Uppspelningskanaler: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="877"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="882"/>
         <source>Low Recording Latency: %1
 </source>
         <translation>Låg inspelningslatency: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="878"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="883"/>
         <source>Low Playback Latency: %1
 </source>
         <translation>Låg uppspelningslatency: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="879"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="884"/>
         <source>High Recording Latency: %1
 </source>
         <translation>Hög inspelningslatency: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="880"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="885"/>
         <source>High Playback Latency: %1
 </source>
         <translation>Hög uppspelningslatency: %1
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="886"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="891"/>
         <source>Supported Playback Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
@@ -5715,7 +2023,7 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="896"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="901"/>
         <source>Supported Capture Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
@@ -5723,7 +2031,7 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="926"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="931"/>
         <source>Selected recording device: %1 - %2
 </source>
         <extracomment>%1 is the recording device number, %2 is the device name</extracomment>
@@ -5731,14 +2039,14 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="928"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="933"/>
         <source>No recording device found for “%1”.
 </source>
         <translation>Ingen inspelningsenhet hittades för &quot;%1&quot;.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="933"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="938"/>
         <source>Selected playback device: %1 - %2
 </source>
         <extracomment>%1 is the playback device number, %2 is the device name</extracomment>
@@ -5746,28 +2054,28 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="935"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="940"/>
         <source>No playback device found for “%1”.
 </source>
         <translation>Ingen uppspelningsenhet hittades för &quot;%1&quot;.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="943"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
         <source>Supported Rates:
 </source>
         <translation>Stödjer skala:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="953"/>
         <source>Cannot check mutual sample rates without both devices.
 </source>
         <translation>Gemensamma samplingsfrekvenser kan inte kontrolleras utan båda enheterna.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1006"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1011"/>
         <source>Received %1 while opening devices
 </source>
         <extracomment>%1 is a PortAudio error code returned while opening the devices</extracomment>
@@ -5775,23 +2083,23 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1013"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1018"/>
         <source>Unable to open Portmixer
 </source>
         <translation>Kan inte öppna portmixer
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1019"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1024"/>
         <source>Available mixers:
 </source>
         <translation>Tillgängliga mixers:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1026"/>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1035"/>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1044"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1031"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1040"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1049"/>
         <source>%1 - %2
 </source>
         <extracomment>%1 is the mixer index number, %2 is the mixer name
@@ -5803,28 +2111,28 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1030"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1035"/>
         <source>Available recording sources:
 </source>
         <translation>Tillgängliga inspelningskällor:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1039"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1044"/>
         <source>Available playback volumes:
 </source>
         <translation>Tillgängliga uppspelningsvolymer:
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1066"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1071"/>
         <source>Recording volume is emulated
 </source>
         <translation>Inspelningsvolymen är emulerad
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1067"/>
+        <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1072"/>
         <source>Recording volume is native
 </source>
         <translation>Inspelningsvolymen har grundinställning
@@ -5834,14 +2142,14 @@ This action will not delete any of your projects.</source>
 <context>
     <name>audio-io</name>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="269"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="270"/>
         <source>Could not find any audio devices.
 </source>
         <translation>Kan inte hitta några ljudenheter
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="270"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="271"/>
         <source>You will not be able to play or record audio.
 
 </source>
@@ -5850,33 +2158,23 @@ This action will not delete any of your projects.</source>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="273"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="274"/>
         <source>Error: %1</source>
         <translation>Fel: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="281"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="282"/>
         <source>Error Initializing Audio</source>
         <translation>Fel uppstod när ljud initialiserades</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="775"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="765"/>
         <source>Audacity Audio</source>
         <translation>Audacity ljud</translation>
     </message>
     <message>
-        <source>Error opening recording device.
-Error code: %1</source>
-        <translation type="vanished">Fel uppstod när inspelningsenhet öppnades.
-Felkod: %1</translation>
-    </message>
-    <message>
-        <source>Error</source>
-        <translation type="vanished">Fel</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1481"/>
-        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1516"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1512"/>
+        <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1547"/>
         <source>Out of memory!</source>
         <translation>Slut på minne!</translation>
     </message>
@@ -6047,33 +2345,6 @@ Felkod: %1</translation>
 <context>
     <name>builtin-effects</name>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="28"/>
-        <source>Auto Duck</source>
-        <translation>Automatisk ducking</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="82"/>
-        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation>Minskar (duckar) volymen för ett eller flera spår när volymen för ett specificerat &quot;kontrollspår&quot; når en viss nivå</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
-        <source>You selected a track which does not contain audio. AutoDuck can only process audio tracks.</source>
-        <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
-        <translation>Du har valt ett spår som inte innehåller ljud. Duckning kan bara bearbeta ljudspår.</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="144"/>
-        <source>Auto Duck needs a control track which must be placed below the selected track(s).</source>
-        <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
-        <translation>Automatisk ducking behöver ett kontrollspår som måste vara placerad under valt spår.</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="184"/>
-        <source>Rendering Control-Track Time-Stretched Audio</source>
-        <translation>Renderar tidsutsträckt ljud för kontrollspår</translation>
-    </message>
-    <message>
         <location filename="../../au3/libraries/au3-builtin-effects/BassTrebleBase.cpp" line="21"/>
         <source>Bass and Treble</source>
         <translation>Bas och diskant</translation>
@@ -6099,12 +2370,12 @@ Felkod: %1</translation>
         <translation>Tonändring i hög kvalitet</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="21"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="22"/>
         <source>Change Speed and Pitch</source>
         <translation>Ändra hastighet och tonhöjd</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="48"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="49"/>
         <source>Changes the speed of a track, also changing its pitch</source>
         <translation>Ändrar hastigheten för ett spår, ändrar även dess tonhöjd</translation>
     </message>
@@ -6219,7 +2490,7 @@ Välj ett område på spåret.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="64"/>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="202"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="203"/>
         <source>Walkie-talkie</source>
         <translation>Walkie-talkie</translation>
     </message>
@@ -6330,72 +2601,72 @@ Välj ett område på spåret.</translation>
         <translation>Begärt värde överskrider minneskapaciteten.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="34"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="35"/>
         <source>Equalization</source>
         <translation>Equalization</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="80"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="81"/>
         <source>Adjusts the volume levels of particular frequencies</source>
         <translation>Justerar volymnivåerna för vissa frekvenser</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="180"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="181"/>
         <source>100Hz Rumble</source>
         <translation>100Hz brum</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="183"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="184"/>
         <source>AM Radio</source>
         <translation>AM Radio</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="186"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="187"/>
         <source>Bass Boost</source>
         <translation>Bas boost</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="188"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="189"/>
         <source>Bass Cut</source>
         <translation>Bas Klipp</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="190"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="191"/>
         <source>Low rolloff for speech</source>
         <translation>Låg rolloff för tal</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="193"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="194"/>
         <source>RIAA</source>
         <translation>RIAA</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="195"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="196"/>
         <source>Telephone</source>
         <translation>Telefon</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="198"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="199"/>
         <source>Treble Boost</source>
         <translation>Diskant boost</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="200"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="201"/>
         <source>Treble Cut</source>
         <translation>Diskant Klipp</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="275"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="276"/>
         <source>To apply Equalization, all selected tracks must have the same sample rate.</source>
         <translation>För att tillämpa utjämning måste alla markerade spår ha samma samplingsfrekvens.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="280"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="281"/>
         <source>To apply Equalization, select one or more audio tracks.</source>
         <translation>För att tillämpa utjämning, välj ett eller flera ljudspår.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="291"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="292"/>
         <source>Track sample rate is too low for this effect.</source>
         <translation>Spårets samplingsfrekvens är för låg för denna effekt.</translation>
     </message>
@@ -6528,7 +2799,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Upprepar markeringen ett specificerat antal gånger</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-builtin-effects/SBSMSBase.h" line="38"/>
+        <location filename="../../au3/libraries/au3-builtin-effects/SBSMSBase.h" line="48"/>
         <source>SBSMS Time / Pitch Stretch</source>
         <translation>SBSMS-tid / Tonhöjdssträckning</translation>
     </message>
@@ -6657,22 +2928,22 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
 <context>
     <name>canvas</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="26"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="27"/>
         <source>Paste and overlap</source>
         <translation>Klistra in och överlappa</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="28"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="29"/>
         <source>Paste and make room on this track</source>
         <translation>Klistra in och gör plats på det här spåret</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="30"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="31"/>
         <source>Paste and make room on all tracks</source>
         <translation>Klistra in och gör plats på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="35"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="36"/>
         <source>Paste and…</source>
         <translation>Klistra in och…</translation>
     </message>
@@ -6680,62 +2951,62 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
 <context>
     <name>clip</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="42"/>
         <source>Cut and leave gap</source>
         <translation>Klipp ut och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="44"/>
         <source>Cut and close gap on this track</source>
         <translation>Klipp ut och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="61"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="46"/>
         <source>Cut and close gap on all tracks</source>
         <translation>Klipp ut och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="66"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="51"/>
         <source>Delete and leave gap</source>
         <translation>Ta bort och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="53"/>
         <source>Delete and close gap on this track</source>
         <translation>Ta bort och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="70"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="55"/>
         <source>Delete and close gap on all tracks</source>
         <translation>Ta bort och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
         <source>Rename clip</source>
         <translation>Byt namn på klipp</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="76"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="60"/>
         <source>Clip color</source>
         <translation>Klippfärg</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="83"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="67"/>
         <source>Cut and…</source>
         <translation>Klipp ut och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="84"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
         <source>Delete and…</source>
         <translation>Ta bort och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="87"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="71"/>
         <source>Split at silences</source>
         <translation>Dela vid tystnader</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="268"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="224"/>
         <source>Same as track color</source>
         <translation>Samma som spårfärg</translation>
     </message>
@@ -6743,12 +3014,12 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1186"/>
         <source>Select</source>
         <translation>Markera</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1128"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1186"/>
         <source>Deselect</source>
         <translation>Avmarkera</translation>
     </message>
@@ -6805,8 +3076,8 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="566"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="700"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="587"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="721"/>
         <source>Save</source>
         <translation>Spara</translation>
     </message>
@@ -6817,70 +3088,71 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Du har inte loggat in</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="402"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="471"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="488"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="566"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="578"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="583"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="633"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="753"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="413"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="482"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="499"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="577"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="589"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="594"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="644"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="757"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1008"/>
         <source>Invalid project</source>
         <extracomment>Error message of a failed cloud operation</extracomment>
         <translation>Ogiltigt projekt</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="482"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="545"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="627"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="997"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="493"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="556"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="638"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="991"/>
         <source>Service destroyed</source>
         <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
         <translation>Tjänsten avslutades</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="501"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="512"/>
         <source>Internal error</source>
         <translation>Internt fel</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="588"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="594"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="605"/>
         <source>Project is not saved to the cloud</source>
         <translation>Projektet är inte sparat i molnet</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="600"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="611"/>
         <source>Project is not synced with the cloud</source>
         <translation>Projektet är inte synkroniserat med molnet</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="709"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="713"/>
         <source>Failed to get audio preview upload URLs</source>
         <translation>Det gick inte att hämta webbadresser för uppladdning av förhandsgranskning av ljud</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="859"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="853"/>
         <source>Invalid audio ID</source>
         <translation>Ogiltigt ljud-ID</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="926"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="920"/>
         <source>Project not found in cloud database</source>
         <translation>Projektet hittades inte i molndatabasen</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1009"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1003"/>
         <source>No valid current project</source>
         <translation>Inget giltigt aktuellt projekt</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1072"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1069"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>Uppladdningen lyckades men nyttolasten saknas</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1097"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1094"/>
         <source>Failed to delete cloud project from database</source>
         <translation>Det gick inte att ta bort molnprojekt från databasen</translation>
     </message>
@@ -6895,110 +3167,102 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Inloggning misslyckades. Gå tillbaka till Audacity och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1137"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1374"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="616"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1078"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1320"/>
         <source>View on audio.com</source>
         <translation>Visa på audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1346"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1288"/>
         <source>Track title</source>
         <translation>Spårtitel</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1347"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1289"/>
         <source>Share audio</source>
         <translation>Dela ljud</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1348"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1290"/>
         <source>Share</source>
         <translation>Dela</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1369"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1315"/>
         <source>Audio shared to audio.com</source>
         <translation>Ljudet har delats på audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1389"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1335"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Delar ljud till audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1448"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1396"/>
         <source>Downloading audio from cloud…</source>
         <translation>Laddar ner ljud från molnet…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1486"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1436"/>
         <source>The project must be saved before updating the audio preview</source>
         <translation>Projektet måste sparas innan ljudförhandsvisningen uppdateras</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1487"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1437"/>
         <source>Save your changes to continue, or cancel the update.</source>
         <translation>Spara dina ändringar för att fortsätta eller avbryt uppdateringen.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1491"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1441"/>
         <source>Unsaved changes</source>
         <translation>Osparade ändringar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1512"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1548"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1561"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1574"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1581"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1588"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1462"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1498"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1511"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1524"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1531"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1538"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
         <translation>Generera ljudförhandsvisning</translation>
     </message>
     <message>
-        <source>Cloud audio preview updated</source>
-        <translation type="vanished">Förhandsvisningen av molnljudet har uppdaterats</translation>
-    </message>
-    <message>
-        <source>The audio preview has been uploaded to audio.com</source>
-        <translation type="vanished">Ljudförhandsvisningen har laddats upp till audio.com</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1542"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1492"/>
         <source>Audio preview is up to date</source>
         <translation>Förhandsvisningen av ljudet är aktuell</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1543"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1493"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
         <translation>Ljudförhandsvisningen matchar redan den senast sparade versionen av detta projekt.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1553"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1503"/>
         <source>Updating cloud audio preview…</source>
         <translation>Uppdaterar förhandsvisning av molnljud…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1582"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
         <source>Could not determine the local path of the downloaded project</source>
         <translation>Det gick inte att fastställa den lokala sökvägen för det nedladdade projektet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="561"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="682"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="695"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="582"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="716"/>
         <source>Save to audio.com</source>
         <translation>Spara till audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="787"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="808"/>
         <source>Audio download failed</source>
         <translation>Ljudnedladdning misslyckades</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="795"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="816"/>
         <source>Open audio from cloud</source>
         <translation>Öppna ljud från molnet</translation>
     </message>
@@ -7098,6 +3362,2833 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     </message>
 </context>
 <context>
+    <name>command</name>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="21"/>
+        <source>Exit</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Avsluta</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="33"/>
+        <source>Restart</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Starta om</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="43"/>
+        <source>&amp;Full screen</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Helskärm</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="53"/>
+        <source>&amp;About Audacity…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Om Audacity…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="63"/>
+        <source>About &amp;Qt…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Om Qt…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="73"/>
+        <source>Online &amp;handbook</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Handbok online</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="83"/>
+        <source>As&amp;k for help</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Be om hjälp</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="93"/>
+        <source>&amp;Preferences</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Inställningar</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="103"/>
+        <source>Revert to &amp;factory settings</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Återgå till fabriksinställningarna</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="113"/>
+        <source>Audio settings</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ljudinställningar</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="123"/>
+        <source>Shortcuts</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Genvägar</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="133"/>
+        <source>Editing</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="143"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="563"/>
+        <source>Spectrogram</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spektrogram</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="163"/>
+        <source>&amp;Playback controls</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Uppspelningskontroller</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="173"/>
+        <source>&amp;Tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="183"/>
+        <source>Show history</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa historik</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="193"/>
+        <source>&amp;Macro manager</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="202"/>
+        <source>&amp;Status bar</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Statusfält</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="723"/>
+        <source>Copy</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Kopiera</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="732"/>
+        <source>Cut</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klipp ut</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="750"/>
+        <source>&amp;Paste</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>K&amp;listra in</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="21"/>
+        <source>&amp;Undo</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Ångra</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="30"/>
+        <source>&amp;Redo</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Gör om</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="741"/>
+        <source>De&amp;lete</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ra&amp;dera</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="153"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="999"/>
+        <source>Open item context menu</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Öppna objektets snabbmeny</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
+        <source>Show audio.com tour</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="28"/>
+        <source>View project on audio.com</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Se projektet på audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="40"/>
+        <source>View on audio.com</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa på audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="52"/>
+        <source>View profile on audio.com</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="62"/>
+        <source>Open audacity URL</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
+        <source>&amp;New…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Ny…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="30"/>
+        <source>&amp;Open…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Öppna…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="42"/>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="135"/>
+        <source>Open</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Öppen</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="55"/>
+        <source>&amp;Clear recent files</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Rensa de senaste filerna</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="64"/>
+        <source>Import…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Importera…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="75"/>
+        <source>Import startup media</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="88"/>
+        <source>&amp;Save</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Spara</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="97"/>
+        <source>Save &amp;as…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Spara som…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="106"/>
+        <source>Save to clo&amp;ud…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Spara i molnet…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="116"/>
+        <source>&amp;Close project</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Stäng projekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="125"/>
+        <source>Share audio</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dela ljud</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="147"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Uppdatera förhandsvisning av molnljud</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="156"/>
+        <source>Update audio preview</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Uppdatera ljudförhandsvisning</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="168"/>
+        <source>&amp;Export audio…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Exportera ljud…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="177"/>
+        <source>&amp;Export labels</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Exportera &amp;etiketter</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="188"/>
+        <source>&amp;Export MIDI</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Exportera MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="197"/>
+        <source>Show metadata editor</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa metadataredigerare</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="207"/>
+        <source>Custom FFmpeg options</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Anpassade FFmpeg-alternativ</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="217"/>
+        <source>Custom channel mapping</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="21"/>
+        <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Minuter &amp;&amp; sekunder</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="30"/>
+        <source>Beats &amp;&amp; measures</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Slag &amp;&amp; takter</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="39"/>
+        <source>Show vertical rulers</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa vertikala linjaler</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="48"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa RMS i vågform</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="57"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa överstyrning i vågformen</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="66"/>
+        <source>Update display while playing</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Uppdatera vyn under uppspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="75"/>
+        <source>Pinned playhead</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Fäst spelhuvud</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="84"/>
+        <source>Click ruler to start playback</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klicka på linjalen för att starta uppspelningen</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="93"/>
+        <source>Half-wave</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Halvvåg</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="105"/>
+        <source>Clip gain</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klippförstärkning</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="114"/>
+        <source>Pitch and speed</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="127"/>
+        <source>Show label editor</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa etikettredigerare</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="137"/>
+        <source>Zoom in</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Zooma in</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="146"/>
+        <source>Zoom out</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Zooma ut</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="155"/>
+        <source>Zoom default</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Standardzoom</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="164"/>
+        <source>Zoom to selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Zooma till markering</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="173"/>
+        <source>Zoom to fit project</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Zooma för att passa projekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="182"/>
+        <source>Zoom toggle</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Växla zoom</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="191"/>
+        <source>Scroll timeline left one page</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="200"/>
+        <source>Scroll timeline right one page</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="209"/>
+        <source>Center view on playhead</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Centrera vyn på spelhuvudet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="222"/>
+        <source>Timeline context menu</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="232"/>
+        <source>Move playhead left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta spelhuvudet åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="241"/>
+        <source>Move playhead right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta spelhuvudet åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="250"/>
+        <source>Extend selection left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Utöka markeringen åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="259"/>
+        <source>Extend selection right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Utöka markeringen åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="268"/>
+        <source>Contract selection from left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Minska markeringen från vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="277"/>
+        <source>Contract selection from right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Minska markeringen från höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="286"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta spelhuvudet till markeringens början</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="295"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta spelhuvudet till markeringens slut</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="304"/>
+        <source>Show effects panel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa effektpanelen</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="351"/>
+        <source>Snapping</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Snapping</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="314"/>
+        <source>Audio setup</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ljudkonfiguration</translation>
+    </message>
+    <message>
+        <location filename="../../src/musehub/internal/musehubcommandsregister.cpp" line="31"/>
+        <source>Get effects</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Hämta effekter</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="324"/>
+        <source>Split tool</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Delningsverktyg</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="333"/>
+        <source>Move realtime effect up</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta upp realtidseffekten</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="342"/>
+        <source>Move realtime effect down</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta ner realtidseffekten</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="21"/>
+        <source>Record on current track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spela in på aktuellt spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="30"/>
+        <source>Record on new track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spela in på nytt spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="21"/>
+        <source>Play/Pause</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spela upp/pausa</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="30"/>
+        <source>Play/Stop</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spela upp/stoppa</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="39"/>
+        <source>Play/Stop and set cursor</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spela upp/stoppa och sätt markören</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="48"/>
+        <source>Play selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spela upp markeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="57"/>
+        <source>Play tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="66"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="39"/>
+        <source>Pause</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Pausa</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="75"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="48"/>
+        <source>Stop</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Stoppa</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="84"/>
+        <source>Rewind to start</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Hoppa till början</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="93"/>
+        <source>Rewind to end</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Hoppa till slutet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="102"/>
+        <source>Seek</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="115"/>
+        <source>Change play region</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="128"/>
+        <source>Change audio host</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Byt ljudvärd</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="140"/>
+        <source>Change playback device</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Byt uppspelningsenhet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="153"/>
+        <source>Change recording device</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Byt inspelningsenhet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="166"/>
+        <source>Change input channels</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ändra ingångskanaler</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="178"/>
+        <source>Rescan audio devices</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Återskanna ljudenheter</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="187"/>
+        <source>Play repeats</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Upprepa uppspelningen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="196"/>
+        <source>Pan automatically</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Panorera automatiskt</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="205"/>
+        <source>Loop playback</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Loopad uppspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="214"/>
+        <source>Clear loop region</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Rensa loopområde</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="223"/>
+        <source>Set loop region to selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ställ in loopområdet efter markeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="232"/>
+        <source>Set selection to loop</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ställ in markeringen efter loopen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="241"/>
+        <source>Set loop region in out</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ställ in loopområdets början och slut</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="250"/>
+        <source>Creating a loop also selects audio</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>När en loop skapas markeras även ljudet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="259"/>
+        <source>Mute/unmute focused track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tysta/avtysta fokuserat spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="269"/>
+        <source>Solo/unsolo focused track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Solo/avsolo fokuserat spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="279"/>
+        <source>Mute all tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tysta alla spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="288"/>
+        <source>Unmute all tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Avtysta alla spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="297"/>
+        <source>Mute selected tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tysta markerade spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="306"/>
+        <source>Unmute selected tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Avtysta markerade spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="315"/>
+        <source>Playback level</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Uppspelningsnivå</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="325"/>
+        <source>Metronome</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Metronom</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="335"/>
+        <source>Timecode</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tidskod</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="345"/>
+        <source>Tempo</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tempo</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="355"/>
+        <source>Time signature</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Taktart</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="57"/>
+        <source>Record level</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Inspelningsnivå</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="67"/>
+        <source>Show mic metering</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Visa mikrofonmätare</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="76"/>
+        <source>Turn on input monitoring</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Slå på ingångsövervakning</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="85"/>
+        <source>Lead-in Recording</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Inspelning med förberedelsetid</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
+        <source>Timed recording</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
+        <source>Turn on sound activated recording</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="113"/>
+        <source>Set sound activation level…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="23"/>
+        <source>Spectrogram settings…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spektrograminställningar…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="39"/>
+        <source>Cancel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Avbryt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="49"/>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klistra in (skjuter klipp på markerat spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="58"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klistra in (överlappar andra klipp)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="67"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klistra in (bevarar synkronisering på alla spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="76"/>
+        <source>Cut clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="89"/>
+        <source>Copy clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="102"/>
+        <source>Delete clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="115"/>
+        <source>Split cut clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="128"/>
+        <source>Split delete clip</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="141"/>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Öppna dialogrutan för tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="151"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Rendera tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="164"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Återställ tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="177"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Sträck utifrån tempoändringar</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="190"/>
+        <source>Split tracks at</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="203"/>
+        <source>New mono track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Nytt monospår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="212"/>
+        <source>New stereo track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Nytt stereospår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="221"/>
+        <source>New label track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Nytt etikettspår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="230"/>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="795"/>
+        <source>Duplicate</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Duplicera</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="239"/>
+        <source>Move track up</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta upp spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="248"/>
+        <source>Move track down</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta ned spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="257"/>
+        <source>Move track to top</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta spåret längst upp</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="266"/>
+        <source>Move track to bottom</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta spåret längst ned</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="275"/>
+        <source>Swap stereo channels</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Byt plats på stereokanaler</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="284"/>
+        <source>Split stereo to L/R mono</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dela stereo till L/R mono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="293"/>
+        <source>Split stereo to center mono</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dela stereo till mittmono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="302"/>
+        <source>Other…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Övrigt…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="312"/>
+        <source>Make stereo track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Skapa stereospår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="321"/>
+        <source>Resample track…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Omsampla spår…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="331"/>
+        <source>Mix and render</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="343"/>
+        <source>Trim</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Beskär</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="352"/>
+        <source>Silence</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Tystnad</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="361"/>
+        <source>Group</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="370"/>
+        <source>Ungroup</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="379"/>
+        <source>Select all</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Markera allt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="388"/>
+        <source>Clear selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Rensa markering</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="397"/>
+        <source>Select all tracks</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Markera alla spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="406"/>
+        <source>Left of playback position</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Till vänster om uppspelningsposition</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="415"/>
+        <source>Right of playback position</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Höger om uppspelningsposition</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="424"/>
+        <source>Track start to cursor</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Från spårets början till markören</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="433"/>
+        <source>Cursor to track end</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Från markören till spårets slut</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="442"/>
+        <source>Track start to end</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spårets början till slutet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
+        <source>Set selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="464"/>
+        <source>Select track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="476"/>
+        <source>At zero crossings</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="485"/>
+        <source>Same as track color</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Samma som spårfärg</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="494"/>
+        <source>Change clip color</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Byt färg på klippet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="506"/>
+        <source>Change track color</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ändra spårfärg</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="518"/>
+        <source>Change track format</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ändra spårformat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="530"/>
+        <source>Change track sample rate</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ändra spårsamplingsfrekvens</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="542"/>
+        <source>Toggle spectral view</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Växla spektral vy</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="551"/>
+        <source>Waveform</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Vågform</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="575"/>
+        <source>Multi-view</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flervy</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="587"/>
+        <source>Add label</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Lägg till etikett</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="596"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Byt namn på objekt (klipp/etikett)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="606"/>
+        <source>Move item left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta objektet åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="616"/>
+        <source>Move item right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta objektet åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="626"/>
+        <source>Move item up</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta objektet uppåt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="636"/>
+        <source>Move item down</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Flytta objektet nedåt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="646"/>
+        <source>Extend item left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Förläng objektet åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="656"/>
+        <source>Extend item right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Förläng objektet åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="666"/>
+        <source>Reduce item left</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Förkorta objektet från vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="676"/>
+        <source>Reduce item right</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Förkorta objektet från höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="686"/>
+        <source>Merge selected clips</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Slå samman markerade klipp</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="700"/>
+        <source>Duplicate selected</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Duplicera markerat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="714"/>
+        <source>Delete</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Radera</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="759"/>
+        <source>Split</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dela</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="768"/>
+        <source>Split into new track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dela upp till nytt spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="777"/>
+        <source>Join selected clips</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Sammanfoga markerade klipp</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="786"/>
+        <source>Split clips at silences</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Dela klipp vid tystnad</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="804"/>
+        <source>Split track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="816"/>
+        <source>Cut and leave gap</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klipp ut och lämna mellanrum</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="825"/>
+        <source>Cut and close gap (per clip)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klipp ut och stäng mellanrum (per klipp)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="834"/>
+        <source>Cut and close gap (per track)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klipp ut och stäng mellanrum (per spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="843"/>
+        <source>Cut and close gap (all tracks)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Klipp ut och stäng mellanrum (alla spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="852"/>
+        <source>Delete and leave gap</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ta bort och lämna mellanrum</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="861"/>
+        <source>Delete and close gap (per clip)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ta bort och stäng mellanrum (per klipp)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="870"/>
+        <source>Delete and close gap (per track)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ta bort och stäng mellanrum (per spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="879"/>
+        <source>Delete and close gap (all tracks)</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Ta bort och stäng mellanrum (alla spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="889"/>
+        <source>Next panel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Nästa panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="899"/>
+        <source>Previous panel</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Föregående panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="909"/>
+        <source>First track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Första spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="919"/>
+        <source>Last track</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Sista spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="929"/>
+        <source>Above item</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Objektet ovanför</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="939"/>
+        <source>Below item</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Objektet nedanför</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="949"/>
+        <source>Select track/track item</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Markera spår/spårobjekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="959"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Lägg till spår eller spårobjekt i markeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="969"/>
+        <source>Track range selection</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Markering av spårintervall</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="979"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Föregående flerspårsmarkering</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="989"/>
+        <source>Multi track selection next</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Nästa flerspårsmarkering</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1009"/>
+        <source>Open ruler context menu</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
+        <source>Repeat last effect</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Upprepa senaste effekten</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="31"/>
+        <source>Plugin manager</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Insticksmodulhanterare</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="53"/>
+        <source>&amp;Apply preset</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Använd förinställning</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="66"/>
+        <source>&amp;Save preset</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Spara förinställning</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="79"/>
+        <source>Save preset as…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>Spara förinställning som…</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="91"/>
+        <source>&amp;Delete preset</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Ta bort förinställning</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="104"/>
+        <source>&amp;Import…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Import…</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="116"/>
+        <source>&amp;Export…</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation>&amp;Export…</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="170"/>
+        <source>Apply %1</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="181"/>
+        <source>Configure %1</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="19"/>
+        <source>Export as MP3</source>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>command_description</name>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="23"/>
+        <source>Exit</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Avsluta</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="35"/>
+        <source>Restart</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Starta om</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="45"/>
+        <source>Full screen</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Helskärm</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="55"/>
+        <source>About Audacity</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Om Audacity</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="65"/>
+        <source>About Qt</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="75"/>
+        <source>Open online handbook</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna handbok online</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="85"/>
+        <source>Ask for help</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="95"/>
+        <source>Preferences…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Inställningar…</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="105"/>
+        <source>Revert to factory settings</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Återgå till fabriksinställningarna</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="115"/>
+        <source>Open audio setup dialog</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna dialogrutan Ljudinställningar</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="125"/>
+        <source>Open shortcuts preferences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="135"/>
+        <source>Open editing preferences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="145"/>
+        <source>Open spectrogram preferences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="165"/>
+        <source>Show/hide playback controls</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa/dölj uppspelningskontroller</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="175"/>
+        <source>Show/hide tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa/dölj spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="185"/>
+        <source>Show history</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa historik</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="195"/>
+        <source>Show/hide macro manager</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="204"/>
+        <source>Show/hide status bar</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa/dölj statusfältet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="725"/>
+        <source>Copy</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Kopiera</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="734"/>
+        <source>Cut</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klipp ut</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="752"/>
+        <source>Paste</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klistra in</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="23"/>
+        <source>Undo</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ångra</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="32"/>
+        <source>Redo</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Gör om</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="743"/>
+        <source>Delete</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Radera</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="155"/>
+        <source>Open the context menu of the focused item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna snabbmenyn för det fokuserade objektet</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
+        <source>Open the audio.com tour page, signing in first if needed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="30"/>
+        <source>View project on audio.com</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Se projektet på audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="42"/>
+        <source>View on audio.com</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa på audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="54"/>
+        <source>Open the signed in user’s audio.com profile page</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="64"/>
+        <source>Handle an audacity:// URL</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="23"/>
+        <source>New…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ny…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="32"/>
+        <source>Open…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="44"/>
+        <source>Open cloud project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="57"/>
+        <source>Clear recent files</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Rensa de senaste filerna</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="66"/>
+        <source>Import…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Importera…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="77"/>
+        <source>Import media files into a new project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="90"/>
+        <source>Save</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spara</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="99"/>
+        <source>Save as…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spara som…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="108"/>
+        <source>Save to cloud…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spara i molnet…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="118"/>
+        <source>Close project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Stäng projekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="127"/>
+        <source>Share audio</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dela ljud</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="137"/>
+        <source>Open cloud audio file</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna ljudfil från molnet</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="149"/>
+        <source>Update cloud audio preview</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Uppdatera förhandsvisning av molnljud</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="158"/>
+        <source>Update audio preview</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Uppdatera ljudförhandsvisning</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="170"/>
+        <source>Export audio…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Exportera ljud…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="179"/>
+        <source>Export labels</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Exportera etiketter</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="190"/>
+        <source>Export MIDI</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Exportera MIDI</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="199"/>
+        <source>Show metadata editor</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa metadataredigerare</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="209"/>
+        <source>Open the custom FFmpeg export options</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectcommandsregister.cpp" line="219"/>
+        <source>Open the custom export channel mapping</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="23"/>
+        <source>Minutes &amp;&amp; seconds</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Minuter &amp;&amp; sekunder</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="32"/>
+        <source>Beats &amp;&amp; measures</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Slag &amp;&amp; takter</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="41"/>
+        <source>Show vertical rulers</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa vertikala linjaler</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="50"/>
+        <source>Show RMS in waveform</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa RMS i vågform</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="59"/>
+        <source>Show clipping in waveform</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa överstyrning i vågformen</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="68"/>
+        <source>Update display while playing</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Uppdatera vyn under uppspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="77"/>
+        <source>Pinned playhead</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Fäst spelhuvud</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="86"/>
+        <source>Click ruler to start playback</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klicka på linjalen för att starta uppspelningen</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="95"/>
+        <source>Half-wave</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Halvvåg</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="107"/>
+        <source>Clip gain</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klippförstärkning</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="116"/>
+        <source>Pitch and speed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="129"/>
+        <source>Show label editor</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa etikettredigerare</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="139"/>
+        <source>Zoom in</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Zooma in</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="148"/>
+        <source>Zoom out</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Zooma ut</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="157"/>
+        <source>Zoom default</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Standardzoom</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="166"/>
+        <source>Zoom to selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Zooma till markering</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="175"/>
+        <source>Zoom to fit project</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Zooma för att passa projekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="184"/>
+        <source>Zoom toggle</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Växla zoom</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="193"/>
+        <source>Scroll the timeline left by one screen width</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="202"/>
+        <source>Scroll the timeline right by one screen width</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="211"/>
+        <source>Center view on playhead</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Centrera vyn på spelhuvudet</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="224"/>
+        <source>Open the timeline context menu</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="234"/>
+        <source>Move playhead left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta spelhuvudet åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="243"/>
+        <source>Move playhead right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta spelhuvudet åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="252"/>
+        <source>Extend selection left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Utöka markeringen åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="261"/>
+        <source>Extend selection right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Utöka markeringen åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="270"/>
+        <source>Contract selection from left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Minska markeringen från vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="279"/>
+        <source>Contract selection from right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Minska markeringen från höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="288"/>
+        <source>Move playhead to selection start</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta spelhuvudet till markeringens början</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="297"/>
+        <source>Move playhead to selection end</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta spelhuvudet till markeringens slut</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="306"/>
+        <source>Show effects panel</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa effektpanelen</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="353"/>
+        <source>Snapping</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Snapping</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="316"/>
+        <source>Open audio setup context menu</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna snabbmenyn för ljudkonfiguration</translation>
+    </message>
+    <message>
+        <location filename="../../src/musehub/internal/musehubcommandsregister.cpp" line="33"/>
+        <source>Open Get effects dialog</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna dialogrutan Hämta effekter</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="326"/>
+        <source>Split tool</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Delningsverktyg</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="335"/>
+        <source>Move realtime effect up</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta upp realtidseffekten</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="344"/>
+        <source>Move realtime effect down</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta ner realtidseffekten</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="23"/>
+        <source>Record on current track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spela in på aktuellt spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="32"/>
+        <source>Record on new track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spela in på nytt spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="23"/>
+        <source>Play/Pause</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spela upp/pausa</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="32"/>
+        <source>Play/Stop</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spela upp/stoppa</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="41"/>
+        <source>Play/Stop and set cursor</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spela upp/stoppa och sätt markören</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="50"/>
+        <source>Play selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spela upp markeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="59"/>
+        <source>Play the given tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="68"/>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="41"/>
+        <source>Pause</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Pausa</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="77"/>
+        <source>Stop playback</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Stoppa uppspelningen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="86"/>
+        <source>Rewind to start</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Hoppa till början</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="95"/>
+        <source>Rewind to end</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Hoppa till slutet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="104"/>
+        <source>Move the playhead to the given time</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="117"/>
+        <source>Change the playback region</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="130"/>
+        <source>Change audio host</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Byt ljudvärd</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="142"/>
+        <source>Change playback device</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Byt uppspelningsenhet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="155"/>
+        <source>Change recording device</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Byt inspelningsenhet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="168"/>
+        <source>Change input channels</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ändra ingångskanaler</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="180"/>
+        <source>Rescan audio devices</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Återskanna ljudenheter</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="189"/>
+        <source>Play repeats</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Upprepa uppspelningen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="198"/>
+        <source>Pan automatically during playback</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Panorera automatiskt under uppspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="207"/>
+        <source>Toggle ‘Loop playback’</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Växla ”loopad uppspelning”</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="216"/>
+        <source>Clear loop region</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Rensa loopområde</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="225"/>
+        <source>Set loop region to selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in loopområdet efter markeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="234"/>
+        <source>Set selection to loop</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in markeringen efter loopen</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="243"/>
+        <source>Set loop region in out</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in loopområdets början och slut</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="252"/>
+        <source>Creating a loop also selects audio</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>När en loop skapas markeras även ljudet</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="261"/>
+        <source>Mute/unmute focused track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tysta/avtysta fokuserat spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="271"/>
+        <source>Solo/unsolo focused track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Solo/avsolo fokuserat spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="281"/>
+        <source>Mute all tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tysta alla spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="290"/>
+        <source>Unmute all tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Avtysta alla spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="299"/>
+        <source>Mute selected tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tysta markerade spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="308"/>
+        <source>Unmute selected tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Avtysta markerade spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="317"/>
+        <source>Set playback level</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in uppspelningsnivå</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="327"/>
+        <source>Toggle metronome playback</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Växla metronomuppspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="337"/>
+        <source>Set playback time</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in uppspelningstid</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="347"/>
+        <source>Set playback tempo</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in uppspelningstempo</translation>
+    </message>
+    <message>
+        <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="357"/>
+        <source>Set playback time signature</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in uppspelningstaktart</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="50"/>
+        <source>Stop record</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Stoppa inspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="59"/>
+        <source>Set record level</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in inspelningsnivå</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="69"/>
+        <source>Show mic metering</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Visa mikrofonmätare</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="78"/>
+        <source>Turn on input monitoring</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Slå på ingångsövervakning</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="87"/>
+        <source>Start lead-in recording</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Starta inspelning med förberedelsetid</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
+        <source>Set up a timed recording</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="106"/>
+        <source>Turn on sound activated recording</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
+        <source>Set sound activation level</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ställ in ljudaktiveringsnivå</translation>
+    </message>
+    <message>
+        <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="25"/>
+        <source>Spectrogram settings…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektrograminställningar…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="41"/>
+        <source>Cancel the current interaction or clear the selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="51"/>
+        <source>Paste (pushes clips on selected track)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klistra in (skjuter klipp på markerat spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="60"/>
+        <source>Paste (overlaps other clips)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klistra in (överlappar andra klipp)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="69"/>
+        <source>Paste (preserves synchronization on all tracks)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klistra in (bevarar synkronisering på alla spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="78"/>
+        <source>Cut the given clip into the clipboard</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="91"/>
+        <source>Copy the given clip into the clipboard</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="104"/>
+        <source>Delete the given clip</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="117"/>
+        <source>Cut the given clip into the clipboard and leave a gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="130"/>
+        <source>Delete the given clip and leave a gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="143"/>
+        <source>Open pitch and speed dialog</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Öppna dialogrutan för tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="153"/>
+        <source>Render pitch and speed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Rendera tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="166"/>
+        <source>Reset pitch and speed</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Återställ tonhöjd och hastighet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="179"/>
+        <source>Stretch with tempo changes</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sträck utifrån tempoändringar</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="192"/>
+        <source>Split the given tracks at the given positions</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="205"/>
+        <source>New mono track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Nytt monospår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="214"/>
+        <source>New stereo track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Nytt stereospår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="223"/>
+        <source>New label track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Nytt etikettspår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="232"/>
+        <source>Duplicate track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Duplicera spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="241"/>
+        <source>Move track up</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta upp spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="250"/>
+        <source>Move track down</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta ned spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="259"/>
+        <source>Move track to top</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta spåret längst upp</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="268"/>
+        <source>Move track to bottom</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta spåret längst ned</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="277"/>
+        <source>Swap stereo channels</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Byt plats på stereokanaler</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="286"/>
+        <source>Split stereo to L/R mono</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dela stereo till L/R mono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="295"/>
+        <source>Split stereo to center mono</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dela stereo till mittmono</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="304"/>
+        <source>Set a custom track sample rate</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="314"/>
+        <source>Make stereo track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Skapa stereospår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="323"/>
+        <source>Resample track…</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Omsampla spår…</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="333"/>
+        <source>Mix the selected tracks into one track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="345"/>
+        <source>Trim audio outside selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Beskär ljud utanför markeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="354"/>
+        <source>Silence audio selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Tysta ljudmarkeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="363"/>
+        <source>Group the selected clips and labels</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="372"/>
+        <source>Ungroup the selected clips and labels</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="381"/>
+        <source>Select all</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Markera allt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="390"/>
+        <source>Clear selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Rensa markering</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="399"/>
+        <source>Select all tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Markera alla spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
+        <source>Select from a chosen time to the playback position</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="417"/>
+        <source>Select from the playback position to a chosen time</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="426"/>
+        <source>Select from the track start to the cursor</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="435"/>
+        <source>Select from the cursor to the track end</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="444"/>
+        <source>Select from the track start to the track end</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="453"/>
+        <source>Set the time selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="466"/>
+        <source>Select the track at the given index</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="478"/>
+        <source>Move the cursor to the nearest zero crossing</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="487"/>
+        <source>Use the track color for the selected clips</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="496"/>
+        <source>Change clip color</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Byt färg på klippet</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="508"/>
+        <source>Change track color</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ändra spårfärg</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="520"/>
+        <source>Change track format</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ändra spårformat</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="532"/>
+        <source>Change track sample rate</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ändra spårsamplingsfrekvens</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="544"/>
+        <source>Toggle spectral view</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Växla spektral vy</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="553"/>
+        <source>Waveform</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Vågform</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="565"/>
+        <source>Spectrogram</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spektrogram</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="577"/>
+        <source>Multi-view</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flervy</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="589"/>
+        <source>Add label</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Lägg till etikett</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="598"/>
+        <source>Rename item (clip/label)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Byt namn på objekt (klipp/etikett)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="608"/>
+        <source>Move item left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta objektet åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="618"/>
+        <source>Move item right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta objektet åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="628"/>
+        <source>Move item up</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta objektet uppåt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="638"/>
+        <source>Move item down</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Flytta objektet nedåt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="648"/>
+        <source>Extend item left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Förläng objektet åt vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="658"/>
+        <source>Extend item right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Förläng objektet åt höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="668"/>
+        <source>Reduce item left</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Förkorta objektet från vänster</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="678"/>
+        <source>Reduce item right</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Förkorta objektet från höger</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="688"/>
+        <source>Merge the clips in the given time range on the given tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="702"/>
+        <source>Duplicate the given time range on the given tracks</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
+        <source>Delete track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ta bort spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="761"/>
+        <source>Split</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dela</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="770"/>
+        <source>Move the selection into a new track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
+        <source>Join selected clips</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sammanfoga markerade klipp</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="788"/>
+        <source>Split clips at silences</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Dela klipp vid tystnad</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="797"/>
+        <source>Duplicate</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Duplicera</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="806"/>
+        <source>Split the given track at the playback position</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="818"/>
+        <source>Cut and leave gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klipp ut och lämna mellanrum</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="827"/>
+        <source>Cut and close gap (per clip)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klipp ut och stäng mellanrum (per klipp)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="836"/>
+        <source>Cut and close gap (per track)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klipp ut och stäng mellanrum (per spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="845"/>
+        <source>Cut and close gap (all tracks)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Klipp ut och stäng mellanrum (alla spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="854"/>
+        <source>Delete and leave gap</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ta bort och lämna mellanrum</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="863"/>
+        <source>Delete and close gap (per clip)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ta bort och stäng mellanrum (per klipp)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="872"/>
+        <source>Delete and close gap (per track)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ta bort och stäng mellanrum (per spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="881"/>
+        <source>Delete and close gap (all tracks)</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ta bort och stäng mellanrum (alla spår)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="891"/>
+        <source>Next panel</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Nästa panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="901"/>
+        <source>Previous panel</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Föregående panel</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="911"/>
+        <source>First track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Första spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="921"/>
+        <source>Last track</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Sista spåret</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="931"/>
+        <source>Above item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Objektet ovanför</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="941"/>
+        <source>Below item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Objektet nedanför</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="951"/>
+        <source>Select track/track item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Markera spår/spårobjekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="961"/>
+        <source>Add track or track item to selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Lägg till spår eller spårobjekt i markeringen</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="971"/>
+        <source>Track range selection</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Markering av spårintervall</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="981"/>
+        <source>Multi track selection previous</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Föregående flerspårsmarkering</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="991"/>
+        <source>Multi track selection next</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Nästa flerspårsmarkering</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1001"/>
+        <source>Open the context menu of the focused track item</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1011"/>
+        <source>Open the context menu of the focused ruler</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
+        <source>Repeat last effect</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Upprepa senaste effekten</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="33"/>
+        <source>Plugin manager</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Insticksmodulhanterare</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
+        <source>Apply preset</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
+        <source>Save preset</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Spara förinställning</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="81"/>
+        <source>Save preset as</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="93"/>
+        <source>Delete preset</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Ta bort förinställning</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="106"/>
+        <source>Import preset</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Importera förinställning</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="118"/>
+        <source>Export preset</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation>Exportera förinställning</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="172"/>
+        <source>Apply %1 with the given parameters</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="183"/>
+        <source>Choose the parameters of %1 without applying it</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="21"/>
+        <source>Export the project audio as an MP3 file into the macro-output folder</source>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>diagnostics</name>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
@@ -7106,117 +6197,101 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
-        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation>Detta kommer att skapa en .zip-fil med information om din MuseScore Studio-setup för att hjälpa utvecklarna diagnostisera dina bekymmer. Du kan inspektera filens innehåll innan du skickar den till någon.</translation>
+        <source>This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
-        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="36"/>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="54"/>
         <source>Save diagnostic files</source>
         <translation>Spara diagnostikfiler</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="43"/>
         <source>Show paths…</source>
         <translation>Visa sökvägar…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="42"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="44"/>
         <source>Show paths</source>
         <translation>Visa sökvägar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="51"/>
         <source>Show profiler…</source>
         <translation>Visa profiler…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="49"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="52"/>
         <source>Show profiler</source>
         <translation>Visa profilhanterare</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="55"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="59"/>
         <source>Show graphics info…</source>
         <translation>Visa grafikinformation…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="56"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="60"/>
         <source>Show graphics info</source>
         <translation>Visa grafikinfo</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="62"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="67"/>
         <source>Show navigation tree…</source>
         <translation>Visa navigeringsträd…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="63"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="68"/>
         <source>Show navigation tree</source>
         <translation>Visa navigationsträd</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="69"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="75"/>
         <source>Show accessibility tree…</source>
         <translation>Visa tillgänglighetsträd…</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="70"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
         <source>Show accessibility tree</source>
         <translation>Visa tillgänglighetsträd</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="77"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Dump accessibility tree to console</source>
         <translation>Dumpa tillgänglighetsträd till konsol</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="92"/>
         <source>Show engraving elements</source>
         <translation>Visa tryckelement</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="90"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="99"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="100"/>
         <source>Show engraving undo stack</source>
         <translation>Visa ångrastack för tryck</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="97"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="98"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="107"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="108"/>
         <source>Show engraving style options list</source>
         <translation>Visa lista med stilalternativ för tryck</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="104"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="105"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="115"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="116"/>
         <source>Show actions list</source>
         <translation>Visa åtgärdslista</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="111"/>
-        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="112"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="123"/>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="124"/>
         <source>Show commands list</source>
         <translation>Visa lista över kommandon</translation>
-    </message>
-    <message>
-        <source>Show rcommands list</source>
-        <translation type="vanished">Visa lista över r-kommandon</translation>
-    </message>
-    <message>
-        <source>Test query action</source>
-        <translation type="vanished">Testfråga åtgärd</translation>
-    </message>
-    <message>
-        <source>Test query action with params 1</source>
-        <translation type="vanished">Testa frågeåtgärd med parametrar 1</translation>
-    </message>
-    <message>
-        <source>Test query action with params 2</source>
-        <translation type="vanished">Testa frågeåtgärd med parametrar 2</translation>
     </message>
 </context>
 <context>
@@ -7434,13 +6509,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Pip</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="319"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="320"/>
         <source>Stop preview</source>
         <extracomment>Shown on a button that stops effect preview</extracomment>
         <translation>Stoppa förhandsgranskning</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="321"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="322"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
         <translation>Förhandsvisa</translation>
@@ -7464,7 +6539,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Alternativ för förinställning</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="462"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="465"/>
         <source>Unknown parameter type: %1</source>
         <translation>Okänd parametertyp: %1</translation>
     </message>
@@ -7511,7 +6586,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="118"/>
-        <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="76"/>
+        <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="78"/>
         <source>Save</source>
         <translation>Spara</translation>
     </message>
@@ -7626,7 +6701,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Förinställningen stämmer inte</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="413"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="506"/>
         <source>Applied effect: %1</source>
         <translation>Tillämpade effekt: %1</translation>
     </message>
@@ -7676,89 +6751,89 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>%1: är för en annan effekt, generator eller analysator.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="762"/>
         <source>Generating %1…</source>
         <translation>Genererar %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="669"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="762"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
         <translation>Tillämpar %1…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="899"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="1001"/>
         <source>Effect preview</source>
         <translation>Effektförhandsvisning</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="82"/>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="41"/>
         <source>Use vendor UI</source>
-        <extracomment>Action title: shown as a menu item or a button label; keep it short</extracomment>
+        <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
         <translation>Använd leverantörens användargränssnitt</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="84"/>
+        <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="43"/>
         <source>Toggle between vendor UI and fallback UI</source>
-        <extracomment>Action description: shown as a tooltip; can be a full sentence</extracomment>
+        <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
         <translation>Växla mellan leverantörens gränssnitt och reservgränssnittet</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="239"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="242"/>
         <source>Master</source>
         <translation>Master</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="278"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="281"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
         <translation>Lade till %1 i %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="281"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="284"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
         <translation>Lägg till %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="319"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="322"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
         <translation>Tog bort %1 från %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="322"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="325"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
         <translation>Ta bort %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="344"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="347"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
         <translation>Ersatte %1 med %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="347"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="350"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
         <translation>Byt ut %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="383"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="386"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
         <translation>Flyttade %1 upp i %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="387"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="390"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
         <translation>Flyttade ner %1 i %2</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="391"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="394"/>
         <source>Change effect order</source>
         <translation>Ändra effektordning</translation>
     </message>
@@ -7769,12 +6844,12 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Standardförinställning</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="580"/>
+        <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="578"/>
         <source>custom</source>
         <translation>Anpassad</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="86"/>
+        <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="88"/>
         <source>Save as…</source>
         <translation>Spara som…</translation>
     </message>
@@ -8189,6 +7264,24 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     </message>
 </context>
 <context>
+    <name>effects-autoduck</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="31"/>
+        <source>Auto duck</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
+        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
+        <translation>Minskar (duckar) volymen för ett eller flera spår när volymen för ett specificerat &quot;kontrollspår&quot; når en viss nivå</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="212"/>
+        <source>Rendering Control-Track Time-Stretched Audio</source>
+        <translation>Renderar tidsutsträckt ljud för kontrollspår</translation>
+    </message>
+</context>
+<context>
     <name>effects-changepitch</name>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitcheffect.cpp" line="10"/>
@@ -8258,7 +7351,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
 <context>
     <name>effects-effects_base</name>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="864"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="966"/>
         <source>Preparing preview</source>
         <translation>Förbereder förhandsvisning</translation>
     </message>
@@ -8363,47 +7456,47 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
 <context>
     <name>effects-noisereduction</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="69"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
         <source>Median</source>
         <translation>Medium</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="71"/>
         <source>Second greatest</source>
         <translation>Andra störst</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="201"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="202"/>
         <source>Noise reduction</source>
         <translation>Brusreducering</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="221"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="222"/>
         <source>Removes background noise such as fans, tape noise, or hums</source>
         <translation>Tar bort bakgrundsbrus som fläktar, bandbrus eller nynnande</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="290"/>
         <source>No audio selected.</source>
         <translation>Inget ljud är markerat.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="304"/>
         <source>You must specify the same window size for steps 1 and 2.</source>
         <translation>Du måste ange samma fönsterstorlek för stegen 1 och 2.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="376"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="377"/>
         <source>All noise profile data must have the same sample rate.</source>
         <translation>Alla data i brusprofilen måste ha samma samplingsfrekvens.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="380"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="381"/>
         <source>The sample rate of the noise profile must match that of the sound to be processed.</source>
         <translation>Brusprofilens samplingsfrekvens måste överensstämma med samplingsfrekvensen för ljudet som ska bearbetas.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="447"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="448"/>
         <source>Selected noise profile is too short.</source>
         <translation>Markerad brusprofil är för kort.</translation>
     </message>
@@ -8517,36 +7610,36 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <translation>Lägger till stöd för Nyquist-effekter i Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="59"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="60"/>
         <source>Applying Nyquist Effect…</source>
         <translation>Tillämpar Nyquist-effekten…</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="67"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="68"/>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="69"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="70"/>
         <source>n/a</source>
         <translation>n/a</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="100"/>
         <source>Nyquist Worker</source>
         <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
         <translation>Nyquist-arbetare</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="111"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="112"/>
         <source>Ill-formed Nyquist plug-in header</source>
         <translation>Felaktig header för Nyquist-insticksmodul</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="138"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="139"/>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="65"/>
         <source>Audacity</source>
         <translation>Audacity</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="489"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="490"/>
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
@@ -8555,25 +7648,25 @@ i spårets spektrograminställningar och markerar
 det frekvensområde som effekten ska påverka.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="657"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="658"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
         <translation>fel: Filen ”%1” anges i filhuvudet men hittades inte i insticksmodulens sökväg.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="823"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="824"/>
         <source>Audio selection required.</source>
         <translation>Ljudmarkering är nödvändig.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1381"/>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1383"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1382"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1384"/>
         <source>Processing complete.</source>
         <translation>Bearbetning slutförd.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1391"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1392"/>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
@@ -8581,7 +7674,7 @@ det frekvensområde som effekten ska påverka.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1400"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1401"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
@@ -8589,7 +7682,7 @@ det frekvensområde som effekten ska påverka.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1410"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
         <source>nyx_error returned from %1.
 </source>
         <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
@@ -8597,66 +7690,66 @@ det frekvensområde som effekten ska påverka.</translation>
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1412"/>
         <source>plug-in</source>
         <translation>insticksmodul</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1426"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1427"/>
         <source>Nyquist returned a list.</source>
         <translation>Nyquist returnerade en lista.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1471"/>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1484"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1472"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1485"/>
         <source>Nyquist returned the value: %1</source>
         <translation>Nyquist returnerade värdet: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1534"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1535"/>
         <source>Nyquist returned too many audio channels.
 </source>
         <translation>Nyquist returnerade för många ljudkanaler.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1539"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1540"/>
         <source>Nyquist returned one audio channel as an array.
 </source>
         <translation>Nyquist returnerade en ljudkanal som uppställning.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1544"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1545"/>
         <source>Nyquist returned an empty array.
 </source>
         <translation>Nyquist returnerade en tom array.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1565"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1566"/>
         <source>Nyquist returned nil audio.
 </source>
         <translation>Nyquist returnerade inget ljud.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1613"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1614"/>
         <source>[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]</source>
         <translation>[Varning: Nyquist returnerade felaktig sträng i UTF-8 som omvandlades hit som Latin-1]</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2062"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2063"/>
         <source>This version of Audacity does not support Nyquist plug-in version %1</source>
         <translation>Denna version av Audacity har inte stöd för Nyquist-insticksmoduler av version %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2317"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2314"/>
         <source>Could not open file</source>
         <translation>Kunde inte öppna filen</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2388"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2385"/>
         <source>Your code looks like SAL syntax, but there is no ‘return’ statement.
 For SAL, use a return statement such as:
 	return *track* * 0.1
@@ -8671,7 +7764,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
 .</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2627"/>
+        <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2624"/>
         <source>untitled</source>
         <translation>namnlös</translation>
     </message>
@@ -10513,22 +9606,22 @@ Daulton</translation>
 <context>
     <name>effects-paulstretch</name>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="30"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="31"/>
         <source>Paulstretch</source>
         <translation>Paulstretch</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="102"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="103"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
         <translation>Paulstretch är endast för en extrem tidsutsträckning eller &quot;stasis&quot;-effekt</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="186"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="187"/>
         <source>Requested value exceeds memory capacity.</source>
         <translation>Begärt värde överskrider minneskapaciteten.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="223"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="224"/>
         <source>Audio selection too short to preview.
 
 Try increasing the audio selection to at least %1 seconds,
@@ -10540,7 +9633,7 @@ Försök utöka ljudmarkeringen till minst %1 sekunder
 eller minska tidsupplösningen till mindre än %2 sekunder.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="233"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="234"/>
         <source>Unable to Preview.
 
 For the current audio selection, the maximum
@@ -10552,7 +9645,7 @@ För den aktuella ljudmarkeringen är den största
 tidsupplösningen %1 sekunder.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="242"/>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="243"/>
         <source>The ‘Time Resolution’ is too long for the selection.
 
 Try increasing the audio selection to at least %1 seconds,
@@ -10824,6 +9917,65 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     </message>
 </context>
 <context>
+    <name>effects/autoduck</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="13"/>
+        <source>Auto duck</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="112"/>
+        <source>Control track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
+        <source>No available track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
+        <source>Threshold</source>
+        <translation>Tröskel</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="192"/>
+        <source>Duck start</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
+        <source>Recovery end</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
+        <source>Duck end</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
+        <source>Gain reduction</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
+        <source>Recovery start</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
+        <source>Hold</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
+        <source>Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>effects/basstreble</name>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="13"/>
@@ -10836,17 +9988,17 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
         <translation>Justera volymen automatiskt för att bevara ljudstyrkan</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="37"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="70"/>
         <source>Bass</source>
         <translation>Bas</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="46"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="90"/>
         <source>Treble</source>
         <translation>Diskant</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="55"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="109"/>
         <source>Output volume</source>
         <translation>Utgångsvolym</translation>
     </message>
@@ -11707,7 +10859,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="443"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="459"/>
         <source>Edit mapping</source>
         <translation>Redigera mappning</translation>
     </message>
@@ -11723,130 +10875,125 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="698"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="864"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="727"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="888"/>
         <source>Export audio</source>
         <translation>Exportera ljud</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="91"/>
         <source>Export</source>
         <extracomment>Section heading in the Export dialog</extracomment>
         <translation>Exportera</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="92"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="106"/>
         <source>Type</source>
         <translation>Typ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="129"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="145"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="65"/>
         <source>File</source>
         <translation>Arkiv</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="144"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="160"/>
         <source>File name preview</source>
         <translation>Förhandsvisning av filnamn</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="185"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>Filnamn</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="169"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="185"/>
         <source>File name prefix</source>
         <translation>Filnamnsprefix</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="229"/>
         <source>Number files in label order</source>
         <translation>Numrera filer i etikettordning</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="229"/>
         <source>Number files in track order</source>
         <translation>Numrera filer i spårordning</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="232"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="248"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>Mapp</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="300"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="316"/>
         <source>Format</source>
         <translation>Format</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="337"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="353"/>
         <source>Audio options</source>
         <translation>Ljud alternativ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="354"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="370"/>
         <source>Channels</source>
         <translation>Kanaler</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="379"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="395"/>
         <source>Mono</source>
         <translation>Mono</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="397"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="413"/>
         <source>Stereo</source>
         <translation>Stereo</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="414"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="430"/>
         <source>Custom mapping</source>
         <translation>Anpassad mappning</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="461"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="477"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
         <translation>Samplingsfrekvens</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="506"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="522"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Öppna anpassade FFmpeg-formatsalterantiv</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="527"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="543"/>
         <source>Format:</source>
         <translation>Format:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="551"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="567"/>
         <source>Codec:</source>
         <translation>Kodek:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="643"/>
-        <source>Effective bit rate may vary</source>
-        <translation>Effektiv bithastighet kan variera</translation>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="687"/>
+        <source>Include audio before first label</source>
+        <translation>Inkludera ljud före första etiketten</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="653"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="656"/>
         <source>Rendering</source>
         <translation>Renderar</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="665"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="670"/>
         <source>Trim blank space before first clip</source>
         <translation>Trimma tom yta före första clip</translation>
-    </message>
-    <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="682"/>
-        <source>Include audio before first label</source>
-        <translation>Inkludera ljud före första etiketten</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
@@ -12110,152 +11257,147 @@ Vissa kodekar godtar endast särskilda värden (128k, 192k, 256k osv.)
         <translation>Leta upp befintlig installation</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="325"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="335"/>
         <source>All selected audio is muted</source>
         <translation>Allt markerat ljud är tystat</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="454"/>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="530"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="424"/>
+        <source>There is no audio to export</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="471"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="547"/>
         <source>untitled</source>
         <translation>namnlös</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="573"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="590"/>
         <source>No labels to export.</source>
         <translation>Inga etiketter att exportera.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="578"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="595"/>
         <source>There are no tracks to export</source>
         <translation>Det finns inga spår att exportera</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="44"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="45"/>
         <source>Other…</source>
         <translation>Övrigt…</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="49"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>%1 Hz (custom)</source>
         <translation>%1 Hz (anpassad)</translation>
     </message>
     <message>
-        <source>Export full project audio</source>
-        <translation type="vanished">Exportera allt projektljud</translation>
-    </message>
-    <message>
-        <source>Export selected audio</source>
-        <translation type="vanished">Exportera markerat ljud</translation>
-    </message>
-    <message>
-        <source>Export audio in loop region</source>
-        <translation type="vanished">Exportera ljud i loopområdet</translation>
-    </message>
-    <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="220"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="237"/>
         <source>No loop region</source>
         <translation>Inget loopområde</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="221"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="238"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>För att exportera ljud i loopområdet måste projektet innehålla en loop. Gå tillbaka, skapa en loop och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="232"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="249"/>
         <source>No selected audio</source>
         <translation>Inget markerat ljud</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="233"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="250"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>För att exportera markerat ljud måste projektet innehålla markerade ljuddata. Gå tillbaka till projektet, markera ljud och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="239"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="256"/>
         <source>No labels</source>
         <translation>Inga etiketter</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="240"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="257"/>
         <source>Exporting labeled regions as separate audio files requires at least one label on the first label track. Please return to the project, add labels and then try again.</source>
         <translation>För att exportera etikettområden som separata ljudfiler krävs minst en etikett på det första etikettspåret. Gå tillbaka till projektet, lägg till etiketter och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="334"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="355"/>
         <source>LabelName</source>
         <extracomment>Placeholder for a label's name in the export file name preview</extracomment>
         <translation>EtikettNamn</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="336"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="357"/>
         <source>TrackName</source>
         <extracomment>Placeholder for a track's name in the export file name preview</extracomment>
         <translation>SpårNamn</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="558"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
         <source>Set sample rate</source>
         <translation>Ställ in samplingsfrekvens</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="699"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="728"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
         <translation>Kunde inte exportera till &quot;%1&quot;: målmappen kunde inte skapas. Kontrollera att sökvägen är giltig och att du har behörighet att skriva till den.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="748"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="777"/>
         <source>Export failed</source>
         <translation>Exporten misslyckades</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="760"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="789"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="229"/>
         <source>Do you want to overwrite?</source>
         <translation>Vill du skriva över?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="781"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="810"/>
         <source>Some of the files already exist. Do you want to overwrite them?</source>
         <translation>Vissa av filerna finns redan. Vill du skriva över dem?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="791"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="820"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="227"/>
         <source>Overwrite</source>
         <translation>Skriv över</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="749"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="778"/>
         <source>Export error</source>
         <translation>Fel vid export</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="54"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
         <source>Full project audio</source>
         <translation>Allt projektljud</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="55"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="56"/>
         <source>Selected audio</source>
         <translation>Markerat ljud</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="56"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
         <source>Audio in loop region</source>
         <translation>Ljud i loopområdet</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="57"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
         <source>Tracks as separate audio files</source>
         <translation>Spår som separata ljudfiler</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="58"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="59"/>
         <source>Labeled regions as separate audio files</source>
         <translation>Etikettområden som separata ljudfiler</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="865"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="889"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -12324,10 +11466,6 @@ Mastereffekterna aktiveras igen efter exporten.</translation>
         <translation>Insticksmodulen har inte rätt format</translation>
     </message>
     <message>
-        <source>Manually</source>
-        <translation type="vanished">Manuellt</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
         <source>Failed to install extension</source>
@@ -12364,8 +11502,7 @@ Mastereffekterna aktiveras igen efter exporten.</translation>
         <translation>Uppdatera utökning</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
-        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="101"/>
         <source>Error code: %1</source>
         <translation>Felkod: %1</translation>
     </message>
@@ -12400,23 +11537,14 @@ Mastereffekterna aktiveras igen efter exporten.</translation>
         <translation>Sångtext</translation>
     </message>
     <message>
-        <source>Run plugin %1</source>
-        <extracomment>%1 is replaced with the name of the plugin</extracomment>
-        <translation type="vanished">Kör insticksmodulen %1</translation>
-    </message>
-    <message>
-        <source>Run plugin %1: %2</source>
-        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
-        <translation type="vanished">Kör insticksmodulen %1: %2</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="118"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="123"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
         <translation>Ej specificerad</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="124"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="129"/>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="137"/>
         <source>Not defined</source>
         <translation>Ej definierad</translation>
     </message>
@@ -12627,23 +11755,28 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="116"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="167"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
         <source>OK</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>OK</translation>
     </message>
     <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckGraph.qml" line="67"/>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="78"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="162"/>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="79"/>
+        <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelControl.qml" line="167"/>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="64"/>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="112"/>
-        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="38"/>
-        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="47"/>
-        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="56"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="71"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="91"/>
+        <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="110"/>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="94"/>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="103"/>
         <source>dB</source>
-        <extracomment>Abbreviation of decibels, used as a unit suffix</extracomment>
+        <extracomment>Abbreviation of &quot;decibels&quot;, used as a unit suffix
+----------
+Abbreviation of decibels, used as a unit suffix</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -12657,49 +11790,58 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <translation>Hz</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="348"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="349"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="105"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="155"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="97"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="728"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="733"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/CommandParamsDialog.qml" line="180"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="140"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="115"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="101"/>
+        <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="62"/>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="550"/>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="116"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="482"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="504"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="620"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="52"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="503"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="525"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="986"/>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="245"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Cancel</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="366"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="370"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="108"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="153"/>
+        <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="73"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
         <source>Apply</source>
         <extracomment>Label of the dialog button that applies the effect</extracomment>
         <translation>Verkställ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="746"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="751"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
-        <extracomment>Label of the button that starts the export</extracomment>
         <translation>Exportera</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="81"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="117"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="258"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
         <source>Close</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Stäng</translation>
@@ -12791,19 +11933,21 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="125"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="127"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="131"/>
         <source>Back</source>
         <translation>Bakåt</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="136"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="140"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="144"/>
         <source>Next</source>
         <translation>Nästa</translation>
     </message>
     <message>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="751"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="148"/>
         <source>Done</source>
+        <extracomment>Label of the button that starts the export</extracomment>
         <translation>Klart</translation>
     </message>
     <message>
@@ -12812,7 +11956,7 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <translation>Succé!</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="137"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="141"/>
         <source>Skip</source>
         <translation>Hoppa över</translation>
     </message>
@@ -12833,41 +11977,44 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <translation>Alla filer</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="714"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1130"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1368"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="608"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1071"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1314"/>
         <source>Success</source>
         <translation>Succé</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="73"/>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="61"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1373"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1319"/>
         <source>Dismiss</source>
         <translation>Stäng</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="625"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="368"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="608"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Save</source>
+        <extracomment>Label of the dialog button that saves the effect settings of a macro step</extracomment>
         <translation>Spara</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="640"/>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="623"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Öppna</translation>
     </message>
     <message>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckGraph.qml" line="63"/>
+        <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="76"/>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
         <source>s</source>
+        <extracomment>Abbreviation of &quot;seconds&quot;, used as a unit suffix</extracomment>
         <translation>s</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="745"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1156"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="639"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1097"/>
         <source>Stop</source>
         <translation>Stoppa</translation>
     </message>
@@ -12892,28 +12039,28 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <translation>Visa detaljer</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="97"/>
         <source>Question</source>
         <translation>Fråga</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
         <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="103"/>
         <source>Information</source>
         <translation>Information</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="99"/>
         <source>Warning</source>
         <translation>Varning</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="100"/>
         <source>Error</source>
         <translation>Fel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="209"/>
         <source>Don’t show this message again</source>
         <translation>Visa inte meddelandet igen</translation>
     </message>
@@ -12951,11 +12098,6 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
         <source>Milliseconds</source>
         <translation>Millisekunder</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
-        <source>percent</source>
-        <translation>procent</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
@@ -13047,67 +12189,67 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <translation><numerusform>%Ln byte</numerusform><numerusform>%Ln byte</numerusform></translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
         <source>Save all</source>
         <translation>Spara alla</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
         <source>Don’t save</source>
         <translation>Spara inte</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
         <source>Yes to all</source>
         <translation>Ja till alla</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
         <source>No</source>
         <translation>Nej</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
         <source>No to all</source>
         <translation>Nej till alla</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Abort</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Retry</source>
         <translation>Försök igen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
         <source>Ignore</source>
         <translation>Ignorera</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
         <source>Discard</source>
         <translation>Kasta</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
         <source>Help</source>
         <translation>Hjälp</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="138"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="139"/>
         <source>Reset</source>
         <translation>Återställ</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="139"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="140"/>
         <source>Continue</source>
         <translation>Fortsätt</translation>
     </message>
@@ -14344,7 +13486,7 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
     <name>import</name>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="134"/>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="168"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="167"/>
         <source>Loop tempo detected at %1 BPM. What would you like to do?</source>
         <translation>Looptempo identifierat vid %1 BPM. Vad vill du göra?</translation>
     </message>
@@ -14360,18 +13502,18 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="140"/>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="173"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="172"/>
         <source>Do nothing</source>
         <translation>Gör ingenting</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="144"/>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="177"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="176"/>
         <source>Loop Tempo Detected</source>
         <translation>Looptempo identifierat</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="172"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="171"/>
         <source>Stretch loop to project tempo</source>
         <translation>Sträck loopen till projektets tempo</translation>
     </message>
@@ -14379,7 +13521,7 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
 <context>
     <name>import-export</name>
     <message>
-        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="142"/>
+        <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="152"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
         <extracomment>Title of the export progress dialog</extracomment>
@@ -14392,14 +13534,14 @@ För tips på passande disk, klicka på hjälpknappen.</translation>
         <translation>Importerar %1</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="485"/>
+        <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="488"/>
         <source>%1 %2</source>
         <comment>clip name template</comment>
         <extracomment>Name default name assigned to a clip on track import</extracomment>
         <translation>%1 %2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="135"/>
+        <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="134"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.h" line="41"/>
         <source>Warning</source>
         <translation>Varning</translation>
@@ -14707,28 +13849,28 @@ men inget av dem kunde tolka filformatet.</translation>
         <translation>Loggsökning</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="30"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="31"/>
         <source>FFmpeg-compatible files</source>
         <translation>FFmpeg-kompatibla filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="165"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="166"/>
         <source>Try installing FFmpeg.
 </source>
         <translation>Försök installera FFmpeg.
 </translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="395"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>Index[%1] Kodek[%2],Språk[%3], Bithastighet[%4], Kanaler[%5], Längd[%6]</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="96"/>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="98"/>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="97"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="99"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="68"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="379"/>
         <source>%1 kbps</source>
         <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
@@ -14736,187 +13878,187 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <translation>%1 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="108"/>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="182"/>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="223"/>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="347"/>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="73"/>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="80"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="75"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="109"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="183"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="224"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="348"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="118"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="100"/>
         <source>Bit Rate</source>
         <translation>Bithastighet</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="166"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="167"/>
         <source>Quality (kbps)</source>
         <translation>Kvalité (kbps)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="262"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="263"/>
         <source>Compression</source>
         <translation>Komprimering</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="270"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="89"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="271"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="351"/>
         <source>Frame Duration</source>
         <translation>Ramlängd</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="282"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="101"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="283"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="363"/>
         <source>2.5 ms</source>
         <translation>2.5 ms</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="283"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="102"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="284"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="364"/>
         <source>5 ms</source>
         <translation>5 ms</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="284"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="103"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="285"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="365"/>
         <source>10 ms</source>
         <translation>10 ms</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="285"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="104"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="286"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="366"/>
         <source>20 ms</source>
         <translation>20 ms</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="286"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="105"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="287"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="367"/>
         <source>40 ms</source>
         <translation>40 ms</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="287"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="106"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="288"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="368"/>
         <source>60 ms</source>
         <translation>60 ms</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="295"/>
         <source>Vbr Mode</source>
         <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
         <translation>Vbr läge</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="299"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="378"/>
         <source>Off</source>
         <translation>Av</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="299"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="378"/>
         <source>On</source>
         <translation>På</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="299"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="378"/>
         <source>Constrained</source>
         <translation>Begränsad</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="304"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="305"/>
         <source>Application</source>
         <translation>Program</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="310"/>
         <source>VOIP</source>
         <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="310"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Audio</source>
         <translation>Ljud</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="310"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Low Delay</source>
         <translation>Låg delay</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="315"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="130"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="316"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="392"/>
         <source>Cutoff</source>
         <translation>Cutoff</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="327"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="328"/>
         <source>Disabled</source>
         <translation>Inaktiverad</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="328"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="143"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="329"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="405"/>
         <source>Narrowband</source>
         <translation>Smalband</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="329"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="144"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="330"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="406"/>
         <source>Mediumband</source>
         <translation>Mellanband</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="330"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="145"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="331"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="407"/>
         <source>Wideband</source>
         <translation>Wideband</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="331"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="146"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="332"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="408"/>
         <source>Super Wideband</source>
         <translation>Superbredband</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="332"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="147"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="333"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="409"/>
         <source>Fullband</source>
         <translation>Fullband</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="698"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="699"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
         <translation>FFmpeg: FEL – Det går inte att fastställa formatbeskrivningen för filen ”%1”.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="706"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="707"/>
         <source>FFmpeg : ERROR - Can’t allocate output format context.</source>
         <translation>FFmpeg: FEL – Det går inte att allokera kontexten för utdataformatet.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="717"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="718"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
         <translation>FFmpeg: FEL – Det går inte att lägga till en ljudström i utdatafilen ”%1”.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="744"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="745"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
         <translation>FFmpeg: FEL – Det går inte att öppna utdatafilen ”%1” för skrivning. Felkod: %2.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="779"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="780"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
         <translation>FFmpeg: FEL – Det går inte att skriva filhuvuden till utdatafilen ”%1”. Felkod: %2.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1001"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
@@ -14924,17 +14066,17 @@ Support for this codec is probably not compiled in.</source>
 Stöd för denna kodek har förmodligen inte kompilerats.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1075"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1076"/>
         <source>The codec reported a generic error (EPERM)</source>
         <translation>Kodec rapporterade ett generiskt fel (EPERM)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1078"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1079"/>
         <source>The codec reported an invalid parameter (EINVAL)</source>
         <translation>Kodec rapporterade en felaktig parameter (EINVAL)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1088"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1089"/>
         <source>Can’t open audio codec “%1” (0x%2)
 
 %3</source>
@@ -14944,102 +14086,102 @@ Stöd för denna kodek har förmodligen inte kompilerats.</translation>
 %3</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1112"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1113"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
         <translation>FFmpeg: FEL – Det går inte att allokera en buffert för läsning från ljud-FIFO:n.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1141"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1142"/>
         <source>FFmpeg : ERROR - Couldn’t write audio frame to output file.</source>
         <translation>FFmpeg: FEL - Kunde inte skriva ljudram till utdatafil.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1172"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1173"/>
         <source>FFmpeg : ERROR - Could not get sample buffer size</source>
         <translation>FFmpeg: FEL – Det gick inte att hämta sampelbuffertens storlek</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1179"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1180"/>
         <source>FFmpeg : ERROR - Could not allocate bytes for samples buffer</source>
         <translation>FFmpeg: FEL – Det gick inte att allokera byte för sampelbufferten</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1188"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1189"/>
         <source>FFmpeg : ERROR - Could not setup audio frame</source>
         <translation>FFmpeg : FEL - Kunde inte ställa in ljudbildruta</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1269"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1270"/>
         <source>FFmpeg : ERROR - encoding frame failed</source>
         <translation>FFmpeg : FEL - avkodning av bildruta misslyckades</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1294"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1295"/>
         <source>FFmpeg : ERROR - Too much remaining data.</source>
         <translation>FFmpeg : FEL - För mycket återstående data.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1369"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1370"/>
         <source>FFmpeg : ERROR - nAudioFrameSizeOut too large.</source>
         <translation>FFmpeg : FEL - nAudioFrameSizeOut är för stor.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1409"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1410"/>
         <source>Properly configured FFmpeg is required to proceed.
 You can configure it at Preferences &gt; General.</source>
         <translation>Korrekt konfigurerad FFmpeg krävs för att fortsätta. 
 Du kan konfigurera den under Inställningar &gt; Allmänt.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1417"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1418"/>
         <source>Attempted to export %1 channels, but maximum number of channels for selected output format is %2</source>
         <extracomment>%1 is the requested channel count, %2 is the maximum supported</extracomment>
         <translation>Försökte att exportera %1 kanaler, men max antal kanaler för valt output-format är %2</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1451"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1452"/>
         <source>Exporting selected audio as %1</source>
         <extracomment>%1 is format description</extracomment>
         <translation>Exporterar valt ljud som %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1454"/>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="592"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1455"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="676"/>
         <source>Exporting the audio as %1</source>
         <extracomment>%1 is format description</extracomment>
         <translation>Exporterar ljudet som %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1566"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1552"/>
         <source>Invalid sample rate</source>
         <translation>Felaktig samplingsfrekvens</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1576"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1562"/>
         <source>Resample</source>
         <translation>Återsampla</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1582"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1568"/>
         <source>The project sample rate (%1) is not supported by the current output
 file format. </source>
         <translation>Projektets samplingsfrekvens (%1) stöds inte av filformatet för den
 nuvarande utmatningen.  </translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1585"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1571"/>
         <source>The project sample rate (%1) and bit rate (%2 kbps) combination is not
 supported by the current output file format. </source>
         <translation>Kombinationen av projektets samplingsfrekvens (%1) och bithastighet (%2 kbps)
 stöds inte av det nuvarande filformatet för utmatning.  </translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1588"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1574"/>
         <source>You may resample to one of the rates below.</source>
         <translation>Du kan återsampla till någon av frekvenserna nedan.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1595"/>
+        <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1581"/>
         <source>Sample Rates</source>
         <translation>Samplingsfrekvenser</translation>
     </message>
@@ -15049,289 +14191,289 @@ stöds inte av det nuvarande filformatet för utmatning.  </translation>
         <translation>FFmpeg-bibliotek hittades inte</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="34"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="58"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="86"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="83"/>
         <source>Bit Depth</source>
         <translation>Bitdjup</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="38"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="77"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="28"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="129"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="53"/>
         <source>16 bit</source>
         <translation>16 bitar</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="38"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="77"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="29"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="129"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="54"/>
         <source>24 bit</source>
         <translation>24 bitar</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="43"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="95"/>
         <source>Level</source>
         <translation>Nivå</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="58"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="88"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="110"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="140"/>
         <source>0 (fastest)</source>
         <translation>0 (snabbast)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="59"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="89"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="111"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="141"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="60"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="112"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="142"/>
         <source>2</source>
         <translation>2</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="61"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="91"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="113"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="143"/>
         <source>3</source>
         <translation>3</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="62"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="92"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="114"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="144"/>
         <source>4</source>
         <translation>4</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="63"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="93"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="115"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="145"/>
         <source>5</source>
         <translation>5</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="64"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="94"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="116"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="146"/>
         <source>6</source>
         <translation>6</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="65"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="95"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="117"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="147"/>
         <source>7</source>
         <translation>7</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="66"/>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="96"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="118"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="148"/>
         <source>8 (best)</source>
         <translation>8 (bäst)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="159"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="211"/>
         <source>FLAC Files</source>
         <translation>FLAC-filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="303"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="355"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
         <translation>FLAC-exporten kunde inte öppna %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="313"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="365"/>
         <source>FLAC encoder failed to initialize
 Status: %1</source>
         <translation>FLAC-avkodare lyckades inte initieras
 Status: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="326"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="378"/>
         <source>Exporting the selected audio as FLAC</source>
         <translation>Exporterar valt ljud som FLAC</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="327"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="379"/>
         <source>Exporting the audio as FLAC</source>
         <translation>Exporterar ljudet som FLAC</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-flac/ImportFLAC.h" line="20"/>
+        <location filename="../../au3/modules/import-export/mod-flac/ImportFLAC.cpp" line="38"/>
         <source>FLAC files</source>
         <translation>FLAC-filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="161"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="297"/>
         <source>MP2 Files</source>
         <translation>MP2-filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="220"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="356"/>
         <source>Cannot export MP2 with this sample rate and bit rate</source>
         <translation>Kan inte exportera MP2 med denna samplingsfrekvens och bithastighet</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="230"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1474"/>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="179"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="446"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="254"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="366"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1734"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="255"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="708"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="388"/>
         <source>Unable to open target file for writing</source>
         <translation>Kunde inte öppna målfil att skriva till</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="245"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="381"/>
         <source>Exporting selected audio at %1 kbps</source>
         <translation>Exporterar valt ljud vid %1 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="247"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="383"/>
         <source>Exporting the audio at %1 kbps</source>
         <translation>Exporterar ljudet vid %1 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="66"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="111"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="70"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="115"/>
         <source>MPEG2</source>
         <translation>MPEG2</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="70"/>
+        <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="115"/>
         <source>MPEG1</source>
         <translation>MPEG1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="165"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="425"/>
         <source>220-260 kbps (Best Quality)</source>
         <translation>220-260 kbps (Bäst kvalité)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="166"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="426"/>
         <source>200-250 kbps</source>
         <translation>200-250 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="167"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="427"/>
         <source>170-210 kbps</source>
         <translation>170-210 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="168"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="428"/>
         <source>155-195 kbps</source>
         <translation>155-195 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="169"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="429"/>
         <source>145-185 kbps</source>
         <translation>145-185 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="170"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="430"/>
         <source>110-150 kbps</source>
         <translation>110-150 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="171"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="431"/>
         <source>95-135 kbps</source>
         <translation>95-135 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="172"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="432"/>
         <source>80-120 kbps</source>
         <translation>80-120 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="173"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="433"/>
         <source>65-105 kbps</source>
         <translation>65-105 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="174"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="434"/>
         <source>45-85 kbps (Smaller files)</source>
         <translation>45-85 kbps (Mindre filer)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="183"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="443"/>
         <source>Excessive, 320 kbps</source>
         <translation>Mycket hög, 320 kbit/s</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="184"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="444"/>
         <source>Extreme, 220-260 kbps</source>
         <translation>Extremt, 220-260 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="185"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="445"/>
         <source>Standard, 170-210 kbps</source>
         <translation>Standard, 170-210 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="186"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="446"/>
         <source>Medium, 145-185 kbps</source>
         <translation>Medel, 145-185 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="190"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="450"/>
         <source>Excessive</source>
         <translation>Mycket hög</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="191"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="451"/>
         <source>Extreme</source>
         <translation>Extrem</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="192"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="452"/>
         <source>Standard</source>
         <translation>Standard</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="193"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="453"/>
         <source>Medium</source>
         <translation>Mellanstor</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="219"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="479"/>
         <source>Bit Rate Mode</source>
         <translation>Bit rate läge</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="231"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="491"/>
         <source>Preset</source>
         <translation>Förinställning</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="232"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="492"/>
         <source>Variable</source>
         <translation>Variabel</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="233"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="493"/>
         <source>Average</source>
         <translation>Medelvärde</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="234"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="494"/>
         <source>Constant</source>
         <translation>Konstant</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="238"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="245"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="252"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="259"/>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="34"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="46"/>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="51"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="498"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="505"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="512"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="519"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="110"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="308"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="76"/>
         <source>Quality</source>
         <translation>Kvalitet</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="735"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="995"/>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
@@ -15339,115 +14481,115 @@ Please download the latest version of ‘LAME for Audacity’.</source>
 Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1024"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1284"/>
         <source>Only lame_enc.dll</source>
         <translation>Bara lame_enc.dll</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1063"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1323"/>
         <source>Only libmp3lame64bit.dylib</source>
         <translation>Bara libmp3lame64bit.dylib</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1066"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1326"/>
         <source>Only libmp3lame.dylib</source>
         <translation>Bara libmp3lame.dylib</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1090"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1350"/>
         <source>Only libmp3lame.so</source>
         <translation>Bara libmp3lame.so</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1091"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1114"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1351"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1374"/>
         <source>Primary shared object files</source>
         <translation>Primära delade objektfiler</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1092"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1115"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1352"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1375"/>
         <source>Extended libraries</source>
         <translation>Utökade bibliotek</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1113"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
         <source>Only libmp3lame.so.0</source>
         <translation>Bara libmp3lame.so.0</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1234"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1494"/>
         <source>MP3 Files</source>
         <translation>MP3-filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1334"/>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1373"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1594"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1633"/>
         <source>Could not open MP3 encoding library!</source>
         <translation>Kunde inte öppna biblioteket för avkodning av MP3!</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1337"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1597"/>
         <source>Error</source>
         <translation>Fel</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1367"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1627"/>
         <source>Could not initialize MP3 encoding library!</source>
         <translation>Kunde inte öppna biblioteket för avkodning av MP3!</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1379"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1639"/>
         <source>Not a valid or supported MP3 encoding library!</source>
         <translation>Inte ett giltigt eller stödjande avkodningsbibliotek för MP3!</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1464"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1724"/>
         <source>Unable to initialize MP3 stream</source>
         <translation>Kunde inte initialisera MP3-strömmen</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1498"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1758"/>
         <source>Exporting selected audio with %1 preset</source>
         <translation>Exporterar markerat ljud med %1 förinställning</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1499"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1759"/>
         <source>Exporting the audio with %1 preset</source>
         <translation>Exporterar ljudet med %1 förinställning</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1503"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1763"/>
         <source>Exporting selected audio with VBR quality %1</source>
         <translation>Exporterar markerat ljud med VBR-kvalitet %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1504"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1764"/>
         <source>Exporting the audio with VBR quality %1</source>
         <translation>Exporterar ljudet med VBR-kvalitet %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1508"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1768"/>
         <source>Exporting selected audio at %1 Kbps</source>
         <translation>Exporterar markerat ljud vid %1 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1509"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1769"/>
         <source>Exporting the audio at %1 Kbps</source>
         <translation>Exporterar ljudet vid %1 kbps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1556"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1816"/>
         <source>Error %1 returned from MP3 encoder</source>
         <translation>Fel %1 returnerades från MP3-avkodaren</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1736"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1996"/>
         <source>MP3 export library not found</source>
         <translation>Hittade inte exportbiblioteket för MP3</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1743"/>
+        <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="2003"/>
         <source>(Built-in)</source>
         <translation>(Inbyggd)</translation>
     </message>
@@ -15457,242 +14599,244 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
         <translation>MP3-filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="284"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
-----------
-kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
+        <extracomment>kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <translation>%1 kbit/s</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="128"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
+        <source>Quality %1 (~%2 kbit/s)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="204"/>
         <source>Ogg Vorbis Files</source>
         <translation>Ogg Vorbis-filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="173"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="249"/>
         <source>Unable to export - rate or quality problem</source>
         <translation>Kan inte exportera - värdefel eller fel kvalité</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="186"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="262"/>
         <source>Unable to export - problem initialising</source>
         <translation>Kan inte exportera - problem med igångstart</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="198"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="274"/>
         <source>Unable to export - problem creating stream</source>
         <translation>Kan inte exportera - problem med att skapa strömmande</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="219"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="295"/>
         <source>Unable to export - problem with packets</source>
         <translation>Kan inte exportera - problem med paket</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="227"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="303"/>
         <source>Unable to export - problem with file</source>
         <translation>Kan inte exportera - problem med fil</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="236"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="312"/>
         <source>Exporting the selected audio as Ogg Vorbis</source>
         <translation>Exporterar markerat ljud som Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="237"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="313"/>
         <source>Exporting the audio as Ogg Vorbis</source>
         <translation>Exporterar ljudet som Ogg Vorbis</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="69"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="104"/>
         <source>Index[%1] Version[%2], Channels[%3], Rate[%4]</source>
         <translation>Index[%1] Version[%2], Kanaler[%3], Rate[%4]</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="353"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="388"/>
         <source>Media read error</source>
         <translation>Läsfel för media</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="356"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="391"/>
         <source>Not an Ogg Vorbis file</source>
         <translation>Inte en Ogg Vorbis-fil</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="359"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="394"/>
         <source>Vorbis version mismatch</source>
         <translation>Vorbis-version överensstämmer inte</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="362"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="397"/>
         <source>Invalid Vorbis bitstream header</source>
         <translation>Ogiltigt sidhuvud för Vorbis-bitström</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="365"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="400"/>
         <source>Internal logic fault</source>
         <translation>Internt logiskt fel</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.h" line="18"/>
+        <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="48"/>
         <source>Ogg Vorbis files</source>
         <translation>Ogg Vorbis-filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="82"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="142"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="344"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="404"/>
         <source>Auto</source>
         <translation>Auto</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="83"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="345"/>
         <source>Maximum</source>
         <translation>Maximum</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="112"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="374"/>
         <source>VBR Mode</source>
         <translation>VBR Läge</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="121"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="383"/>
         <source>Optimize for</source>
         <translation>Optimerat för</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Speech</source>
         <translation>Tal</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="195"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="457"/>
         <source>Opus Files</source>
         <translation>Opus filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="316"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="578"/>
         <source>Unsupported sample rate</source>
         <translation>Samplingsfrekvens stöds inte</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="343"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="605"/>
         <source>Exporting selected audio as Opus</source>
         <translation>Exporterar valt ljud som Opus</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="344"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="606"/>
         <source>Exporting the audio as Opus</source>
         <translation>Exporterar ljudet som Opus</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="376"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="638"/>
         <source>Unable to create Opus encoder</source>
         <translation>Det gick inte att skapa Opus encoder</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="383"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="645"/>
         <source>Unable to set bitrate</source>
         <translation>Kan inte ställa bitrate</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="390"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="652"/>
         <source>Unable to set complexity</source>
         <translation>Det går inte att ställa in komplexitet</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="397"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="659"/>
         <source>Unable to set bandwidth</source>
         <translation>Det går inte att ställa bandbredd</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="404"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="666"/>
         <source>Unable to set VBR mode</source>
         <translation>Det går inte att ställa in CVBR läge</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="412"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="674"/>
         <source>Unable to set CVBR mode</source>
         <translation>Det går inte att ställa in CVBR läge</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="423"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="685"/>
         <source>Unable to get lookahead</source>
         <translation>Det gick inte att hämta framförhållningen</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="431"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="693"/>
         <source>Failed to calculate correct preskip</source>
         <translation>Det gick inte att beräkna korrekt förhopp</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="521"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="563"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="783"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="825"/>
         <source>Failed to encode input buffer</source>
         <translation>Det gick inte att koda indatabuffert</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="33"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="37"/>
         <source>no error</source>
         <translation>inga fel</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="35"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="293"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="39"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="350"/>
         <source>invalid argument</source>
         <translation>ogiltigt argument</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="37"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="41"/>
         <source>buffer too small</source>
         <translation>buffer för liten</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="39"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="289"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="43"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="346"/>
         <source>internal error</source>
         <translation>internt fel</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="41"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="301"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="45"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="358"/>
         <source>invalid packet</source>
         <translation>ogiltigt paket</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="43"/>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="291"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="47"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="348"/>
         <source>not implemented</source>
         <translation>ej implementerat</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="45"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="49"/>
         <source>invalid state</source>
         <translation>ogiltigt tillstånd</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="47"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="51"/>
         <source>memory allocation has failed</source>
         <translation>minnesallokering misslyckades</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="49"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="53"/>
         <source>Unknown error</source>
         <translation>Okänt problem</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="119"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="123"/>
         <source>Buffer overflow in OGG packet</source>
         <translation>Buffertspill i OGG-paket</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="249"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="253"/>
         <source>Unable to write OGG page header</source>
         <translation>Kunde inte skriva till OGG page header</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="253"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="257"/>
         <source>Unable to write OGG page</source>
         <translation>Kan inte skriva till OGG page</translation>
     </message>
@@ -15702,113 +14846,113 @@ kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <translation>Opus filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="152"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="209"/>
         <source>File has changed the number of channels in the middle.</source>
         <translation>Filen har ändrat antalet kanaler i mitten.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="287"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="344"/>
         <source>IO error reading from file</source>
         <translation>IO-fel vid läsning från fil</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="295"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="352"/>
         <source>not an Opus file</source>
         <translation>är inte en Opus fil</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="297"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="354"/>
         <source>invalid header</source>
         <translation>ogiltig rubrik</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="299"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="356"/>
         <source>unsupported version</source>
         <translation>versionen stöds inte</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="303"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="360"/>
         <source>invalid stream structure</source>
         <translation>ogiltig strömmande struktur</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="305"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="362"/>
         <source>stream is not seekable</source>
         <translation>strömmen är inte sökbar</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="307"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="364"/>
         <source>invalid timestamp</source>
         <translation>ogiltig tidsstämpel</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="337"/>
+        <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="394"/>
         <source>Failed to decode Opus file: %1</source>
         <extracomment>%1 is the error message</extracomment>
         <translation>Det gick inte att avkoda Opus-fil: %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="57"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="141"/>
         <source>AIFF (Apple/SGI)</source>
         <translation>AIFF (Apple/SGI)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="61"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="145"/>
         <source>WAV (Microsoft)</source>
         <translation>WAV (Microsoft)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="129"/>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="219"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="213"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="303"/>
         <source>Encoding</source>
         <translation>Kodning</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="198"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="282"/>
         <source>Header</source>
         <translation>Rubrik</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="398"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="482"/>
         <source>Other uncompressed files</source>
         <translation>Andra okomprimerade filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="517"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="601"/>
         <source>GSM 6.10 requires mono</source>
         <translation>GSM 6.10 behöver mono</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="521"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="605"/>
         <source>WAVEX and GSM 6.10 formats are not compatible</source>
         <translation>WAVEX och GSM 6.10 format är inte kompatibla</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="534"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="618"/>
         <source>Cannot export audio in this format.</source>
         <translation>Kan inte exportera ljud i detta format.</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="548"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="632"/>
         <source>Cannot export audio to %1</source>
         <extracomment>%1 is the file path</extracomment>
         <translation>Kan inte exportera ljud till %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="581"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="665"/>
         <source>You have attempted to Export a WAV or AIFF file which would be greater than 4GB.
 Audacity cannot do this, the Export was abandoned.</source>
         <translation>Du har försökt att exportera en WAV eller AIFF fil som skulle bli större än 4GB.
 Audacity kan inte göra det..</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="590"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="674"/>
         <source>Exporting the selected audio as %1</source>
         <extracomment>%1 is a format description</extracomment>
         <translation>Exporterar markerat ljudet som %1</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="740"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
         <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
@@ -15816,68 +14960,68 @@ Libsndfile says “%2”</source>
 Libsndfile rapporterar ”%2”</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="57"/>
+        <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="84"/>
         <source>WAV, AIFF, and other uncompressed types</source>
         <translation>WAV, AIFF och andra okomprimerade typer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="163"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="297"/>
         <source>WavPack Files</source>
         <translation>WavPack filer</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="316"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="450"/>
         <source>Unable to create target file for writing</source>
         <translation>Kunde inte skapa målfil att skriva till</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="334"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="468"/>
         <source>Exporting selected audio as WavPack</source>
         <translation>Exporterar valt ljud som WavPack</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="335"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="469"/>
         <source>Exporting the audio as WavPack</source>
         <translation>Exporterar ljudet som WavPack</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="21"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="46"/>
         <source>Low Quality (Fast)</source>
         <translation>Låg kvalitet (snabb)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="22"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="47"/>
         <source>Normal Quality</source>
         <translation>Normal kvalitet</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="23"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="48"/>
         <source>High Quality (Slow)</source>
         <translation>Hög kvalitet (Långsam)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="24"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="49"/>
         <source>Very High Quality (Slowest)</source>
         <translation>Mycket hög kvalitet (långsammast)</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="30"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="55"/>
         <source>32 bit float</source>
         <translation>32-bitars flyttal</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="59"/>
         <source>%1 bps</source>
         <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
         <translation>%1 bps</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="65"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="90"/>
         <source>Hybrid Mode</source>
         <translation>Hybrid läge</translation>
     </message>
     <message>
-        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="70"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="95"/>
         <source>Create Correction(.wvc) File</source>
         <translation>Skapa korrigeringsfil (.wvc)</translation>
     </message>
@@ -15887,7 +15031,7 @@ Libsndfile rapporterar ”%2”</translation>
         <translation>WavPack filer</translation>
     </message>
     <message numerus="yes">
-        <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
+        <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="258"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
         <translation><numerusform>%1 fel påträffades vid avkodning av WavPack-filen!</numerusform><numerusform>%1 fel påträffades vid avkodning av WavPack-filen!</numerusform></translation>
@@ -15914,67 +15058,67 @@ Libsndfile rapporterar ”%2”</translation>
 <context>
     <name>label</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="27"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="19"/>
         <source>Cut and leave gap</source>
         <translation>Klipp ut och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="29"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="21"/>
         <source>Cut and close gap on this track</source>
         <translation>Klipp ut och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="31"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="23"/>
         <source>Cut and close gap on all tracks</source>
         <translation>Klipp ut och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="36"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="28"/>
         <source>Paste and overlap</source>
         <translation>Klistra in och överlappa</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="38"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="30"/>
         <source>Paste and make room on this track</source>
         <translation>Klistra in och gör plats på det här spåret</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="40"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="32"/>
         <source>Paste and make room on all tracks</source>
         <translation>Klistra in och gör plats på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="37"/>
         <source>Delete and leave gap</source>
         <translation>Ta bort och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="47"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="39"/>
         <source>Delete and close gap on this track</source>
         <translation>Ta bort och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="49"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="41"/>
         <source>Delete and close gap on all tracks</source>
         <translation>Ta bort och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="53"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
         <source>Rename label</source>
         <translation>Byt namn på etikett</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="59"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="51"/>
         <source>Cut and…</source>
         <translation>Klipp ut och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="60"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="52"/>
         <source>Paste and…</source>
         <translation>Klistra in och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="61"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="53"/>
         <source>Delete and…</source>
         <translation>Ta bort och…</translation>
     </message>
@@ -16002,22 +15146,22 @@ Libsndfile rapporterar ”%2”</translation>
         <translation>U&amp;tökad (med frekvensintervall)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="126"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="142"/>
         <source>Labels</source>
         <translation>Etiketter</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="179"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="195"/>
         <source>Label Track</source>
         <translation>Etikettspår</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="758"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="774"/>
         <source>Importing WebVTT files is not currently supported.</source>
         <translation>Import av WebVTT-filer stöds för närvarande inte.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="782"/>
+        <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="798"/>
         <source>One or more saved labels could not be read.</source>
         <translation>En eller fler sparade etiketter kunde inte läsas.</translation>
     </message>
@@ -16136,6 +15280,402 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
         <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
         <source>Mastering MuseScore</source>
         <translation>Mastering MuseScore</translation>
+    </message>
+</context>
+<context>
+    <name>macromanager</name>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/CommandParamsDialog.qml" line="193"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="153"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="53"/>
+        <source>Confirm</source>
+        <translation>Bekräfta</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="21"/>
+        <source>Edit macro</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="105"/>
+        <source>Search commands</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="261"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="97"/>
+        <source>Run</source>
+        <translation>Kör</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="275"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="150"/>
+        <source>Run on files…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="293"/>
+        <source>Done</source>
+        <translation>Färdig</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/AvailableCommandsList.qml" line="33"/>
+        <source>Available commands</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
+        <source>Moving %1. Use the up and down arrows to move it. Press Escape to stop.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
+        <source>Move %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="246"/>
+        <source>Step %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="336"/>
+        <source>Actions for %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="378"/>
+        <source>Edit command</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="394"/>
+        <source>Move up</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="399"/>
+        <source>Move down</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="405"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="159"/>
+        <source>Delete</source>
+        <translation>Radera</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="412"/>
+        <source>Command menu</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="27"/>
+        <source>Macro commands</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="96"/>
+        <source>Step</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="128"/>
+        <source>Command</source>
+        <translation>Kommando</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="160"/>
+        <source>Actions</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="258"/>
+        <source>Double-click a command, or drag it, to add it to your macro</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="107"/>
+        <source>Run macro “%1”</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="142"/>
+        <source>Edit</source>
+        <translation>Redigera</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="146"/>
+        <source>Rename</source>
+        <translation>Byt namn</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="154"/>
+        <source>Export…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="167"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="89"/>
+        <source>Macro menu</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="48"/>
+        <source>Macros</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="66"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="18"/>
+        <source>New macro</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="110"/>
+        <source>Macro manager menu</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="69"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="26"/>
+        <source>Rename macro</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="73"/>
+        <source>Export macro…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="78"/>
+        <source>Remove all steps</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="82"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="50"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="56"/>
+        <source>Delete macro</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="26"/>
+        <source>Queued</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="28"/>
+        <source>Processing</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="30"/>
+        <source>Complete</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="32"/>
+        <source>Failed</source>
+        <translation>Misslyckades</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="34"/>
+        <source>Stopped</source>
+        <translation>Stoppades</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="43"/>
+        <source>File path</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="55"/>
+        <source>Status</source>
+        <translation>Status</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="71"/>
+        <source>Import macro…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="98"/>
+        <source>You don’t have any macros yet</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="76"/>
+        <source>Macro name</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="124"/>
+        <source>A macro with this name already exists</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="22"/>
+        <source>Run on files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="103"/>
+        <source>Stop</source>
+        <translation>Stoppa</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="147"/>
+        <source>Step %1 of “%2”: %3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="152"/>
+        <source>The macro uses steps that do not exist:
+%1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="177"/>
+        <source>macro “%1”</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="285"/>
+        <source>Macro “%1” not found</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="334"/>
+        <source>“%1” ran successfully</source>
+        <translation type="unfinished"/>
+    </message>
+    <message numerus="yes">
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="335"/>
+        <source>%n step(s) applied to the project</source>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="338"/>
+        <source>Macro completed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrorunner.cpp" line="350"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="17"/>
+        <source>The macro could not be completed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macroserialization.cpp" line="85"/>
+        <source>macro has no name</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macroserialization.cpp" line="99"/>
+        <source>macro step has no macro name</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macroserialization.cpp" line="108"/>
+        <source>macro step has an invalid command</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="125"/>
+        <source>Macro “%1” calls itself</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="126"/>
+        <source>Macro “%1” calls itself through “%2”</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="327"/>
+        <source>Invalid macro file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="36"/>
+        <source>The macro could not be renamed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="45"/>
+        <source>“%1” will be deleted</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="46"/>
+        <source>“%1” is used by other macros. Deleting it will also remove it from: %2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="64"/>
+        <source>The macro could not be deleted</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="71"/>
+        <source>Export macro</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="78"/>
+        <source>The macro could not be exported</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="84"/>
+        <source>Import macro</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="112"/>
+        <source>Macro files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macrocommandsmodel.cpp" line="336"/>
+        <source>The macro could not be saved</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="131"/>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="145"/>
+        <source>The macro could not be imported</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="191"/>
+        <source>Some commands of this macro are not available</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="192"/>
+        <source>The macro can be imported, but it will fail at these steps:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="201"/>
+        <source>Replace macro?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="202"/>
+        <source>A macro named “%1” already exists. Do you want to replace it?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
+        <source>Audio files</source>
+        <translation>Ljudfiler</translation>
+    </message>
+    <message>
+        <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="56"/>
+        <source>Select files</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -16364,24 +15904,24 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
         <translation>värde</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
-        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="150"/>
+        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="119"/>
+        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="148"/>
         <source>XML files</source>
         <translation>XML-filer</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="133"/>
-        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="162"/>
+        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="131"/>
+        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="160"/>
         <source>Save</source>
         <translation>Spara</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="166"/>
+        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="164"/>
         <source>Error saving template</source>
         <translation>Fel när mallen sparades</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="167"/>
+        <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="165"/>
         <source>Unable to save metadata template into given file.</source>
         <translation>Det går inte att spara metadatamallen i den angivna filen.</translation>
     </message>
@@ -16416,50 +15956,61 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
         <translation>YEAR</translation>
     </message>
     <message>
+        <location filename="../../src/importexport/export/view/metadatamodel.h" line="72"/>
+        <location filename="../../src/project/internal/au3/au3metadata.h" line="42"/>
+        <source>GENRE</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
         <translation>COMMENTS</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="136"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="175"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="131"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="170"/>
         <source>Error loading template</source>
         <translation>Fel när mallen lästes in</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="137"/>
-        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="176"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
+        <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
         <source>Unable to load metadata template from given file.</source>
         <translation>Det går inte att läsa in metadatamallen från den angivna filen.</translation>
     </message>
     <message>
-        <location filename="../../src/project/types/projectmeta.h" line="98"/>
+        <location filename="../../src/project/types/projectmeta.h" line="99"/>
         <source>Artist name</source>
         <translation>Artistnamn</translation>
     </message>
     <message>
-        <location filename="../../src/project/types/projectmeta.h" line="99"/>
+        <location filename="../../src/project/types/projectmeta.h" line="100"/>
         <source>Track title</source>
         <translation>Spårtitel</translation>
     </message>
     <message>
-        <location filename="../../src/project/types/projectmeta.h" line="100"/>
+        <location filename="../../src/project/types/projectmeta.h" line="101"/>
         <source>Album title</source>
         <translation>Albumtitel</translation>
     </message>
     <message>
-        <location filename="../../src/project/types/projectmeta.h" line="101"/>
+        <location filename="../../src/project/types/projectmeta.h" line="102"/>
         <source>Track number</source>
         <translation>Spårnummer</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="103"/>
+        <source>Genre</source>
+        <translation>Genre</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/types/projectmeta.h" line="104"/>
         <source>Year</source>
         <translation>År</translation>
     </message>
     <message>
-        <location filename="../../src/project/types/projectmeta.h" line="104"/>
+        <location filename="../../src/project/types/projectmeta.h" line="105"/>
         <source>Comments</source>
         <translation>Kommentarer</translation>
     </message>
@@ -16575,15 +16126,6 @@ Den kommer inte att läsas in.</translation>
         <translation>Misslyckades att registrera:
 %1</translation>
     </message>
-    <message numerus="yes">
-        <source>Enable this plug-in?
-</source>
-        <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
-        <translation type="vanished"><numerusform>Aktivera denna insticksmodul?
-</numerusform><numerusform>Aktivera dessa insticksmoduler?
-</numerusform></translation>
-    </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="479"/>
         <source>Enable new plug-ins</source>
@@ -16593,47 +16135,47 @@ Den kommer inte att läsas in.</translation>
 <context>
     <name>multiclip</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="26"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="27"/>
         <source>Cut and leave gap</source>
         <translation>Klipp ut och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="29"/>
         <source>Cut and close gap on this track</source>
         <translation>Klipp ut och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="30"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="31"/>
         <source>Cut and close gap on all tracks</source>
         <translation>Klipp ut och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="35"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="36"/>
         <source>Delete and leave gap</source>
         <translation>Ta bort och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="37"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="38"/>
         <source>Delete and close gap on this track</source>
         <translation>Ta bort och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="39"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="40"/>
         <source>Delete and close gap on all tracks</source>
         <translation>Ta bort och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="47"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="48"/>
         <source>Cut and…</source>
         <translation>Klipp ut och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="48"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="49"/>
         <source>Delete and…</source>
         <translation>Ta bort och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="52"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="53"/>
         <source>Join</source>
         <extracomment>Verb: context menu command that joins the selected clips</extracomment>
         <translation>Sammanfoga</translation>
@@ -16665,152 +16207,152 @@ Den kommer inte att läsas in.</translation>
         <translation>Navigera med Esc</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="40"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
         <source>Next section</source>
         <translation>Nästa avsnitt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="42"/>
         <source>Navigate next section</source>
         <translation>Navigera till nästa avsnitt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="47"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="49"/>
         <source>Previous section</source>
         <translation>Föregående avsnitt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="48"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="50"/>
         <source>Navigate previous section</source>
         <translation>Navigera till föregående avsnitt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="54"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="57"/>
         <source>Next panel</source>
         <translation>Nästa panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="55"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="58"/>
         <source>Navigate next panel</source>
         <translation>Navigera till nästa panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="61"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="65"/>
         <source>Previous panel</source>
         <translation>Föregående panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="62"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="66"/>
         <source>Navigate previous panel</source>
         <translation>Navigera till föregående panel</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="68"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="73"/>
         <source>Next tab</source>
         <translation>Nästa flik</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="69"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="74"/>
         <source>Navigate next tab</source>
         <translation>Navigera till nästa flik</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="75"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="81"/>
         <source>Previous tab</source>
         <translation>Föregående flik</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="76"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
         <source>Navigate previous tab</source>
         <translation>Navigera till föregående flik</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
         <source>Right</source>
         <translation>Höger</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="83"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
         <source>Navigate right</source>
         <translation>Navigera åt höger</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
         <source>Left</source>
         <translation>Vänster</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="98"/>
         <source>Navigate left</source>
         <translation>Navigera åt vänster</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="96"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="105"/>
         <source>Up</source>
         <translation>Upp</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="106"/>
         <source>Navigate up</source>
         <translation>Navigera upp</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="103"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="113"/>
         <source>Down</source>
         <translation>Ned</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="104"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="114"/>
         <source>Navigate down</source>
         <translation>Navigera ner</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="110"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="121"/>
         <source>First control</source>
         <translation>Första kontroll</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="111"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="122"/>
         <source>Navigate first control</source>
         <translation>Navigera till första kontrollen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="117"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="129"/>
         <source>Last control</source>
         <translation>Sista kontroll</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="118"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="130"/>
         <source>Navigate last control</source>
         <translation>Navigera till sista kontrollen</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="124"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="137"/>
         <source>Next row control</source>
         <translation>Kontroll på nästa rad</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="125"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
         <source>Navigate next row control</source>
         <translation>Navigera till kontrollen på nästa rad</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="131"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="145"/>
         <source>Previous row control</source>
         <translation>Kontroll på föregående rad</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="132"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="146"/>
         <source>Navigate previous row control</source>
         <translation>Navigera till kontrollen på föregående rad</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="153"/>
         <source>Trigger control</source>
         <translation>Aktivera kontroll</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="139"/>
+        <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="154"/>
         <source>Navigate trigger control</source>
         <translation>Aktivera kontrollen</translation>
     </message>
@@ -17351,103 +16893,103 @@ Den kommer inte att läsas in.</translation>
         <translation>Inställningar för uppspelningsmätare</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="43"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="24"/>
         <source>Audio settings are already being changed.</source>
         <translation>Ljudinställningarna ändras redan.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="45"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="26"/>
         <source>The selected audio settings are invalid.</source>
         <translation>De valda ljudinställningarna är ogiltiga.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="47"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="28"/>
         <source>The selected audio routing is invalid.</source>
         <translation>Den valda ljuddirigeringen är ogiltig.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="49"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="30"/>
         <source>No usable audio API is available.</source>
         <translation>Inget användbart ljud-API är tillgängligt.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="51"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="32"/>
         <source>No ASIO device is available.</source>
         <translation>Ingen ASIO-enhet är tillgänglig.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="53"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="34"/>
         <source>The active audio stream could not be stopped.</source>
         <translation>Den aktiva ljudströmmen kunde inte stoppas.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="55"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="36"/>
         <source>An internal error occurred while changing the audio settings.</source>
         <translation>Ett internt fel uppstod när ljudinställningarna ändrades.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="155"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="138"/>
         <source>No playback device is available.</source>
         <translation>Ingen uppspelningsenhet är tillgänglig.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="156"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="139"/>
         <source>“%1” is now used for playback.</source>
         <translation>”%1” används nu för uppspelning.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="158"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
         <source>Playback device changed</source>
         <translation>Uppspelningsenhet ändrad</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="163"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="146"/>
         <source>No recording device is available.</source>
         <translation>Ingen inspelningsenhet är tillgänglig.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="164"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="147"/>
         <source>“%1” is now used for recording.</source>
         <translation>”%1” används nu för inspelning.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="166"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
         <source>Recording device changed</source>
         <translation>Inspelningsenhet ändrad</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="995"/>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1019"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="988"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1013"/>
         <source>The previous audio state could not be restored.</source>
         <translation>Det tidigare ljudtillståndet kunde inte återställas.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="996"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="989"/>
         <source>Unable to rescan audio devices</source>
         <translation>Det går inte att söka efter ljudenheter igen</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1002"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="998"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
         <translation>Ljudströmmen kunde inte återställas efter omsökning av ljudenheter.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1004"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1000"/>
         <source>Audio devices</source>
         <translation>Ljudenheter</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1020"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1014"/>
         <source>Unable to change audio settings</source>
         <translation>Det går inte att ändra ljudinställningar</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1029"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1023"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
         <translation>Ljudströmmen kunde inte återställas efter ändringen av ljudinställningarna.</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1031"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1025"/>
         <source>Audio settings</source>
         <translation>Ljudinställningar</translation>
     </message>
@@ -17819,7 +17361,7 @@ Den kommer inte att läsas in.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="198"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="199"/>
         <source>Appearance</source>
         <translation>Utseende</translation>
     </message>
@@ -17911,7 +17453,7 @@ Den kommer inte att läsas in.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="38"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="39"/>
         <source>Audio settings are already being changed.</source>
         <translation>Ljudinställningarna ändras redan.</translation>
     </message>
@@ -17937,7 +17479,7 @@ Den kommer inte att läsas in.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="42"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="43"/>
         <source>The active audio stream could not be stopped.</source>
         <translation>Den aktiva ljudströmmen kunde inte stoppas.</translation>
     </message>
@@ -17959,7 +17501,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="252"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="256"/>
         <source>The previous audio state could not be restored.</source>
         <translation>Det tidigare ljudtillståndet kunde inte återställas.</translation>
     </message>
@@ -18012,79 +17554,76 @@ Den kommer inte att läsas in.</translation>
         <translation>Ändringar i den temporära katalogen kommer inte att få effekt förrän Audacity startas om</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="195"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="196"/>
         <source>General</source>
         <translation>Allmänt</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="164"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="267"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="201"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="266"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="202"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="270"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
         <translation>Ljudinställningar</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="40"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="41"/>
         <source>The default audio settings are invalid.</source>
         <translation>Standardljudinställningarna är ogiltiga.</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="47"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="48"/>
         <source>An internal error occurred while resetting the audio settings.</source>
         <translation>Ett internt fel uppstod vid återställning av ljudinställningarna.</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="204"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="205"/>
         <source>Audio editing</source>
         <translation>Ljudredigering</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="207"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="208"/>
+        <source>Tracks</source>
+        <translation>Spår</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
         <source>Playback/Recording</source>
         <translation>Uppspelning/inspelning</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
         <source>Spectral display</source>
         <translation>Spektralvisning</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
         <source>Music</source>
         <translation>Musik</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="223"/>
         <source>Export</source>
         <translation>Exportera</translation>
     </message>
     <message>
-        <source>Cloud</source>
-        <translation type="vanished">Moln</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="225"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="229"/>
         <source>Shortcuts</source>
         <translation>Genvägar</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="228"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="232"/>
         <source>Plugins</source>
         <translation>Insticksmoduler</translation>
     </message>
     <message>
-        <source>Advanced options</source>
-        <translation type="vanished">Avancerade alternativ</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="254"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="258"/>
         <source>Unable to reset audio settings</source>
         <translation>Det går inte att återställa ljudinställningarna</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="261"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
         <translation>Ljudströmmen kunde inte återställas efter att ljudinställningarna återställdes.</translation>
     </message>
@@ -18207,6 +17746,66 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
         <translation>Spara alltid på datorn</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="15"/>
+        <source>Sound activated recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="22"/>
+        <source>Turn on sound activated recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="14"/>
+        <source>Display</source>
+        <translation>Visning</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="33"/>
+        <source>Default track visualization</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="56"/>
+        <source>Default ruler format</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="85"/>
+        <source>Default audio track name</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="65"/>
+        <source>Waveform</source>
+        <translation>Vågform</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="66"/>
+        <source>Spectrogram</source>
+        <translation>Spektrogram</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="67"/>
+        <source>Multi-view</source>
+        <translation>Flervy</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="75"/>
+        <source>Linear (amp)</source>
+        <translation>Linear (amp)</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="76"/>
+        <source>Logarithmic (dB)</source>
+        <translation>Logaritmisk (dB)</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="77"/>
+        <source>Linear (dB)</source>
+        <translation>Linear (dB)</translation>
     </message>
 </context>
 <context>
@@ -18520,19 +18119,19 @@ Den kommer inte att läsas in.</translation>
         <translation>Accentfärg</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="530"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="541"/>
         <source>Could not save project locally</source>
         <translation>Kunde inte spara projektet lokalt</translation>
     </message>
     <message>
-        <location filename="../../src/au3wrap/internal/au3project.cpp" line="153"/>
+        <location filename="../../src/au3wrap/internal/au3project.cpp" line="161"/>
         <source>Project loading failed</source>
         <translation>Projektet kunde inte läsas in</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="712"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="825"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="874"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="741"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="719"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="768"/>
         <source>All supported files</source>
         <translation>Alla filer som stöds</translation>
     </message>
@@ -18558,195 +18157,219 @@ Den kommer inte att läsas in.</translation>
         <translation>Importerade flera filer</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="397"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="245"/>
         <source>Error opening file</source>
         <translation>Fel uppstod när filen öppnades</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="398"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="246"/>
         <source>Could not open file: %1</source>
         <translation>Kunde inte öppna fil: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="744"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1136"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1155"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="615"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="638"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1077"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1096"/>
         <source>Dismiss</source>
         <extracomment>Label of the button that dismisses a notification</extracomment>
         <translation>Stäng</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="738"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="632"/>
         <source>Upload project to audio.com…</source>
         <translation>Ladda upp projekt till audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="826"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Audacity project files</source>
         <translation>Audacity-projektfiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3-filer</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="828"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="181"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4-filer</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="564"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="570"/>
         <source>Cloud sync failed</source>
         <translation>Molnsynkroniseringen misslyckades</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="577"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="598"/>
         <source>Project unavailable</source>
         <translation>Projektet är inte tillgängligt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="586"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="592"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="740"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="607"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="761"/>
         <source>Access denied</source>
         <translation>Åtkomst nekad</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="608"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="720"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="629"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="741"/>
         <source>Version conflict</source>
         <translation>Versionskonflikt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="621"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="641"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="642"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="662"/>
         <source>Visit audio.com</source>
         <translation>Besök audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="623"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="644"/>
         <source>Load latest</source>
         <translation>Ladda senaste</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="630"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
         <source>Project incomplete</source>
         <translation>Projektet är ofullständigt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="757"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="778"/>
         <source>Network error</source>
         <translation>Nätverksfel</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="715"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1131"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="609"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1072"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
         <translation>Alla sparade ändringar uppdateras nu i molnet.
 Du kan hantera filen från sidan med uppdaterade projekt på audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="829"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="723"/>
         <source>Importable audio and media files</source>
         <translation>Importerbara ljud- och mediafiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="843"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="893"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="737"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="787"/>
         <source>Open</source>
         <extracomment>Title of a file picker dialog</extracomment>
         <translation>Öppna</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="875"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="769"/>
         <source>Audio files</source>
         <translation>Ljudfiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="876"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="770"/>
         <source>Video files</source>
         <translation>Videofiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="877"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="771"/>
         <source>Game media files</source>
         <translation>Spelmediafiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="878"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="772"/>
         <source>Streaming files</source>
         <translation>Strömningsfiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="879"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="773"/>
         <source>Animation and image files</source>
         <translation>Animations- och bildfiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="880"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="774"/>
         <source>Raw files</source>
         <translation>Rådatafiler</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="909"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="803"/>
         <source>Do you want to save changes to the project before closing?</source>
         <translation>Vill du spara ändringarna i projektet innan du stänger det?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="911"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="805"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Vill du spara ändringarna i projektet ”%1” innan du stänger det?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="915"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="809"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Dina ändringar går förlorade om du inte sparar dem.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="922"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="816"/>
         <source>Unsaved changes</source>
         <translation>Osparade ändringar</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1149"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="987"/>
+        <source>Use default location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="990"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1005"/>
+        <source>Could not create a new project</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="991"/>
+        <source>The temporary files location is not accessible: %1
+
+Use the default location instead? It can be changed later in Preferences.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1006"/>
+        <source>Make sure the temporary files location is accessible: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1090"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Återupptar synkronisering med audio.com…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1167"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1598"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1108"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1548"/>
         <source>Syncing project from cloud…</source>
         <translation>Synkroniserar projekt från molnet…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1328"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1270"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Kan inte läsa filen %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1333"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1275"/>
         <source>An error occurred while reading this file.</source>
         <translation>Ett fel uppstod när filen lästes.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="559"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="677"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="693"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="733"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="580"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="698"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="714"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
         <translation>Spara till dator</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectconfiguration.cpp" line="162"/>
+        <location filename="../../src/project/internal/projectconfiguration.cpp" line="161"/>
         <source>Untitled</source>
         <translation>Namnlös</translation>
     </message>
@@ -18826,17 +18449,17 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="564"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="565"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="460"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="488"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2293"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2774"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2350"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2821"/>
         <source>Warning</source>
         <translation>Varning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1114"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1169"/>
         <source>Progress</source>
         <extracomment>This title appears on a dialog that indicates the progress in doing something.</extracomment>
         <translation>Förlopp</translation>
@@ -18881,13 +18504,13 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="255"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1397"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2408"/>
         <source>This may take several seconds</source>
         <translation>Detta kan ta flera minuter</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="549"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="550"/>
         <source>Could not write to %1.
 </source>
         <extracomment>%1 is the file path</extracomment>
@@ -18895,7 +18518,7 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
 </translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="552"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="553"/>
         <source>Disk is full.
 %1</source>
         <extracomment>%1 is an additional detail message, possibly empty</extracomment>
@@ -18903,7 +18526,7 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="639"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="640"/>
         <source>Failed to create savepoint:
 
 %1</source>
@@ -18913,8 +18536,8 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="663"/>
-        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="686"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="664"/>
+        <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="687"/>
         <source>Failed to release savepoint:
 
 %1</source>
@@ -19072,29 +18695,23 @@ Filen kan vara skadad eller skrivskyddad.</translation>
         <translation>Kunde inte arbeta med blockfilerna</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="948"/>
-        <source>Total orphan blocks deleted %1</source>
-        <extracomment>%1 is the number of deleted orphan blocks</extracomment>
-        <translation>Alla föräldralösa block raderade %1</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1029"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1080"/>
         <source>Failed to rollback transaction during import</source>
         <translation>Det gick inte att återställa transaktionen under importen</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1053"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1104"/>
         <source>Unable to attach destination database</source>
         <translation>Kunde inte bifoga databasen för destinationen</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1064"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1115"/>
         <source>Unable to switch to fast journaling mode</source>
         <translation>Det går inte att växla till snabbt journalföringsläge</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1106"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1964"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1161"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2021"/>
         <source>Unable to prepare project file command:
 
 %1</source>
@@ -19104,13 +18721,14 @@ Filen kan vara skadad eller skrivskyddad.</translation>
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1139"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1194"/>
         <source>Failed to bind SQL parameter</source>
         <translation>Misslyckades med att sätta samman SQL parameter</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1154"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1989"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1209"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1254"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2046"/>
         <source>Failed to update the project file.
 The following command failed:
 
@@ -19122,27 +18740,27 @@ Följande kommando misslyckades:
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1185"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1240"/>
         <source>Failed to copy the project history.</source>
         <translation>Det gick inte att kopiera projekthistoriken.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1210"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1273"/>
         <source>Destination project could not be detached</source>
         <translation>Projektet med denna destination kunde inte frigöras</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1334"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1397"/>
         <source>Copying Project</source>
         <translation>Kopiera projekt</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1348"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1411"/>
         <source>Error Writing to File</source>
         <translation>Fel vid skrivning till fil</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1350"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1413"/>
         <source>Audacity failed to write file %1.
 Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
@@ -19152,29 +18770,29 @@ Kanske hårddisken är skrivskyddad eller är full.
 För tips på hur man frigör utrymme, klicka på hjälpknappen.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1583"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1646"/>
         <source>Compacting project</source>
         <translation>Packar samman projektet</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1685"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1749"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
         <translation>[Projekt %1] Audacity ”%2”</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1687"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1751"/>
         <source>&lt;untitled&gt;</source>
         <translation>&lt;namnlös&gt;</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1698"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1762"/>
         <source>(Recovered)</source>
         <extracomment>E.g this is recovered audio that had been lost.</extracomment>
         <translation>(återskapad)</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1798"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1862"/>
         <source>This file was saved using Audacity %1.
 You are using Audacity %2. You may need to upgrade to a newer version to open this file.</source>
         <extracomment>%1 is the Audacity version that saved the file, %2 is the running version.</extracomment>
@@ -19183,58 +18801,59 @@ Du använder Audacity %2. Du behöver kanske uppgradera till
 en nyare version för att kunna öppna denna fil.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1802"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1866"/>
         <source>Can’t open project file</source>
         <translation>Kan inte öppna projektfilen</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1918"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1975"/>
         <source>Failed to remove the autosave information from the project file.</source>
         <translation>Misslyckades med att ta bort information kring autospar från projektfilen.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1982"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2032"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2042"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2055"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2039"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2089"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2099"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2112"/>
         <source>Unable to bind to blob</source>
         <translation>Det går inte att binda till blobben</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2155"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2212"/>
         <source>The project file is read-only</source>
         <translation>Projektfilen är skrivskyddad</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2194"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2251"/>
         <source>Unable to parse project information.</source>
         <translation>Kunde inte analysera projektets information.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2294"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
         <translation>Projektets databas kunde inte öppnas igen, möjligen på grund av begränsat utrymme på lagringsenheten.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2310"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2367"/>
         <source>Saving project</source>
         <translation>Spara projekt</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2312"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2366"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2386"/>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2428"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="217"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2369"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2423"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2443"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2473"/>
         <source>Error Saving Project</source>
         <translation>Fel uppstod när projektet sparades</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2408"/>
         <source>Syncing</source>
         <translation>Synka</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2368"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
         <source>The project failed to open, possibly due to limited space
 on the storage device.
 
@@ -19246,7 +18865,7 @@ liten plats på hårddisken.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2388"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2445"/>
         <source>Unable to remove autosave information, possibly due to limited space
 on the storage device.
 
@@ -19258,12 +18877,12 @@ för lite utrymme på hårddisken.
 %1</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2454"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2499"/>
         <source>Backing up project</source>
         <translation>Gör backup på projekt</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2773"/>
+        <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2820"/>
         <source>Automatic database backup failed.</source>
         <translation>Automatisk backup av databasen misslyckades.</translation>
     </message>
@@ -19371,7 +18990,7 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
 <context>
     <name>project/history</name>
     <message>
-        <location filename="../../src/projectscene/view/historypanel/historypanelmodel.cpp" line="76"/>
+        <location filename="../../src/projectscene/view/historypanel/historypanelmodel.cpp" line="80"/>
         <source>File opened</source>
         <translation>Filen har öppnats</translation>
     </message>
@@ -19392,57 +19011,57 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="432"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="453"/>
         <source>Audacity 3 project</source>
         <translation>Audacity 3-projekt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="433"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="454"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Du har öppnat ett Audacity 3-projekt. Det måste konverteras innan du kan använda det i Audacity 4.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="438"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="459"/>
         <source>Cancel</source>
         <translation>Avbryt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="441"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="462"/>
         <source>Save as new project</source>
         <translation>Spara som nytt projekt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="444"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="465"/>
         <source>Legacy project</source>
         <translation>Äldre projekt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="469"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="490"/>
         <source>The project was saved as “%1”</source>
         <translation>Projektet sparades som ”%1”</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="472"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
         <source>Continue</source>
         <translation>Fortsätt</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="475"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="496"/>
         <source>Project saved</source>
         <translation>Projektet har sparats</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1193"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1134"/>
         <source>Time Track not supported</source>
         <translation>Tidsspår stöds inte</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1194"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1135"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
         <translation>Projektet innehåller ett tidsspår, som ännu inte stöds i Audacity 4 och därför måste tas bort. Det ursprungliga Audacity 3-projektet påverkas inte.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1198"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1139"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -19521,13 +19140,9 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="505"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
         <source>Save to computer</source>
         <translation>Spara till dator</translation>
-    </message>
-    <message>
-        <source>Save on your computer</source>
-        <translation type="vanished">Spara på din dator</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
@@ -19549,40 +19164,43 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <translation>markering</translation>
     </message>
     <message>
-        <source>Log in or create a new account on Audio.com to share your music.</source>
-        <translation type="vanished">Logga in eller skapa ett nytt konto på Audio.com för att dela din musik.</translation>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
+        <source>The project was not saved because the selected project is open in another window.
+Please try again and select an original name.</source>
+        <translation>Projektet sparades inte eftersom det valda projektet är öppet i ett annat fönster.
+Försök igen med ett annat namn.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="483"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="504"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Publicera</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="487"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="508"/>
         <source>Publish changes online?</source>
         <translation>Publicera ändringar online?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="488"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="509"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Dina sparade ändringar kommer att vara offentliga. Vi kommer också att behöva generera en ny MP3 för offentlig uppspelning.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="499"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="509"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="523"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="520"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="530"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="544"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Kontrollera din internetanslutning eller försök igen senare.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="498"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="508"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="519"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
         <source>Unable to connect to the cloud</source>
         <translation>Det går inte att ansluta till molnet</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="522"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Det går inte att ansluta till Audio.com</translation>
     </message>
@@ -19642,34 +19260,34 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="804"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="825"/>
         <source>Your audio could not be shared</source>
         <translation>Ditt ljud kunde inte delas</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="833"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Ditt konto på audio.com måste först verifieras. Aktivera kontot via länken i aktiveringsmeddelandet.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="818"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="839"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com returnerade en okänd felkod: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="821"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="842"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com returnerade en okänd felkod.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="823"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="830"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="844"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="851"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Försök igen senare eller hämta hjälp om problemet på audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="826"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="847"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Kunde inte ansluta till audio.com. Kontrollera din internetanslutning eller försök igen senare.</translation>
     </message>
@@ -19685,57 +19303,57 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
 <context>
     <name>projectscene</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="28"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="38"/>
         <source>Selection</source>
         <translation>Markering</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="50"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="61"/>
         <source>Selection start</source>
         <translation>Markeringens början</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="51"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="62"/>
         <source>Selection end</source>
         <translation>Markeringens slut</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="82"/>
         <source>Duration</source>
         <translation>Längd</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/EffectCard.qml" line="133"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/EffectCard.qml" line="134"/>
         <source>Get it on MuseHub</source>
         <translation>Hämta via MuseHub</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="15"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/GetEffectsDialog.qml" line="15"/>
         <source>Get effects</source>
         <translation>Hämta effekter</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="52"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="52"/>
         <source>Please wait…</source>
         <translation>Vänta…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="68"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="68"/>
         <source>Connection error</source>
         <translation>Anslutningsfel</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="76"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="76"/>
         <source>Audacity is unable to connect to MuseHub.com. Please check your connection and try again.</source>
         <translation>Audacity kan inte ansluta till MuseHub.com. Kontrollera anslutningen och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="83"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="83"/>
         <source>Try again</source>
         <translation>Försök igen</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="122"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/GetEffectsDialog.qml" line="122"/>
         <source>Become a partner</source>
         <translation>Bli partner</translation>
     </message>
@@ -19790,7 +19408,7 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="438"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="433"/>
         <source>New label track</source>
         <translation>Nytt etikettspår</translation>
     </message>
@@ -19894,14 +19512,6 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <translation>Etikett</translation>
     </message>
     <message>
-        <source>Pan: 100R</source>
-        <translation type="vanished">Panorering: 100H</translation>
-    </message>
-    <message>
-        <source>Pan:</source>
-        <translation type="vanished">Panorera:</translation>
-    </message>
-    <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all master effects</source>
@@ -19933,10 +19543,6 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
         <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Titta på video&lt;/a&gt;</translation>
-    </message>
-    <message>
-        <source>Real-time effects panel</source>
-        <translation type="vanished">Panel för realtidseffekter</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
@@ -19972,7 +19578,7 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <translation>Spårvolym</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/internal/GetEffectsContent.qml" line="17"/>
+        <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="17"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="104"/>
         <source>Effects</source>
         <translation>Effekter</translation>
@@ -19995,152 +19601,152 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <translation>Solo</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="232"/>
+        <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="227"/>
         <source>Separator line</source>
         <translation>Avskiljarlinje</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="52"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="50"/>
         <source>Bar</source>
         <translation>Takt</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="53"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="51"/>
         <source>1/2</source>
         <translation>1/2</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="54"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="52"/>
         <source>1/4</source>
         <translation>1/4</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="55"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="53"/>
         <source>1/8</source>
         <translation>1/8</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="56"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="54"/>
         <source>1/16</source>
         <translation>1/16</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="57"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="55"/>
         <source>1/32</source>
         <translation>1/32</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="58"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="56"/>
         <source>1/64</source>
         <translation>1/64</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="59"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="57"/>
         <source>1/128</source>
         <translation>1/128</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="61"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="59"/>
         <source>Enable triplets</source>
         <translation>Aktivera trioler</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="217"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="196"/>
         <source>Seconds</source>
         <translation>Sekunder</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="218"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="197"/>
         <source>Deciseconds</source>
         <translation>Tiondels sekunder</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="219"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="198"/>
         <source>Centiseconds</source>
         <translation>Hudradels sekunder</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="220"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="199"/>
         <source>Milliseconds</source>
         <translation>Millisekunder</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="221"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="200"/>
         <source>Samples</source>
         <translation>Sampel</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="203"/>
         <source>Seconds &amp; samples</source>
         <translation>Sekunder &amp;&amp; sampel</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="209"/>
         <source>Video frames (24 fps)</source>
         <translation>Videobildrutor (24 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="231"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="210"/>
         <source>NTSC frames (29.97 fps)</source>
         <translation>NTSC bildrutor (29.97 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="232"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="211"/>
         <source>NTSC frames (30 fps)</source>
         <translation>NTSC bildrutor (30 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="233"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="212"/>
         <source>PAL frames (25 fps)</source>
         <translation>PAL-bildrutor (25 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="221"/>
         <source>CDDA frames (75 fps)</source>
         <translation>CDDA-bildrutor (75 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="215"/>
         <source>Video frames</source>
         <translation>Bildrutor</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="245"/>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
         <source>CD frames</source>
         <translation>CD bildrutor</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="67"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="69"/>
         <source>Track</source>
         <translation>Spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="70"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="72"/>
         <source>Label text</source>
         <translation>Etikettext</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="76"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="78"/>
         <source>Start time</source>
         <translation>Starttid</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="88"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="90"/>
         <source>End time</source>
         <translation>Sluttid</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="99"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="101"/>
         <source>Low frequency</source>
         <translation>Låg frekvens</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="111"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="113"/>
         <source>High frequency</source>
         <translation>Hög frekvens</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="30"/>
+        <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="34"/>
         <source>Remove effect</source>
         <translation>Ta bort effekt</translation>
     </message>
@@ -20155,22 +19761,22 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <translation>Ångra och gör om</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="159"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="171"/>
         <source>Clip: %1</source>
         <translation>Klipp: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="695"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="739"/>
         <source>Clip name: %1</source>
         <translation>Klippnamn: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="837"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="881"/>
         <source>Clip menu</source>
         <translation>Klippmeny</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="103"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="125"/>
         <source>Label: %1</source>
         <translation>Etikett: %1</translation>
     </message>
@@ -20209,83 +19815,83 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <translation>Spårmeny</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="198"/>
         <source>Track %1: %2, audio track, selected</source>
         <translation>Spår %1: %2, ljudspår, markerat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="235"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="198"/>
         <source>Track %1: %2, audio track</source>
         <translation>Spår %1: %2, ljudspår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="236"/>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="303"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="199"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="266"/>
         <source>Press Enter to select or deselect</source>
         <translation>Tryck på Retur för att markera eller avmarkera</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="265"/>
         <source>Track %1: %2, label track, selected</source>
         <translation>Spår %1: %2, etikettspår, markerat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="302"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="265"/>
         <source>Track %1: %2, label track</source>
         <translation>Spår %1: %2, etikettspår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="640"/>
         <source>Moved Samples</source>
         <translation>Flyttade sampel</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="656"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="640"/>
         <source>Sample Edit</source>
         <translation>Redigera sampel</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="197"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="209"/>
         <source>Blue</source>
         <translation>Blå</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="198"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="210"/>
         <source>Violet</source>
         <translation>Violett</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="199"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="211"/>
         <source>Magenta</source>
         <translation>Magenta</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="200"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="212"/>
         <source>Red</source>
         <translation>Röd</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="201"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="213"/>
         <source>Orange</source>
         <translation>Orange</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="202"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="214"/>
         <source>Yellow</source>
         <translation>Gul</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="203"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="215"/>
         <source>Green</source>
         <translation>Grön</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="204"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="216"/>
         <source>Turquoise</source>
         <translation>Turkos</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="205"/>
+        <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="217"/>
         <source>Cyan</source>
         <translation>Cyan</translation>
     </message>
@@ -20294,6 +19900,11 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="66"/>
         <source>Timeline</source>
         <translation>Tidslinje</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml" line="93"/>
+        <source>Track %1: %2, vertical ruler</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
@@ -20317,13 +19928,13 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
 <context>
     <name>projectscene/toolbars</name>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="209"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="187"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>Inspelningskanal %1 (mono)</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="212"/>
+        <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="190"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
         <translation>%1 inspelningskanaler (stereo)</translation>
@@ -20357,22 +19968,22 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <translation>Visa mikrofonmätaren när ingen inspelning pågår</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="970"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="984"/>
         <source>Record</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Spela in</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="968"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="982"/>
         <source>Recorded audio</source>
         <translation>Inspelat ljud</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="118"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="150"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="170"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="185"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="200"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="114"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="147"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="167"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="183"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="199"/>
         <source>Recording error</source>
         <extracomment>Title of an error dialog</extracomment>
         <translation>Inspelningsfel</translation>
@@ -20428,6 +20039,323 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <source>Please select a track for lead-in recording.</source>
         <translation>Markera ett spår för inspelning med förberedelsetid.</translation>
     </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelControl.qml" line="70"/>
+        <source>Activation level</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="15"/>
+        <source>Set sound activation level</source>
+        <translation>Ställ in ljudaktiveringsnivå</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
+        <source>Timed recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="417"/>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="430"/>
+        <source>Duration</source>
+        <translation>Längd</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="170"/>
+        <source>Date</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="187"/>
+        <source>Time</source>
+        <translation>Tid</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="318"/>
+        <source>Start recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="325"/>
+        <source>Now</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="337"/>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="396"/>
+        <source>At a time</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="377"/>
+        <source>End recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="384"/>
+        <source>For a duration</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="474"/>
+        <source>When recording is done</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="480"/>
+        <source>Save project</source>
+        <translation>Spara projekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="501"/>
+        <source>Export audio</source>
+        <translation>Exportera ljud</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="506"/>
+        <source>Settings</source>
+        <extracomment>Button that opens the export settings: where the audio is exported to and in what format</extracomment>
+        <translation>Inställningar</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="524"/>
+        <source>Quit Audacity</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
+        <source>Start timed recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="116"/>
+        <source>Stop</source>
+        <translation>Stoppa</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="30"/>
+        <source>%1d</source>
+        <extracomment>Abbreviated number of days in a duration, e.g. &quot;2d&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="34"/>
+        <source>%1h</source>
+        <extracomment>Abbreviated number of hours in a duration, e.g. &quot;1h&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="38"/>
+        <source>%1m</source>
+        <extracomment>Abbreviated number of minutes in a duration, e.g. &quot;30m&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="42"/>
+        <source>%1s</source>
+        <extracomment>Abbreviated number of seconds in a duration, e.g. &quot;45s&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="159"/>
+        <source>The end time has already passed.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="198"/>
+        <source>Audacity was already recording.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="208"/>
+        <source>Recording couldn’t be started.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="222"/>
+        <source>Timed recording couldn’t start</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="246"/>
+        <source>Confirm</source>
+        <translation>Bekräfta</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="249"/>
+        <source>Stop timed recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="250"/>
+        <source>Your timed recording will be stopped.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="287"/>
+        <source>Timed recording complete</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="289"/>
+        <source>Recorded for %1</source>
+        <extracomment>%1 is how long the timed recording lasted, e.g. &quot;1h 30m&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="293"/>
+        <source>Timed recording stopped</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="328"/>
+        <source>Project saved</source>
+        <translation>Projektet har sparats</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="330"/>
+        <source>Couldn’t save the project</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="353"/>
+        <source>Couldn’t export the audio</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="357"/>
+        <source>Audio exported</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="95"/>
+        <source>Audacity will quit in %1</source>
+        <extracomment>%1 is the time left until Audacity quits, e.g. &quot;59s&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="99"/>
+        <source>Recording ends in %1</source>
+        <extracomment>%1 is the time left until the timed recording ends, e.g. &quot;59m 50s&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="102"/>
+        <source>Started: %1</source>
+        <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="106"/>
+        <source>Recording starts in %1</source>
+        <extracomment>%1 is the time left until the timed recording starts, e.g. &quot;5m&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="109"/>
+        <source>Starts: %1</source>
+        <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="112"/>
+        <source>Ends: %1</source>
+        <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 13:23:30&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="159"/>
+        <source>This file already exists:
+%1
+
+Do you want to overwrite it?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="161"/>
+        <source>These files already exist:
+%1
+
+Do you want to overwrite them?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="166"/>
+        <source>Overwrite</source>
+        <translation>Skriv över</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="182"/>
+        <source>Save project as</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="46"/>
+        <source>%1 at %2</source>
+        <extracomment>A date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="58"/>
+        <source>Starts when you press Start timed recording and ends %1 (%2).</source>
+        <extracomment>%1 is when the recording ends, e.g. &quot;today at 16:28:20&quot;, and %2 its duration, e.g. &quot;1h&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="63"/>
+        <source>Starts when you press Start timed recording and records for %1.</source>
+        <extracomment>%1 is the duration of the recording, e.g. &quot;1h 30m&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="67"/>
+        <source>Starts %1 and records for %2.</source>
+        <extracomment>%1 is when the recording starts, e.g. &quot;today at 12:23:30&quot; or &quot;in 43m 30s&quot;, and %2 its duration, e.g. &quot;1h 30m&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="73"/>
+        <source>Start time has passed. Choose a time after %1.</source>
+        <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="79"/>
+        <source>End time has passed. Choose a time after %1.</source>
+        <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="84"/>
+        <source>End time must be after the start time.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="102"/>
+        <source>in %1</source>
+        <extracomment>%1 is how long until the recording starts, e.g. &quot;43m 30s&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="113"/>
+        <source>today at %1</source>
+        <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="118"/>
+        <source>tomorrow at %1</source>
+        <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="122"/>
+        <source>on %1</source>
+        <extracomment>%1 is a date and a time, e.g. &quot;Sun 25 Oct 2026 at 16:28:20&quot;</extracomment>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>registries</name>
@@ -20466,82 +20394,82 @@ Anslut en inmatningsenhet och sök igen.</translation>
 <context>
     <name>selection</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="26"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="27"/>
         <source>Cut and leave gap</source>
         <translation>Klipp ut och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="28"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="29"/>
         <source>Cut and close gap</source>
         <translation>Klipp ut och stäng mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="30"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="31"/>
         <source>Cut and close gap on this track</source>
         <translation>Klipp ut och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="32"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="33"/>
         <source>Cut and close gap on all tracks</source>
         <translation>Klipp ut och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="37"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="38"/>
         <source>Paste and overlap</source>
         <translation>Klistra in och överlappa</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="39"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="40"/>
         <source>Paste and make room on this track</source>
         <translation>Klistra in och gör plats på det här spåret</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="41"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="42"/>
         <source>Paste and make room on all tracks</source>
         <translation>Klistra in och gör plats på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="46"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="47"/>
         <source>Delete and leave gap</source>
         <translation>Ta bort och lämna mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="48"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="49"/>
         <source>Delete and close gap</source>
         <translation>Ta bort och stäng mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="50"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="51"/>
         <source>Delete and close gap on this track</source>
         <translation>Ta bort och stäng mellanrummet på detta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="52"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="53"/>
         <source>Delete and close gap on all tracks</source>
         <translation>Ta bort och stäng mellanrummet på alla spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="62"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="63"/>
         <source>Cut and…</source>
         <translation>Klipp ut och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="63"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="64"/>
         <source>Paste and…</source>
         <translation>Klistra in och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="65"/>
         <source>Delete and…</source>
         <translation>Ta bort och…</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="68"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="69"/>
         <source>Split at silences</source>
         <translation>Dela vid tystnader</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="71"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="72"/>
         <source>Join</source>
         <extracomment>Verb: context menu command that joins the selected audio</extracomment>
         <translation>Sammanfoga</translation>
@@ -20615,7 +20543,7 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <translation>Ange kortkommando</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="63"/>
         <source>Define keyboard shortcut</source>
         <translation>Definiera kortkommando</translation>
     </message>
@@ -20625,12 +20553,12 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <translation>Det här kortkommandot är redan tilldelat till: &lt;b&gt;%1&lt;/b&gt;</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="242"/>
         <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
         <translation>Är du säker på att du vill tilldela den till &lt;b&gt;%1&lt;/b&gt; istället?</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="247"/>
         <source>Reassign shortcut</source>
         <translation>Ändra kortkommando</translation>
     </message>
@@ -20648,6 +20576,144 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="209"/>
         <source>Export shortcuts</source>
         <translation>Exportera kortkommandon</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="32"/>
+        <source>Navigation</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between panels and controls</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="34"/>
+        <source>Playback</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that control playback</extracomment>
+        <translation>Uppspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="36"/>
+        <source>Recording</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that control recording</extracomment>
+        <translation>Inspelning</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="38"/>
+        <source>Timeline</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that work only while the timeline has the keyboard focus</extracomment>
+        <translation>Tidslinje</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="40"/>
+        <source>Track view</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that work only while a track or a track item has the keyboard focus</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="44"/>
+        <source>Project view</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that change how the project is shown</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
+        <source>Editing</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that edit audio, clips, labels and tracks</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>
+        <source>Track navigation</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between tracks and track items</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="50"/>
+        <source>Effects</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that open or apply effects</extracomment>
+        <translation>Effekter</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="52"/>
+        <source>Spectrogram</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the spectrogram view</extracomment>
+        <translation>Spektrogram</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="55"/>
+        <source>App</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that act on the whole application</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="57"/>
+        <source>Project</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that manage the project file</extracomment>
+        <translation>Projekt</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="59"/>
+        <source>Cloud</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the cloud service</extracomment>
+        <translation>Moln</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="61"/>
+        <source>Audio</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the audio engine and audio devices</extracomment>
+        <translation>Ljud</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="63"/>
+        <source>VST</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of VST plugins; &quot;VST&quot; is a product name, do not translate it</extracomment>
+        <translation>VST</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="65"/>
+        <source>Dock</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that show, hide or move panels and toolbars</extracomment>
+        <translation>Docka</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="67"/>
+        <source>Workspace</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that change the workspace (the layout of panels and toolbars)</extracomment>
+        <translation>Arbetsyta</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="69"/>
+        <source>Extensions</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of extensions (add-ons that users install)</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="71"/>
+        <source>Shortcuts</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that manage the shortcuts themselves</extracomment>
+        <translation>Genvägar</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="73"/>
+        <source>Windows</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that manage application windows</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="75"/>
+        <source>Update</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that check for or install application updates</extracomment>
+        <translation>Uppdatera</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="77"/>
+        <source>Diagnostics</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of diagnostic tools for developers</extracomment>
+        <translation>Diagnostik</translation>
+    </message>
+    <message>
+        <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="79"/>
+        <source>Testflow</source>
+        <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the automated test tool for developers; &quot;Testflow&quot; is a tool name, do not translate it</extracomment>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -21377,7 +21443,7 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <translation>%1 av %2</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="256"/>
+        <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="264"/>
         <source>Dismiss</source>
         <translation>Stäng</translation>
     </message>
@@ -21418,56 +21484,56 @@ Anslut en inmatningsenhet och sök igen.</translation>
 <context>
     <name>trackcontextmenu</name>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="60"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="85"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="108"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="63"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="88"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="111"/>
         <source>Move track</source>
         <translation>Flytta spår</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="61"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="86"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Track visualization</source>
         <translation>Spårvisualisering</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="62"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="87"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="109"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="65"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="90"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="112"/>
         <source>Track color</source>
         <translation>Spårfärg</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="67"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="92"/>
         <source>Meters &amp;&amp; monitoring</source>
         <translation>Mätare &amp;&amp; övervakning</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="70"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="93"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="73"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="96"/>
         <source>Format:</source>
         <translation>Format:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="71"/>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="94"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="74"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="97"/>
         <source>Rate:</source>
         <translation>Frekvens:</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="351"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="331"/>
         <source>Format: %1</source>
         <translation>Format: %1</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="385"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="365"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
         <translation>Frekvens: %1 Hz</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="476"/>
+        <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="459"/>
         <source>%1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
         <translation>%1 Hz</translation>
@@ -21516,38 +21582,43 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <translation>Drog envelopppunkt</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="897"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="891"/>
         <source>Set looping region in/out</source>
         <translation>Ställ in loopområdets början och slut</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="42"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="43"/>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
         <translation>Mixar ned till mono…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="278"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="320"/>
         <source>Rendering pitch and speed…</source>
         <translation>Renderar tonhöjd och hastighet…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1368"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1396"/>
         <source>Mix down to mono</source>
         <translation>Mixa ned till mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1369"/>
+        <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1397"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
         <translation>Denna åtgärd kräver att ett eller flera klipp konverteras till mono. Vill du fortsätta?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1576"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1352"/>
+        <source>Mix</source>
+        <translation>Mixa</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1647"/>
         <source>Combine mono tracks to stereo</source>
         <translation>Kombinera monospår till stereo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1577"/>
+        <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1648"/>
         <source>The tracks you are attempting to merge to stereo contain clips at different positions, or otherwise mismatching clips. Merging them will render the tracks.
 
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
@@ -21560,566 +21631,611 @@ Det innebär att realtidseffekterna tillämpas på vågformen och att dolda data
 Vill du fortsätta?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="21"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="30"/>
         <source>Playback position</source>
         <translation>Uppspelningsposition</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="704"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="833"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="856"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="879"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="910"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="578"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="709"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="730"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="751"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="787"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Inget ljud är markerat</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="706"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="834"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="857"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="880"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="911"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="580"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="710"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="731"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="752"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="788"/>
         <source>Select the audio to delete and try again.</source>
         <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
         <translation>Markera ljudet som ska tas bort och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1346"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1360"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1374"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1082"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1099"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1116"/>
         <source>Paste error</source>
         <translation>Fel vid inklistring</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2097"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1690"/>
         <source>Set rate</source>
         <translation>Ställ in samplingsfrekvens</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2267"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1843"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Resample track</source>
         <translation>Omsampla spår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="39"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="46"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
         <translation>Beskär markerade ljudspår från %1 sekunder till %2 sekunder</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="41"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="48"/>
         <source>Trim Audio</source>
         <translation>Beskär ljud</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="52"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="59"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
         <translation>Tystade markerade spår från %1 sekunder till %2 sekunder</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="54"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="61"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="79"/>
         <source>Silence</source>
         <translation>Tystnad</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="72"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="79"/>
         <source>Silenced selected clips</source>
         <translation>Tystade markerade klipp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="92"/>
         <source>Track Title</source>
         <translation>Spårtitel</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="85"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="92"/>
         <source>Changed Track Title</source>
         <translation>Ändrade spårtitel</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="101"/>
         <source>Clip Title</source>
         <translation>Klipptitel</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="94"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="101"/>
         <source>Changed clip title</source>
         <translation>Ändrade klipptitel</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="110"/>
         <source>Pitch Shift</source>
         <translation>Tonhöjd ändra</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="103"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="110"/>
         <source>Changed Pitch Shift</source>
         <translation>Ändrad tonhöjd</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="112"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="119"/>
         <source>Reset Clip Pitch</source>
         <translation>Återställ Clip Pitch</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="121"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="687"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="128"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
         <source>Changed Speed</source>
         <translation>Ändrad hastighet</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="130"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="137"/>
         <source>Reset Clip Speed</source>
         <translation>Återställ klipphastighet</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="144"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="175"/>
         <source>Changed track color</source>
         <translation>Ändrade spårfärg</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="160"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="161"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="191"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="192"/>
         <source>Reset Clip Pitch and Speed</source>
         <translation>Återställ klippets tonhöjd och hastighet</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="201"/>
         <source>Rendered time-stretched audio</source>
         <translation>Renderat time-stretchat ljud</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="170"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="201"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="974"/>
         <source>Render</source>
         <translation>Rendera</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="241"/>
         <source>Pasted from the clipboard</source>
         <translation>Klistrade in från urklipp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="209"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="241"/>
         <source>Paste</source>
         <translation>Klistra in</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="263"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="283"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1255"/>
         <source>Cut to the clipboard</source>
         <translation>Klipp ut till urklipp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="231"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="251"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="263"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="283"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1043"/>
         <source>Cut</source>
         <translation>Klipp ut</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="343"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1075"/>
         <source>Remove multiple items</source>
         <translation>Ta bort flera objekt</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="311"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="343"/>
         <source>Remove multiple clips</source>
         <translation>Ta bort flera klipp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="312"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1007"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="344"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1075"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1077"/>
         <source>Remove</source>
         <translation>Ta bort</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1137"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="354"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1369"/>
         <source>Delete</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Radera</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="322"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="354"/>
         <source>Delete and close gap</source>
         <translation>Ta bort och stäng mellanrum</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="392"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="418"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="453"/>
         <source>Items moved</source>
         <translation>Objekt flyttade</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="395"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="421"/>
         <source>Clip moved</source>
         <translation>Klipp flyttat</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="396"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="422"/>
         <source>Move clip</source>
         <translation>Flytta klipp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="393"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="448"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="419"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="453"/>
         <source>Move items</source>
         <translation>Flytta objekt</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="398"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="154"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="155"/>
+        <source>Changed fade in</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="166"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="167"/>
+        <source>Changed fade out</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="424"/>
         <source>Label moved</source>
         <translation>Etikett flyttad</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="399"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="425"/>
         <source>Move label</source>
         <translation>Flytta etikett</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="468"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="533"/>
         <source>Split</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Dela</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="551"/>
         <source>Split clips at silence</source>
         <translation>Dela klipp vid tystnad</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="477"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="486"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="551"/>
         <source>Split at silence</source>
         <translation>Dela vid tystnad</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="495"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="504"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="560"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="569"/>
         <source>Split into new track</source>
         <translation>Dela upp till nytt spår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="615"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="638"/>
         <source>Split-cut to the clipboard</source>
         <translation>Dela och klipp ut till urklipp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="550"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="573"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="615"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="638"/>
         <source>Split cut</source>
         <translation>Dela och klipp ut</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="668"/>
         <source>Trim items left</source>
         <translation>Beskär objekt från vänster</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="603"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="668"/>
         <source>Trim clip left</source>
         <translation>Beskär klippet från vänster</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="605"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="627"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="670"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
         <source>Trim</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Beskär</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Trim items right</source>
         <translation>Beskär objekt från höger</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="626"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Trim clip right</source>
         <translation>Beskär klippet från höger</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="688"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="753"/>
         <source>Changed speed to: %1%</source>
         <translation>Ändrade hastigheten till %1 %</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="756"/>
         <source>Stretch Left</source>
         <translation>Sträck åt vänster</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="757"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Stretch items left</source>
         <translation>Sträck objekt åt vänster</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="757"/>
         <source>Stretch clips left</source>
         <translation>Sträck klipp åt vänster</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="694"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="759"/>
         <source>Stretch Right</source>
         <translation>Sträck åt höger</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="760"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1158"/>
         <source>Stretch items right</source>
         <translation>Sträck objekt åt höger</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="695"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="760"/>
         <source>Stretch clips right</source>
         <translation>Sträck klipp åt höger</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="781"/>
         <source>Created new mono track</source>
         <translation>Skapade nytt monospår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="716"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="781"/>
         <source>New mono track</source>
         <translation>Nytt monospår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="790"/>
         <source>Created new stereo track</source>
         <translation>Skapade nytt stereospår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="725"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="790"/>
         <source>New stereo track</source>
         <translation>Nytt stereospår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="800"/>
         <source>Created label track</source>
         <translation>Skapade etikettspår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="735"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="800"/>
         <source>New label track</source>
         <translation>Nytt etikettspår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="743"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Delete track</source>
         <translation>Ta bort spår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="752"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="817"/>
         <source>Duplicate track</source>
         <translation>Duplicera spår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="761"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="768"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="826"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="833"/>
         <source>Move track</source>
         <translation>Flytta spår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="815"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="880"/>
         <source>Insert silence</source>
         <translation>Infoga tystnad</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="839"/>
-        <source>Clips grouped</source>
-        <translation>Grupperade klipp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="845"/>
-        <source>Clips ungrouped</source>
-        <translation>Klippgruppen delades upp</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="856"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
         <source>Changed track format</source>
         <translation>Ändrade spårformat</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="865"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="903"/>
         <source>Changed track rate</source>
         <translation>Ändrade spårets samplingsfrekvens</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="874"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="875"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="912"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Swapped stereo channels</source>
         <translation>Bytte plats på stereokanaler</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="884"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="885"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="922"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
         <source>Split stereo tracks to L/R mono</source>
         <translation>Delade stereospår till vänster/höger mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="895"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="932"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Split stereo tracks to center mono</source>
         <translation>Delade stereospår till centrerad mono</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="904"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="942"/>
         <source>Make stereo track</source>
         <translation>Skapa stereospår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Resampled audio track(s)</source>
         <translation>Återsamplade ljudspår</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="973"/>
+        <source>Rendered all audio in track ‘%1’</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
+        <source>Mixed and rendered %1 tracks into one new stereo track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="979"/>
+        <source>Mixed and rendered %1 tracks into one new mono track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="981"/>
+        <source>Mix and render</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1001"/>
         <source>Label added</source>
         <translation>Lade till etikett</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1001"/>
         <source>Add label</source>
         <translation>Lägg till etikett</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Label title changed</source>
         <translation>Ändrade etikettens titel</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="941"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Changed label title</source>
         <translation>Ändrade etikettens titel</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="950"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1018"/>
         <source>Label low frequency changed</source>
         <translation>Etikettens lägsta frekvens ändrades</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1019"/>
         <source>Change label low frequency</source>
         <translation>Ändra etikettens lägsta frekvens</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="960"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1028"/>
         <source>Label high frequency changed</source>
         <translation>Etikettens högsta frekvens ändrades</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="961"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Change label high frequency</source>
         <translation>Ändra etikettens högsta frekvens</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="975"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1043"/>
         <source>Cut label</source>
         <translation>Klipp ut etikett</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="992"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
         <source>Remove label</source>
         <translation>Ta bort etiketten</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1077"/>
         <source>Remove multiple labels</source>
         <translation>Ta bort flera etiketter</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1097"/>
         <source>Move labels</source>
         <translation>Flytta etiketter</translation>
     </message>
     <message>
-        <source>Move</source>
-        <translation type="vanished">Flytta</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1097"/>
         <source>Labels moved</source>
         <translation>Etiketter flyttade</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1106"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1138"/>
         <source>Label stretched</source>
         <translation>Sträckte etikett</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1038"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1106"/>
         <source>Stretch label left</source>
         <translation>Sträck etiketten åt vänster</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1059"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Stretch labels left</source>
         <translation>Sträck etiketterna åt vänster</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1092"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1128"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1160"/>
         <source>Stretch</source>
         <translation>Sträck</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1070"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1138"/>
         <source>Stretch label right</source>
         <translation>Sträck etiketten åt höger</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1090"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1158"/>
         <source>Stretch labels right</source>
         <translation>Sträck etiketterna åt höger</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1112"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1249"/>
+        <source>Cut multiple items</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1251"/>
+        <source>Cut multiple clips</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1253"/>
+        <source>Cut multiple labels</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1317"/>
+        <source>Items grouped</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1326"/>
+        <source>Items ungrouped</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1344"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Sammanfogade %1 sekunder vid %2</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1115"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1347"/>
         <source>Join</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Sammanfoga</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1120"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1352"/>
         <source>Duplicated</source>
         <translation>Duplicerade</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1122"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1354"/>
         <source>Duplicate</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
         <translation>Duplicera</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1359"/>
         <source>Split-deleted clips</source>
         <translation>Delade och tog bort klipp</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1359"/>
         <source>Split delete</source>
         <translation>Dela och ta bort</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1135"/>
+        <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1367"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
         <translation>Tog bort %1 sekunder vid %2</translation>
@@ -22130,24 +22246,29 @@ Vill du fortsätta?</translation>
         <translation>Inte tillräckligt med utrymme för att klistra in klippet</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="366"/>
+        <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="373"/>
         <source>Tracks: Empty</source>
         <translation>Spår: tomma</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="458"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="506"/>
         <source>Tempo changed</source>
         <translation>Ändrade tempo</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="463"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="531"/>
         <source>Upper time signature changed</source>
         <translation>Taktartens täljare ändrades</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="468"/>
+        <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="536"/>
         <source>Lower time signature changed</source>
         <translation>Taktartens nämnare ändrades</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/au3/au3interactionutils.cpp" line="320"/>
+        <source>Resampling…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -22277,17 +22398,32 @@ Vill du fortsätta?</translation>
 <context>
     <name>trackruler</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="107"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="70"/>
+        <source>Zoom</source>
+        <translation>Zoom</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="88"/>
+        <source>Zoom in</source>
+        <translation>Zooma in</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="110"/>
+        <source>Zoom out</source>
+        <translation>Zooma ut</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="129"/>
         <source>Reset</source>
         <translation>Återställ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="121"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="147"/>
         <source>Ruler format</source>
         <translation>Linjalformat</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="137"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="180"/>
         <source>Half wave</source>
         <translation>Halvvåg</translation>
     </message>
@@ -22308,7 +22444,8 @@ Vill du fortsätta?</translation>
 <context>
     <name>ui</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="274"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="290"/>
+        <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="208"/>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
         <source>Browse</source>
         <translation>Bläddra</translation>
@@ -22415,21 +22552,6 @@ Vill du fortsätta?</translation>
         <translation>Sök</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
-        <source>Red</source>
-        <translation>Röd</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
-        <source>Green</source>
-        <translation>Grön</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
-        <source>Blue</source>
-        <translation>Blå</translation>
-    </message>
-    <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
         <source>Key</source>
         <comment>key/value</comment>
@@ -22521,117 +22643,117 @@ Vill du fortsätta?</translation>
 <context>
     <name>uicomponents</name>
     <message>
-        <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="17"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/frequencymodel.cpp" line="17"/>
         <source>Hz</source>
         <translation>Hz</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="19"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/frequencymodel.cpp" line="19"/>
         <source>kHz</source>
         <translation>kHz</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/internal/numeric/beatsformatter.cpp" line="44"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/beatsformatter.cpp" line="44"/>
         <source>bar</source>
         <translation>takt</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/internal/numeric/beatsformatter.cpp" line="49"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/beatsformatter.cpp" line="49"/>
         <source>beat</source>
         <translation>taktslag</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="18"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="18"/>
         <source>seconds</source>
         <translation>sekunder</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="20"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="20"/>
         <source>seconds + milliseconds</source>
         <translation>sekunder + millisekunder</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="23"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="23"/>
         <source>hh:mm:ss</source>
         <translation>hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="25"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="25"/>
         <source>dd:hh:mm:ss</source>
         <translation>dd:hh:mm:ss</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="28"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="28"/>
         <source>hh:mm:ss + hundredths</source>
         <translation>hh:mm:ss + hundratal</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="31"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="31"/>
         <source>hh:mm:ss + milliseconds</source>
         <translation>hh:mm:ss + millisekunder</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="35"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="35"/>
         <source>hh:mm:ss + samples</source>
         <translation>hh:mm:ss + sampel</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="38"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="38"/>
         <source>samples</source>
         <translation>sampel</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="41"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="41"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
         <translation>hh:mm:ss + filmbildrutor (24 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="44"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="44"/>
         <source>Film frames (24 fps)</source>
         <translation>Bildrutor (24 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="48"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="48"/>
         <source>hh:mm:ss + NTSC drop frames</source>
         <translation>hh:mm:ss + tappade NTSC-bildrutor</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="51"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="51"/>
         <source>hh:mm:ss + NTSC non-drop frames</source>
         <translation>hh:mm:ss + otappade NTSC-bildrutor</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="54"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="54"/>
         <source>NTSC frames</source>
         <translation>NTSC-bildrutor</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="57"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="57"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
         <translation>hh:mm:ss + PAL-bildrutor (25 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="60"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="60"/>
         <source>PAL frames (25 fps)</source>
         <translation>PAL-bildrutor (25 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="64"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="64"/>
         <source>hh:mm:ss + CDDA frames (25 fps)</source>
         <translation>hh:mm:ss + CDDA-bildrutor (25 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="67"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="67"/>
         <source>CDDA frames (75 fps)</source>
         <translation>CDDA-bildrutor (75 fps)</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="71"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="71"/>
         <source>bar:beat</source>
         <translation>takt:taktslag</translation>
     </message>
     <message>
-        <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="74"/>
+        <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="74"/>
         <source>bar:beat:tick</source>
         <translation>takt:taktslag:tick</translation>
     </message>
@@ -22769,49 +22891,36 @@ Vill du fortsätta?</translation>
 <context>
     <name>update</name>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="85"/>
-        <source>A new update is ready to install</source>
-        <translation>En ny uppdatering är redo att installeras</translation>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="104"/>
+        <source>%1 %2 is available!</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="86"/>
-        <source>A new version of %1 is available!</source>
-        <translation>En ny version av %1 är tillgänglig!</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="97"/>
-        <source>%1 has downloaded an update and is ready to install. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>%1 har hämtat en uppdatering och är redo att installera den. %1 startas om för att slutföra installationen. Om du har osparade ändringar blir du ombedd att spara dem först.</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="110"/>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="132"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="120"/>
         <source>Release notes</source>
         <translation>Versionsanteckningar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="131"/>
-        <source>%1 Release notes</source>
-        <translation>%1 Versionsanteckningar</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="53"/>
         <source>Skip this version</source>
         <translation>Hoppa över denna version</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="74"/>
         <source>Remind me later</source>
         <translation>Påminn mig senare</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="89"/>
-        <source>Update now</source>
-        <translation>Uppdatera nu</translation>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
+        <source>Install update</source>
+        <translation>Installera uppdatering</translation>
     </message>
     <message>
-        <source>Install update</source>
-        <translation type="vanished">Installera uppdatering</translation>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
+        <source>Restart &amp; update</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22819,57 +22928,72 @@ Vill du fortsätta?</translation>
         <translation>Läs utgivningskommentarerna för %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="136"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="147"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
         <translation>Du har redan den senaste versionen av %1. Besök &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; för nyheter om vad som kommer härnäst.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="143"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="154"/>
         <source>You’re up to date!</source>
         <translation>Du är uppdaterad!</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="175"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="210"/>
+        <source>Updated to %1 %2</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="222"/>
+        <source>%1 %2 is now ready to install.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="225"/>
+        <source>New update available</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="228"/>
+        <source>See details</source>
+        <translation>Visa detaljer</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="242"/>
         <source>Cannot connect to server</source>
         <translation>Kan inte ansluta till server</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="176"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="243"/>
         <source>Sorry - please try again later</source>
         <translation>Ledsen - prova igen senare</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="178"/>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="190"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="245"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="257"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
         <translation>Sök efter uppdateringar</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="188"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="255"/>
         <source>Not enough disk space</source>
         <translation>Inte tillräckligt med diskutrymme</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="265"/>
-        <source>%1 has downloaded an update and is ready to install it. %1 will restart to complete the installation. If you have any unsaved changes, you will be prompted to save them first.</source>
-        <translation>%1 har hämtat en uppdatering och är redo att installera den. %1 startas om för att slutföra installationen. Om du har osparade ändringar blir du ombedd att spara dem först.</translation>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="297"/>
+        <source>Restart to finish updating</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="272"/>
-        <source>Restart</source>
-        <translation>Starta om</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="302"/>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="298"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
         <translation>%1 måste avslutas för att slutföra installationen. Om det finns osparade ändringar uppmanas du att spara dem innan %1 avslutas.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="308"/>
-        <source>Close</source>
-        <translation>Stäng</translation>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="304"/>
+        <source>Restart</source>
+        <translation>Starta om</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
@@ -22883,37 +23007,32 @@ Vill du fortsätta?</translation>
         <translation>Hämtar %1 %2</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateCompletedContent.qml" line="65"/>
-        <source>Updated successfully</source>
-        <translation>Uppdateringen lyckades</translation>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="46"/>
+        <source>Download and install future %1 updates automatically</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="53"/>
-        <source>Update available</source>
-        <translation>Uppdatering tillgänglig</translation>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="60"/>
+        <source>You can change this anytime in &lt;b&gt;Preferences &gt; General&lt;/b&gt;.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="87"/>
-        <source>See details</source>
-        <translation>Visa detaljer</translation>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="377"/>
+        <source>Preparing %1 %2</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../muse/framework/update/qml/Muse/Update/internal/UpdateReadyContent.qml" line="97"/>
-        <source>Update</source>
-        <translation>Uppdatera</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="375"/>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="481"/>
         <source>Free up at least %1 MB of disk space and try again.</source>
         <translation>Frigör minst %1 MB diskutrymme och försök igen.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="546"/>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="647"/>
         <source>Installing %1</source>
         <translation>Installerar %1</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="547"/>
+        <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="648"/>
         <source>Installing %1 %2</source>
         <translation>Installerar %1 %2</translation>
     </message>
@@ -22927,20 +23046,20 @@ Vill du fortsätta?</translation>
         <translation>Använd gammal vy</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="41"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="43"/>
         <source>Use new view</source>
         <translation>Använd ny vy</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="48"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="49"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="50"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="51"/>
         <source>Open FX editor</source>
         <translation>Öppna FX-redigeraren</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="61"/>
-        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="62"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="64"/>
+        <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="65"/>
         <source>Open instrument editor</source>
         <translation>Öppna instrumentredigeraren</translation>
     </message>
@@ -23008,18 +23127,6 @@ Vill du fortsätta?</translation>
 <context>
     <name>wave-track</name>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1011"/>
-        <source>Sequence has block file exceeding maximum %1 samples per block.
-Truncating to this maximum length.</source>
-        <translation>Sekvensen har blockfil som överskrider maximalt %1 sampel per block.
-Trunkerar till maximal längd.</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-wave-track/Sequence.cpp" line="1017"/>
-        <source>Warning - Truncating Overlong Block File</source>
-        <translation>Varning - Trunkerar blockfil som är för lång</translation>
-    </message>
-    <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="22"/>
         <source>Pre-processing</source>
         <translation>Förbearbetning</translation>
@@ -23035,29 +23142,29 @@ Trunkerar till maximal längd.</translation>
         <translation>&amp;Multi-vy</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1899"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1650"/>
         <source>Resampling failed.</source>
         <translation>Omsamplingen misslyckades.</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1900"/>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="341"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1651"/>
         <source>Warning</source>
         <translation>Varning</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="368"/>
+        <location filename="../../src/trackedit/internal/trackeditconfiguration.cpp" line="62"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="383"/>
         <source>Audio</source>
         <translation>Ljud</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="688"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="683"/>
         <source>Wave Track</source>
         <translation>Våg spår</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="820"/>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="828"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="815"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="823"/>
         <source>%1.%2</source>
         <comment>clip name template</comment>
         <extracomment>Template for clip name generation on copy-paste
@@ -23066,14 +23173,9 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>%1.%2</translation>
     </message>
     <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2828"/>
+        <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2868"/>
         <source>A track has a corrupted sample sequence.</source>
         <translation>Ett spår har en korrupt provsekvens.</translation>
-    </message>
-    <message>
-        <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="340"/>
-        <source>There is not enough room available to expand the cut line</source>
-        <translation>Det finns inte tillräcklig plats för att expandera klipplinjen</translation>
     </message>
 </context>
 <context>
@@ -23097,49 +23199,49 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Linear (dB)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="211"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="203"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
         <source>-36 dB (shallow range for high-amplitude editing)</source>
         <translation>-36 dB (ytligt intervall för redigering i hög amplitud)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="213"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="205"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
         <translation>-48 dB (PCM-intervall av 8-bitars sampel)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="215"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="207"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
         <translation>-60 dB (PCM-intervall av 10-bitars sampel)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="217"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="209"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
         <translation>−72 dB (PCM-intervall för 12-bitars sampel)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="219"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="211"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
         <translation>−84 dB (PCM-intervall för 14-bitars sampel)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="221"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="213"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
         <translation>-96 dB (PCM-intervall av 16-bitars sampel)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="223"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="215"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="233"/>
         <source>-120 dB (approximate limit of human hearing)</source>
         <translation>-120 dB (uppskattad gräns för mänsklig hörsel)</translation>
     </message>
     <message>
-        <location filename="../../src/playback/view/common/metermodel.cpp" line="225"/>
+        <location filename="../../src/playback/view/common/metermodel.cpp" line="217"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
         <translation>-145 dB (PCM-intervall av 24-bitars sampel)</translation>
@@ -23185,7 +23287,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="45"/>
         <source>Edit workspaces</source>
         <translation>Redigera arbetsytor</translation>
     </message>
@@ -23205,28 +23307,28 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>“%1” får inte användas som namn på arbetsytor. Välj ett annat namn.</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="221"/>
         <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
         <translation>Detta kommer att återställa din arbetsyta till standardlayouten och kan inte ångras. Vill du fortsätta?</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="224"/>
         <source>Resetting workspaces</source>
         <translation>Återställer arbetsytor</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="232"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
         <source>Reset workspace</source>
         <translation>Återställ arbetsyta</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="263"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="259"/>
         <source>Name cannot be empty</source>
         <translation>Namn får inte vara tomt</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="274"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="270"/>
         <source>Name already exists</source>
         <translation>Namn finns redan</translation>
     </message>
@@ -23255,17 +23357,13 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <translation>Välj arbetsyta</translation>
     </message>
     <message>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces…</source>
-        <translation type="vanished">Redigera arbetsytor...</translation>
+        <translation>Redigera arbetsytor...</translation>
     </message>
     <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="43"/>
-        <source>Edit workspaces...</source>
-        <translation>Redigera arbetsytor…</translation>
-    </message>
-    <message>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="50"/>
-        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="51"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="52"/>
+        <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="53"/>
         <source>Create new workspace</source>
         <translation>Skapa ny arbetsyta</translation>
     </message>

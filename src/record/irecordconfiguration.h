@@ -35,6 +35,18 @@ public:
     virtual void setIsInputMonitoringOn(bool enable) = 0;
     virtual muse::async::Notification isInputMonitoringOnChanged() const = 0;
 
+    virtual bool isOverdubOn() const = 0;
+    virtual void setIsOverdubOn(bool enable) = 0;
+    virtual muse::async::Notification isOverdubOnChanged() const = 0;
+
+    virtual bool recordOnNewTrack() const = 0;
+    virtual void setRecordOnNewTrack(bool enable) = 0;
+    virtual muse::async::Notification recordOnNewTrackChanged() const = 0;
+
+    virtual bool detectDropouts() const = 0;
+    virtual void setDetectDropouts(bool enable) = 0;
+    virtual muse::async::Notification detectDropoutsChanged() const = 0;
+
     virtual double leadInTimeDuration() const = 0;
     virtual void setLeadInTimeDuration(double seconds) = 0;
     virtual muse::async::Notification leadInTimeDurationChanged() const = 0;
@@ -42,6 +54,14 @@ public:
     virtual double crossfadeDuration() const = 0;
     virtual void setCrossfadeDuration(double milliseconds) = 0;
     virtual muse::async::Notification crossfadeDurationChanged() const = 0;
+
+    virtual bool isSoundActivatedRecordingOn() const = 0;
+    virtual void setIsSoundActivatedRecordingOn(bool enable) = 0;
+    virtual muse::async::Notification isSoundActivatedRecordingOnChanged() const = 0;
+
+    virtual double soundActivationLevel() const = 0;
+    virtual void setSoundActivationLevel(double db) = 0;
+    virtual muse::async::Notification soundActivationLevelChanged() const = 0;
 
     virtual RecordingTrackNameOptions recordingTrackNameOptions() const = 0;
 

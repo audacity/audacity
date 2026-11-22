@@ -42,8 +42,8 @@ void MacroActions::remove(const std::string& name) const
     const std::vector<std::string> dependents = repository()->referencingMacros(name);
     const QString macroName = QString::fromStdString(name);
     const std::string text = dependents.empty()
-                             ? qtrc("macromanager", "\"%1\" will be deleted").arg(macroName).toStdString()
-                             : qtrc("macromanager", "\"%1\" is used by other macros. Deleting it will also remove it from: %2")
+                             ? qtrc("macromanager", "“%1” will be deleted").arg(macroName).toStdString()
+                             : qtrc("macromanager", "“%1” is used by other macros. Deleting it will also remove it from: %2")
                              .arg(macroName, QString::fromStdString(strings::join(dependents, ", "))).toStdString();
 
     const IInteractive::Result result = interactive()->warningSync(

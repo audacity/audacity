@@ -78,6 +78,10 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
             // causing the monitoring to be stopped so we need to restart it
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
+
+        meterController()->isSoundActivationMeterVisibleChanged().onNotify(this, [this]() {
+            updateAudioEngineMonitoring();
+        }, muse::async::Asyncable::Mode::SetReplace);
     });
 }
 
@@ -166,12 +170,12 @@ bool Au3AudioInput::audioEngineShouldBeMonitoring() const
         return false;
     }
     // otherwise Monitoring can be started if:
-    // - ALWAYS: if we are monitoring input (listening to the input)
+    // - ALWAYS: if we are monitoring input (listening to the input) or showing the sound activation level meter
     // - CONDITIONALLY if we are metering the mic (showing the meter)
     //   -> only if the track in focus has the same number of channels as the input device
     //   OR
     //   -> only if the record meter is visible
-    if (configuration()->isInputMonitoringOn()) {
+    if (configuration()->isInputMonitoringOn() || meterController()->isSoundActivationMeterVisible()) {
         return true;
     }
 

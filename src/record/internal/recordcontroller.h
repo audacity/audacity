@@ -81,6 +81,8 @@ private:
     void onProjectChanged();
 
     muse::Ret toggleRecord();
+    muse::Ret toggleRecordSecondChoice();
+    muse::Ret toggleRecord(bool onNewTrack);
     muse::Ret recordOnNewTrack();
     muse::Ret start();
     muse::Ret startWithNewTrack();
@@ -91,6 +93,8 @@ private:
     void stopPlaybackIfPaused();
     muse::Ret toggleMicMetering();
     muse::Ret toggleInputMonitoring();
+    muse::Ret toggleSoundActivatedRecording();
+    muse::Ret openSoundActivationLevelDialog();
 
     void setCurrentRecordStatus(RecordStatus status);
 

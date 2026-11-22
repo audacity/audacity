@@ -982,6 +982,7 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     t1 = std::min(t1, mixerLimit);
 
     mLostSamples = 0;
+    mCapturedFrames = 0;
     mLostCaptureIntervals.clear();
     mDetectDropouts
         =gPrefs->Read(WarningDialogKey(wxT("DropoutDetected")), true) != 0;
@@ -1010,27 +1011,13 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     //       captureFormat == mCaptureFormat) {
 
     mSoftwarePlaythrough = options.inputMonitoring;
-    mPauseRec = SoundActivatedRecord.Read();
+    mPauseRec = options.soundActivatedRecording && !sequences.captureSequences.empty();
     gPrefs->Read(wxT("/AudioIO/Microfades"), &mbMicroFades, false);
-    int silenceLevelDB;
-    gPrefs->Read(wxT("/AudioIO/SilenceLevel"), &silenceLevelDB, -50);
-    int dBRange = DecibelScaleCutoff.Read();
-    if (silenceLevelDB < -dBRange) {
-        silenceLevelDB = -dBRange + 3;
-        // meter range was made smaller than SilenceLevel
-        // so set SilenceLevel reasonable
-
-        // PRL:  update prefs, or correct it only in-session?
-        // The behavior (as of 2.3.1) was the latter, the code suggested that
-        // the intent was the former;  I preserve the behavior, but uncomment
-        // this if you disagree.
-        // gPrefs->Write(wxT("/AudioIO/SilenceLevel"), silenceLevelDB);
-        // gPrefs->Flush();
-    }
-    mSilenceLevel = DB_TO_LINEAR(silenceLevelDB); // meter goes -dBRange dB -> 0dB
+    mSilenceLevel = DB_TO_LINEAR(options.soundActivationLevelDb);
 
     // Clamp lead-in time so we don't play before time 0
     const auto leadInTime = std::max(0.0, std::min(t0, options.leadInTime));
+    mSoundActivationSuspended.store(mPauseRec && leadInTime <= 0.0, std::memory_order_relaxed);
     mRecordingSchedule = {};
     mRecordingSchedule.mLeadInTime = leadInTime;
     mRecordingSchedule.mLatencyCompensation = AudioIOLatencyCompensation.Read() / 1000.0;
@@ -1138,7 +1125,7 @@ int AudioIO::StartTransport(const TransportSequences& sequences,
     mPlaybackSchedule.GetPolicy().Initialize(mPlaybackSchedule, mRate);
 
     mCaptureClockDiscardFrames = static_cast<unsigned long long>(
-        std::max(0.0, -mRecordingSchedule.TotalCorrection()) * mRate);
+        std::max(0.0, -mRecordingSchedule.mLatencyCompensation) * mRate);
 
     auto range = Extensions();
     successAudio = successAudio
@@ -1461,7 +1448,7 @@ bool AudioIO::AllocateBuffers(
                     assert(pSequence->FindChannelGroup());
                     // use sequence time for the end time, not real time!
                     double startTime, endTime;
-                    if (!sequences.leadInTimeSequences.empty()) {
+                    if (mRecordingSchedule.mLeadInTime > 0.0) {
                         startTime = mPlaybackSchedule.mT0;
                     } else {
                         startTime = t0;
@@ -1698,6 +1685,8 @@ void AudioIO::StopTransport()
     const auto wasPlaying = mNumPlaybackChannels > 0;
     const auto wasRecording = mNumCaptureChannels > 0;
     mNumCaptureChannels = mNumPlaybackChannels = 0;
+    mPauseRec = false;
+    mSoundActivationSuspended.store(false, std::memory_order_relaxed);
 
     // No longer need effects processing. This must be done after the stream is stopped
     // to prevent the callback from being invoked after the effects are finalized.
@@ -2734,19 +2723,17 @@ int audacityAudioCallback(const void* inputBuffer, void* outputBuffer,
         timeInfo, statusFlags, userData);
 }
 
-// Stop recording if 'silence' is detected
-// Start recording if sound detected.
-//
-//   By using CallAfter(), we can schedule the call to the toolbar
-//   to run in the main GUI thread after the next event loop iteration.
-//   That's important, because Pause() updates GUI, such as status bar,
-//   and that should NOT happen in this audio non-gui thread.
+// Suspend recording while the input stays below the activation level
 void AudioIoCallback::CheckSoundActivatedRecordingLevel(
     float* inputSamples,
     unsigned long framesPerBuffer)
 {
     // Quick returns if next to nothing to do.
     if (!mPauseRec) {
+        return;
+    }
+
+    if (mPlaybackSchedule.GetSequenceTime() < mPlaybackSchedule.mT0 + mRecordingSchedule.mLeadInTime) {
         return;
     }
 
@@ -2758,13 +2745,7 @@ void AudioIoCallback::CheckSoundActivatedRecordingLevel(
         }
     }
 
-    bool bShouldBePaused = maxPeak < mSilenceLevel;
-    if (bShouldBePaused != IsPaused()) {
-        auto pListener = GetListener();
-        if (pListener) {
-            pListener->OnSoundActivationThreshold();
-        }
-    }
+    mSoundActivationSuspended.store(maxPeak < mSilenceLevel, std::memory_order_relaxed);
 }
 
 // Limit values to -1.0..+1.0
@@ -2845,7 +2826,7 @@ bool AudioIoCallback::FillOutputBuffers(
     // ------ End of MEMORY ALLOCATION ---------------
 
     auto playbackVolume = GetMixerOutputVol();
-    if (mForceFadeOut.load(std::memory_order_relaxed) || IsPaused()) {
+    if (mForceFadeOut.load(std::memory_order_relaxed) || IsHalted()) {
         playbackVolume = 0.0;
     }
 
@@ -3036,19 +3017,23 @@ unsigned long AudioIoCallback::DrainInputBuffers(
             || len < framesPerBuffer)) {
         // Assume that any good partial buffer should be written leftmost
         // and zeroes will be padded after; label the zeroes.
-        auto start = mPlaybackSchedule.GetSequenceTime()
-                     + len / mRate + mRecordingSchedule.mLatencyCompensation;
-        auto duration = (framesPerBuffer - len) / mRate;
+        const auto recordingStart = mPlaybackSchedule.mT0 + mRecordingSchedule.mLeadInTime;
+        const auto start = std::max(recordingStart,
+                                    mPlaybackSchedule.mT0 + (mCapturedFrames + len) / mRate
+                                    + mRecordingSchedule.mLatencyCompensation);
+        const auto duration = (framesPerBuffer - len) / mRate;
         auto pLast = mLostCaptureIntervals.empty()
                      ? nullptr : &mLostCaptureIntervals.back();
         if (pLast
-            && fabs(pLast->first + pLast->second - start) < 0.5 / mRate) {
+            && start <= pLast->first + pLast->second + 0.5 / mRate) {
             // Make one bigger interval, not two butting intervals
-            pLast->second = start + duration - pLast->first;
+            pLast->second += duration;
         } else {
             mLostCaptureIntervals.emplace_back(start, duration);
         }
     }
+
+    mCapturedFrames += framesPerBuffer;
 
     if (len < framesPerBuffer) {
         mLostSamples += (framesPerBuffer - len);
@@ -3352,7 +3337,7 @@ int AudioIoCallback::AudioCallback(
     mbHasSoloSequences = CountSoloingSequences() > 0;
     mCallbackReturn = paContinue;
 
-    if (IsPaused()
+    if (IsHalted()
         // PRL:  Why was this added?  Was it only because of the mysterious
         // initial leading zeroes, now solved by setting mStreamToken early?
         // JKC: I think it's used for the MIDI time cursor.  See comments
@@ -3363,11 +3348,11 @@ int AudioIoCallback::AudioCallback(
     }
 
     for ( auto& ext : Extensions()) {
-        ext.ComputeOtherTimings(mRate, IsPaused(),
+        ext.ComputeOtherTimings(mRate, IsHalted(),
                                 timeInfo,
                                 framesPerBuffer);
         ext.FillOtherBuffers(
-            mRate, mNumPauseFrames, IsPaused(), mbHasSoloSequences);
+            mRate, mNumPauseFrames, IsHalted(), mbHasSoloSequences);
     }
 
     // ------ MEMORY ALLOCATIONS -----------------------------------------------
@@ -3412,13 +3397,6 @@ int AudioIoCallback::AudioCallback(
 
         SendVuInputMeterData(inputSamples, framesPerBuffer, callbackTime);
 
-        // This function may queue up a pause or resume.
-        // TODO this is a bit dodgy as it toggles the Pause, and
-        // relies on an idle event to have handled that, so could
-        // queue up multiple toggle requests and so do nothing.
-        // Eventually it will sort itself out by random luck, but
-        // the net effect is a delay in starting/stopping sound activated
-        // recording.
         CheckSoundActivatedRecordingLevel(
             inputSamples,
             framesPerBuffer);
@@ -3435,7 +3413,7 @@ int AudioIoCallback::AudioCallback(
 
     // Test for no sequence audio to play (because we are paused and have faded
     // out)
-    if (IsPaused() && ((!mbMicroFades) || mOldPlaybackVolume == 0.0f)) {
+    if (IsHalted() && ((!mbMicroFades) || mOldPlaybackVolume == 0.0f)) {
         return mCallbackReturn;
     }
 
@@ -3556,7 +3534,7 @@ int AudioIoCallback::CallbackDoSeek()
 void AudioIoCallback::CallbackCheckCompletion(
     int& callbackReturn, unsigned long len)
 {
-    if (IsPaused()) {
+    if (IsHalted()) {
         return;
     }
 

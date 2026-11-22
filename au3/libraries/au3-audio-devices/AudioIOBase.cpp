@@ -376,6 +376,11 @@ bool AudioIOBase::IsPaused() const
     return mPaused.load(std::memory_order_relaxed);
 }
 
+bool AudioIOBase::IsHalted() const
+{
+    return IsPaused() || mSoundActivationSuspended.load(std::memory_order_relaxed);
+}
+
 bool AudioIOBase::IsBusy() const
 {
     if (mStreamToken != 0) {

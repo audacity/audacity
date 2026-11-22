@@ -43,6 +43,10 @@ void RecordCommandsState::init()
         updateCommandStates({ RECORD_TOGGLE_INPUT_MONITORING_COMMAND });
     });
 
+    configuration()->isSoundActivatedRecordingOnChanged().onNotify(this, [this]() {
+        updateCommandStates({ RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND });
+    });
+
     updateCommandStates();
 }
 
@@ -53,6 +57,7 @@ void RecordCommandsState::deinit()
     controller()->isRecordingChanged().disconnect(this);
     controller()->isMicMeteringOnChanged().disconnect(this);
     controller()->isInputMonitoringOnChanged().disconnect(this);
+    configuration()->isSoundActivatedRecordingOnChanged().disconnect(this);
 }
 
 void RecordCommandsState::updateCommandStates(const std::vector<Command>& commands)
@@ -78,7 +83,9 @@ CommandState RecordCommandsState::commandState(const Command& command) const
         return CommandState(false);
     }
 
-    if (command == RECORD_START_COMMAND || command == RECORD_ON_NEW_TRACK_COMMAND) {
+    if (command == RECORD_START_COMMAND
+        || command == RECORD_ON_NEW_TRACK_COMMAND
+        || command == RECORD_SECOND_CHOICE_COMMAND) {
         return CommandState(controller()->isRecordAllowed() && !controller()->isLeadInRecording());
     }
 
@@ -96,6 +103,14 @@ CommandState RecordCommandsState::commandState(const Command& command) const
 
     if (command == RECORD_TOGGLE_INPUT_MONITORING_COMMAND) {
         return CommandState(true, controller()->isInputMonitoringOn());
+    }
+
+    if (command == RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND) {
+        return CommandState(!controller()->isRecording(), configuration()->isSoundActivatedRecordingOn());
+    }
+
+    if (command == RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND) {
+        return CommandState(!controller()->isRecording());
     }
 
     return CommandState(true);

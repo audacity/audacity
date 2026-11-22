@@ -5,6 +5,8 @@
 
 #include "global/settings.h"
 
+#include "audio/audiotypes.h"
+
 using namespace muse;
 using namespace au::record;
 
@@ -13,6 +15,8 @@ const muse::Settings::Key MIC_METERING_KEY("record", "record/micMetering");
 const muse::Settings::Key INPUT_MONITORING_KEY("record", "record/inputMonitoring");
 const muse::Settings::Key LEAD_IN_TIME_DURATION_KEY("record", "record/leadInTimeDuration");
 const muse::Settings::Key CROSSFADE_DURATION_KEY("record", "record/crossfadeDuration");
+const muse::Settings::Key SOUND_ACTIVATED_RECORDING_KEY("record", "record/soundActivatedRecording");
+const muse::Settings::Key SOUND_ACTIVATION_LEVEL_KEY("record", "record/soundActivationLevel");
 
 const muse::Settings::Key TIMED_RECORDING_DURATION_KEY("record", "record/timedRecording/durationSeconds");
 const muse::Settings::Key TIMED_RECORDING_SAVE_PROJECT_KEY("record", "record/timedRecording/saveProject");
@@ -27,6 +31,9 @@ const muse::Settings::Key CUSTOM_TRACK_NAME_KEY("record", "GUI/TrackNames/Recodi
 const muse::Settings::Key TRACK_NUMBER_KEY("record", "GUI/TrackNames/TrackNumber");
 const muse::Settings::Key DATE_STAMP_KEY("record", "GUI/TrackNames/DateStamp");
 const muse::Settings::Key TIME_STAMP_KEY("record", "GUI/TrackNames/TimeStamp");
+const muse::Settings::Key OVERDUB_KEY("record", "AudioIO/Duplex");
+const muse::Settings::Key RECORD_ON_NEW_TRACK_KEY("record", "GUI/PreferNewTrackRecord");
+const muse::Settings::Key DETECT_DROPOUTS_KEY("record", "Warnings/DropoutDetected");
 }
 
 void RecordConfiguration::init()
@@ -39,6 +46,21 @@ void RecordConfiguration::init()
     muse::settings()->setDefaultValue(INPUT_MONITORING_KEY, muse::Val(false));
     muse::settings()->valueChanged(INPUT_MONITORING_KEY).onReceive(nullptr, [this](const muse::Val&) {
         m_isInputMonitoringOnChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(OVERDUB_KEY, muse::Val(true));
+    muse::settings()->valueChanged(OVERDUB_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_isOverdubOnChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(RECORD_ON_NEW_TRACK_KEY, muse::Val(false));
+    muse::settings()->valueChanged(RECORD_ON_NEW_TRACK_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_recordOnNewTrackChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(DETECT_DROPOUTS_KEY, muse::Val(true));
+    muse::settings()->valueChanged(DETECT_DROPOUTS_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_detectDropoutsChanged.notify();
     });
 
     muse::settings()->setDefaultValue(LEAD_IN_TIME_DURATION_KEY, muse::Val(2.0));
@@ -56,6 +78,16 @@ void RecordConfiguration::init()
     muse::settings()->setDefaultValue(TIMED_RECORDING_SAVE_PROJECT_KEY, muse::Val(timedRecordingDefaults.saveProject));
     muse::settings()->setDefaultValue(TIMED_RECORDING_EXPORT_AUDIO_KEY, muse::Val(timedRecordingDefaults.exportAudio));
     muse::settings()->setDefaultValue(TIMED_RECORDING_QUIT_AUDACITY_KEY, muse::Val(timedRecordingDefaults.quitAudacity));
+
+    muse::settings()->setDefaultValue(SOUND_ACTIVATED_RECORDING_KEY, muse::Val(false));
+    muse::settings()->valueChanged(SOUND_ACTIVATED_RECORDING_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_isSoundActivatedRecordingOnChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(SOUND_ACTIVATION_LEVEL_KEY, muse::Val(au::audio::DEFAULT_SOUND_ACTIVATION_LEVEL_DB));
+    muse::settings()->valueChanged(SOUND_ACTIVATION_LEVEL_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_soundActivationLevelChanged.notify();
+    });
 }
 
 bool RecordConfiguration::isMicMeteringOn() const
@@ -88,6 +120,51 @@ muse::async::Notification RecordConfiguration::isInputMonitoringOnChanged() cons
     return m_isInputMonitoringOnChanged;
 }
 
+bool RecordConfiguration::isOverdubOn() const
+{
+    return muse::settings()->value(OVERDUB_KEY).toBool();
+}
+
+void RecordConfiguration::setIsOverdubOn(bool enable)
+{
+    muse::settings()->setSharedValue(OVERDUB_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::isOverdubOnChanged() const
+{
+    return m_isOverdubOnChanged;
+}
+
+bool RecordConfiguration::recordOnNewTrack() const
+{
+    return muse::settings()->value(RECORD_ON_NEW_TRACK_KEY).toBool();
+}
+
+void RecordConfiguration::setRecordOnNewTrack(bool enable)
+{
+    muse::settings()->setSharedValue(RECORD_ON_NEW_TRACK_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::recordOnNewTrackChanged() const
+{
+    return m_recordOnNewTrackChanged;
+}
+
+bool RecordConfiguration::detectDropouts() const
+{
+    return muse::settings()->value(DETECT_DROPOUTS_KEY).toBool();
+}
+
+void RecordConfiguration::setDetectDropouts(bool enable)
+{
+    muse::settings()->setSharedValue(DETECT_DROPOUTS_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::detectDropoutsChanged() const
+{
+    return m_detectDropoutsChanged;
+}
+
 double RecordConfiguration::leadInTimeDuration() const
 {
     return muse::settings()->value(LEAD_IN_TIME_DURATION_KEY).toDouble();
@@ -116,6 +193,36 @@ void RecordConfiguration::setCrossfadeDuration(double milliseconds)
 muse::async::Notification RecordConfiguration::crossfadeDurationChanged() const
 {
     return m_crossfadeDurationChanged;
+}
+
+bool RecordConfiguration::isSoundActivatedRecordingOn() const
+{
+    return muse::settings()->value(SOUND_ACTIVATED_RECORDING_KEY).toBool();
+}
+
+void RecordConfiguration::setIsSoundActivatedRecordingOn(bool enable)
+{
+    muse::settings()->setSharedValue(SOUND_ACTIVATED_RECORDING_KEY, muse::Val(enable));
+}
+
+muse::async::Notification RecordConfiguration::isSoundActivatedRecordingOnChanged() const
+{
+    return m_isSoundActivatedRecordingOnChanged;
+}
+
+double RecordConfiguration::soundActivationLevel() const
+{
+    return muse::settings()->value(SOUND_ACTIVATION_LEVEL_KEY).toDouble();
+}
+
+void RecordConfiguration::setSoundActivationLevel(double db)
+{
+    muse::settings()->setSharedValue(SOUND_ACTIVATION_LEVEL_KEY, muse::Val(db));
+}
+
+muse::async::Notification RecordConfiguration::soundActivationLevelChanged() const
+{
+    return m_soundActivationLevelChanged;
 }
 
 RecordingTrackNameOptions RecordConfiguration::recordingTrackNameOptions() const

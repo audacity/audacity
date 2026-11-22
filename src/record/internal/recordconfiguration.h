@@ -24,6 +24,18 @@ public:
     void setIsInputMonitoringOn(bool enable) override;
     muse::async::Notification isInputMonitoringOnChanged() const override;
 
+    bool isOverdubOn() const override;
+    void setIsOverdubOn(bool enable) override;
+    muse::async::Notification isOverdubOnChanged() const override;
+
+    bool recordOnNewTrack() const override;
+    void setRecordOnNewTrack(bool enable) override;
+    muse::async::Notification recordOnNewTrackChanged() const override;
+
+    bool detectDropouts() const override;
+    void setDetectDropouts(bool enable) override;
+    muse::async::Notification detectDropoutsChanged() const override;
+
     double leadInTimeDuration() const override;
     void setLeadInTimeDuration(double seconds) override;
     muse::async::Notification leadInTimeDurationChanged() const override;
@@ -31,6 +43,14 @@ public:
     double crossfadeDuration() const override;
     void setCrossfadeDuration(double milliseconds) override;
     muse::async::Notification crossfadeDurationChanged() const override;
+
+    bool isSoundActivatedRecordingOn() const override;
+    void setIsSoundActivatedRecordingOn(bool enable) override;
+    muse::async::Notification isSoundActivatedRecordingOnChanged() const override;
+
+    double soundActivationLevel() const override;
+    void setSoundActivationLevel(double db) override;
+    muse::async::Notification soundActivationLevelChanged() const override;
 
     RecordingTrackNameOptions recordingTrackNameOptions() const override;
 
@@ -40,7 +60,12 @@ public:
 private:
     muse::async::Notification m_isMicMeteringOnChanged;
     muse::async::Notification m_isInputMonitoringOnChanged;
+    muse::async::Notification m_isOverdubOnChanged;
+    muse::async::Notification m_recordOnNewTrackChanged;
+    muse::async::Notification m_detectDropoutsChanged;
     muse::async::Notification m_leadInTimeDurationChanged;
     muse::async::Notification m_crossfadeDurationChanged;
+    muse::async::Notification m_isSoundActivatedRecordingOnChanged;
+    muse::async::Notification m_soundActivationLevelChanged;
 };
 }

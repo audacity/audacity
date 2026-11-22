@@ -162,7 +162,7 @@ void AutoRecoveryModel::discardSelected()
 
     auto promise = interactive()->question(
         muse::trc("appshell/autorecovery", "Are you sure you want to discard the selected projects?"),
-        muse::trc("appshell/autorecovery", "Choosing \"Yes\" permanently deletes the selected projects immediately."),
+        muse::trc("appshell/autorecovery", "Choosing “Yes” permanently deletes the selected projects immediately."),
         { muse::IInteractive::Button::No, muse::IInteractive::Button::Yes },
         muse::IInteractive::Button::No, {},
         muse::trc("appshell/autorecovery", "Automatic crash recovery"));

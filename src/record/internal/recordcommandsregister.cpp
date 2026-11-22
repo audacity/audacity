@@ -18,9 +18,9 @@ const std::vector<CommandInfo> s_commandInfos = {
     CommandInfo{
         RECORD_START_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
-        TranslatableString("command", "Record on current track"),
+        TranslatableString("command", "Record"),
         //: Command description: shown as a tooltip; can be a full sentence
-        TranslatableString("command_description", "Record on current track"),
+        TranslatableString("command_description", "Record"),
         InputSchema(),
         Decoration(IconCode::Code::RECORD_FILL)
     },
@@ -30,6 +30,17 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command", "Record on new track"),
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Record on new track"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        RECORD_SECOND_CHOICE_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short.
+        //: Records the other way than Record: on a new track, or on the current track when "Record on a new track" is turned on
+        TranslatableString("command", "Record (second choice)"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description",
+                           "Record on a new track, or on the current track when “Record on a new track” is turned on in Preferences"),
         InputSchema(),
         Decoration()
     },
@@ -94,6 +105,25 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command", "Timed recording"),
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set up a timed recording"),
+        InputSchema(),
+        Decoration(),
+        Availability::UI
+    },
+    CommandInfo{
+        RECORD_TOGGLE_SOUND_ACTIVATED_RECORDING_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Turn on sound activated recording"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Turn on sound activated recording"),
+        InputSchema(),
+        Decoration(rcommand::Checkable::Yes)
+    },
+    CommandInfo{
+        RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Set sound activation level…"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Set sound activation level"),
         InputSchema(),
         Decoration(),
         Availability::UI

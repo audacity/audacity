@@ -114,18 +114,18 @@ void ViewTrackItem::setDragGhost(bool ghost)
     emit isDragGhostChanged();
 }
 
-bool ViewTrackItem::intersectsSelection() const
+bool ViewTrackItem::movesWithSelection() const
 {
-    return m_intersectsSelection;
+    return m_movesWithSelection;
 }
 
-void ViewTrackItem::setIntersectsSelection(bool newState)
+void ViewTrackItem::setMovesWithSelection(bool newState)
 {
-    if (m_intersectsSelection == newState) {
+    if (m_movesWithSelection == newState) {
         return;
     }
-    m_intersectsSelection = newState;
-    emit intersectsSelectionChanged();
+    m_movesWithSelection = newState;
+    emit movesWithSelectionChanged();
 }
 
 double ViewTrackItem::leftVisibleMargin() const

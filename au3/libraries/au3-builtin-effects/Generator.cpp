@@ -35,8 +35,8 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
     int ntrack = 0;
 
     outputs.Get().Any().VisitWhile(bGoodResult,
-                                   [&](auto&& fallthrough){
-        return [&](WaveTrack& track) {
+                                   [&, this](auto&& fallthrough){
+        return [&, this](WaveTrack& track) {
             if (!track.GetSelected()) {
                 return fallthrough();
             }

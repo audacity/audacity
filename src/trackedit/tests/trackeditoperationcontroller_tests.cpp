@@ -445,5 +445,60 @@ TEST_P(TrackeditOperationMoveTests, ClipMoveFailureRollsBackLabelsAndBothSelecti
     EXPECT_EQ(m_selection->leftMostSelectedLabelStartTime(), 2.0);
 }
 
+TEST_P(TrackeditOperationMoveTests, RangeSelectionMoveTakesTheWholeGroupAlong)
+{
+    //! [GIVEN] The source clip, a clip on another track and the label are grouped
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto other = factory.createTrackFromTemplate("other", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    const TrackId otherId = factory.addTrackToProject(other);
+    const ClipKey otherClip { otherId, other->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_trackEditProject, track(_)).WillByDefault([this](TrackId id) -> std::optional<Track> {
+        const auto* track = DomAccessor::findTrack(projectRef(), Au3TrackId(id));
+        return track ? std::optional<Track>(DomConverter::track(track)) : std::nullopt;
+    });
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(int64_t(7)));
+    m_operation->groupItems({ m_sourceClip, otherClip, m_sourceLabel });
+
+    //! [GIVEN] A time selection lies within the source clip only
+    m_selection->setDataSelectedStartTime(1.02, true);
+    m_selection->setDataSelectedEndTime(1.08, true);
+    m_selection->setClipsIntersectingRangeSelection({ m_sourceClip });
+    m_selection->setLabelsIntersectingRangeSelection({});
+
+    //! [WHEN] The range selection is moved
+    ASSERT_TRUE(m_operation->moveRangeSelection(0.5, true));
+
+    //! [THEN] The whole group moved by the same offset, not only the clip under the selection
+    EXPECT_EQ(m_clips->clipStartTime(m_sourceClip), 1.5);
+    EXPECT_EQ(m_clips->clipStartTime(otherClip), 3.5);
+    EXPECT_EQ(m_trackEditProject->label(m_sourceLabel).startTime, 2.5);
+}
+
+TEST_P(TrackeditOperationMoveTests, RangeSelectionMoveItemsIncludeTheWholeGroup)
+{
+    //! [GIVEN] The source clip and a clip on another track are grouped, the label is not
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto other = factory.createTrackFromTemplate("other", { { 3.0, { { 0.1, TrackTemplateFactory::createNoise } } } });
+    const TrackId otherId = factory.addTrackToProject(other);
+    const ClipKey otherClip { otherId, other->GetSortedClipByIndex(0)->GetId() };
+    ON_CALL(*m_trackEditProject, track(_)).WillByDefault([this](TrackId id) -> std::optional<Track> {
+        const auto* track = DomAccessor::findTrack(projectRef(), Au3TrackId(id));
+        return track ? std::optional<Track>(DomConverter::track(track)) : std::nullopt;
+    });
+    ON_CALL(*m_trackEditProject, createNewGroupID(_)).WillByDefault(Return(int64_t(7)));
+    m_operation->groupItems({ m_sourceClip, otherClip });
+
+    //! [GIVEN] A time selection lies within the source clip only
+    m_selection->setClipsIntersectingRangeSelection({ m_sourceClip });
+    m_selection->setLabelsIntersectingRangeSelection({});
+
+    //! [WHEN] The items a range move would take are asked for
+    const ItemKeys items = m_operation->rangeSelectionMoveItems();
+
+    //! [THEN] They are the clip under the selection and the rest of its group, without the ungrouped label
+    EXPECT_EQ(items.clips, (ClipKeyList { m_sourceClip, otherClip }));
+    EXPECT_TRUE(items.labels.empty());
+}
+
 INSTANTIATE_TEST_SUITE_P(SelectionOrder, TrackeditOperationMoveTests, Bool());
 }

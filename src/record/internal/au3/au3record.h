@@ -8,6 +8,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
 
 #include "context/iglobalcontext.h"
@@ -18,6 +19,7 @@
 #include "audio/iaudioengine.h"
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "au3wrap/au3types.h"
+#include "playback/iplaybackconfiguration.h"
 
 #include "../../irecord.h"
 #include "../../irecordconfiguration.h"
@@ -31,9 +33,11 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
+    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
@@ -77,6 +81,8 @@ private:
                        std::vector<std::vector<float> >* crossfadeData = nullptr);
     void cancelRecording();
     void commitRecording();
+    bool labelDropouts();
+    void showDropoutsWarning();
 
     void notifyAboutRecordClipsChanged();
 

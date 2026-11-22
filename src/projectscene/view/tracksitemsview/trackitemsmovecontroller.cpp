@@ -185,6 +185,11 @@ bool TrackItemsMoveController::keyboardActive() const
     return active() && m_keyboardMove;
 }
 
+bool TrackItemsMoveController::rangeSelectionActive() const
+{
+    return active() && m_rangeSelection;
+}
+
 void TrackItemsMoveController::moveByKeyboard(double timeOffset, int trackOffset)
 {
     if (m_updating || (active() && !keyboardActive())) {
