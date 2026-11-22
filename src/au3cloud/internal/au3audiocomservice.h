@@ -85,11 +85,6 @@ public:
 private:
     muse::ProgressPtr createSyncProgress();
     muse::RetVal<muse::ProgressPtr> startSync(au::project::IAudacityProjectPtr project, const std::string& name, bool wasSyncing);
-    void startNewSnapshotUpload(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress, const std::string& name,
-                                UploadMode uploadMode, std::function<bool()> projectSaveCallback);
-    void resumePendingSnapshotOrStartNew(au::project::IAudacityProjectPtr project, muse::ProgressPtr progress,
-                                         const audacity::cloud::audiocom::sync::DBProjectData& pendingSnapshotData, const std::string& name,
-                                         UploadMode uploadMode, std::function<bool()> projectSaveCallback);
     std::optional<ProjectList::Item> findCachedProject(const std::string& projectId) const;
     muse::Ret checkUnsyncedProject(const std::string& cloudProjectId) const;
 
@@ -112,8 +107,6 @@ private:
 
     Observer::Subscription m_uploadSubscription;
     std::shared_ptr<std::atomic<bool> > m_uploadDone;
-
-    Observer::Subscription m_resumeSyncSubscription;
 
     std::unique_ptr<DownloadManager> m_downloadManager;
     muse::async::Channel<std::string, muse::io::path_t> m_audioThumbnailFileUpdatedChannel;
