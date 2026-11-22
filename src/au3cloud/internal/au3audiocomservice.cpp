@@ -949,12 +949,25 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
 
         //! Reuse the local copy only when the project file is present on disk and
         //! no explicit snapshot is requested; otherwise fall through to OpenFromCloud.
-        auto cancelCheck = [progress](double) -> bool { return !progress->isCanceled(); };
+        //! Finish the progress on the main thread, and move the reference to the progress into that call.
+        //! When finish() runs on this thread, finished.send() puts a message in the queue of the main thread,
+        //! and that message does not keep the progress alive. If this thread then drops the last reference
+        //! (for example, after a cancel), the main thread reads the channel of a destroyed progress.
+        //! On the main thread, send() calls the listeners directly, and a cancelled progress is not finished.
+        const auto finish = [&self, &progress](const muse::RetVal<muse::Val>& result) {
+            muse::async::Async::call(self.get(), [progress = std::move(progress), result]() {
+                if (!progress->isCanceled()) {
+                    progress->finish(result);
+                }
+            }, muse::runtime::mainThreadId());
+        };
+
+        auto cancelCheck = [progress = progress.get()](double) -> bool { return !progress->isCanceled(); };
         if (!forceOverwrite && snapshotId.empty() && dbProjectData.has_value()) {
             const auto localPath = muse::io::path_t { dbProjectData->LocalPath.Get() };
             if (self->filesystem()->exists(localPath)
                 && isSnapshotUpToDate(dbProjectData, cancelCheck, cancellationContext)) {
-                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
+                finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
                 return;
             }
         }
@@ -966,15 +979,15 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
             cloudProjectId, snapshotId, syncMode, std::move(progressCallback), cancellationContext).get();
 
         if (result.Status == sync::ProjectSyncResult::StatusCode::Cancelled) {
-            progress->finish(make_ret(Err::OpenProjectCancelled));
+            finish(make_ret(Err::OpenProjectCancelled));
             return;
         }
 
         if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
-            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.ProjectPath.Get()))));
+            finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.ProjectPath.Get()))));
         } else {
             const auto err = syncResultCodeToErr(result.Result.Code);
-            progress->finish(make_ret(err));
+            finish(make_ret(err));
         }
     }).detach();
 
