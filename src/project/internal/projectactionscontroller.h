@@ -92,6 +92,7 @@ private:
                           const muse::String& displayNameOverride = muse::String(), const muse::String& projectId = muse::String());
     muse::Ret loadWithFallback(const IAudacityProjectPtr& project, const muse::io::path_t& loadPath, const std::string& format);
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
+    void resumeCloudSyncOfCurrentProject();
     IAudacityProjectPtr createProjectInCurrentWindow();
     muse::RetVal<muse::io::path_t> askFallbackTemporaryDir() const;
     void showTemporaryDirError() const;

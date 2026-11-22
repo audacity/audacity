@@ -1063,67 +1063,72 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         const io::path_t projectPath = !result.val.isNull() ? result.val.toPath() : localPath;
         doOpenProject(projectPath);
 
-        auto project = globalContext()->currentProject();
-        if (!project) {
-            return;
-        }
-
-        if (!ensureAuthorization()) {
-            return;
-        }
-
-        auto [syncRet, syncProgress] = audioComService()->resumeProjectSync(project);
-        if (!syncRet || !syncProgress || syncProgress->isCanceled()) {
-            return;
-        }
-
-        syncProgress->finished().onReceive(this, [this](const ProgressResult& result) {
-            if (!result.ret.success()) {
-                handleCloudSaveError(result.ret);
-                return;
-            }
-
-            const bool dismissable = false;
-            toastService()->show(trc("global", "Success"),
-                                 trc("project",
-                                     "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
-                                 muse::ui::IconCode::Code::TICK,
-                                 dismissable,
-            {
-                { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
-                { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
-            }
-                                 ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
-                if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
-                    platformInteractive()->openUrl(url);
-                }
-            });
-        });
-
-        const bool dismissible = false;
-        const bool showProgressInfo = true;
-        toastService()->showWithProgress(
-            trc("project", "Resuming sync to audio.com…"),
-            {},
-            syncProgress,
-            muse::ui::IconCode::Code::CLOUD,
-            dismissible,
-        {
-            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
-            { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
-        },
-            showProgressInfo
-            ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastResult& toastResult) {
-            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
-                audioComService()->stopProjectSync();
-                progress->cancel();
-            }
-        });
+        resumeCloudSyncOfCurrentProject();
     });
 
     interactive()->showProgress(trc("project", "Syncing project from cloud…"), *progress);
 
     return make_ret(Ret::Code::Ok);
+}
+
+void ProjectActionsController::resumeCloudSyncOfCurrentProject()
+{
+    auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    if (!ensureAuthorization()) {
+        return;
+    }
+
+    auto [syncRet, syncProgress] = audioComService()->resumeProjectSync(project);
+    if (!syncRet || !syncProgress || syncProgress->isCanceled()) {
+        return;
+    }
+
+    syncProgress->finished().onReceive(this, [this](const ProgressResult& result) {
+        if (!result.ret.success()) {
+            handleCloudSaveError(result.ret);
+            return;
+        }
+
+        const bool dismissable = false;
+        toastService()->show(trc("global", "Success"),
+                             trc("project",
+                                 "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
+                             muse::ui::IconCode::Code::TICK,
+                             dismissable,
+        {
+            { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
+            { trc("cloud", "View on audio.com"), muse::toast::ToastActionCode::Custom }
+        }
+                             ).onResolve(this, [this, url = result.val.toQString()](const muse::toast::ToastResult& toastResult) {
+            if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
+                platformInteractive()->openUrl(url);
+            }
+        });
+    });
+
+    const bool dismissible = false;
+    const bool showProgressInfo = true;
+    toastService()->showWithProgress(
+        trc("project", "Resuming sync to audio.com…"),
+        {},
+        syncProgress,
+        muse::ui::IconCode::Code::CLOUD,
+        dismissible,
+    {
+        { trc("project", "Dismiss"), muse::toast::ToastActionCode::Dismiss },
+        { trc("global", "Stop"), muse::toast::ToastActionCode::Custom }
+    },
+        showProgressInfo
+        ).onResolve(this, [this, progress = syncProgress](const muse::toast::ToastResult& toastResult) {
+        if (toastResult.isCode(muse::toast::ToastActionCode::Custom)) {
+            audioComService()->stopProjectSync();
+            progress->cancel();
+        }
+    });
 }
 
 Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
