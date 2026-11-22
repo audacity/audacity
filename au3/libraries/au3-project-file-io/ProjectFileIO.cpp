@@ -459,7 +459,9 @@ ProjectFileIO::ProjectFileIO(AudacityProject& project)
             BasicUI::ShowErrorDialog({},
                                      TranslatableString("project-file-io", "Warning"),
                                      //: %1 is the drive or volume name
-                                     TranslatableString("project-file-io", "There is very little free disk space left on %1\nPlease select a bigger temporary directory location in\nDirectories Preferences.").arg(volume),
+                                     TranslatableString("project-file-io",
+                                                        "There is very little free disk space left on %1\nPlease select a bigger temporary directory location in\nDirectories Preferences.").arg(
+                                         volume),
                                      "Error:_Disk_full_or_not_writable"
                                      );
         }
@@ -770,7 +772,8 @@ bool ProjectFileIO::CheckVersion()
         if (GetLastErrorCode() == SQLITE_CANTOPEN) {
             SetError(
                 /*: An error message. */
-                TranslatableString("project-file-io", "Project is in a read only directory\n(Unable to create the required temporary files)"),
+                TranslatableString("project-file-io",
+                                   "Project is in a read only directory\n(Unable to create the required temporary files)"),
                 GetLibraryError()
                 );
         }
@@ -807,7 +810,8 @@ bool ProjectFileIO::CheckVersion()
     // process it since we can't trust anything about it.
     if (ProjectSchemaVersion < version) {
         SetError(
-            TranslatableString("project-file-io", "This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
+            TranslatableString("project-file-io",
+                               "This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
             );
         return false;
     }
@@ -1206,7 +1210,8 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
 
                 SetDBError(
                     //: %1 is the SQL command that failed
-                    TranslatableString("project-file-io", "Failed to update the project file.\nThe following command failed:\n\n%1").arg(sql)
+                    TranslatableString("project-file-io", "Failed to update the project file.\nThe following command failed:\n\n%1").arg(
+                        sql)
                     );
                 return false;
             }
@@ -1394,7 +1399,8 @@ bool ProjectFileIO::RenameOrWarn(const FilePath& src, const FilePath& dst)
     // Provides a progress dialog with indeterminate mode
     using namespace BasicUI;
     auto pd = MakeGenericProgress(*ProjectFramePlacement(&mProject),
-                                  TranslatableString("project-file-io", "Copying Project"), TranslatableString("project-file-io", "This may take several seconds"));
+                                  TranslatableString("project-file-io", "Copying Project"),
+                                  TranslatableString("project-file-io", "This may take several seconds"));
     wxASSERT(pd);
 
     // Wait for the checkpoints to end
@@ -1410,7 +1416,8 @@ bool ProjectFileIO::RenameOrWarn(const FilePath& src, const FilePath& dst)
         ShowError(*ProjectFramePlacement(&mProject),
                   TranslatableString("project-file-io", "Error Writing to File"),
                   //: %1 is the file path
-                  TranslatableString("project-file-io", "Audacity failed to write file %1.\nPerhaps disk is full or not writable.\nFor tips on freeing up space, click the help button.")
+                  TranslatableString("project-file-io",
+                                     "Audacity failed to write file %1.\nPerhaps disk is full or not writable.\nFor tips on freeing up space, click the help button.")
                   .Format(dst),
                   "Error:_Disk_full_or_not_writable"
                   );
@@ -1748,7 +1755,8 @@ void ProjectFileIO::SetProjectTitle(int number)
             =/*: %1 is the project number, %2 is the project name.*/
               TranslatableString("project-file-io", "[Project %1] Audacity “%2”")
               .Format(number + 1,
-                      name.empty() ? TranslatableString("project-file-io", "<untitled>") : TranslatableString::untranslatable((const char*)name))
+                      name.empty() ? TranslatableString("project-file-io",
+                                                        "<untitled>") : TranslatableString::untranslatable((const char*)name))
               .Translation();
     }
     // If we are not showing numbers, then <untitled> shows as 'Audacity'.
@@ -1859,7 +1867,8 @@ bool ProjectFileIO::HandleXMLTag(const std::string_view& tag, const AttributesLi
 
     if (codeVer < fileVer) {
         /*: %1 is the Audacity version that saved the file, %2 is the running version.*/
-        auto msg = TranslatableString("project-file-io", "This file was saved using Audacity %1.\nYou are using Audacity %2. You may need to upgrade to a newer version to open this file.")
+        auto msg = TranslatableString("project-file-io",
+                                      "This file was saved using Audacity %1.\nYou are using Audacity %2. You may need to upgrade to a newer version to open this file.")
                    .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
         ShowError(*ProjectFramePlacement(&project),
@@ -2348,7 +2357,8 @@ bool ProjectFileIO::SaveProject(
                 BasicUI::CallAfter([this]{
                     ShowError({},
                               TranslatableString("project-file-io", "Warning"),
-                              TranslatableString("project-file-io", "The project’s database failed to reopen, possibly because of limited space on the storage device."),
+                              TranslatableString("project-file-io",
+                                                 "The project’s database failed to reopen, possibly because of limited space on the storage device."),
                               "Error:_Disk_full_or_not_writable"
                               );
                     Publish(ProjectFileIOMessage::ReconnectionFailure);
@@ -2405,7 +2415,8 @@ bool ProjectFileIO::SaveProject(
             // Provides a progress dialog with indeterminate mode
             using namespace BasicUI;
             auto pd = MakeGenericProgress({},
-                                          TranslatableString("project-file-io", "Syncing"), TranslatableString("project-file-io", "This may take several seconds"));
+                                          TranslatableString("project-file-io", "Syncing"),
+                                          TranslatableString("project-file-io", "This may take several seconds"));
             wxASSERT(pd);
 
             // Wait for the checkpoints to end
@@ -2422,7 +2433,9 @@ bool ProjectFileIO::SaveProject(
                 ShowError({},
                           TranslatableString("project-file-io", "Error Saving Project"),
                           //: %1 is the underlying error message
-                          TranslatableString("project-file-io", "The project failed to open, possibly due to limited space\non the storage device.\n\n%1").arg(GetLastError()),
+                          TranslatableString("project-file-io",
+                                             "The project failed to open, possibly due to limited space\non the storage device.\n\n%1").arg(
+                              GetLastError()),
                           "Error:_Disk_full_or_not_writable");
 
                 newConn = nullptr;
@@ -2442,7 +2455,9 @@ bool ProjectFileIO::SaveProject(
             ShowError({},
                       TranslatableString("project-file-io", "Error Saving Project"),
                       //: %1 is the underlying error message
-                      TranslatableString("project-file-io", "Unable to remove autosave information, possibly due to limited space\non the storage device.\n\n%1").arg(GetLastError()),
+                      TranslatableString("project-file-io",
+                                         "Unable to remove autosave information, possibly due to limited space\non the storage device.\n\n%1").arg(
+                          GetLastError()),
                       "Error:_Disk_full_or_not_writable");
 
             newConn = nullptr;
