@@ -901,12 +901,16 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
         }
     }
 
-    if (cloudProjectId.empty()) {
+    const bool pendingNewProject = cloudProjectId.empty()
+                                   && filesystem()->exists(localPath)
+                                   && sync::CloudProjectsDatabase::Get().GetPendingCloudProjectName(localPath.toStdString()).has_value();
+
+    if (cloudProjectId.empty() && !pendingNewProject) {
         return muse::RetVal<muse::ProgressPtr>::make_ret(
             muse::Ret::Code::UnknownError, muse::trc("cloud", "Project not found in cloud database"));
     }
 
-    if (!forceOverwrite) {
+    if (!forceOverwrite && !pendingNewProject) {
         const auto unsyncedRet = checkUnsyncedProject(cloudProjectId);
         if (!unsyncedRet) {
             return muse::RetVal<muse::ProgressPtr>::make_ret(unsyncedRet);
@@ -914,6 +918,13 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
     }
 
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    if (pendingNewProject) {
+        muse::async::Async::call(this, [progress, localPath]() {
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
+        });
+        return muse::RetVal<muse::ProgressPtr>::make_ok(progress);
+    }
 
     auto progressCallback = [progress](double p) -> bool {
         if (progress->isCanceled()) {
@@ -1083,6 +1094,8 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::shareAudio(const std::string
 
 muse::Ret Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath)
 {
+    sync::CloudProjectsDatabase::Get().RemovePendingCloudProject(localPath.toStdString());
+
     auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());
     if (!dbData) {
         // Nothing cached for this path, treat as already deleted

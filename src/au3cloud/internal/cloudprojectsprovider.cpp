@@ -34,7 +34,19 @@ std::optional<CloudProjectRecord> toCloudProjectRecord(
 std::optional<CloudProjectRecord> CloudProjectsProvider::projectRecordForPath(const muse::io::path_t& projectPath) const
 {
     namespace sync = audacity::cloud::audiocom::sync;
-    return toCloudProjectRecord(sync::CloudProjectsDatabase::Get().GetProjectDataForPath(projectPath.toStdString()));
+    auto& cloudDatabase = sync::CloudProjectsDatabase::Get();
+
+    if (auto record = toCloudProjectRecord(cloudDatabase.GetProjectDataForPath(projectPath.toStdString()))) {
+        return record;
+    }
+
+    if (!cloudDatabase.GetPendingCloudProjectName(projectPath.toStdString()).has_value()) {
+        return std::nullopt;
+    }
+
+    CloudProjectRecord record;
+    record.localPath = projectPath;
+    return record;
 }
 
 std::optional<CloudProjectRecord> CloudProjectsProvider::projectRecordForId(const std::string& projectId) const
