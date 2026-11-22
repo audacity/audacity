@@ -18,6 +18,7 @@
 #include "CloudLibrarySettings.h"
 #include "CloudSyncDTO.h"
 #include "ProjectUploadOperation.h"
+#include "SnapshotUploadQueue.h"
 #include "ServiceConfig.h"
 
 #include "au3-string-utils/CodeConversions.h"
@@ -112,7 +113,8 @@ ProjectCloudExtension::ProjectCloudExtension(AudacityProject& project)
         if (message == ProjectFileIOMessage::ProjectFilePathChange)
             OnProjectPathChanged();
     })},
-    mAsyncStateNotifier { std::make_unique<CloudStatusChangedNotifier>() },
+    mQueue { std::make_shared<SnapshotUploadQueue>(*this) },
+mAsyncStateNotifier { std::make_unique<CloudStatusChangedNotifier>() },
 mUIStateNotifier { std::make_unique<CloudStatusChangedNotifier>() }
 {
     if (!ProjectFileIO::Get(project).IsTemporary()) {
@@ -142,6 +144,26 @@ bool ProjectCloudExtension::IsCloudProject() const
 void ProjectCloudExtension::OnLoad()
 {
     UpdateIdFromDatabase();
+}
+
+bool ProjectCloudExtension::EnqueueSnapshot(const std::string& name, UploadMode mode)
+{
+    return mQueue->Enqueue(name, mode);
+}
+
+bool ProjectCloudExtension::ResumeSync(const std::string& name)
+{
+    if (mQueue->IsEmpty() && !mQueue->RestorePending() && IsLocalAheadOfCloud()) {
+        mQueue->Enqueue(name, UploadMode::Normal);
+    }
+
+    if (mQueue->IsEmpty()) {
+        return false;
+    }
+
+    mQueue->Run();
+
+    return true;
 }
 
 void ProjectCloudExtension::OnSyncStarted()
@@ -206,6 +228,24 @@ void ProjectCloudExtension::OnBlocksHashed(
 
     element->ReadyForUpload = true;
     uploadOperation.Start();
+}
+
+bool ProjectCloudExtension::IsLocalAheadOfCloud() const
+{
+    auto& cloudDatabase = CloudProjectsDatabase::Get();
+
+    const auto projectFilePath
+        =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
+
+    if (cloudDatabase.GetPendingCloudProjectName(projectFilePath).has_value()) {
+        return true;
+    }
+
+    const auto dbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
+
+    return dbData
+           && (dbData->SyncStatus == DBProjectData::SyncStatusPendingSnapshot
+               || dbData->SyncStatus == DBProjectData::SyncStatusUploading);
 }
 
 void ProjectCloudExtension::RecordSnapshotRequested()
@@ -517,16 +557,19 @@ void ProjectCloudExtension::UpdateIdFromDatabase()
         mSnapshotId = projectData->SnapshotId;
     }
 
-    Publish(
-        {
-            AudiocomTrace::ignore, // OK here because we're not publishing an
-                                   // error
-            projectData->SyncStatus
-            == DBProjectData::SyncStatusType::SyncStatusSynced
-            ? ProjectSyncStatus::Synced
-            : ProjectSyncStatus::Unsynced,
-        },
-        false);
+    if (!mQueue->IsEmpty()) {
+        return;
+    }
+
+    const auto status = projectData->SyncStatus == DBProjectData::SyncStatusType::SyncStatusSynced
+                        ? ProjectSyncStatus::Synced
+                        : ProjectSyncStatus::Unsynced;
+
+    if (GetCurrentSyncStatus() == status) {
+        return;
+    }
+
+    Publish({ AudiocomTrace::ignore, status }, false);
 }
 
 void ProjectCloudExtension::UnsafeUpdateProgress()

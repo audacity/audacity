@@ -93,6 +93,8 @@ public:
 
     void AbortLastUploadOperation();
 
+    bool EnqueueSnapshot(const std::string& name, UploadMode mode);
+    bool ResumeSync(const std::string& name);
     void CancelSync();
 
     bool IsSyncing() const;
@@ -125,6 +127,7 @@ private:
     struct CloudStatusChangedNotifier;
 
     void UpdateIdFromDatabase();
+    bool IsLocalAheadOfCloud() const;
 
     void UnsafeUpdateProgress();
 
@@ -151,6 +154,7 @@ private:
 
     std::mutex mUploadQueueMutex;
     std::vector<std::shared_ptr<UploadQueueElement> > mUploadQueue;
+    std::shared_ptr<SnapshotUploadQueue> mQueue;
 
     mutable std::mutex mStatusMutex;
     CloudStatusChangedMessage mLastStatus;
