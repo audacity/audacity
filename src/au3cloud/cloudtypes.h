@@ -1,5 +1,6 @@
 #pragma once
 
+#include <optional>
 #include <variant>
 #include <string>
 #include <vector>
@@ -84,8 +85,11 @@ struct DownloadRequest {
 };
 
 struct CloudProjectRecord {
-    std::string projectId;
-    std::string snapshotId;
+    std::optional<std::string> projectId;
+    std::optional<std::string> snapshotId;
     muse::io::path_t localPath;
+
+    bool existsOnCloud() const { return projectId.has_value(); }
+    bool hasSnapshot() const { return projectId.has_value() && snapshotId.has_value(); }
 };
 }

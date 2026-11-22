@@ -20,8 +20,12 @@ std::optional<CloudProjectRecord> toCloudProjectRecord(
     }
 
     CloudProjectRecord record;
-    record.projectId = data->ProjectId;
-    record.snapshotId = data->SnapshotId;
+    if (!data->ProjectId.empty()) {
+        record.projectId = data->ProjectId;
+    }
+    if (!data->SnapshotId.empty()) {
+        record.snapshotId = data->SnapshotId;
+    }
     record.localPath = muse::io::path_t(data->LocalPath.Get());
     return record;
 }

@@ -604,12 +604,12 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::updateAudioPreview(au::proje
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError,
                                                          muse::trc("cloud", "Project is not saved to the cloud"));
     }
-    const std::string& projectId = cloudRecord.value().projectId;
-    const std::string& snapshotId = cloudRecord.value().snapshotId;
-    if (projectId.empty() || snapshotId.empty()) {
+    if (!cloudRecord->hasSnapshot()) {
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError,
                                                          muse::trc("cloud", "Project is not synced with the cloud"));
     }
+    const std::string projectId = cloudRecord->projectId.value();
+    const std::string snapshotId = cloudRecord->snapshotId.value();
 
     const std::string projectPage = ::getCloudProjectPage(project);
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
