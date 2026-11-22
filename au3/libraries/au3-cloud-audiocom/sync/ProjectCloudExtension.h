@@ -23,6 +23,7 @@
 #include "au3-registries/ClientData.h"
 #include "au3-utility/Observer.h"
 
+#include "CloudProjectsDatabase.h"
 #include "CloudSyncError.h"
 #include "CloudSyncDTO.h"
 #include "ProjectUploadOperation.h"
@@ -123,9 +124,12 @@ private:
     void UpdateIdFromDatabase();
 
     void UnsafeUpdateProgress();
-    void Publish(CloudStatusChangedMessage cloudStatus, bool canMerge);
 
-    void MarkProjectSynced(bool success);
+    void RecordSnapshotRequested();
+    void RecordSnapshotCreated(const ProjectInfo& project, const SnapshotInfo& snapshot);
+    void MarkProjectSynced(DBProjectData::SyncStatusType syncStatus);
+
+    void Publish(CloudStatusChangedMessage cloudStatus, bool canMerge);
 
     UploadQueueElement*
     UnsafeFindUploadQueueElement(const ProjectUploadOperation& uploadOperation);
@@ -143,7 +147,7 @@ private:
     std::string mSnapshotId;
 
     std::mutex mUploadQueueMutex;
-    std::vector<std::shared_ptr<UploadQueueElement>> mUploadQueue;
+    std::vector<std::shared_ptr<UploadQueueElement> > mUploadQueue;
 
     mutable std::mutex mStatusMutex;
     CloudStatusChangedMessage mLastStatus;

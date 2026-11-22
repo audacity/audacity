@@ -208,9 +208,18 @@ void ProjectCloudExtension::OnBlocksHashed(
     uploadOperation.Start();
 }
 
-void ProjectCloudExtension::OnSnapshotCreated(
-    const ProjectUploadOperation& uploadOperation,
-    const CreateSnapshotResponse& response)
+void ProjectCloudExtension::RecordSnapshotRequested()
+{
+    auto& cloudDatabase = CloudProjectsDatabase::Get();
+
+    if (auto dbData = cloudDatabase.GetProjectData(GetCloudProjectId())) {
+        dbData->LocalPath  = audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
+        dbData->SyncStatus = DBProjectData::SyncStatusPendingSnapshot;
+        cloudDatabase.UpdateProjectData(*dbData);
+    }
+}
+
+void ProjectCloudExtension::RecordSnapshotCreated(const ProjectInfo& project, const SnapshotInfo& snapshot)
 {
     auto& cloudDatabase = CloudProjectsDatabase::Get();
 
@@ -225,8 +234,8 @@ void ProjectCloudExtension::OnSnapshotCreated(
         dbData = *previousDbData;
     }
 
-    dbData.ProjectId    = response.Project.Id;
-    dbData.SnapshotId   = response.Snapshot.Id;
+    dbData.ProjectId    = project.Id;
+    dbData.SnapshotId   = snapshot.Id;
     dbData.LocalPath    = projectFilePath;
     dbData.LastModified = wxDateTime::Now().GetTicks();
     dbData.LastRead     = dbData.LastModified;
@@ -234,15 +243,20 @@ void ProjectCloudExtension::OnSnapshotCreated(
     dbData.SavesCount++;
 
     cloudDatabase.UpdateProjectData(dbData);
-    cloudDatabase.SetProjectUserSlug(
-        response.Project.Id, response.Project.Username);
+    cloudDatabase.RemovePendingCloudProject(projectFilePath);
+    cloudDatabase.SetProjectUserSlug(project.Id, project.Username);
 
-    {
-        auto lock = std::lock_guard { mIdentifiersMutex };
+    auto lock = std::lock_guard { mIdentifiersMutex };
 
-        mProjectId  = response.Project.Id;
-        mSnapshotId = response.Snapshot.Id;
-    }
+    mProjectId  = project.Id;
+    mSnapshotId = snapshot.Id;
+}
+
+void ProjectCloudExtension::OnSnapshotCreated(
+    const ProjectUploadOperation& uploadOperation,
+    const CreateSnapshotResponse& response)
+{
+    RecordSnapshotCreated(response.Project, response.Snapshot);
 
     auto lock    = std::lock_guard { mUploadQueueMutex };
     auto element = UnsafeFindUploadQueueElement(uploadOperation);
@@ -341,7 +355,7 @@ void ProjectCloudExtension::OnSyncCompleted(
 
     mUploadQueue.clear();
 
-    MarkProjectSynced(!error.has_value());
+    MarkProjectSynced(error.has_value() ? DBProjectData::SyncStatusUploading : DBProjectData::SyncStatusSynced);
 
     Publish(
         { trace,
@@ -570,27 +584,24 @@ void ProjectCloudExtension::Publish(
     }
 }
 
-void ProjectCloudExtension::MarkProjectSynced(bool success)
+void ProjectCloudExtension::MarkProjectSynced(DBProjectData::SyncStatusType syncStatus)
 {
     auto& cloudDatabase = CloudProjectsDatabase::Get();
 
     const auto projectFilePath
         =audacity::ToUTF8(ProjectFileIO::Get(mProject).GetFileName());
 
-    auto previousDbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
+    auto dbData = cloudDatabase.GetProjectDataForPath(projectFilePath);
 
-    DBProjectData dbData;
-
-    if (previousDbData) {
-        dbData = *previousDbData;
+    if (!dbData) {
+        return;
     }
 
-    dbData.LastModified = wxDateTime::Now().GetTicks();
-    dbData.LastRead     = dbData.LastModified;
-    dbData.SyncStatus   = success ? DBProjectData::SyncStatusSynced
-                          : DBProjectData::SyncStatusUploading;
+    dbData->LastModified = wxDateTime::Now().GetTicks();
+    dbData->LastRead     = dbData->LastModified;
+    dbData->SyncStatus   = syncStatus;
 
-    cloudDatabase.UpdateProjectData(dbData);
+    cloudDatabase.UpdateProjectData(*dbData);
 }
 
 ProjectCloudExtension::UploadQueueElement*
