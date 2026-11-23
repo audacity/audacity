@@ -488,6 +488,9 @@ bool ProjectActionsController::doCloseOpenedProject(const bool quitApp, const bo
         return true;
     }
 
+    // In case the user pressed Ctrl+W while dragging something ...
+    trackeditInteraction()->notifyAboutCancelDragEdit();
+
     if (!discardUnsavedChanges && project->hasUnsavedChanges()) {
         const IInteractive::Button btn = askAboutSavingProject(project);
 
