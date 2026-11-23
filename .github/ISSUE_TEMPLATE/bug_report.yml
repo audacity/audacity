@@ -1,5 +1,5 @@
 name: Audacity 4.0 bug report
-description: File a bug report
+description: File a bug report. Please report only one problem per issue. If you have several, open a separate issue for each.
 labels: ["bug"]
 type: "bug"
 body:
