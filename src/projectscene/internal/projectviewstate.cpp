@@ -527,7 +527,9 @@ void ProjectViewState::doSetTrackHeight(const trackedit::TrackId& trackId, int h
         au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
         if (au3Project) {
             auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
-            au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+            if (track) {
+                au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+            }
         }
     }
 }

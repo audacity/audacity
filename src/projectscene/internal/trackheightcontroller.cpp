@@ -6,6 +6,7 @@
 #include <algorithm>
 
 #include "framework/global/containers.h"
+#include "framework/global/log.h"
 
 #include "project/iaudacityproject.h"
 
@@ -82,6 +83,11 @@ void TrackHeightController::init()
 
 au::trackedit::TrackIdList TrackHeightController::targetTracks(std::optional<trackedit::TrackId> track) const
 {
+    if (track && !muse::contains(allTracks(), *track)) {
+        LOGW() << "track " << *track << " is not in the project, using the focused track";
+        track.reset();
+    }
+
     const trackedit::TrackIdList selected = selectionController()->selectedTracks();
     const trackedit::TrackId anchor = track.value_or(trackNavigationController()->focusedTrack());
     if (anchor == trackedit::INVALID_TRACK) {

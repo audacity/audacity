@@ -123,6 +123,16 @@ TEST_F(TrackHeightControllerTests, TargetsTheGivenTrackRatherThanTheFocusedOne)
     EXPECT_EQ(m_controller->targetTracks(2), (trackedit::TrackIdList { 2, 3 }));
 }
 
+TEST_F(TrackHeightControllerTests, TargetsTheFocusedTrackWhenTheGivenOneIsNotInTheProject)
+{
+    //! [GIVEN] Track 3 is focused and not selected
+    focus(3);
+    select({ 1 });
+
+    //! [THEN] An unknown track falls back to the focused one
+    EXPECT_EQ(m_controller->targetTracks(99), (trackedit::TrackIdList { 3 }));
+}
+
 TEST_F(TrackHeightControllerTests, ChangeHeightResizesEachTrack)
 {
     //! [EXPECT] Each track gets 24 px taller

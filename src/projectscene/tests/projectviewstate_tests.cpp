@@ -370,6 +370,15 @@ TEST_F(ProjectViewStateTests, ExpandTrack_KeepsExpandedTrackHeight)
     EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 200);
 }
 
+TEST_F(ProjectViewStateTests, SetTrackHeight_DoesNotCrashForATrackNotInTheProject)
+{
+    const trackedit::TrackId unknownTrack = 999999;
+
+    m_projectViewState->setTrackHeight(unknownTrack, 200);
+
+    EXPECT_EQ(m_projectViewState->trackHeight(unknownTrack).val, 200);
+}
+
 TEST_F(ProjectViewStateTests, TrackDefaultHeight_IsShorterForLabelTracks)
 {
     const trackedit::TrackIdList tracks = getAllTracks();
