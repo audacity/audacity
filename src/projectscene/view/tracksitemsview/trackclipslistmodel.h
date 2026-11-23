@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <functional>
 #include <memory>
 #include <optional>
 
@@ -107,6 +108,9 @@ private:
     bool isKeyboardTriggered() const;
 
     bool removeClipFades(const ClipKey& key, trackedit::ClipSide side);
+    //! Returns whether any clip changed
+    bool changeClipsForFadeEdit(const ClipKey& key, const std::function<bool(const trackedit::ClipKey&, bool completed)>& change,
+                                const std::function<bool(const trackedit::Clip&)>& needsChange = {});
 
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;

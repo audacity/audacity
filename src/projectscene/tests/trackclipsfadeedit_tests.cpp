@@ -18,6 +18,7 @@ using namespace ::testing;
 namespace au::projectscene {
 namespace {
 const ClipKey CLIP { trackedit::TrackItemKey(1, 10) };
+const trackedit::ClipKey OTHER_CLIP { 1, 20 };
 
 constexpr double CLIP_DURATION = 10.0;
 constexpr double FADE_IN = 1.0;
@@ -103,5 +104,79 @@ TEST_F(TrackClipsFadeEditTests, AbandonedDragIsNotTheStartingPointOfTheNextOne)
 
     //! [THEN] The fade-in is as it was before either drag
     EXPECT_DOUBLE_EQ(m_fadeIn, FADE_IN);
+}
+
+TEST_F(TrackClipsFadeEditTests, FadeTypeChangesApplyToTheSelectionInOneUndoStep)
+{
+    //! [GIVEN] Two selected clips
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(trackedit::ClipKeyList { CLIP.key, OTHER_CLIP }));
+    constexpr auto type = FadeTypes::Type::EQUAL_POWER;
+    constexpr auto trackeditType = trackedit::FadeType::EqualPower;
+
+    //! [THEN] Changing the fade-in type of one changes both, and only the last change completes, so that it pushes one
+    //! undo step for both
+    {
+        InSequence seq;
+        EXPECT_CALL(*m_interaction, changeClipFadeInType(CLIP.key, trackeditType, false)).WillOnce(Return(true));
+        EXPECT_CALL(*m_interaction, changeClipFadeInType(OTHER_CLIP, trackeditType, true)).WillOnce(Return(true));
+    }
+    //! [WHEN] The fade-in type of one is changed
+    EXPECT_TRUE(m_model->changeClipFadeInType(CLIP, type));
+
+    //! [THEN] Likewise with the fade-out
+    {
+        InSequence seq;
+        EXPECT_CALL(*m_interaction, changeClipFadeOutType(CLIP.key, trackeditType, false)).WillOnce(Return(true));
+        EXPECT_CALL(*m_interaction, changeClipFadeOutType(OTHER_CLIP, trackeditType, true)).WillOnce(Return(true));
+    }
+    //! [WHEN] The fade-out type of one is changed
+    EXPECT_TRUE(m_model->changeClipFadeOutType(CLIP, type));
+}
+
+TEST_F(TrackClipsFadeEditTests, FadeTypeChangesApplyToTheSelectedClipsOfAnotherTypeEvenIfTheClickedOneHasIt)
+{
+    //! [GIVEN] Two selected clips: the clicked one with an equal-power fade-in and fade-out, the other with linear ones
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(trackedit::ClipKeyList { CLIP.key, OTHER_CLIP }));
+    constexpr auto clickedClipType = trackedit::FadeType::EqualPower;
+    constexpr auto otherClipType = trackedit::FadeType::Linear;
+    ON_CALL(*m_project, clip(_)).WillByDefault([&](const trackedit::ClipKey& key) {
+        trackedit::Clip clip;
+        clip.key = key;
+        clip.fadeInType = clip.fadeOutType = key == CLIP.key ? clickedClipType : otherClipType;
+        return clip;
+    });
+
+    //! [THEN] Only the other clip changes, and its change completes, so that it pushes the undo step
+    EXPECT_CALL(*m_interaction, changeClipFadeInType(CLIP.key, _, _)).Times(0);
+    EXPECT_CALL(*m_interaction, changeClipFadeInType(OTHER_CLIP, clickedClipType, true)).WillOnce(Return(true));
+    //! [WHEN] The clicked clip's fade-in type is chosen
+    EXPECT_TRUE(m_model->changeClipFadeInType(CLIP, FadeTypes::Type::EQUAL_POWER));
+
+    //! [THEN] Likewise with the fade-out
+    EXPECT_CALL(*m_interaction, changeClipFadeOutType(CLIP.key, _, _)).Times(0);
+    EXPECT_CALL(*m_interaction, changeClipFadeOutType(OTHER_CLIP, clickedClipType, true)).WillOnce(Return(true));
+    //! [WHEN] The clicked clip's fade-out type is chosen
+    EXPECT_TRUE(m_model->changeClipFadeOutType(CLIP, FadeTypes::Type::EQUAL_POWER));
+}
+
+TEST_F(TrackClipsFadeEditTests, ChoosingTheFadeTypeAllSelectedClipsHaveChangesNothing)
+{
+    //! [GIVEN] Two selected clips with fades of the same type
+    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(trackedit::ClipKeyList { CLIP.key, OTHER_CLIP }));
+    constexpr auto type = trackedit::FadeType::EqualPower;
+    ON_CALL(*m_project, clip(_)).WillByDefault([&](const trackedit::ClipKey& key) {
+        trackedit::Clip clip;
+        clip.key = key;
+        clip.fadeInType = clip.fadeOutType = type;
+        return clip;
+    });
+
+    //! [THEN] No clip changes, so no undo step is pushed
+    EXPECT_CALL(*m_interaction, changeClipFadeInType(_, _, _)).Times(0);
+    EXPECT_CALL(*m_interaction, changeClipFadeOutType(_, _, _)).Times(0);
+
+    //! [WHEN] That type is chosen for the fade-in, then for the fade-out
+    EXPECT_FALSE(m_model->changeClipFadeInType(CLIP, FadeTypes::Type::EQUAL_POWER));
+    EXPECT_FALSE(m_model->changeClipFadeOutType(CLIP, FadeTypes::Type::EQUAL_POWER));
 }
 }

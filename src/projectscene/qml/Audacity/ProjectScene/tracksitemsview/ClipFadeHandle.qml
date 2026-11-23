@@ -86,10 +86,8 @@ Item {
                 root.fadeRemoveRequested()
                 return
             }
-            const type = parseInt(itemId)
-            if (type !== root.fadeType) {
-                root.fadeTypeChangeRequested(type)
-            }
+            // Even the type this fade has: the other selected clips may have another
+            root.fadeTypeChangeRequested(parseInt(itemId))
         }
     }
 
