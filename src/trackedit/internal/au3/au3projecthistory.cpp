@@ -21,7 +21,7 @@ void au::trackedit::Au3ProjectHistory::init()
 
 bool au::trackedit::Au3ProjectHistory::undoAvailable() const
 {
-    if (!globalContext()->currentProject()) {
+    if (m_interactionOngoing || !globalContext()->currentProject()) {
         return false;
     }
 
@@ -39,7 +39,7 @@ void au::trackedit::Au3ProjectHistory::undo()
 
 bool au::trackedit::Au3ProjectHistory::redoAvailable() const
 {
-    if (!globalContext()->currentProject()) {
+    if (m_interactionOngoing || !globalContext()->currentProject()) {
         return false;
     }
 

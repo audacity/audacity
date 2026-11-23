@@ -1562,6 +1562,56 @@ TEST_F(Au3ClipsInteractionTests, CanceledFadeDragKeepsTheFadeStoredBeyondATrimme
     removeTrack(trackId);
 }
 
+TEST_F(Au3ClipsInteractionTests, NoUndoOrRedoWhileAFadeIsDragged)
+{
+    //! [GIVEN] A clip whose fade-in was changed and undone, so that there is both something to undo and to redo
+    constexpr double clipDuration = 10.0;
+    constexpr double firstFadeIn = 1.0;
+    constexpr double secondFadeIn = 2.0;
+    constexpr double draggedFadeIn = 3.0;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", { { 0.0, { { clipDuration, TrackTemplateFactory::createNoise } } } });
+    const TrackId trackId = factory.addTrackToProject(track);
+    Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    const auto clipId = track->GetClip(0)->GetId();
+    const ClipKey clipKey { trackId, clipId };
+
+    const std::unique_ptr<Au3ProjectHistory> history = makeProjectHistory();
+    ASSERT_TRUE(m_clipsInteraction->changeClipFadeIn(clipKey, firstFadeIn));
+    history->pushHistoryState("first", "first");
+    ASSERT_TRUE(m_clipsInteraction->changeClipFadeIn(clipKey, secondFadeIn));
+    history->pushHistoryState("second", "second");
+    history->undo();
+    ASSERT_TRUE(history->undoAvailable());
+    ASSERT_TRUE(history->redoAvailable());
+
+    //! [WHEN] Its fade-in is being dragged
+    NiceMock<TrackeditInteractionMock> interaction;
+    ON_CALL(interaction, changeClipFadeIn(_, _, _)).WillByDefault([this](const ClipKey& key, secs_t duration, bool) {
+        return m_clipsInteraction->changeClipFadeIn(key, duration);
+    });
+    const auto clip = DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId)), clipId);
+    ASSERT_NE(clip, nullptr);
+    std::unique_ptr<ClipFadeDrag> drag = ClipFadeDrag::start(interaction, *history, m_trackEditProject,
+                                                             Clips { DomConverter::clip(projectTrack, clip.get()) }, clipKey,
+                                                             ClipSide::Left);
+    ASSERT_NE(drag, nullptr);
+    drag->changeFade(draggedFadeIn);
+
+    //! [THEN] Neither undo nor redo is available: the drag would otherwise go on from the restored state, and its
+    //! release make an undo step of it
+    EXPECT_FALSE(history->undoAvailable());
+    EXPECT_FALSE(history->redoAvailable());
+
+    //! [THEN] Both are available again once the drag is over
+    drag.reset();
+    EXPECT_TRUE(history->undoAvailable());
+    EXPECT_TRUE(history->redoAvailable());
+
+    removeTrack(trackId);
+}
+
 TEST_F(Au3ClipsInteractionTests, MoveClipOntoNeighbourAtExactSampleBoundaryLeavesNoGap)
 {
     //! [GIVEN] Two same-rate clips whose overlap, 12 samples, computes to a hair above 12 in floating point
