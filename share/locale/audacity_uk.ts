@@ -3549,7 +3549,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="62"/>
         <source>Open audacity URL</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити адресу audacity</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
@@ -3586,7 +3586,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="75"/>
         <source>Import startup media</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Імпортувати мультимедія для запуску</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="88"/>
@@ -3664,7 +3664,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="217"/>
         <source>Custom channel mapping</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Нетипова прив&apos;язка каналів</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="21"/>
@@ -3778,13 +3778,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="191"/>
         <source>Scroll timeline left one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Гортати монтажний стіл на одну сторінку ліворуч</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="200"/>
         <source>Scroll timeline right one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Гортати монтажний стіль на одну сторінку праворуч</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="209"/>
@@ -3796,7 +3796,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="222"/>
         <source>Timeline context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Контекстне меню монтажного столу</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="232"/>
@@ -3928,7 +3928,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="57"/>
         <source>Play tracks</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відтворити доріжки</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="66"/>
@@ -3960,13 +3960,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="102"/>
         <source>Seek</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позиціювати</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="115"/>
         <source>Change play region</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Змінити ділянку відтворення</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="128"/>
@@ -4140,19 +4140,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
         <source>Timed recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкладене записування</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Увімкнути запис із активацією звуком</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="113"/>
         <source>Set sound activation level…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Встановити рівень активації звуком…</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="23"/>
@@ -4188,31 +4188,31 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="76"/>
         <source>Cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вирізати кліп</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="89"/>
         <source>Copy clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Копіювати кліп</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="102"/>
         <source>Delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вилучити кліп</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="115"/>
         <source>Split cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розрізати кпіп</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="128"/>
         <source>Split delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розрізати і вилучити кліп</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="141"/>
@@ -4242,7 +4242,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="190"/>
         <source>Split tracks at</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розрізати доріжки на позиції</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="203"/>
@@ -4333,7 +4333,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="331"/>
         <source>Mix and render</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Змікшувати і перетворити</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="343"/>
@@ -4351,13 +4351,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="361"/>
         <source>Group</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Згрупувати</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="370"/>
         <source>Ungroup</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розгрупувати</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="379"/>
@@ -4411,19 +4411,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
         <source>Set selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Встановити позначення</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="464"/>
         <source>Select track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вибрати доріжку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="476"/>
         <source>At zero crossings</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>До нульових точок</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="485"/>
@@ -4579,7 +4579,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="804"/>
         <source>Split track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розділити доріжку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="816"/>
@@ -4699,7 +4699,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1009"/>
         <source>Open ruler context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити контекстне меню лінійки</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
@@ -4753,19 +4753,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="170"/>
         <source>Apply %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Застосувати %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="181"/>
         <source>Configure %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Налаштувати %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="19"/>
         <source>Export as MP3</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Експортувати як MP3</translation>
     </message>
 </context>
 <context>
@@ -4798,7 +4798,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="65"/>
         <source>About Qt</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Про Qt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="75"/>
@@ -4810,7 +4810,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="85"/>
         <source>Ask for help</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Попросити про допомогу</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="95"/>
@@ -4834,19 +4834,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="125"/>
         <source>Open shortcuts preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити налаштування клавіатурних скорочень</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="135"/>
         <source>Open editing preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити редагування налаштувань</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="145"/>
         <source>Open spectrogram preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити налаштування спектрограми</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="165"/>
@@ -4870,7 +4870,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="195"/>
         <source>Show/hide macro manager</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Показати/Сховати керування макросами</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="204"/>
@@ -4924,7 +4924,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
         <source>Open the audio.com tour page, signing in first if needed</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити сторінку гіда audio.com з входом до системи, якщо потрібно</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="30"/>
@@ -4942,13 +4942,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="54"/>
         <source>Open the signed in user’s audio.com profile page</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити сторінку профілю користувача, який увійшов до audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="64"/>
         <source>Handle an audacity:// URL</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Обробити адресу audacity://</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="23"/>
@@ -4966,7 +4966,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="44"/>
         <source>Open cloud project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити хмарний проєкт</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="57"/>
@@ -4984,7 +4984,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="77"/>
         <source>Import media files into a new project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Імпортувати мультимедійні файли до нового проєкту</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="90"/>
@@ -5062,13 +5062,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="209"/>
         <source>Open the custom FFmpeg export options</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити нетипові параметри експортування FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="219"/>
         <source>Open the custom export channel mapping</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити нетипову прив&apos;язку каналу експортування</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="23"/>
@@ -5182,13 +5182,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="193"/>
         <source>Scroll the timeline left by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Гортати монтажний стіл ліворуч на одну ширину екрана</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="202"/>
         <source>Scroll the timeline right by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Гортати монтажний стіл праворуч на одну ширину екрана</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="211"/>
@@ -5200,7 +5200,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="224"/>
         <source>Open the timeline context menu</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити контекстне меню монтажного столу</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="234"/>
@@ -5332,7 +5332,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="59"/>
         <source>Play the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відтворити задані доріжки</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="68"/>
@@ -5363,13 +5363,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="104"/>
         <source>Move the playhead to the given time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Пересунути позицію відтворення до вказаної</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="117"/>
         <source>Change the playback region</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Змінити ділянку відтворення</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="130"/>
@@ -5549,13 +5549,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
         <source>Set up a timed recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Налаштувати відкладений запис</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="106"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Увімкнути запис із активацією звуком</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
@@ -5573,7 +5573,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="41"/>
         <source>Cancel the current interaction or clear the selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Скасувати поточну взаємодію або зняти позначення</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="51"/>
@@ -5597,31 +5597,31 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="78"/>
         <source>Cut the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вирізати заданий кліп до буфера обміну даними</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="91"/>
         <source>Copy the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Копіювати заданий кліп до буфера обміну даними</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="104"/>
         <source>Delete the given clip</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вилучити заданий кліп</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="117"/>
         <source>Cut the given clip into the clipboard and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вирізати заданий кліп до буфера обміну даними і лишити замість нього прогалину</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="130"/>
         <source>Delete the given clip and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вилучити заданий кліп і лишити замість нього прогалину</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="143"/>
@@ -5651,7 +5651,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="192"/>
         <source>Split the given tracks at the given positions</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розділити задані доріжки у вказаних позиціях</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="205"/>
@@ -5723,7 +5723,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="304"/>
         <source>Set a custom track sample rate</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Встановити нетипову частоту дискретизації доріжки</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="314"/>
@@ -5741,7 +5741,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="333"/>
         <source>Mix the selected tracks into one track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Мікшувати позначені доріжки в одну доріжку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="345"/>
@@ -5759,13 +5759,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="363"/>
         <source>Group the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Згрупувати позначені кліпи і мітки</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="372"/>
         <source>Ungroup the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розгрупувати позначені кліпи і мітки</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="381"/>
@@ -5789,55 +5789,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
         <source>Select from a chosen time to the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позначити з вибраного моменту до позиції відтворення</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="417"/>
         <source>Select from the playback position to a chosen time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позначити від поточної позиції відтворення до вибраного моменту</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="426"/>
         <source>Select from the track start to the cursor</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позначити з початку доріжки до курсора</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="435"/>
         <source>Select from the cursor to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позначити від курсора до кінця доріжки</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="444"/>
         <source>Select from the track start to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позначити від початку доріжки до кінця доріжки</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="453"/>
         <source>Set the time selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Встановити позначення за часом</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="466"/>
         <source>Select the track at the given index</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Позначити доріжку із вказаним індексом</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="478"/>
         <source>Move the cursor to the nearest zero crossing</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Пересунути курсор до найближчого перетину нуля</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="487"/>
         <source>Use the track color for the selected clips</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Використати колір доріжки для позначних кліпів</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="496"/>
@@ -5951,13 +5951,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="688"/>
         <source>Merge the clips in the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Об&apos;єднати кліпи у вкзааному діапазоні часу на вказаних доріжках</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="702"/>
         <source>Duplicate the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Дублювати вказаний діапазон часу на вказаних доріжках</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
@@ -5975,7 +5975,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="770"/>
         <source>Move the selection into a new track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Пересунути позначене на нову доріжку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
@@ -5999,7 +5999,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="806"/>
         <source>Split the given track at the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розділити вказану доріжку у позиції відтворення</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="818"/>
@@ -6119,13 +6119,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1001"/>
         <source>Open the context menu of the focused track item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити контекстне меню фокусованого запису доріжки</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1011"/>
         <source>Open the context menu of the focused ruler</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Відкрити контекстне меню фокусованої лінійки</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
@@ -6143,7 +6143,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
         <source>Apply preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Застосувати шаблон</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
@@ -6155,7 +6155,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="81"/>
         <source>Save preset as</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Зберегти шаблон як</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="93"/>
@@ -6179,19 +6179,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="172"/>
         <source>Apply %1 with the given parameters</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Застосувати %1 з вказаними параметрами</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="183"/>
         <source>Choose the parameters of %1 without applying it</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вибрати параметри %1 без його застосування</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="21"/>
         <source>Export the project audio as an MP3 file into the macro-output folder</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Експортувати звукові дані проєкту як файл MP3 до теки macro-output</translation>
     </message>
 </context>
 <context>
@@ -6204,7 +6204,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
         <source>This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation type="unfinished"/>
+        <translation>У результаті буде створено файл .zip з даними щодо ваших параметрів %1, щоб допомогти розробникам у діагностиці ваших проблем. Ви можете оглянути вміст цього файла, перш ніж надсилати його будь-кому.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
@@ -7274,7 +7274,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="31"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Приглушення музики</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
@@ -9927,18 +9927,18 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="13"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Приглушення музики</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="112"/>
         <source>Control track</source>
-        <translation type="unfinished"/>
+        <translation>Контрольна доріжка</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
         <source>No available track</source>
-        <translation type="unfinished"/>
+        <translation>Немає доступних доріжок</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
@@ -9948,37 +9948,37 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="192"/>
         <source>Duck start</source>
-        <translation type="unfinished"/>
+        <translation>Початок приглушення</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
         <source>Recovery end</source>
-        <translation type="unfinished"/>
+        <translation>Кінець відновлення</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
         <source>Duck end</source>
-        <translation type="unfinished"/>
+        <translation>Кінець приглушення</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
         <source>Gain reduction</source>
-        <translation type="unfinished"/>
+        <translation>Компенсація підсилення</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
         <source>Recovery start</source>
-        <translation type="unfinished"/>
+        <translation>Початок відновлення</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
         <source>Hold</source>
-        <translation type="unfinished"/>
+        <translation>Утримання</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
         <source>Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</source>
-        <translation type="unfinished"/>
+        <translation>Для автоматичного приглушення потрібна доріжка звуку в одну секунду для запуску приглушення. Додайте таку доріжку до вашого проєкту, щоб продовжити.</translation>
     </message>
 </context>
 <context>
@@ -11270,7 +11270,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="424"/>
         <source>There is no audio to export</source>
-        <translation type="unfinished"/>
+        <translation>Немає звукових даних для експортування</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="471"/>
@@ -14613,7 +14613,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
         <source>Quality %1 (~%2 kbit/s)</source>
-        <translation type="unfinished"/>
+        <translation>Якість %1 (~%2 кбіт/с)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="204"/>
@@ -15300,12 +15300,12 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="21"/>
         <source>Edit macro</source>
-        <translation type="unfinished"/>
+        <translation>Редагувати макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="105"/>
         <source>Search commands</source>
-        <translation type="unfinished"/>
+        <translation>Пошук команд</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="261"/>
@@ -15317,7 +15317,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="275"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="150"/>
         <source>Run on files…</source>
-        <translation type="unfinished"/>
+        <translation>Запустити для файлів…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="293"/>
@@ -15327,42 +15327,42 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/AvailableCommandsList.qml" line="33"/>
         <source>Available commands</source>
-        <translation type="unfinished"/>
+        <translation>Доступні команди</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Moving %1. Use the up and down arrows to move it. Press Escape to stop.</source>
-        <translation type="unfinished"/>
+        <translation>Пересування %1. Скористайтеся клавішами зі стрілками вгору і вниз для пересування. Натисніть Escape, щоб припинити.</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Move %1</source>
-        <translation type="unfinished"/>
+        <translation>Пересунути %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="246"/>
         <source>Step %1</source>
-        <translation type="unfinished"/>
+        <translation>Крок %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="336"/>
         <source>Actions for %1</source>
-        <translation type="unfinished"/>
+        <translation>Дії для %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="378"/>
         <source>Edit command</source>
-        <translation type="unfinished"/>
+        <translation>Редагувати команду</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="394"/>
         <source>Move up</source>
-        <translation type="unfinished"/>
+        <translation>Пересунути вище</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="399"/>
         <source>Move down</source>
-        <translation type="unfinished"/>
+        <translation>Пересунути нижче</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="405"/>
@@ -15373,17 +15373,17 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="412"/>
         <source>Command menu</source>
-        <translation type="unfinished"/>
+        <translation>Меню команд</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="27"/>
         <source>Macro commands</source>
-        <translation type="unfinished"/>
+        <translation>Макрокоманди</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="96"/>
         <source>Step</source>
-        <translation type="unfinished"/>
+        <translation>Крок</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="128"/>
@@ -15393,17 +15393,17 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="160"/>
         <source>Actions</source>
-        <translation type="unfinished"/>
+        <translation>Дії</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="258"/>
         <source>Double-click a command, or drag it, to add it to your macro</source>
-        <translation type="unfinished"/>
+        <translation>Двічі клацніть на команді або перетягніть її, щоб додати команду до вашого макроса</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="107"/>
         <source>Run macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Виконати макрос «%1»</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="142"/>
@@ -15418,67 +15418,67 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="154"/>
         <source>Export…</source>
-        <translation type="unfinished"/>
+        <translation>Експортувати…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="167"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="89"/>
         <source>Macro menu</source>
-        <translation type="unfinished"/>
+        <translation>Меню макросів</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="48"/>
         <source>Macros</source>
-        <translation type="unfinished"/>
+        <translation>Макроси</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="66"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="18"/>
         <source>New macro</source>
-        <translation type="unfinished"/>
+        <translation>Новий макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="110"/>
         <source>Macro manager menu</source>
-        <translation type="unfinished"/>
+        <translation>Меню керування макросами</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="69"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="26"/>
         <source>Rename macro</source>
-        <translation type="unfinished"/>
+        <translation>Перейменувати макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="73"/>
         <source>Export macro…</source>
-        <translation type="unfinished"/>
+        <translation>Експортувати макрос…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="78"/>
         <source>Remove all steps</source>
-        <translation type="unfinished"/>
+        <translation>Вилучити усі кроки</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="82"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="50"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="56"/>
         <source>Delete macro</source>
-        <translation type="unfinished"/>
+        <translation>Вилучити макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="26"/>
         <source>Queued</source>
-        <translation type="unfinished"/>
+        <translation>Додано до черги</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="28"/>
         <source>Processing</source>
-        <translation type="unfinished"/>
+        <translation>Обробка</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="30"/>
         <source>Complete</source>
-        <translation type="unfinished"/>
+        <translation>Завершено</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="32"/>
@@ -15493,7 +15493,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="43"/>
         <source>File path</source>
-        <translation type="unfinished"/>
+        <translation>Шлях до файла</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="55"/>
@@ -15503,27 +15503,27 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="71"/>
         <source>Import macro…</source>
-        <translation type="unfinished"/>
+        <translation>Імпортувати макрос…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="98"/>
         <source>You don’t have any macros yet</source>
-        <translation type="unfinished"/>
+        <translation>У вас ще немає макросів</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="76"/>
         <source>Macro name</source>
-        <translation type="unfinished"/>
+        <translation>Назва макроса</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="124"/>
         <source>A macro with this name already exists</source>
-        <translation type="unfinished"/>
+        <translation>Макрос із такою назвою вже існує</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="22"/>
         <source>Run on files</source>
-        <translation type="unfinished"/>
+        <translation>Запустити для файлів</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="103"/>
@@ -15533,145 +15533,146 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="147"/>
         <source>Step %1 of “%2”: %3</source>
-        <translation type="unfinished"/>
+        <translation>Крок %1 з «%2»: %3</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="152"/>
         <source>The macro uses steps that do not exist:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>У цьому макросі використано кроки, яких не існує:
+%1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="177"/>
         <source>macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>макрос «%1»</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="285"/>
         <source>Macro “%1” not found</source>
-        <translation type="unfinished"/>
+        <translation>Не знайдено макрос «%1»</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="334"/>
         <source>“%1” ran successfully</source>
-        <translation type="unfinished"/>
+        <translation>«%1» успішно запущено</translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="335"/>
         <source>%n step(s) applied to the project</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n крок застосовано до проєкту</numerusform><numerusform>%n кроки застосовано до проєкту</numerusform><numerusform>%n кроків застосовано до проєкту</numerusform><numerusform>%n крок застосовано до проєкту</numerusform></translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="338"/>
         <source>Macro completed</source>
-        <translation type="unfinished"/>
+        <translation>Макрос завершено</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="350"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="17"/>
         <source>The macro could not be completed</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалсоя завершити виконання макроса</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="85"/>
         <source>macro has no name</source>
-        <translation type="unfinished"/>
+        <translation>у макроса немає назви</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="99"/>
         <source>macro step has no macro name</source>
-        <translation type="unfinished"/>
+        <translation>крок макроса не має назви макроса</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="108"/>
         <source>macro step has an invalid command</source>
-        <translation type="unfinished"/>
+        <translation>крок макроста має некоректну команду</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="125"/>
         <source>Macro “%1” calls itself</source>
-        <translation type="unfinished"/>
+        <translation>Макрос «%1» викликає сам себе</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="126"/>
         <source>Macro “%1” calls itself through “%2”</source>
-        <translation type="unfinished"/>
+        <translation>Макрос «%1» викликає сам себе через «%2»</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="327"/>
         <source>Invalid macro file</source>
-        <translation type="unfinished"/>
+        <translation>Некоректний файл макроса</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="36"/>
         <source>The macro could not be renamed</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося перейменувати макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="45"/>
         <source>“%1” will be deleted</source>
-        <translation type="unfinished"/>
+        <translation>«%1» буде вилучено</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="46"/>
         <source>“%1” is used by other macros. Deleting it will also remove it from: %2</source>
-        <translation type="unfinished"/>
+        <translation>«%1» використовується іншим макросом. Вилучення його також призведе до вилучення його з: %2</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="64"/>
         <source>The macro could not be deleted</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося вилучити макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="71"/>
         <source>Export macro</source>
-        <translation type="unfinished"/>
+        <translation>Експортувати макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="78"/>
         <source>The macro could not be exported</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося експортувати макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="84"/>
         <source>Import macro</source>
-        <translation type="unfinished"/>
+        <translation>Імпортувати макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="112"/>
         <source>Macro files</source>
-        <translation type="unfinished"/>
+        <translation>Файли макросів</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macrocommandsmodel.cpp" line="336"/>
         <source>The macro could not be saved</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося зберегти макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="131"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="145"/>
         <source>The macro could not be imported</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося імпортувати макрос</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="191"/>
         <source>Some commands of this macro are not available</source>
-        <translation type="unfinished"/>
+        <translation>Деякі з команд у цьому макросі недоступні</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="192"/>
         <source>The macro can be imported, but it will fail at these steps:</source>
-        <translation type="unfinished"/>
+        <translation>Макрос можна імпортувати, але він не спрацює на цих кроках:</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="201"/>
         <source>Replace macro?</source>
-        <translation type="unfinished"/>
+        <translation>Замірити макрос?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="202"/>
         <source>A macro named “%1” already exists. Do you want to replace it?</source>
-        <translation type="unfinished"/>
+        <translation>Макрос із назвою «%1» вже існує. Хочете замінити його?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
@@ -15681,7 +15682,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="56"/>
         <source>Select files</source>
-        <translation type="unfinished"/>
+        <translation>Виберіть файли</translation>
     </message>
 </context>
 <context>
@@ -15965,7 +15966,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="72"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="42"/>
         <source>GENRE</source>
-        <translation type="unfinished"/>
+        <translation>ЖАНР</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
@@ -17756,12 +17757,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="15"/>
         <source>Sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Запис з активацією звуком</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="22"/>
         <source>Turn on sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Увімкнути запис із активацією звуком</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="14"/>
@@ -17771,17 +17772,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="33"/>
         <source>Default track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Типова візуалізація доріжки</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="56"/>
         <source>Default ruler format</source>
-        <translation type="unfinished"/>
+        <translation>Типовий формат лінійки</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="85"/>
         <source>Default audio track name</source>
-        <translation type="unfinished"/>
+        <translation>Типова назва звукової доріжки</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="65"/>
@@ -18322,25 +18323,27 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="987"/>
         <source>Use default location</source>
-        <translation type="unfinished"/>
+        <translation>Використати типове місце</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="990"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1005"/>
         <source>Could not create a new project</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося створити проєкт</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="991"/>
         <source>The temporary files location is not accessible: %1
 
 Use the default location instead? It can be changed later in Preferences.</source>
-        <translation type="unfinished"/>
+        <translation>Немає доступу до місця для тимчасових файлів: %1
+
+Використати замість нього типове місце? Пізніше його можна змінити у «Налаштуваннях».</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1006"/>
         <source>Make sure the temporary files location is accessible: %1</source>
-        <translation type="unfinished"/>
+        <translation>Переконайтеся у доступності місця для тимчасових файлів: %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1090"/>
@@ -19910,7 +19913,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml" line="93"/>
         <source>Track %1: %2, vertical ruler</source>
-        <translation type="unfinished"/>
+        <translation>Доріжка %1: %2, вертикальна лінійка</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
@@ -20047,7 +20050,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelControl.qml" line="70"/>
         <source>Activation level</source>
-        <translation type="unfinished"/>
+        <translation>Рівень активації</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="15"/>
@@ -20058,7 +20061,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
         <source>Timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Відкладене записування</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>
@@ -20070,7 +20073,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="170"/>
         <source>Date</source>
-        <translation type="unfinished"/>
+        <translation>Дата</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="187"/>
@@ -20080,33 +20083,33 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="318"/>
         <source>Start recording</source>
-        <translation type="unfinished"/>
+        <translation>Почати запис</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="325"/>
         <source>Now</source>
-        <translation type="unfinished"/>
+        <translation>Зараз</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="337"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="396"/>
         <source>At a time</source>
-        <translation type="unfinished"/>
+        <translation>У момент часу</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="377"/>
         <source>End recording</source>
-        <translation type="unfinished"/>
+        <translation>Завершити запис</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="384"/>
         <source>For a duration</source>
-        <translation type="unfinished"/>
+        <translation>За тривалістю</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="474"/>
         <source>When recording is done</source>
-        <translation type="unfinished"/>
+        <translation>Коли запис буде завершено</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="480"/>
@@ -20132,7 +20135,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
         <source>Start timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Почати відкладений запис</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="116"/>
@@ -20143,45 +20146,45 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="30"/>
         <source>%1d</source>
         <extracomment>Abbreviated number of days in a duration, e.g. &quot;2d&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1д</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="34"/>
         <source>%1h</source>
         <extracomment>Abbreviated number of hours in a duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1г</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="38"/>
         <source>%1m</source>
         <extracomment>Abbreviated number of minutes in a duration, e.g. &quot;30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1х</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="42"/>
         <source>%1s</source>
         <extracomment>Abbreviated number of seconds in a duration, e.g. &quot;45s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1с</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="159"/>
         <source>The end time has already passed.</source>
-        <translation type="unfinished"/>
+        <translation>Момент завершення вже минув.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="198"/>
         <source>Audacity was already recording.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity вже виконувала запис.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="208"/>
         <source>Recording couldn’t be started.</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося почати записування.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="222"/>
         <source>Timed recording couldn’t start</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося розпочати відкладений запис</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="246"/>
@@ -20191,28 +20194,28 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="249"/>
         <source>Stop timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Припинити відкладений запис</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="250"/>
         <source>Your timed recording will be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>Ваш відкладений запис буде зупинено.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="287"/>
         <source>Timed recording complete</source>
-        <translation type="unfinished"/>
+        <translation>Відкладене записування завершено</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="289"/>
         <source>Recorded for %1</source>
         <extracomment>%1 is how long the timed recording lasted, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Записано протягом %1</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="293"/>
         <source>Timed recording stopped</source>
-        <translation type="unfinished"/>
+        <translation>Відкладене записування зупинено</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="328"/>
@@ -20222,53 +20225,53 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="330"/>
         <source>Couldn’t save the project</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося зберегти проєкт</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="353"/>
         <source>Couldn’t export the audio</source>
-        <translation type="unfinished"/>
+        <translation>Не вдалося експортувати звукові дані</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="357"/>
         <source>Audio exported</source>
-        <translation type="unfinished"/>
+        <translation>Звукові дані експортовано</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="95"/>
         <source>Audacity will quit in %1</source>
         <extracomment>%1 is the time left until Audacity quits, e.g. &quot;59s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity завершить роботу за %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="99"/>
         <source>Recording ends in %1</source>
         <extracomment>%1 is the time left until the timed recording ends, e.g. &quot;59m 50s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Записування завершується за %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="102"/>
         <source>Started: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розпочато: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="106"/>
         <source>Recording starts in %1</source>
         <extracomment>%1 is the time left until the timed recording starts, e.g. &quot;5m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Записування розпочинається за %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="109"/>
         <source>Starts: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Починається: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="112"/>
         <source>Ends: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 13:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Завершується: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="159"/>
@@ -20276,7 +20279,10 @@ Please connect an input device and rescan.</source>
 %1
 
 Do you want to overwrite it?</source>
-        <translation type="unfinished"/>
+        <translation>Цей файл вже існує:
+%1
+
+Хочете його перезаписати?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="161"/>
@@ -20284,7 +20290,10 @@ Do you want to overwrite it?</source>
 %1
 
 Do you want to overwrite them?</source>
-        <translation type="unfinished"/>
+        <translation>Ці файли вже існують:
+%1
+
+Хочете їх перезаписати?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="166"/>
@@ -20294,72 +20303,72 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="182"/>
         <source>Save project as</source>
-        <translation type="unfinished"/>
+        <translation>Зберегти проєкт як</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="46"/>
         <source>%1 at %2</source>
         <extracomment>A date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 о %2</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="58"/>
         <source>Starts when you press Start timed recording and ends %1 (%2).</source>
         <extracomment>%1 is when the recording ends, e.g. &quot;today at 16:28:20&quot;, and %2 its duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Починається, коли ви натиснете «Почати відкладений запис», і завершується %1 (%2).</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="63"/>
         <source>Starts when you press Start timed recording and records for %1.</source>
         <extracomment>%1 is the duration of the recording, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Починається, коли ви натиснете «Почати відкладений запис», і виконується %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="67"/>
         <source>Starts %1 and records for %2.</source>
         <extracomment>%1 is when the recording starts, e.g. &quot;today at 12:23:30&quot; or &quot;in 43m 30s&quot;, and %2 its duration, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Починається %1 і виконується %2.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="73"/>
         <source>Start time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Момент початку пропущено. Виберіть час після %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="79"/>
         <source>End time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Момент завершення вже минув. Виберіть час після %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="84"/>
         <source>End time must be after the start time.</source>
-        <translation type="unfinished"/>
+        <translation>Момент завершення має слідувати за моментом початку..</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="102"/>
         <source>in %1</source>
         <extracomment>%1 is how long until the recording starts, e.g. &quot;43m 30s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>за %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="113"/>
         <source>today at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>сьогодні о %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="118"/>
         <source>tomorrow at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>завтра о %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="122"/>
         <source>on %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sun 25 Oct 2026 at 16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1</translation>
     </message>
 </context>
 <context>
@@ -20586,7 +20595,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="32"/>
         <source>Navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between panels and controls</extracomment>
-        <translation type="unfinished"/>
+        <translation>Навігація</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="34"/>
@@ -20610,13 +20619,13 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="40"/>
         <source>Track view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that work only while a track or a track item has the keyboard focus</extracomment>
-        <translation type="unfinished"/>
+        <translation>Перегляд доріжок</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="44"/>
         <source>Project view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that change how the project is shown</extracomment>
-        <translation type="unfinished"/>
+        <translation>Перегляд проєкту</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
@@ -20628,7 +20637,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>
         <source>Track navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between tracks and track items</extracomment>
-        <translation type="unfinished"/>
+        <translation>Навігація доріжкою</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="50"/>
@@ -20646,7 +20655,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="55"/>
         <source>App</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that act on the whole application</extracomment>
-        <translation type="unfinished"/>
+        <translation>Програма</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="57"/>
@@ -20688,7 +20697,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="69"/>
         <source>Extensions</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of extensions (add-ons that users install)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Розширення</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="71"/>
@@ -20700,7 +20709,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="73"/>
         <source>Windows</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that manage application windows</extracomment>
-        <translation type="unfinished"/>
+        <translation>Вікна</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="75"/>
@@ -20718,7 +20727,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="79"/>
         <source>Testflow</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the automated test tool for developers; &quot;Testflow&quot; is a tool name, do not translate it</extracomment>
-        <translation type="unfinished"/>
+        <translation>Тестування</translation>
     </message>
 </context>
 <context>
@@ -21855,13 +21864,13 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="154"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="155"/>
         <source>Changed fade in</source>
-        <translation type="unfinished"/>
+        <translation>Змінено наростання</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="166"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="167"/>
         <source>Changed fade out</source>
-        <translation type="unfinished"/>
+        <translation>Змінено згасання</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="424"/>
@@ -22065,22 +22074,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="973"/>
         <source>Rendered all audio in track ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>Оброблено усі звукові дані на доріжці «%1»</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
         <source>Mixed and rendered %1 tracks into one new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Змікшовано та перетворено %1 доріжок у одну нову стереодоріжку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="979"/>
         <source>Mixed and rendered %1 tracks into one new mono track</source>
-        <translation type="unfinished"/>
+        <translation>Змікшовано та перетворено %1 доріжок у одну монодоріжку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="981"/>
         <source>Mix and render</source>
-        <translation type="unfinished"/>
+        <translation>Змікшувати і перетворити</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
@@ -22184,27 +22193,27 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1249"/>
         <source>Cut multiple items</source>
-        <translation type="unfinished"/>
+        <translation>Розрізати декілька записів</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1251"/>
         <source>Cut multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>Розрізати декілька кріпів</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1253"/>
         <source>Cut multiple labels</source>
-        <translation type="unfinished"/>
+        <translation>Розрізати декілька міток</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1317"/>
         <source>Items grouped</source>
-        <translation type="unfinished"/>
+        <translation>Записи згруповано</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1326"/>
         <source>Items ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>Записи розгруповано</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1344"/>
@@ -22273,7 +22282,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3interactionutils.cpp" line="320"/>
         <source>Resampling…</source>
-        <translation type="unfinished"/>
+        <translation>Зміна дискретизації…</translation>
     </message>
 </context>
 <context>
@@ -22898,7 +22907,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="104"/>
         <source>%1 %2 is available!</source>
-        <translation type="unfinished"/>
+        <translation>Випущено %1 %2!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="120"/>
@@ -22925,7 +22934,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
         <source>Restart &amp; update</source>
-        <translation type="unfinished"/>
+        <translation>Перезапустити і оновити</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22945,17 +22954,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="210"/>
         <source>Updated to %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>Оновлено до %1 %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="222"/>
         <source>%1 %2 is now ready to install.</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 готова до встановлення.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="225"/>
         <source>New update available</source>
-        <translation type="unfinished"/>
+        <translation>Маємо оновлення</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="228"/>
@@ -22988,7 +22997,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="297"/>
         <source>Restart to finish updating</source>
-        <translation type="unfinished"/>
+        <translation>Перезапустіть для завершення оновлення</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="298"/>
@@ -23014,17 +23023,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="46"/>
         <source>Download and install future %1 updates automatically</source>
-        <translation type="unfinished"/>
+        <translation>Отримувати і встановлювати майбутні оновлення %1 автоматично</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="60"/>
         <source>You can change this anytime in &lt;b&gt;Preferences &gt; General&lt;/b&gt;.</source>
-        <translation type="unfinished"/>
+        <translation>Ви можете будь-коли змінити це на сторінці &lt;b&gt;Налаштування &gt; Загальні&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="377"/>
         <source>Preparing %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>Приготування %1 %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="481"/>

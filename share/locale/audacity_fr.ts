@@ -5834,19 +5834,19 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="466"/>
         <source>Select the track at the given index</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sélectionner la piste à l’index indiqué</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="478"/>
         <source>Move the cursor to the nearest zero crossing</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Déplacez le curseur jusqu&apos;au croisement du zéro le plus proche</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="487"/>
         <source>Use the track color for the selected clips</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Utiliser la couleur de la piste pour les clips sélectionnés</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="496"/>
@@ -5960,13 +5960,13 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="688"/>
         <source>Merge the clips in the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fusionner les clips situés dans la plage de temps indiquée, sur les pistes indiquées</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="702"/>
         <source>Duplicate the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dupliquer la plage de temps indiquée sur les pistes indiquées</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
@@ -5984,7 +5984,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="770"/>
         <source>Move the selection into a new track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Déplacer la sélection vers une nouvelle piste</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
@@ -6008,7 +6008,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="806"/>
         <source>Split the given track at the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Diviser la piste indiquée à la position de lecture indiquée</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="818"/>
@@ -6128,13 +6128,13 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1001"/>
         <source>Open the context menu of the focused track item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ouvrir le menu contextuel de l&apos;élément de piste ayant le focus</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1011"/>
         <source>Open the context menu of the focused ruler</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ouvrir le menu contextuel de la règle ayant le focus</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
@@ -6152,7 +6152,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
         <source>Apply preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Appliquer le preset</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
@@ -6164,7 +6164,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="81"/>
         <source>Save preset as</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Enregistrer le preset sous</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="93"/>
@@ -6188,19 +6188,19 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="172"/>
         <source>Apply %1 with the given parameters</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Appliquer %1 avec les paramètres indiqués</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="183"/>
         <source>Choose the parameters of %1 without applying it</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Choisir les paramètres de %1 sans les appliquer</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="21"/>
         <source>Export the project audio as an MP3 file into the macro-output folder</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Exporter l’audio du projet en un fichier MP3 vers le dossier de sortie des macros.</translation>
     </message>
 </context>
 <context>
@@ -6213,7 +6213,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
         <source>This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation type="unfinished"/>
+        <translation>Cela créera un fichier .zip contenant des informations sur votre configuration de %1 pour aider les développeurs à diagnostiquer les problèmes que vous rencontrez. Vous pouvez inspecter le contenu de ce fichier avant de l&apos;envoyer à qui que ce soit.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
@@ -7283,7 +7283,7 @@ Essayez de réinitialiser les clips étirés ou de mixer et de restituer les pis
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="31"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Auto Duck</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
@@ -8896,7 +8896,7 @@ Canal de droite</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="221"/>
         <source>Abrupt</source>
-        <translation>Brusque</translation>
+        <translation>Raide</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="222"/>
@@ -9812,25 +9812,25 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="92"/>
         <source>Small Room Bright</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Petite pièce brillante</translation>
+        <translation>Small Room brillante</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="94"/>
         <source>Small Room Dark</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Petite pièce étouffée</translation>
+        <translation>Small Room étouffée</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="96"/>
         <source>Medium Room</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Pièce moyenne</translation>
+        <translation>Medium Room</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="98"/>
         <source>Large Room</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Grande pièce</translation>
+        <translation>Large Room</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="100"/>
@@ -9884,7 +9884,7 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
         <source>Allows continuous changes to the tempo and/or pitch</source>
-        <translation>Permet des changements continus du tempo et/ou de la hauteur</translation>
+        <translation>Permet des changements continus du tempo et / ou de la hauteur</translation>
     </message>
 </context>
 <context>
@@ -9936,18 +9936,18 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="13"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Auto Duck</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="112"/>
         <source>Control track</source>
-        <translation type="unfinished"/>
+        <translation>Piste de contrôle</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
         <source>No available track</source>
-        <translation type="unfinished"/>
+        <translation>Aucune piste disponible</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
@@ -9957,37 +9957,37 @@ Veuillez sélectionner une zone à réparer comportant de l&apos;audio sur au mo
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="192"/>
         <source>Duck start</source>
-        <translation type="unfinished"/>
+        <translation>Début de duck</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
         <source>Recovery end</source>
-        <translation type="unfinished"/>
+        <translation>Fin de la récupération</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
         <source>Duck end</source>
-        <translation type="unfinished"/>
+        <translation>Fin de duck</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
         <source>Gain reduction</source>
-        <translation type="unfinished"/>
+        <translation>Réduction de gain</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
         <source>Recovery start</source>
-        <translation type="unfinished"/>
+        <translation>Début de la récupération</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
         <source>Hold</source>
-        <translation type="unfinished"/>
+        <translation>Hold</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
         <source>Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</source>
-        <translation type="unfinished"/>
+        <translation>Auto duck nécessite une deuxième piste audio pour déclencher l’atténuation du son. Ajoutez-en une à votre projet pour continuer.</translation>
     </message>
 </context>
 <context>
@@ -11279,7 +11279,7 @@ Recommandé - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="424"/>
         <source>There is no audio to export</source>
-        <translation type="unfinished"/>
+        <translation>Il n’y a pas d&apos;audio à exporter</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="471"/>
@@ -14621,7 +14621,7 @@ Veuillez télécharger la dernière version de &apos;LAME pour Audacity&apos;.</
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
         <source>Quality %1 (~%2 kbit/s)</source>
-        <translation type="unfinished"/>
+        <translation>Qualité %1 (~%2 kbit/s)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="204"/>
@@ -14722,7 +14722,7 @@ Veuillez télécharger la dernière version de &apos;LAME pour Audacity&apos;.</
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Speech</source>
-        <translation>Discours</translation>
+        <translation>Parole</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="457"/>
@@ -15308,12 +15308,12 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="21"/>
         <source>Edit macro</source>
-        <translation type="unfinished"/>
+        <translation>Éditer la macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="105"/>
         <source>Search commands</source>
-        <translation type="unfinished"/>
+        <translation>Rechercher des commandes</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="261"/>
@@ -15325,7 +15325,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="275"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="150"/>
         <source>Run on files…</source>
-        <translation type="unfinished"/>
+        <translation>Lancer sur des fichiers…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="293"/>
@@ -15335,42 +15335,42 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/AvailableCommandsList.qml" line="33"/>
         <source>Available commands</source>
-        <translation type="unfinished"/>
+        <translation>Commandes disponibles</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Moving %1. Use the up and down arrows to move it. Press Escape to stop.</source>
-        <translation type="unfinished"/>
+        <translation>Déplacement de %1. Utilisez les flèches haut et bas pour le déplacer. Appuyez sur Échap pour arrêter.</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Move %1</source>
-        <translation type="unfinished"/>
+        <translation>Déplacer %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="246"/>
         <source>Step %1</source>
-        <translation type="unfinished"/>
+        <translation>Étape %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="336"/>
         <source>Actions for %1</source>
-        <translation type="unfinished"/>
+        <translation>Actions pour %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="378"/>
         <source>Edit command</source>
-        <translation type="unfinished"/>
+        <translation>Éditer la commande</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="394"/>
         <source>Move up</source>
-        <translation type="unfinished"/>
+        <translation>Monter</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="399"/>
         <source>Move down</source>
-        <translation type="unfinished"/>
+        <translation>Descendre</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="405"/>
@@ -15381,17 +15381,17 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="412"/>
         <source>Command menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu des commandes</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="27"/>
         <source>Macro commands</source>
-        <translation type="unfinished"/>
+        <translation>Commandes macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="96"/>
         <source>Step</source>
-        <translation type="unfinished"/>
+        <translation>Étape</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="128"/>
@@ -15401,17 +15401,17 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="160"/>
         <source>Actions</source>
-        <translation type="unfinished"/>
+        <translation>Actions</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="258"/>
         <source>Double-click a command, or drag it, to add it to your macro</source>
-        <translation type="unfinished"/>
+        <translation>Double-cliquez sur une commande, ou faites-la glisser, pour l’ajouter à votre macro.</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="107"/>
         <source>Run macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Lancer la macro “%1”</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="142"/>
@@ -15426,67 +15426,67 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="154"/>
         <source>Export…</source>
-        <translation type="unfinished"/>
+        <translation>Exporter…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="167"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="89"/>
         <source>Macro menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu des macros</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="48"/>
         <source>Macros</source>
-        <translation type="unfinished"/>
+        <translation>Macros</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="66"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="18"/>
         <source>New macro</source>
-        <translation type="unfinished"/>
+        <translation>Nouvelle macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="110"/>
         <source>Macro manager menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu gestionnaire de macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="69"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="26"/>
         <source>Rename macro</source>
-        <translation type="unfinished"/>
+        <translation>Renommer la macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="73"/>
         <source>Export macro…</source>
-        <translation type="unfinished"/>
+        <translation>Exporter la macro…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="78"/>
         <source>Remove all steps</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer toutes les étapes</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="82"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="50"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="56"/>
         <source>Delete macro</source>
-        <translation type="unfinished"/>
+        <translation>Supprimer la macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="26"/>
         <source>Queued</source>
-        <translation type="unfinished"/>
+        <translation>En file d’attente</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="28"/>
         <source>Processing</source>
-        <translation type="unfinished"/>
+        <translation>Traitement</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="30"/>
         <source>Complete</source>
-        <translation type="unfinished"/>
+        <translation>Terminé</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="32"/>
@@ -15501,7 +15501,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="43"/>
         <source>File path</source>
-        <translation type="unfinished"/>
+        <translation>Chemin vers le fichier</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="55"/>
@@ -15511,27 +15511,27 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="71"/>
         <source>Import macro…</source>
-        <translation type="unfinished"/>
+        <translation>Importer une macro…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="98"/>
         <source>You don’t have any macros yet</source>
-        <translation type="unfinished"/>
+        <translation>Vous n’avez pas encore de macros</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="76"/>
         <source>Macro name</source>
-        <translation type="unfinished"/>
+        <translation>Nom de la macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="124"/>
         <source>A macro with this name already exists</source>
-        <translation type="unfinished"/>
+        <translation>Une macro portant ce nom existe déjà</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="22"/>
         <source>Run on files</source>
-        <translation type="unfinished"/>
+        <translation>Lancer sur des fichiers</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="103"/>
@@ -15541,145 +15541,146 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="147"/>
         <source>Step %1 of “%2”: %3</source>
-        <translation type="unfinished"/>
+        <translation>Étape %1 de “%2” : %3</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="152"/>
         <source>The macro uses steps that do not exist:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>La macro utilise des étapes qui n’existent pas :
+%1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="177"/>
         <source>macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>macro “%1”</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="285"/>
         <source>Macro “%1” not found</source>
-        <translation type="unfinished"/>
+        <translation>Macro “%1” introuvable</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="334"/>
         <source>“%1” ran successfully</source>
-        <translation type="unfinished"/>
+        <translation>“%1” s’est exécuté avec succès</translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="335"/>
         <source>%n step(s) applied to the project</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n étape appliquée au projet</numerusform><numerusform>%n étapes appliquées au projet</numerusform><numerusform>%n étapes appliquées au projet</numerusform></translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="338"/>
         <source>Macro completed</source>
-        <translation type="unfinished"/>
+        <translation>Macro terminée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="350"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="17"/>
         <source>The macro could not be completed</source>
-        <translation type="unfinished"/>
+        <translation>La macro n’a pas pu être terminée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="85"/>
         <source>macro has no name</source>
-        <translation type="unfinished"/>
+        <translation>la macro n’a pas de nom</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="99"/>
         <source>macro step has no macro name</source>
-        <translation type="unfinished"/>
+        <translation>l&apos;étape de macro ne possède pas de nom de macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="108"/>
         <source>macro step has an invalid command</source>
-        <translation type="unfinished"/>
+        <translation>l&apos;étape de macro contient une commande invalide</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="125"/>
         <source>Macro “%1” calls itself</source>
-        <translation type="unfinished"/>
+        <translation>La macro “%1” s’appelle elle-même</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="126"/>
         <source>Macro “%1” calls itself through “%2”</source>
-        <translation type="unfinished"/>
+        <translation>La macro “%1” s’appelle elle-même à travers “%2”</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="327"/>
         <source>Invalid macro file</source>
-        <translation type="unfinished"/>
+        <translation>Fichier de macro invalide</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="36"/>
         <source>The macro could not be renamed</source>
-        <translation type="unfinished"/>
+        <translation>La macro n’a pas pu être renommée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="45"/>
         <source>“%1” will be deleted</source>
-        <translation type="unfinished"/>
+        <translation>“%1” sera supprimée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="46"/>
         <source>“%1” is used by other macros. Deleting it will also remove it from: %2</source>
-        <translation type="unfinished"/>
+        <translation>“%1” est utilisée par d’autres macros. Sa suppression entraînera sa disparition de : %2</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="64"/>
         <source>The macro could not be deleted</source>
-        <translation type="unfinished"/>
+        <translation>La macro n’a pas pu être supprimée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="71"/>
         <source>Export macro</source>
-        <translation type="unfinished"/>
+        <translation>Exporter la macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="78"/>
         <source>The macro could not be exported</source>
-        <translation type="unfinished"/>
+        <translation>La macro n’a pas pu être exportée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="84"/>
         <source>Import macro</source>
-        <translation type="unfinished"/>
+        <translation>Importer une macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="112"/>
         <source>Macro files</source>
-        <translation type="unfinished"/>
+        <translation>Fichiers macro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macrocommandsmodel.cpp" line="336"/>
         <source>The macro could not be saved</source>
-        <translation type="unfinished"/>
+        <translation>La macro n’a pas pu être enregistrée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="131"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="145"/>
         <source>The macro could not be imported</source>
-        <translation type="unfinished"/>
+        <translation>La macro n’a pas pu être importée</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="191"/>
         <source>Some commands of this macro are not available</source>
-        <translation type="unfinished"/>
+        <translation>Certaines commandes de cette macro ne sont pas disponibles</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="192"/>
         <source>The macro can be imported, but it will fail at these steps:</source>
-        <translation type="unfinished"/>
+        <translation>La macro peut être importée, mais elle échouera aux étapes suivantes :</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="201"/>
         <source>Replace macro?</source>
-        <translation type="unfinished"/>
+        <translation>Remplacer la macro ?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="202"/>
         <source>A macro named “%1” already exists. Do you want to replace it?</source>
-        <translation type="unfinished"/>
+        <translation>Une macro nommée “%1” existe déjà. Voulez-vous la remplacer ?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
@@ -15689,7 +15690,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="56"/>
         <source>Select files</source>
-        <translation type="unfinished"/>
+        <translation>Sélectionner les fichiers</translation>
     </message>
 </context>
 <context>
@@ -15973,7 +15974,7 @@ Remarque : Maitriser MuseScore est disponible principalement en anglais (Certain
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="72"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="42"/>
         <source>GENRE</source>
-        <translation type="unfinished"/>
+        <translation>GENRE</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
@@ -17764,7 +17765,7 @@ Il ne sera pas chargé.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="15"/>
         <source>Sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Enregistrement activé par le son</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="22"/>
@@ -17779,17 +17780,17 @@ Il ne sera pas chargé.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="33"/>
         <source>Default track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Visualisation de la piste par défaut</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="56"/>
         <source>Default ruler format</source>
-        <translation type="unfinished"/>
+        <translation>Format de règle par défaut</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="85"/>
         <source>Default audio track name</source>
-        <translation type="unfinished"/>
+        <translation>Nom des pistes audio par défaut</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="65"/>
@@ -18330,25 +18331,27 @@ Vous pouvez gérer ce fichier à partir de votre page de projets mis à jour sur
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="987"/>
         <source>Use default location</source>
-        <translation type="unfinished"/>
+        <translation>Utiliser l’emplacement par défaut</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="990"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1005"/>
         <source>Could not create a new project</source>
-        <translation type="unfinished"/>
+        <translation>Impossible de créer un nouveau projet</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="991"/>
         <source>The temporary files location is not accessible: %1
 
 Use the default location instead? It can be changed later in Preferences.</source>
-        <translation type="unfinished"/>
+        <translation>L’emplacement des fichiers temporaires n’est pas accessible : %1
+
+Utiliser l’emplacement par défaut ? Il sera possible de le modifier ultérieurement dans les Préférences.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1006"/>
         <source>Make sure the temporary files location is accessible: %1</source>
-        <translation type="unfinished"/>
+        <translation>Assurez-vous que l’emplacement des fichiers temporaires est accessible : %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1090"/>
@@ -19918,7 +19921,7 @@ Veuillez recommencer et choisissez un nom diffèrent.</translation>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml" line="93"/>
         <source>Track %1: %2, vertical ruler</source>
-        <translation type="unfinished"/>
+        <translation>Piste %1 : %2, règle verticale</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
@@ -20056,7 +20059,7 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelControl.qml" line="70"/>
         <source>Activation level</source>
-        <translation type="unfinished"/>
+        <translation>Niveau d’activation</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="15"/>
@@ -20079,7 +20082,7 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="170"/>
         <source>Date</source>
-        <translation type="unfinished"/>
+        <translation>Date</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="187"/>
@@ -20089,33 +20092,33 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="318"/>
         <source>Start recording</source>
-        <translation type="unfinished"/>
+        <translation>Démarrer l&apos;enregistrement</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="325"/>
         <source>Now</source>
-        <translation type="unfinished"/>
+        <translation>Maintenant</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="337"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="396"/>
         <source>At a time</source>
-        <translation type="unfinished"/>
+        <translation>À tel moment</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="377"/>
         <source>End recording</source>
-        <translation type="unfinished"/>
+        <translation>Arrêter l’enregistrement</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="384"/>
         <source>For a duration</source>
-        <translation type="unfinished"/>
+        <translation>Pour telle durée</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="474"/>
         <source>When recording is done</source>
-        <translation type="unfinished"/>
+        <translation>Une fois l’enregistrement terminé</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="480"/>
@@ -20141,7 +20144,7 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
         <source>Start timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Démarrer l&apos;enregistrement programmé</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="116"/>
@@ -20152,45 +20155,45 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="30"/>
         <source>%1d</source>
         <extracomment>Abbreviated number of days in a duration, e.g. &quot;2d&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1j</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="34"/>
         <source>%1h</source>
         <extracomment>Abbreviated number of hours in a duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1h</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="38"/>
         <source>%1m</source>
         <extracomment>Abbreviated number of minutes in a duration, e.g. &quot;30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1m</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="42"/>
         <source>%1s</source>
         <extracomment>Abbreviated number of seconds in a duration, e.g. &quot;45s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1s</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="159"/>
         <source>The end time has already passed.</source>
-        <translation type="unfinished"/>
+        <translation>L’heure de fin est déjà passée.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="198"/>
         <source>Audacity was already recording.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity enregistre déjà.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="208"/>
         <source>Recording couldn’t be started.</source>
-        <translation type="unfinished"/>
+        <translation>L’enregistrement n’a pas pu démarrer.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="222"/>
         <source>Timed recording couldn’t start</source>
-        <translation type="unfinished"/>
+        <translation>L’enregistrement programmé n’a pas pu démarrer</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="246"/>
@@ -20200,28 +20203,28 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="249"/>
         <source>Stop timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Arrêter l’enregistrement programmé</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="250"/>
         <source>Your timed recording will be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;enregistrement programmé sera arrêté.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="287"/>
         <source>Timed recording complete</source>
-        <translation type="unfinished"/>
+        <translation>Enregistrement programmé terminé</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="289"/>
         <source>Recorded for %1</source>
         <extracomment>%1 is how long the timed recording lasted, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Enregistrement de %1</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="293"/>
         <source>Timed recording stopped</source>
-        <translation type="unfinished"/>
+        <translation>Enregistrement programmé arrêté</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="328"/>
@@ -20231,53 +20234,53 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="330"/>
         <source>Couldn’t save the project</source>
-        <translation type="unfinished"/>
+        <translation>Impossible d’enregistrer le projet</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="353"/>
         <source>Couldn’t export the audio</source>
-        <translation type="unfinished"/>
+        <translation>Impossible d’exporter l’audio</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="357"/>
         <source>Audio exported</source>
-        <translation type="unfinished"/>
+        <translation>Audio exporté</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="95"/>
         <source>Audacity will quit in %1</source>
         <extracomment>%1 is the time left until Audacity quits, e.g. &quot;59s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity sera fermé dans %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="99"/>
         <source>Recording ends in %1</source>
         <extracomment>%1 is the time left until the timed recording ends, e.g. &quot;59m 50s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fin de l’enregistrement dans %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="102"/>
         <source>Started: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Démarré le : %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="106"/>
         <source>Recording starts in %1</source>
         <extracomment>%1 is the time left until the timed recording starts, e.g. &quot;5m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Début de l’enregistrement dans %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="109"/>
         <source>Starts: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Démarre le : %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="112"/>
         <source>Ends: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 13:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fin le : %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="159"/>
@@ -20285,7 +20288,10 @@ Veuillez connecter un périphérique d&apos;entrée et relancer la recherche.</t
 %1
 
 Do you want to overwrite it?</source>
-        <translation type="unfinished"/>
+        <translation>Ce fichier existe déjà :
+%1
+
+Voulez-vous l’écraser ?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="161"/>
@@ -20293,7 +20299,10 @@ Do you want to overwrite it?</source>
 %1
 
 Do you want to overwrite them?</source>
-        <translation type="unfinished"/>
+        <translation>Ces fichiers existent déjà :
+%1
+
+Voulez-vous les écraser ?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="166"/>
@@ -20303,72 +20312,72 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="182"/>
         <source>Save project as</source>
-        <translation type="unfinished"/>
+        <translation>Enregistrer le projet sous</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="46"/>
         <source>%1 at %2</source>
         <extracomment>A date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 à %2</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="58"/>
         <source>Starts when you press Start timed recording and ends %1 (%2).</source>
         <extracomment>%1 is when the recording ends, e.g. &quot;today at 16:28:20&quot;, and %2 its duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Débute lorsque vous appuyez sur Démarrer l’enregistrement programmé et se termine le %1 (%2).</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="63"/>
         <source>Starts when you press Start timed recording and records for %1.</source>
         <extracomment>%1 is the duration of the recording, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Débute lorsque vous appuyez sur Démarrer l’enregistrement programmé et enregistre pendant %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="67"/>
         <source>Starts %1 and records for %2.</source>
         <extracomment>%1 is when the recording starts, e.g. &quot;today at 12:23:30&quot; or &quot;in 43m 30s&quot;, and %2 its duration, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Démarre le %1 et enregistre pendant %2.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="73"/>
         <source>Start time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>L’heure de début est dépassée. Choisissez une heure postérieure à %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="79"/>
         <source>End time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>L’heure de fin est dépassée. Choisissez une heure postérieure à %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="84"/>
         <source>End time must be after the start time.</source>
-        <translation type="unfinished"/>
+        <translation>L&apos;heure de fin doit être postérieure à l&apos;heure de début.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="102"/>
         <source>in %1</source>
         <extracomment>%1 is how long until the recording starts, e.g. &quot;43m 30s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>dans %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="113"/>
         <source>today at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>aujourd’hui à %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="118"/>
         <source>tomorrow at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>demain à %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="122"/>
         <source>on %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sun 25 Oct 2026 at 16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>le %1</translation>
     </message>
 </context>
 <context>
@@ -20595,7 +20604,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="32"/>
         <source>Navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between panels and controls</extracomment>
-        <translation type="unfinished"/>
+        <translation>Navigation</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="34"/>
@@ -20619,13 +20628,13 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="40"/>
         <source>Track view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that work only while a track or a track item has the keyboard focus</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vue piste</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="44"/>
         <source>Project view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that change how the project is shown</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vue projet</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
@@ -20637,7 +20646,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>
         <source>Track navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between tracks and track items</extracomment>
-        <translation type="unfinished"/>
+        <translation>Navigation dans la piste</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="50"/>
@@ -20655,7 +20664,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="55"/>
         <source>App</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that act on the whole application</extracomment>
-        <translation type="unfinished"/>
+        <translation>Application</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="57"/>
@@ -20697,7 +20706,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="69"/>
         <source>Extensions</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of extensions (add-ons that users install)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Extensions</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="71"/>
@@ -20709,7 +20718,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="73"/>
         <source>Windows</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that manage application windows</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fenêtres</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="75"/>
@@ -20727,7 +20736,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="79"/>
         <source>Testflow</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the automated test tool for developers; &quot;Testflow&quot; is a tool name, do not translate it</extracomment>
-        <translation type="unfinished"/>
+        <translation>Testflow</translation>
     </message>
 </context>
 <context>
@@ -21864,13 +21873,13 @@ Souhaitez-vous continuer ?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="154"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="155"/>
         <source>Changed fade in</source>
-        <translation type="unfinished"/>
+        <translation>Fondu en entrée modifié</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="166"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="167"/>
         <source>Changed fade out</source>
-        <translation type="unfinished"/>
+        <translation>Fondu en sortie modifié</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="424"/>
@@ -22074,17 +22083,17 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="973"/>
         <source>Rendered all audio in track ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>Rendu de tout l’audio de la piste ‘%1’</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
         <source>Mixed and rendered %1 tracks into one new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Mixé et exportation des pistes %1 vers une nouvelle piste stéréo</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="979"/>
         <source>Mixed and rendered %1 tracks into one new mono track</source>
-        <translation type="unfinished"/>
+        <translation>Mixé et exportation des pistes %1 vers une nouvelle piste mono</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="981"/>
@@ -22193,27 +22202,27 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1249"/>
         <source>Cut multiple items</source>
-        <translation type="unfinished"/>
+        <translation>Couper plusieurs éléments</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1251"/>
         <source>Cut multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>Couper plusieurs clips</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1253"/>
         <source>Cut multiple labels</source>
-        <translation type="unfinished"/>
+        <translation>Couper plusieurs labels</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1317"/>
         <source>Items grouped</source>
-        <translation type="unfinished"/>
+        <translation>Éléments groupés</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1326"/>
         <source>Items ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>Éléments dégroupés</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1344"/>
@@ -22282,7 +22291,7 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3interactionutils.cpp" line="320"/>
         <source>Resampling…</source>
-        <translation type="unfinished"/>
+        <translation>Rééchantillonner…</translation>
     </message>
 </context>
 <context>
@@ -22907,7 +22916,7 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="104"/>
         <source>%1 %2 is available!</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 est disponible !</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="120"/>
@@ -22934,7 +22943,7 @@ Souhaitez-vous continuer ?</translation>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
         <source>Restart &amp; update</source>
-        <translation type="unfinished"/>
+        <translation>Redémarrer et mettre à jour</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22954,17 +22963,17 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="210"/>
         <source>Updated to %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>Mis à jour vers %1 %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="222"/>
         <source>%1 %2 is now ready to install.</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 est prêt à être installé.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="225"/>
         <source>New update available</source>
-        <translation type="unfinished"/>
+        <translation>Nouvelle mise à jour disponible</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="228"/>
@@ -22997,7 +23006,7 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="297"/>
         <source>Restart to finish updating</source>
-        <translation type="unfinished"/>
+        <translation>Redémarrez pour terminer la mise à jour</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="298"/>
@@ -23023,17 +23032,17 @@ Souhaitez-vous continuer ?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="46"/>
         <source>Download and install future %1 updates automatically</source>
-        <translation type="unfinished"/>
+        <translation>Télécharger et installer automatiquement les futures mises à jour de %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="60"/>
         <source>You can change this anytime in &lt;b&gt;Preferences &gt; General&lt;/b&gt;.</source>
-        <translation type="unfinished"/>
+        <translation>Vous pouvez modifier cela à tout moment dans &lt;b&gt;Préférences &gt; Général&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="377"/>
         <source>Preparing %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>Préparation de %1 %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="481"/>
