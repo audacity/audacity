@@ -261,6 +261,10 @@ StyledDialogView {
 
                             filter: exportPreferencesModel.fileFilter()
                             dir: exportPreferencesModel.suggestedFilePath
+
+                            onPathSelected: function (path) {
+                                exportPreferencesModel.setFileDialogPath(path)
+                            }
                         }
 
                         TextInputField {
@@ -297,10 +301,7 @@ StyledDialogView {
                             navigation.order: dirField.navigation.order + 1
 
                             onClicked: {
-                                var selectedFile = dirPickerModel.selectAny()
-                                if (Boolean(selectedFile)) {
-                                    exportPreferencesModel.setFileDialogPath(selectedFile)
-                                }
+                                dirPickerModel.selectAny()
                             }
                         }
                     }
