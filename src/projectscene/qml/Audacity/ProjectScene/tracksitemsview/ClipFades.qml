@@ -47,8 +47,14 @@ Item {
         readonly property real fadeInX: -root.clipOffset
         readonly property real fadeOutX: root.clipWidth - root.clipOffset - root.fadeOutWidth
 
-        readonly property real fadeInLineCenter: fadeInX + root.fadeInWidth - 0.5
-        readonly property real fadeOutLineCenter: fadeOutX + 0.5
+        readonly property real lineHalfWidth: 0.5
+        // Each line is centered on where its fade ends: so, where the fades meet, their lines are one. Though, to be
+        // seen whole, not further out than the clip's first and last half pixels.
+        readonly property real fadeInLineCenter: {
+            const clipEndX = root.clipWidth - root.clipOffset
+            return Math.min(fadeInX + root.fadeInWidth, clipEndX - lineHalfWidth)
+        }
+        readonly property real fadeOutLineCenter: Math.max(fadeOutX, fadeInX + lineHalfWidth)
 
         // When the handles collide, each is pushed to its side by half the overlap: when the lines are aligned,
         // the handles are on either side of them.
@@ -73,6 +79,7 @@ Item {
         isFadeIn: true
         fadeWidth: root.fadeInWidth
         fadeX: prv.fadeInX
+        lineX: prv.fadeInLineCenter
         fadeType: root.fadeInType
         drawingTop: root.drawingTop
 
@@ -110,6 +117,7 @@ Item {
         isFadeIn: false
         fadeWidth: root.fadeOutWidth
         fadeX: prv.fadeOutX
+        lineX: prv.fadeOutLineCenter
         fadeType: root.fadeOutType
         drawingTop: root.drawingTop
 

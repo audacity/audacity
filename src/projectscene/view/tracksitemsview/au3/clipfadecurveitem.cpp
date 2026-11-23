@@ -61,6 +61,7 @@ void ClipFadeCurveItem::setIsFadeIn(bool isFadeIn) { set(m_isFadeIn, isFadeIn); 
 void ClipFadeCurveItem::setFadeX(qreal x) { set(m_fadeX, x); }
 void ClipFadeCurveItem::setFadeWidth(qreal width) { set(m_fadeWidth, width); }
 void ClipFadeCurveItem::setFadeType(FadeTypes::Type type) { set(m_fadeType, type); }
+void ClipFadeCurveItem::setLineX(qreal x) { set(m_lineX, x); }
 void ClipFadeCurveItem::setDrawingTop(qreal top) { set(m_drawingTop, top); }
 void ClipFadeCurveItem::setHighlighted(bool highlighted) { set(m_highlighted, highlighted); }
 
@@ -80,13 +81,11 @@ void ClipFadeCurveItem::paint(QPainter* painter)
 
 void ClipFadeCurveItem::drawBoundaryLine(QPainter& painter) const
 {
-    // Drawn just inside the fade
-    const qreal x = m_isFadeIn ? m_fadeX + m_fadeWidth - 0.5 : m_fadeX + 0.5;
-    if (x < 0 || x > width()) {
+    if (m_lineX < 0 || m_lineX > width()) {
         return;
     }
 
-    const QLineF line(x, m_drawingTop, x, height());
+    const QLineF line(m_lineX, m_drawingTop, m_lineX, height());
 
     QPen pen(lineColor, 1, Qt::CustomDashLine, Qt::FlatCap);
     pen.setDashPattern({ dashLength, dashLength });
