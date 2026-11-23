@@ -62,7 +62,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
         <source>Repeat %1</source>
-        <translation type="unfinished"/>
+        <translation>Powtórz %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
@@ -231,7 +231,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="434"/>
         <source>Macro manager</source>
-        <translation type="unfinished"/>
+        <translation>Menedżer makr</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="476"/>
@@ -501,7 +501,7 @@ Ta czynność nie usunie żadnego z Twoich projektów.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
         <source>Mix and render to new track</source>
-        <translation type="unfinished"/>
+        <translation>Miksuj i renderuj do nowej ścieżki</translation>
     </message>
 </context>
 <context>
@@ -691,7 +691,7 @@ Ta czynność nie usunie żadnego z Twoich projektów.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="17"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="168"/>
         <source>Automatic crash recovery</source>
-        <translation type="unfinished"/>
+        <translation>Automatyczne odzyskiwanie po awarii</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="62"/>
@@ -709,12 +709,12 @@ Po odzyskaniu zapisz projekty, aby mieć pewność, że zmiany zostaną zapisane
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
         <source>Not selected</source>
-        <translation type="unfinished"/>
+        <translation>Niezaznaczone</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="157"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Zakończ Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
@@ -724,12 +724,12 @@ Po odzyskaniu zapisz projekty, aby mieć pewność, że zmiany zostaną zapisane
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
         <source>Discard selected</source>
-        <translation type="unfinished"/>
+        <translation>Odrzuć zaznaczone</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="209"/>
         <source>Recover selected</source>
-        <translation type="unfinished"/>
+        <translation>Odzyskaj zaznaczone</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="30"/>
@@ -746,12 +746,12 @@ Po odzyskaniu zapisz projekty, aby mieć pewność, że zmiany zostaną zapisane
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="164"/>
         <source>Are you sure you want to discard the selected projects?</source>
-        <translation type="unfinished"/>
+        <translation>Na pewno chcesz odrzucić zaznaczone projekty?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
         <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
-        <translation type="unfinished"/>
+        <translation>Wybranie „Tak” natychmiast i trwale usunie zaznaczone projekty.</translation>
     </message>
 </context>
 <context>
@@ -3432,7 +3432,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="133"/>
         <source>Editing</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Edytowanie</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="143"/>
@@ -3463,7 +3463,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="193"/>
         <source>&amp;Macro manager</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Menedżer makr</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="202"/>
@@ -3518,7 +3518,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
         <source>Show audio.com tour</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Pokaż przewodnik po Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="28"/>
@@ -3536,13 +3536,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="52"/>
         <source>View profile on audio.com</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Wyświetl profil na Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="62"/>
         <source>Open audacity URL</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz adres URL Audacity</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
@@ -3579,7 +3579,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="75"/>
         <source>Import startup media</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Importuj pliki startowe</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="88"/>
@@ -3657,7 +3657,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="217"/>
         <source>Custom channel mapping</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Niestandardowe mapowanie kanałów</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="21"/>
@@ -3771,13 +3771,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="191"/>
         <source>Scroll timeline left one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przewiń oś czasu o stronę w lewo</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="200"/>
         <source>Scroll timeline right one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przewiń oś czasu o stronę w prawo</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="209"/>
@@ -3789,7 +3789,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="222"/>
         <source>Timeline context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Menu kontekstowe osi czasu</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="232"/>
@@ -3921,7 +3921,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="57"/>
         <source>Play tracks</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odtwórz ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="66"/>
@@ -3953,13 +3953,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="102"/>
         <source>Seek</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przejdź do pozycji</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="115"/>
         <source>Change play region</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zmień obszar odtwarzania</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="128"/>
@@ -4133,19 +4133,19 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
         <source>Timed recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Nagrywanie zaplanowane</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Włącz nagrywanie aktywowane dźwiękiem</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="113"/>
         <source>Set sound activation level…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ustaw poziom aktywacji dźwięku…</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="23"/>
@@ -4181,31 +4181,31 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="76"/>
         <source>Cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Wytnij klip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="89"/>
         <source>Copy clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Kopiuj klip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="102"/>
         <source>Delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Usuń klip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="115"/>
         <source>Split cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Wytnij klip z podziałem</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="128"/>
         <source>Split delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Usuń klip z podziałem</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="141"/>
@@ -4235,7 +4235,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="190"/>
         <source>Split tracks at</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Podziel ścieżki w</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="203"/>
@@ -4326,7 +4326,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="331"/>
         <source>Mix and render</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Miksuj i renderuj</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="343"/>
@@ -4344,13 +4344,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="361"/>
         <source>Group</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Grupuj</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="370"/>
         <source>Ungroup</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rozgrupuj</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="379"/>
@@ -4404,19 +4404,19 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
         <source>Set selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ustaw zaznaczenie</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="464"/>
         <source>Select track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaznacz ścieżkę</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="476"/>
         <source>At zero crossings</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przy przejściach przez zero</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="485"/>
@@ -4572,7 +4572,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="804"/>
         <source>Split track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Podziel ścieżkę</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="816"/>
@@ -4692,7 +4692,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1009"/>
         <source>Open ruler context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz menu kontekstowe linijki</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
@@ -4746,19 +4746,19 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="170"/>
         <source>Apply %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zastosuj %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="181"/>
         <source>Configure %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Konfiguruj %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="19"/>
         <source>Export as MP3</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eksportuj jako MP3</translation>
     </message>
 </context>
 <context>
@@ -4791,7 +4791,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="65"/>
         <source>About Qt</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Informacje o Qt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="75"/>
@@ -4803,7 +4803,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="85"/>
         <source>Ask for help</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Poproś o pomoc</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="95"/>
@@ -4827,19 +4827,19 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="125"/>
         <source>Open shortcuts preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz ustawienia skrótów</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="135"/>
         <source>Open editing preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz ustawienia edytowania</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="145"/>
         <source>Open spectrogram preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz ustawienia spektrogramu</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="165"/>
@@ -4863,7 +4863,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="195"/>
         <source>Show/hide macro manager</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Pokaż/ukryj menedżer makr</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="204"/>
@@ -4917,7 +4917,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
         <source>Open the audio.com tour page, signing in first if needed</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz stronę przewodnika po Audio.com, w razie potrzeby najpierw zaloguj się</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="30"/>
@@ -4935,13 +4935,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="54"/>
         <source>Open the signed in user’s audio.com profile page</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz stronę profilu zalogowanego użytkownika na Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="64"/>
         <source>Handle an audacity:// URL</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Obsłuż adres URL audacity://</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="23"/>
@@ -4959,7 +4959,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="44"/>
         <source>Open cloud project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz projekt w chmurze</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="57"/>
@@ -4977,7 +4977,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="77"/>
         <source>Import media files into a new project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Importuj pliki multimedialne do nowego projektu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="90"/>
@@ -5055,13 +5055,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="209"/>
         <source>Open the custom FFmpeg export options</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz opcje niestandardowego eksportu FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="219"/>
         <source>Open the custom export channel mapping</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz niestandardowe mapowanie kanałów eksportu</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="23"/>
@@ -5175,13 +5175,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="193"/>
         <source>Scroll the timeline left by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przewiń oś czasu w lewo o szerokość ekranu</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="202"/>
         <source>Scroll the timeline right by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przewiń oś czasu w prawo o szerokość ekranu</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="211"/>
@@ -5193,7 +5193,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="224"/>
         <source>Open the timeline context menu</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz menu kontekstowe osi czasu</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="234"/>
@@ -5325,7 +5325,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="59"/>
         <source>Play the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Odtwórz podane ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="68"/>
@@ -5356,13 +5356,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="104"/>
         <source>Move the playhead to the given time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przesuń wskaźnik odtwarzania do podanego czasu</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="117"/>
         <source>Change the playback region</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zmień obszar odtwarzania</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="130"/>
@@ -5542,13 +5542,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
         <source>Set up a timed recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaplanuj nagrywanie</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="106"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Włącz nagrywanie aktywowane dźwiękiem</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
@@ -5566,7 +5566,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="41"/>
         <source>Cancel the current interaction or clear the selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Anuluj bieżącą czynność lub wyczyść zaznaczenie</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="51"/>
@@ -5590,31 +5590,31 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="78"/>
         <source>Cut the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Wytnij podany klip do schowka</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="91"/>
         <source>Copy the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Skopiuj podany klip do schowka</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="104"/>
         <source>Delete the given clip</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Usuń podany klip</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="117"/>
         <source>Cut the given clip into the clipboard and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Wytnij podany klip do schowka, pozostawiając lukę</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="130"/>
         <source>Delete the given clip and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Usuń podany klip, pozostawiając lukę</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="143"/>
@@ -5644,7 +5644,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="192"/>
         <source>Split the given tracks at the given positions</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Podziel podane ścieżki w podanych miejscach</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="205"/>
@@ -5716,7 +5716,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="304"/>
         <source>Set a custom track sample rate</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ustaw niestandardową częstotliwość próbkowania ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="314"/>
@@ -5734,7 +5734,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="333"/>
         <source>Mix the selected tracks into one track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zmiksuj zaznaczone ścieżki w jedną ścieżkę</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="345"/>
@@ -5752,13 +5752,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="363"/>
         <source>Group the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zgrupuj zaznaczone klipy i etykiety</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="372"/>
         <source>Ungroup the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rozgrupuj zaznaczone klipy i etykiety</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="381"/>
@@ -5782,55 +5782,55 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
         <source>Select from a chosen time to the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaznacz od wybranego czasu do pozycji odtwarzania</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="417"/>
         <source>Select from the playback position to a chosen time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaznacz od pozycji odtwarzania do wybranego czasu</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="426"/>
         <source>Select from the track start to the cursor</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaznacz od początku ścieżki do kursora</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="435"/>
         <source>Select from the cursor to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaznacz od kursora do końca ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="444"/>
         <source>Select from the track start to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaznacz od początku do końca ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="453"/>
         <source>Set the time selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ustaw zaznaczenie czasu</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="466"/>
         <source>Select the track at the given index</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zaznacz ścieżkę o podanym indeksie</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="478"/>
         <source>Move the cursor to the nearest zero crossing</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przesuń kursor do najbliższego przejścia przez zero</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="487"/>
         <source>Use the track color for the selected clips</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Użyj koloru ścieżki dla zaznaczonych klipów</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="496"/>
@@ -5944,13 +5944,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="688"/>
         <source>Merge the clips in the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Połącz klipy w podanym zakresie czasu na podanych ścieżkach</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="702"/>
         <source>Duplicate the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Powiel podany zakres czasu na podanych ścieżkach</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
@@ -5968,7 +5968,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="770"/>
         <source>Move the selection into a new track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Przenieś zaznaczenie do nowej ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
@@ -5992,7 +5992,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="806"/>
         <source>Split the given track at the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Podziel podaną ścieżkę w pozycji odtwarzania</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="818"/>
@@ -6112,13 +6112,13 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1001"/>
         <source>Open the context menu of the focused track item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz menu kontekstowe aktywnego elementu ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1011"/>
         <source>Open the context menu of the focused ruler</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Otwórz menu kontekstowe aktywnej linijki</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
@@ -6136,7 +6136,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
         <source>Apply preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zastosuj preset</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
@@ -6148,7 +6148,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="81"/>
         <source>Save preset as</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zapisz preset jako</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="93"/>
@@ -6172,19 +6172,19 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="172"/>
         <source>Apply %1 with the given parameters</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Zastosuj %1 z podanymi parametrami</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="183"/>
         <source>Choose the parameters of %1 without applying it</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Wybierz parametry efektu %1 bez jego zastosowania</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="21"/>
         <source>Export the project audio as an MP3 file into the macro-output folder</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Eksportuj dźwięk projektu jako plik MP3 do folderu wyjściowego makr</translation>
     </message>
 </context>
 <context>
@@ -6197,7 +6197,7 @@ Spróbuj zresetować rozciągnięte klipy lub zmiksować i wyrenderować ścież
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
         <source>This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation type="unfinished"/>
+        <translation>Zostanie utworzony plik .zip z informacjami o konfiguracji %1, który pomoże programistom zdiagnozować ewentualne problemy. Przed wysłaniem go komukolwiek możesz sprawdzić jego zawartość.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
@@ -9926,12 +9926,12 @@ Zaznacz obszar do naprawy z dźwiękiem przynajmniej po jednej stronie (im więc
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="112"/>
         <source>Control track</source>
-        <translation type="unfinished"/>
+        <translation>Ścieżka kontrolna</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
         <source>No available track</source>
-        <translation type="unfinished"/>
+        <translation>Brak dostępnej ścieżki</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
@@ -17754,7 +17754,7 @@ Nie zostanie załadowany.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="22"/>
         <source>Turn on sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Włącz nagrywanie aktywowane dźwiękiem</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="14"/>
@@ -20052,7 +20052,7 @@ Podłącz urządzenie wejściowe i przeskanuj ponownie.</translation>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
         <source>Timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Nagrywanie czasowe</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>
@@ -20121,7 +20121,7 @@ Podłącz urządzenie wejściowe i przeskanuj ponownie.</translation>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="524"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Zakończ Audacity</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
@@ -20616,7 +20616,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
         <source>Editing</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that edit audio, clips, labels and tracks</extracomment>
-        <translation type="unfinished"/>
+        <translation>Edytowanie</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>
@@ -22074,7 +22074,7 @@ Chcesz kontynuować?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="981"/>
         <source>Mix and render</source>
-        <translation type="unfinished"/>
+        <translation>Miksuj i renderuj</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>

@@ -62,7 +62,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
         <source>Repeat %1</source>
-        <translation type="unfinished"/>
+        <translation>Upprepa %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
@@ -231,7 +231,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="434"/>
         <source>Macro manager</source>
-        <translation type="unfinished"/>
+        <translation>Makrohanterare</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="476"/>
@@ -501,7 +501,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
         <source>Mix and render to new track</source>
-        <translation type="unfinished"/>
+        <translation>Mixa och rendera till nytt spår</translation>
     </message>
 </context>
 <context>
@@ -607,7 +607,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
-        <translation>gjord av Lars &quot;musselasse&quot; Karlsson (200X-2014, 2019 -) och A. Regnander (2018) för översättning till svenska</translation>
+        <translation>Svensk översättning: Lars &quot;musselasse&quot; Karlsson (200X-2014, 2019–), A. Regnander (2018) och Daniel Nylander (2026, översättning och granskning)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
@@ -642,7 +642,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="47"/>
         <source>Legal</source>
-        <translation>Legal</translation>
+        <translation>Juridik</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
@@ -691,16 +691,16 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="17"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="168"/>
         <source>Automatic crash recovery</source>
-        <translation type="unfinished"/>
+        <translation>Automatisk kraschåterställning</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="62"/>
         <source>The following projects were not saved properly the last time Audacity was run and can be automatically recovered.
 
 After recovery, save the projects to ensure changes are written to disk.</source>
-        <translation>Några projekt sparades inte ordentligt förra gången Audacity kördes och kan återskapas automatiskt.
+        <translation>Följande projekt sparades inte korrekt när Audacity kördes senast och kan återställas automatiskt.
 
-Efter återskapadet, spara projekten för att försäkra dig om att ändringarna sparas på hårddisken.</translation>
+Spara projekten efter återställningen så att ändringarna skrivs till disken.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
@@ -710,12 +710,12 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
         <source>Not selected</source>
-        <translation type="unfinished"/>
+        <translation>Inte markerad</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="157"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Avsluta Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
@@ -725,18 +725,18 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
         <source>Discard selected</source>
-        <translation type="unfinished"/>
+        <translation>Förkasta markerade</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="209"/>
         <source>Recover selected</source>
-        <translation type="unfinished"/>
+        <translation>Återställ markerade</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="30"/>
         <source>Select</source>
         <extracomment>Column header of the automatic crash recovery dialog. Here &quot;Select&quot; is a verb.</extracomment>
-        <translation>Välj</translation>
+        <translation>Markera</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="32"/>
@@ -747,12 +747,12 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="164"/>
         <source>Are you sure you want to discard the selected projects?</source>
-        <translation type="unfinished"/>
+        <translation>Är du säker på att du vill förkasta de markerade projekten?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
         <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
-        <translation type="unfinished"/>
+        <translation>Om du väljer ”Ja” tas de markerade projekten bort permanent omedelbart.</translation>
     </message>
 </context>
 <context>
@@ -794,7 +794,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
         <source>App updates</source>
-        <translation>Programuppdatering</translation>
+        <translation>Programuppdateringar</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
@@ -864,7 +864,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/PlaybackPage.qml" line="36"/>
         <source>Watch video</source>
-        <translation>Se video</translation>
+        <translation>Titta på video</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="16"/>
@@ -1705,12 +1705,12 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="258"/>
         <source>Samples</source>
-        <translation>Sampel</translation>
+        <translation>Samplar</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="259"/>
         <source>4 Pixels per Sample</source>
-        <translation>4 bildpunkter per sampel</translation>
+        <translation>4 bildpunkter per samplingsvärde</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="260"/>
@@ -1786,7 +1786,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="52"/>
         <source>Watch video</source>
-        <translation>Se video</translation>
+        <translation>Titta på video</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="58"/>
@@ -2064,14 +2064,14 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
         <source>Supported Rates:
 </source>
-        <translation>Stödjer skala:
+        <translation>Samplingsfrekvenser som stöds:
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="953"/>
         <source>Cannot check mutual sample rates without both devices.
 </source>
-        <translation>Gemensamma samplingsfrekvenser kan inte kontrolleras utan båda enheterna.
+        <translation>Kan inte kontrollera gemensamma samplingsfrekvenser utan båda enheterna.
 </translation>
     </message>
     <message>
@@ -2093,7 +2093,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1024"/>
         <source>Available mixers:
 </source>
-        <translation>Tillgängliga mixers:
+        <translation>Tillgängliga mixrar:
 </translation>
     </message>
     <message>
@@ -2135,7 +2135,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1072"/>
         <source>Recording volume is native
 </source>
-        <translation>Inspelningsvolymen har grundinställning
+        <translation>Inspelningsvolymen är inbyggd
 </translation>
     </message>
 </context>
@@ -2145,7 +2145,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="270"/>
         <source>Could not find any audio devices.
 </source>
-        <translation>Kan inte hitta några ljudenheter
+        <translation>Kunde inte hitta några ljudenheter.
 </translation>
     </message>
     <message>
@@ -2165,12 +2165,12 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="282"/>
         <source>Error Initializing Audio</source>
-        <translation>Fel uppstod när ljud initialiserades</translation>
+        <translation>Fel vid initiering av ljud</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="765"/>
         <source>Audacity Audio</source>
-        <translation>Audacity ljud</translation>
+        <translation>Audacity-ljud</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="1512"/>
@@ -2190,7 +2190,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
         <source>Unable to store preset in config file</source>
-        <translation>Kunde inte lagra förinställningarna i konfig fil</translation>
+        <translation>Kunde inte lagra förinställningen i konfigurationsfilen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
@@ -2221,14 +2221,14 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
         <source>Audio Unit</source>
         <extracomment>the name of an Apple audio software protocol</extracomment>
-        <translation>Ljudenhet</translation>
+        <translation>Audio Unit</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="134"/>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="194"/>
         <source>Audio Unit Effects</source>
         <extracomment>Audio Unit is the name of an Apple audio software protocol</extracomment>
-        <translation>Ljudenhetseffekter</translation>
+        <translation>Audio Unit-effekter</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="139"/>
@@ -2238,7 +2238,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="150"/>
         <source>Provides Audio Unit Effects support to Audacity</source>
-        <translation>Tillhandahåller stöd för ljudenhetseffekter till Audacity</translation>
+        <translation>Ger Audacity stöd för Audio Unit-effekter</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="195"/>
@@ -2293,7 +2293,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="484"/>
         <source>Failed to set preset name</source>
-        <translation>Kunde inte läsa filen med förinställningar</translation>
+        <translation>Kunde inte ange förinställningens namn</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="489"/>
@@ -2303,12 +2303,12 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="498"/>
         <source>Failed to convert property list to XML data</source>
-        <translation>Misslyckades att konvertera listan till XML data</translation>
+        <translation>Kunde inte konvertera egenskapslistan till XML-data</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="503"/>
         <source>XML data is empty after conversion</source>
-        <translation>XML data är tomt efter omvandlingen</translation>
+        <translation>XML-data är tom efter konverteringen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
@@ -2352,7 +2352,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/BassTrebleBase.cpp" line="41"/>
         <source>Simple tone control effect</source>
-        <translation>Kontrolleffekt för enkel ton</translation>
+        <translation>Enkel effekt för tonkontroll</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="52"/>
@@ -2377,7 +2377,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="49"/>
         <source>Changes the speed of a track, also changing its pitch</source>
-        <translation>Ändrar hastigheten för ett spår, ändrar även dess tonhöjd</translation>
+        <translation>Ändrar hastigheten för ett spår och ändrar även dess tonhöjd</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="33"/>
@@ -2392,7 +2392,7 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeTempoBase.cpp" line="114"/>
         <source>High Quality Tempo Change</source>
-        <translation>Tempoändring i hög kvalitet</translation>
+        <translation>Tempoändring med hög kvalitet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="29"/>
@@ -2402,14 +2402,14 @@ Efter återskapadet, spara projekten för att försäkra dig om att ändringarna
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="35"/>
         <source>Please select an audio track.</source>
-        <translation>Var god välj ett ljudspår.</translation>
+        <translation>Välj ett ljudspår.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="52"/>
         <source>Invalid audio selection.
 Please ensure that audio is selected.</source>
         <translation>Ogiltig ljudmarkering.
-Var god se till att ljudet är markerat.</translation>
+Kontrollera att ljudet är markerat.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ContrastBase.cpp" line="59"/>
@@ -2431,17 +2431,17 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="30"/>
         <source>Soft Overdrive</source>
-        <translation>Mjuk overdrive</translation>
+        <translation>Mjuk överstyrning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="30"/>
         <source>Medium Overdrive</source>
-        <translation>Mellanstor overdrive</translation>
+        <translation>Medelhög överstyrning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="31"/>
         <source>Hard Overdrive</source>
-        <translation>Hård overdrive</translation>
+        <translation>Kraftig överstyrning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="31"/>
@@ -2476,12 +2476,12 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="60"/>
         <source>Hard clip -12dB, 80% make-up gain</source>
-        <translation>Hård klippning −12 dB, 80 % kompensationsförstärkning</translation>
+        <translation>Hård klippning -12 dB, 80 % kompensationsförstärkning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="62"/>
         <source>Soft clip -12dB, 80% make-up gain</source>
-        <translation>Mjuk klippning −12 dB, 80 % kompensationsförstärkning</translation>
+        <translation>Mjuk klippning -12 dB, 80 % kompensationsförstärkning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="63"/>
@@ -2502,12 +2502,12 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="66"/>
         <source>Light Crunch Overdrive</source>
-        <translation>Light Crunch-overdrive</translation>
+        <translation>Lätt crunch med överstyrning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="67"/>
         <source>Heavy Overdrive</source>
-        <translation>Tung overdrive</translation>
+        <translation>Kraftig överstyrning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="68"/>
@@ -2517,7 +2517,7 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="69"/>
         <source>Valve Overdrive</source>
-        <translation>Valve-overdrive</translation>
+        <translation>Röröverstyrning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="70"/>
@@ -2527,32 +2527,32 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="71"/>
         <source>Gated Expansion Distortion</source>
-        <translation>Låst utvidgningsförvrängning</translation>
+        <translation>Tröskelstyrd expansionsförvrängning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="72"/>
         <source>Leveller, Light, -70dB noise floor</source>
-        <translation>Utjämnare, lätt, -70dB bottennivå för brus</translation>
+        <translation>Utjämnare, lätt, -70 dB brusgolv</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="73"/>
         <source>Leveller, Moderate, -70dB noise floor</source>
-        <translation>Utjämnare, måttlig, -70dB bottennivå för brus</translation>
+        <translation>Utjämnare, måttlig, -70 dB brusgolv</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="74"/>
         <source>Leveller, Heavy, -70dB noise floor</source>
-        <translation>Utjämnare, tung, -70dB bottennivå för brus</translation>
+        <translation>Utjämnare, tung, -70 dB brusgolv</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="75"/>
         <source>Leveller, Heavier, -70dB noise floor</source>
-        <translation>Utjämnare, tyngre, -70dB bottennivå för brus</translation>
+        <translation>Utjämnare, tyngre, -70 dB brusgolv</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="76"/>
         <source>Leveller, Heaviest, -70dB noise floor</source>
-        <translation>Utjämnare, tyngst, -70dB bottennivå för brus</translation>
+        <translation>Utjämnare, tyngst, -70 dB brusgolv</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="77"/>
@@ -2603,7 +2603,7 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="35"/>
         <source>Equalization</source>
-        <translation>Equalization</translation>
+        <translation>Equalizer</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="81"/>
@@ -2613,27 +2613,27 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="181"/>
         <source>100Hz Rumble</source>
-        <translation>100Hz brum</translation>
+        <translation>100 Hz-brum</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="184"/>
         <source>AM Radio</source>
-        <translation>AM Radio</translation>
+        <translation>AM-radio</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="187"/>
         <source>Bass Boost</source>
-        <translation>Bas boost</translation>
+        <translation>Basförstärkning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="189"/>
         <source>Bass Cut</source>
-        <translation>Bas Klipp</translation>
+        <translation>Basreducering</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="191"/>
         <source>Low rolloff for speech</source>
-        <translation>Låg rolloff för tal</translation>
+        <translation>Låg avrullning för tal</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="194"/>
@@ -2648,17 +2648,17 @@ Välj ett område på spåret.</translation>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="199"/>
         <source>Treble Boost</source>
-        <translation>Diskant boost</translation>
+        <translation>Diskantförstärkning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="201"/>
         <source>Treble Cut</source>
-        <translation>Diskant Klipp</translation>
+        <translation>Diskantreducering</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="276"/>
         <source>To apply Equalization, all selected tracks must have the same sample rate.</source>
-        <translation>För att tillämpa utjämning måste alla markerade spår ha samma samplingsfrekvens.</translation>
+        <translation>För att använda equalizern måste alla markerade spår ha samma samplingsfrekvens.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="281"/>
@@ -2696,7 +2696,7 @@ Felmeddelandet säger:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="301"/>
         <source>Error Saving Equalization Curves</source>
-        <translation>Fel uppstod när equalizationkurvor sparades</translation>
+        <translation>Fel när equalizerkurvor sparades</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
@@ -2743,7 +2743,7 @@ Felmeddelandet säger:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/Generator.cpp" line="51"/>
         <source>There is not enough room available to generate the audio</source>
-        <translation>Det finns inte tillräcklig plats att skapa ljud</translation>
+        <translation>Det finns inte tillräckligt med utrymme för att generera ljudet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/LegacyCompressorBase.cpp" line="42"/>
@@ -2768,7 +2768,7 @@ Felmeddelandet säger:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="65"/>
         <source>To plot the spectrum, all selected tracks must have the same sample rate.</source>
-        <translation>Alla markerade spår måste ha samma samplingsfrekvens för att spektrumet ska kunna visas.</translation>
+        <translation>För att rita spektrumet måste alla valda spår ha samma samplingsfrekvens.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="66"/>
@@ -2780,8 +2780,8 @@ Felmeddelandet säger:
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="80"/>
         <source>Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.
 Try resetting any stretched clips, or mixing and rendering the tracks before analyzing</source>
-        <translation>Ljudet kunde inte analyseras. Detta kan bero på ett stretchat eller tonhöjdsförskjutet klipp.
-Försök att återställa eventuella stretchade klipp, eller mixa och rendera spåren innan du analyserar</translation>
+        <translation>Ljudet kunde inte analyseras. Det kan bero på ett tidsutsträckt eller tonhöjdsförskjutet klipp.
+Försök återställa tidsutsträckta klipp eller mixa och rendera spåren före analysen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="110"/>
@@ -2791,17 +2791,17 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/RepeatBase.cpp" line="14"/>
         <source>Repeat</source>
-        <translation>Repetera</translation>
+        <translation>Upprepa</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/RepeatBase.cpp" line="35"/>
         <source>Repeats the selection the specified number of times</source>
-        <translation>Upprepar markeringen ett specificerat antal gånger</translation>
+        <translation>Upprepar markeringen ett angivet antal gånger</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/SBSMSBase.h" line="48"/>
         <source>SBSMS Time / Pitch Stretch</source>
-        <translation>SBSMS-tid / Tonhöjdssträckning</translation>
+        <translation>SBSMS tids-/tonhöjdsutsträckning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="40"/>
@@ -2829,7 +2829,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="52"/>
         <source>Highpass</source>
-        <translation>Highpass</translation>
+        <translation>Högpass</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="76"/>
@@ -2851,7 +2851,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../au3/libraries/au3-builtin-effects/SilenceBase.cpp" line="20"/>
         <source>Silence</source>
         <comment>generator</comment>
-        <translation>Tystnad</translation>
+        <translation>Tysta</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/SilenceBase.cpp" line="49"/>
@@ -2912,7 +2912,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="123"/>
         <source>Automatically reduces the length of passages where the volume is below a specified level</source>
-        <translation>Reducerar automatiskt längden för passager där volymen är under en specifik nivå</translation>
+        <translation>Reducerar automatiskt längden för passager där volymen är under en angiven nivå</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="32"/>
@@ -3303,13 +3303,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/DataUploader.cpp" line="262"/>
         <source>File not found</source>
-        <translation>Filen hittades inte.</translation>
+        <translation>Filen hittades inte</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="369"/>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="469"/>
         <source>Project was closed before snapshot was created</source>
-        <translation>Projektet stängdes innan snapshotbilden skapades</translation>
+        <translation>Projektet stängdes innan ögonblicksbilden skapades</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="450"/>
@@ -3330,27 +3330,27 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/RemoteProjectSnapshot.cpp" line="169"/>
         <source>Failed to attach to the Cloud project database</source>
-        <translation>Det gick inte att bifoga till Cloud-projektdatabasen</translation>
+        <translation>Kunde inte ansluta till Cloud-projektdatabasen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/RemoteProjectSnapshot.cpp" line="552"/>
         <source>Failed to decompress the Cloud project block</source>
-        <translation>Det gick inte att dekomprimera Cloud-projektblocket</translation>
+        <translation>Kunde inte packa upp Cloud-projektblocket</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp" line="238"/>
         <source>Local project data was removed before the sync has completed</source>
-        <translation>Lokala projektdata togs bort innan synkroniseringen har slutförts</translation>
+        <translation>Lokala projektdata togs bort innan synkroniseringen slutfördes</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp" line="323"/>
         <source>Failed to deserialize the response</source>
-        <translation>Det gick inte att deserialisera svaret</translation>
+        <translation>Kunde inte tolka svaret</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="617"/>
         <source>Cannot proceed to upload.</source>
-        <translation>Kan inte ladda upp.</translation>
+        <translation>Kan inte fortsätta med uppladdningen.</translation>
     </message>
 </context>
 <context>
@@ -3433,7 +3433,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="133"/>
         <source>Editing</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Redigering</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="143"/>
@@ -3464,7 +3464,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="193"/>
         <source>&amp;Macro manager</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>&amp;Makrohanterare</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="202"/>
@@ -3494,7 +3494,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="21"/>
         <source>&amp;Undo</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>&amp;Ångra</translation>
+        <translation>Å&amp;ngra</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="30"/>
@@ -3519,7 +3519,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
         <source>Show audio.com tour</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Visa rundturen på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="28"/>
@@ -3537,13 +3537,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="52"/>
         <source>View profile on audio.com</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Visa profilen på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="62"/>
         <source>Open audacity URL</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna audacity-URL</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
@@ -3562,7 +3562,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="135"/>
         <source>Open</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Öppen</translation>
+        <translation>Öppna</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="55"/>
@@ -3580,7 +3580,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="75"/>
         <source>Import startup media</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Importera startmedia</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="88"/>
@@ -3658,7 +3658,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="217"/>
         <source>Custom channel mapping</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Anpassad kanalmappning</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="21"/>
@@ -3772,13 +3772,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="191"/>
         <source>Scroll timeline left one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rulla tidslinjen en sida åt vänster</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="200"/>
         <source>Scroll timeline right one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rulla tidslinjen en sida åt höger</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="209"/>
@@ -3790,7 +3790,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="222"/>
         <source>Timeline context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tidslinjens snabbmeny</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="232"/>
@@ -3850,7 +3850,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="351"/>
         <source>Snapping</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Snapping</translation>
+        <translation>Fästning</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="314"/>
@@ -3922,7 +3922,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="57"/>
         <source>Play tracks</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spela upp spår</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="66"/>
@@ -3954,13 +3954,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="102"/>
         <source>Seek</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sök</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="115"/>
         <source>Change play region</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ändra uppspelningsområde</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="128"/>
@@ -4134,19 +4134,19 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
         <source>Timed recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tidsinställd inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aktivera ljudaktiverad inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="113"/>
         <source>Set sound activation level…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ställ in ljudaktiveringsnivå…</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="23"/>
@@ -4182,31 +4182,31 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="76"/>
         <source>Cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Klipp ut klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="89"/>
         <source>Copy clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Kopiera klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="102"/>
         <source>Delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ta bort klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="115"/>
         <source>Split cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela och klipp ut klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="128"/>
         <source>Split delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela och ta bort klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="141"/>
@@ -4236,7 +4236,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="190"/>
         <source>Split tracks at</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela spår vid</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="203"/>
@@ -4327,7 +4327,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="331"/>
         <source>Mix and render</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Mixa och rendera</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="343"/>
@@ -4339,19 +4339,19 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="352"/>
         <source>Silence</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Tystnad</translation>
+        <translation>Tysta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="361"/>
         <source>Group</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Gruppera</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="370"/>
         <source>Ungroup</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela upp grupp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="379"/>
@@ -4405,19 +4405,19 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
         <source>Set selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ange markering</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="464"/>
         <source>Select track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Välj spår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="476"/>
         <source>At zero crossings</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Vid nollgenomgångar</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="485"/>
@@ -4573,7 +4573,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="804"/>
         <source>Split track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela spår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="816"/>
@@ -4693,7 +4693,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1009"/>
         <source>Open ruler context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna snabbmenyn för linjal</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
@@ -4747,19 +4747,19 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="170"/>
         <source>Apply %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tillämpa %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="181"/>
         <source>Configure %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Konfigurera %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="19"/>
         <source>Export as MP3</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Exportera som MP3</translation>
     </message>
 </context>
 <context>
@@ -4792,7 +4792,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="65"/>
         <source>About Qt</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Om Qt</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="75"/>
@@ -4804,7 +4804,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="85"/>
         <source>Ask for help</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Be om hjälp</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="95"/>
@@ -4828,19 +4828,19 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="125"/>
         <source>Open shortcuts preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna inställningar för kortkommandon</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="135"/>
         <source>Open editing preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna redigeringsinställningar</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="145"/>
         <source>Open spectrogram preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna inställningar för spektrogram</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="165"/>
@@ -4864,7 +4864,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="195"/>
         <source>Show/hide macro manager</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Visa/dölj makrohanteraren</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="204"/>
@@ -4918,7 +4918,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
         <source>Open the audio.com tour page, signing in first if needed</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna rundturen på audio.com och logga in först vid behov</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="30"/>
@@ -4936,13 +4936,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="54"/>
         <source>Open the signed in user’s audio.com profile page</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna den inloggade användarens profilsida på audio.com</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="64"/>
         <source>Handle an audacity:// URL</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Hantera en audacity://-URL</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="23"/>
@@ -4960,7 +4960,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="44"/>
         <source>Open cloud project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna molnprojekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="57"/>
@@ -4978,7 +4978,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="77"/>
         <source>Import media files into a new project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Importera mediefiler till ett nytt projekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="90"/>
@@ -5056,13 +5056,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="209"/>
         <source>Open the custom FFmpeg export options</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna anpassade exportalternativ för FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="219"/>
         <source>Open the custom export channel mapping</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna anpassad kanalmappning för export</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="23"/>
@@ -5176,13 +5176,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="193"/>
         <source>Scroll the timeline left by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rulla tidslinjen åt vänster en skärmbredd</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="202"/>
         <source>Scroll the timeline right by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Rulla tidslinjen åt höger en skärmbredd</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="211"/>
@@ -5194,7 +5194,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="224"/>
         <source>Open the timeline context menu</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna snabbmenyn för tidslinjen</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="234"/>
@@ -5254,7 +5254,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="353"/>
         <source>Snapping</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation>Snapping</translation>
+        <translation>Fästning</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="316"/>
@@ -5326,7 +5326,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="59"/>
         <source>Play the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spela angivna spår</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="68"/>
@@ -5357,13 +5357,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="104"/>
         <source>Move the playhead to the given time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Flytta uppspelningshuvudet till angiven tid</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="117"/>
         <source>Change the playback region</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ändra uppspelningsområdet</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="130"/>
@@ -5543,13 +5543,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
         <source>Set up a timed recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ställ in en tidsstyrd inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="106"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Aktivera ljudaktiverad inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
@@ -5567,7 +5567,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="41"/>
         <source>Cancel the current interaction or clear the selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Avbryt aktuell interaktion eller rensa markeringen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="51"/>
@@ -5591,31 +5591,31 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="78"/>
         <source>Cut the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Klipp ut angivet klipp till urklipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="91"/>
         <source>Copy the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Kopiera angivet klipp till urklipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="104"/>
         <source>Delete the given clip</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ta bort angivet klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="117"/>
         <source>Cut the given clip into the clipboard and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Klipp ut angivet klipp till urklipp och lämna ett mellanrum</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="130"/>
         <source>Delete the given clip and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ta bort angivet klipp och lämna ett mellanrum</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="143"/>
@@ -5645,7 +5645,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="192"/>
         <source>Split the given tracks at the given positions</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela angivna spår vid angivna positioner</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="205"/>
@@ -5717,7 +5717,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="304"/>
         <source>Set a custom track sample rate</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ange en anpassad samplingsfrekvens för spår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="314"/>
@@ -5735,7 +5735,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="333"/>
         <source>Mix the selected tracks into one track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Mixa valda spår till ett spår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="345"/>
@@ -5753,13 +5753,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="363"/>
         <source>Group the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Gruppera valda klipp och etiketter</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="372"/>
         <source>Ungroup the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela upp gruppen med valda klipp och etiketter</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="381"/>
@@ -5783,55 +5783,55 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
         <source>Select from a chosen time to the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Markera från en vald tid till uppspelningspositionen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="417"/>
         <source>Select from the playback position to a chosen time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Markera från uppspelningspositionen till en vald tid</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="426"/>
         <source>Select from the track start to the cursor</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Markera från spårets början till markören</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="435"/>
         <source>Select from the cursor to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Markera från markören till spårets slut</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="444"/>
         <source>Select from the track start to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Markera från spårets början till spårets slut</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="453"/>
         <source>Set the time selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Ange tidsmarkeringen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="466"/>
         <source>Select the track at the given index</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Markera spåret vid angivet index</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="478"/>
         <source>Move the cursor to the nearest zero crossing</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Flytta markören till närmaste nollgenomgång</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="487"/>
         <source>Use the track color for the selected clips</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Använd spårfärgen för valda klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="496"/>
@@ -5945,13 +5945,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="688"/>
         <source>Merge the clips in the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sammanfoga klippen i angivet tidsintervall på angivna spår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="702"/>
         <source>Duplicate the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Duplicera angivet tidsintervall på angivna spår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
@@ -5969,7 +5969,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="770"/>
         <source>Move the selection into a new track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Flytta markeringen till ett nytt spår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
@@ -5993,7 +5993,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="806"/>
         <source>Split the given track at the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Dela angivet spår vid uppspelningspositionen</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="818"/>
@@ -6113,13 +6113,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1001"/>
         <source>Open the context menu of the focused track item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna snabbmenyn för fokuserat spårobjekt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1011"/>
         <source>Open the context menu of the focused ruler</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Öppna snabbmenyn för fokuserad linjal</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
@@ -6137,7 +6137,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
         <source>Apply preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tillämpa förinställning</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
@@ -6149,7 +6149,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="81"/>
         <source>Save preset as</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spara förinställning som</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="93"/>
@@ -6173,19 +6173,19 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="172"/>
         <source>Apply %1 with the given parameters</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tillämpa %1 med angivna parametrar</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="183"/>
         <source>Choose the parameters of %1 without applying it</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>Välj parametrarna för %1 utan att tillämpa dem</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="21"/>
         <source>Export the project audio as an MP3 file into the macro-output folder</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Exportera projektljudet som en MP3-fil till mappen för makroutdata</translation>
     </message>
 </context>
 <context>
@@ -6198,7 +6198,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
         <source>This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation type="unfinished"/>
+        <translation>Detta skapar en .zip-fil med information om din %1-konfiguration som hjälper utvecklare att felsöka problem. Du kan granska filens innehåll innan du skickar den till någon.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
@@ -6403,7 +6403,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="98"/>
         <source>Bass Guitar</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Bass Guitar</translation>
+        <translation>Basgitarr</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="101"/>
@@ -6415,13 +6415,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="104"/>
         <source>Kick Drums</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Kick Drums</translation>
+        <translation>Baskaggar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="107"/>
         <source>Drums Control</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Trummor kontroll</translation>
+        <translation>Trumkontroll</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="111"/>
@@ -6463,13 +6463,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="132"/>
         <source>Master Limiter</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Master Limiter</translation>
+        <translation>Masterbegränsare</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="135"/>
         <source>SFX Limiter</source>
         <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation>SFX Limiter</translation>
+        <translation>Ljudeffektsbegränsare</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="138"/>
@@ -6493,7 +6493,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="150"/>
         <source>Play it Loud</source>
         <extracomment>This is the name of an effect preset.</extracomment>
-        <translation>Spelar upp starkt</translation>
+        <translation>Spela högt</translation>
     </message>
 </context>
 <context>
@@ -6726,7 +6726,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="108"/>
         <source>Presets</source>
-        <translation>Förinställning</translation>
+        <translation>Förinställningar</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="118"/>
@@ -6873,13 +6873,13 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="48"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="101"/>
         <source>Nyquist scripts</source>
-        <translation>Nyquist script</translation>
+        <translation>Nyquist-skript</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="49"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="102"/>
         <source>Lisp scripts</source>
-        <translation>Lisp script</translation>
+        <translation>Lisp-skript</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="50"/>
@@ -7129,7 +7129,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="104"/>
         <source>Provides builtin effects to Audacity</source>
-        <translation>Tillhandahåller inbyggda effekter i Audacity</translation>
+        <translation>Ger Audacity inbyggda effekter</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/LoadEffects.cpp" line="185"/>
@@ -7167,7 +7167,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="343"/>
         <source>Fading</source>
-        <translation>Uttoning</translation>
+        <translation>Toning</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="345"/>
@@ -7268,7 +7268,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="31"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Automatisk duckning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
@@ -7304,7 +7304,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
         <source>Algorithm not effective on this audio. Nothing changed.</source>
-        <translation>Algoritmen är inte effektiv i detta ljud. Ingenting ändrades.</translation>
+        <translation>Algoritmen fungerar inte för det här ljudet. Ingenting ändrades.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
@@ -7322,7 +7322,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/dtmfgenerator.cpp" line="52"/>
         <source>Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones</source>
-        <translation>Generar tvåtoniga multifrekvenstoner (DTMF) som efterliknar knappsatstoner på telefoner</translation>
+        <translation>Genererar DTMF-toner, som de från telefoners knappsatser</translation>
     </message>
 </context>
 <context>
@@ -7330,7 +7330,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="15"/>
         <source>Compressor</source>
-        <translation>Komprimerare</translation>
+        <translation>Kompressor</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="58"/>
@@ -7366,7 +7366,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/fade/fadeeffect.cpp" line="78"/>
         <source>Applies a linear fade-in to the selected audio</source>
-        <translation>Tillämpar en linjär intoning för markerat ljud</translation>
+        <translation>Tillämpar en linjär intoning av det markerade ljudet</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/fade/fadeeffect.cpp" line="81"/>
@@ -7376,7 +7376,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/fade/fadeeffect.cpp" line="95"/>
         <source>Applies a linear fade-out to the selected audio</source>
-        <translation>Tillämpar en linjär uttoningseffekt på det markerade ljudet</translation>
+        <translation>Tillämpar en linjär uttoning av det markerade ljudet</translation>
     </message>
 </context>
 <context>
@@ -7384,7 +7384,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/filtercurveeq.cpp" line="9"/>
         <source>Filter Curve EQ</source>
-        <translation>Filterkurva EQ</translation>
+        <translation>Filterkurve-EQ</translation>
     </message>
 </context>
 <context>
@@ -7392,7 +7392,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/graphiceq.cpp" line="9"/>
         <source>Graphic EQ</source>
-        <translation>Graphic EQ</translation>
+        <translation>Grafisk EQ</translation>
     </message>
 </context>
 <context>
@@ -7405,7 +7405,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/invert/inverteffect.cpp" line="26"/>
         <source>Flips the audio samples upside-down, reversing their polarity</source>
-        <translation>Vänder ljudsamplen upp och ned så att polariteten omkastas</translation>
+        <translation>Vänder ljudsamplarna upp och ned och inverterar deras polaritet</translation>
     </message>
 </context>
 <context>
@@ -7413,12 +7413,12 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="30"/>
         <source>Loudness Normalization</source>
-        <translation>Loudness normalisering</translation>
+        <translation>Normalisering av ljudstyrka</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="59"/>
         <source>Sets the loudness of one or more tracks</source>
-        <translation>Ställ in loudness för ett eller fler spår</translation>
+        <translation>Ställer in ljudstyrkan för ett eller flera spår</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
@@ -7458,7 +7458,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
         <source>Median</source>
-        <translation>Medium</translation>
+        <translation>Median</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="71"/>
@@ -7473,7 +7473,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="222"/>
         <source>Removes background noise such as fans, tape noise, or hums</source>
-        <translation>Tar bort bakgrundsbrus som fläktar, bandbrus eller nynnande</translation>
+        <translation>Tar bort bakgrundsbrus från exempelvis fläktar, bandbrus eller brum</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="290"/>
@@ -7493,12 +7493,12 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="381"/>
         <source>The sample rate of the noise profile must match that of the sound to be processed.</source>
-        <translation>Brusprofilens samplingsfrekvens måste överensstämma med samplingsfrekvensen för ljudet som ska bearbetas.</translation>
+        <translation>Samplingsfrekvensen för brusprofilen måste överensstämma med den för ljudet som ska bearbetas.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="448"/>
         <source>Selected noise profile is too short.</source>
-        <translation>Markerad brusprofil är för kort.</translation>
+        <translation>Den markerade brusprofilen är för kort.</translation>
     </message>
 </context>
 <context>
@@ -7512,7 +7512,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="54"/>
         <source>Sets the peak amplitude of one or more tracks</source>
-        <translation>Ändrar den maximala amplituden för ett eller fler spår</translation>
+        <translation>Ställer in toppamplituden för ett eller flera spår</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="97"/>
@@ -7630,7 +7630,7 @@ Försök att återställa eventuella stretchade klipp, eller mixa och rendera sp
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="112"/>
         <source>Ill-formed Nyquist plug-in header</source>
-        <translation>Felaktig header för Nyquist-insticksmodul</translation>
+        <translation>Felaktigt filhuvud för Nyquist-insticksmodul</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="139"/>
@@ -7657,7 +7657,7 @@ det frekvensområde som effekten ska påverka.</translation>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="824"/>
         <source>Audio selection required.</source>
-        <translation>Ljudmarkering är nödvändig.</translation>
+        <translation>En ljudmarkering krävs.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1382"/>
@@ -7716,14 +7716,14 @@ det frekvensområde som effekten ska påverka.</translation>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1540"/>
         <source>Nyquist returned one audio channel as an array.
 </source>
-        <translation>Nyquist returnerade en ljudkanal som uppställning.
+        <translation>Nyquist returnerade en ljudkanal som en matris.
 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1545"/>
         <source>Nyquist returned an empty array.
 </source>
-        <translation>Nyquist returnerade en tom array.
+        <translation>Nyquist returnerade en tom matris.
 </translation>
     </message>
     <message>
@@ -7736,7 +7736,7 @@ det frekvensområde som effekten ska påverka.</translation>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1614"/>
         <source>[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]</source>
-        <translation>[Varning: Nyquist returnerade felaktig sträng i UTF-8 som omvandlades hit som Latin-1]</translation>
+        <translation>[Varning: Nyquist returnerade en ogiltig UTF-8-sträng, som här har omvandlats från Latin-1]</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2063"/>
@@ -7791,12 +7791,12 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="12"/>
         <source>Low-shelf</source>
-        <translation>Low-shelf</translation>
+        <translation>Låghylla</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="13"/>
         <source>High-shelf</source>
-        <translation>High-shelf</translation>
+        <translation>Höghylla</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="14"/>
@@ -7826,14 +7826,14 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="19"/>
         <source>~aPlease select frequencies.</source>
-        <translation>~aVar god välj frekvenser.</translation>
+        <translation>~aVälj frekvenser.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="20"/>
         <source>~aBandwidth is zero (the upper and lower~%~
                        frequencies are both ~a Hz).~%~
                        Please select a frequency range.</source>
-        <translation>~aBandbredden är noll (de över och undre~%~
+        <translation>~aBandbredden är noll (de övre och nedre~%~
                        frekvenserna är båda ~a Hz).~%~
                        Välj ett frekvensintervall.</translation>
     </message>
@@ -7874,23 +7874,23 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="27"/>
         <source>~aCenter frequency must be above 0 Hz.</source>
-        <translation>~aCenterfrekvensen måste vara över 0 Hz.</translation>
+        <translation>~aMittfrekvensen måste vara över 0 Hz.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="28"/>
         <source>~aFrequency selection is too high for track sample rate.~%~
                         For the current track, the high frequency setting cannot~%~
                         be greater than ~a Hz</source>
-        <translation>~aFrekvensmarkeringen är för hög för spårets samplingsfrekvens.~%~
-                        För det aktuella spåret får inställningen för hög frekvens inte~%~
-                        överstiga ~a Hz</translation>
+        <translation>~aFrekvensvalet är för högt för spårets samplingsfrekvens.~%~
+                        För det aktuella spåret får inställningen för den höga~%~
+                        frekvensen inte vara större än ~a Hz</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="29"/>
         <source>~aBandwidth is zero (the upper and lower~%~
                          frequencies are both ~a Hz).~%~
                          Please select a frequency range.</source>
-        <translation>~aBandbredden är noll (de över och undre~%~
+        <translation>~aBandbredden är noll (de övre och nedre~%~
                          frekvenserna är båda ~a Hz).~%~
                          Välj ett frekvensintervall.</translation>
     </message>
@@ -7912,7 +7912,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
         <source>Selection too short.~%It must be more than 2 samples.</source>
-        <translation>Markeringen är för kort.~%Den måste vara större än 2 sampel.</translation>
+        <translation>Markeringen är för kort.~%Den måste innehålla fler än två samplar.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
@@ -7922,7 +7922,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
         <source>Fade Type</source>
-        <translation>Toning typ</translation>
+        <translation>Toningsform</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="36"/>
@@ -7947,7 +7947,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="40"/>
         <source>Mid-fade Adjust (%)</source>
-        <translation>Justering av mittentoning (%)</translation>
+        <translation>Justera mittpunkt för toning (%)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="41"/>
@@ -7977,7 +7977,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="46"/>
         <source>Handy Presets (override controls)</source>
-        <translation>Behändiga förinställningar (överskrider kontroller)</translation>
+        <translation>Användbara förinställningar (åsidosätter reglage)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="47"/>
@@ -8042,7 +8042,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="59"/>
         <source>S-Curve Out</source>
-        <translation>S-kurva finns</translation>
+        <translation>S-kurva ut</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="60"/>
@@ -8076,7 +8076,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
         <source>Threshold Percentage</source>
-        <translation>Tröskel procent</translation>
+        <translation>Tröskelvärde i procent</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
@@ -8106,17 +8106,17 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
         <source>Error.~%Invalid selection.~%More than 2 audio clips selected.</source>
-        <translation>Fel.~%Ogiltig markering..~%Fler än 2 ljudklipp är markerade.</translation>
+        <translation>Fel.~%Ogiltig markering.~%Fler än två ljudklipp är markerade.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="73"/>
         <source>Error.~%Invalid selection.~%Empty space at start/ end of the selection.</source>
-        <translation>Fel..~%Ogiltig ljudmarkering..~%Tomt mellanrum i början av markeringen.</translation>
+        <translation>Fel.~%Ogiltig markering.~%Tomt utrymme i början eller slutet av markeringen.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="74"/>
         <source>Error.~%Crossfade Clips may only be applied to one track.</source>
-        <translation>Fel.~%Crossfade på klipp kan endast tillämpas på ett spår.</translation>
+        <translation>Fel.~%Övertoning av klipp kan bara tillämpas på ett spår.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
@@ -8126,7 +8126,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
         <source>Fade TYPE</source>
-        <translation>Fade TYPE</translation>
+        <translation>TONINGSTYP</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="77"/>
@@ -8136,12 +8136,12 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="78"/>
         <source>Constant Power 1</source>
-        <translation>Konstant kraft 1</translation>
+        <translation>Konstant effekt 1</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="79"/>
         <source>Constant Power 2</source>
-        <translation>Konstant kraft 2</translation>
+        <translation>Konstant effekt 2</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="80"/>
@@ -8176,7 +8176,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="86"/>
         <source>Error.~%Select 2 (or more) tracks to crossfade.</source>
-        <translation>Fel.~%Välj 2 (eller fler) spår att köra crossfade på.</translation>
+        <translation>Fel.~%Välj 2 (eller fler) spår att övertona.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="87"/>
@@ -8191,7 +8191,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="89"/>
         <source>Regular</source>
-        <translation>Reguljär</translation>
+        <translation>Vanlig</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="90"/>
@@ -8226,12 +8226,12 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="96"/>
         <source>Low-quality Pitch Shift</source>
-        <translation>Tonhöjdsskiftning i låg kvalitet</translation>
+        <translation>Tonhöjdsförskjutning med låg kvalitet</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="97"/>
         <source>High-quality Pitch Shift</source>
-        <translation>Tonhöjdsändring med hög kvalitet</translation>
+        <translation>Tonhöjdsförskjutning med hög kvalitet</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="98"/>
@@ -8266,12 +8266,12 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="104"/>
         <source>Create labels based on</source>
-        <translation>Skapa etiketter baserat på</translation>
+        <translation>Skapa etiketter utifrån</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="105"/>
         <source>Number and Interval</source>
-        <translation>Nummer ochintervall</translation>
+        <translation>Antal och intervall</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="106"/>
@@ -8296,17 +8296,17 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="110"/>
         <source>Length of label region (seconds)</source>
-        <translation>Längd på etikettområde (sekunder)</translation>
+        <translation>Längd på etikettområdet (sekunder)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="111"/>
         <source>Adjust label interval to fit length</source>
-        <translation>Justera etikettintervall för att passa längd</translation>
+        <translation>Anpassa etikettintervallet efter längden</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="112"/>
         <source>Label text</source>
-        <translation>Etikettext</translation>
+        <translation>Etikettens text</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="113"/>
@@ -8316,7 +8316,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="114"/>
         <source>Minimum number of digits in label</source>
-        <translation>Minimalt antal siffror i etikett</translation>
+        <translation>Minsta antal siffror i etiketten</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="115"/>
@@ -8356,12 +8356,12 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="122"/>
         <source>Begin numbering from</source>
-        <translation>Börja numrering från</translation>
+        <translation>Börja numrera från</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="123"/>
         <source>Message on completion</source>
-        <translation>Meddelande vid slutförd</translation>
+        <translation>Meddelande när åtgärden är klar</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="124"/>
@@ -8381,7 +8381,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="127"/>
         <source>Warning: Overlapping region labels.~%</source>
-        <translation>Varning: Områdesetiketter överlappas.~%</translation>
+        <translation>Varning: Överlappande områdesetiketter.~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="128"/>
@@ -8416,7 +8416,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="134"/>
         <source>Roll-off (dB per octave)</source>
-        <translation>Roll-off (dB per oktav)</translation>
+        <translation>Branthet (dB per oktav)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="135"/>
@@ -8446,16 +8446,16 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="140"/>
         <source>Frequency must be at least 0.1 Hz.</source>
-        <translation>Frekvensen måste vara minst 0.1 Hz.</translation>
+        <translation>Frekvensen måste vara minst 0,1 Hz.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="141"/>
         <source>Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
                  Track sample rate is ~a Hz~%~
                  Frequency must be less than ~a Hz.</source>
-        <translation>Fel:~%~%Frekvensen (~a Hz) är för hög för spårets samplingsfrekvens.~%~%~
-                 Spårets samplingsfrekvens är ~a Hz~%~
-                 Frekvensen måste vara lägre än ~a Hz.</translation>
+        <translation>Fel:~%~%Frekvens (~a Hz) är för hög för spårets samplingsfrekvens.~%~%~
+                  Spårets samplingsfrekvens är ~a Hz~%~
+                  Frekvensen måste vara mindre än ~a Hz.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
@@ -8465,17 +8465,17 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
         <source>Threshold level (dB)</source>
-        <translation>Tröskel nivå (dB)</translation>
+        <translation>Tröskelnivå (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="144"/>
         <source>Threshold measurement</source>
-        <translation>Tröskel mätvärde</translation>
+        <translation>Tröskelmätning</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="145"/>
         <source>Peak level</source>
-        <translation>Peak nivå</translation>
+        <translation>Toppnivå</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="146"/>
@@ -8485,22 +8485,22 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="147"/>
         <source>RMS level</source>
-        <translation>RMS nivå</translation>
+        <translation>RMS-nivå</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="148"/>
         <source>Minimum silence duration</source>
-        <translation>Minimum tystnad varaktighet</translation>
+        <translation>Minsta tystnadslängd</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="149"/>
         <source>Minimum label interval</source>
-        <translation>Minimum etikettintervall</translation>
+        <translation>Minsta etikettintervall</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="150"/>
         <source>Label type</source>
-        <translation>Etikett typ</translation>
+        <translation>Etikettyp</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="151"/>
@@ -8525,12 +8525,12 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="155"/>
         <source>Maximum leading silence</source>
-        <translation>Maximal tystnad</translation>
+        <translation>Längsta inledande tystnad</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="156"/>
         <source>Maximum trailing silence</source>
-        <translation>Maximum efterföljande tystnad</translation>
+        <translation>Längsta efterföljande tystnad</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="157"/>
@@ -8545,7 +8545,7 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="159"/>
         <source>Too many silences detected.~%Only the first 10000 labels added.</source>
-        <translation>För många tystnader upptäcktes.~%Bara de första 10000 etiketter tillagda.</translation>
+        <translation>För många tystnader upptäcktes.~%Bara de första 10 000 etiketterna lades till.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
@@ -8559,9 +8559,9 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
         <source>Labelling regions between sounds requires~%~
                  at least two sounds.~%~
                  Only one sound detected.</source>
-        <translation>Att märka regioner mellan ljud kräver ~%~
+        <translation>Att skapa områdesetiketter mellan ljud kräver ~%~
                   minst två ljud.~%~
-                  Endast ett ljud upptäckt.</translation>
+                  Endast ett ljud hittades.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
@@ -8586,25 +8586,25 @@ För LISP börjar du i stället med en inledande parentes, exempelvis:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="166"/>
         <source>Soft Clip</source>
-        <translation>Mjukt klipp</translation>
+        <translation>Mjuk klippning</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="167"/>
         <source>Hard Clip</source>
-        <translation>Hårt klipp</translation>
+        <translation>Hård klippning</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="168"/>
         <source>Input Gain (dB)
 mono/Left</source>
-        <translation>Inmatningsförstärkning (dB)
+        <translation>Ingångsförstärkning (dB)
 för mono/vänster kanal</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="169"/>
         <source>Input Gain (dB)
 Right channel</source>
-        <translation>Inmatningsförstärkning (dB)
+        <translation>Ingångsförstärkning (dB)
 för höger kanal</translation>
     </message>
     <message>
@@ -8615,12 +8615,12 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="171"/>
         <source>Hold (ms)</source>
-        <translation>Håll (ms)</translation>
+        <translation>Hålltid (ms)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="172"/>
         <source>Apply Make-up Gain</source>
-        <translation>Tillämpa kompensationsförstärkning</translation>
+        <translation>Använd kompensationsförstärkning</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
@@ -8640,7 +8640,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="176"/>
         <source>Gate</source>
-        <translation>Gate</translation>
+        <translation>Grind</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="177"/>
@@ -8650,7 +8650,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="178"/>
         <source>Stereo Linking</source>
-        <translation>Stereo länk</translation>
+        <translation>Stereolänkning</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="179"/>
@@ -8665,17 +8665,17 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
         <source>Gate threshold (dB)</source>
-        <translation>Gate Tröskel (dB)</translation>
+        <translation>Grindtröskel (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="182"/>
         <source>Gate frequencies above (kHz)</source>
-        <translation>Gate frekvenser över (kHz)</translation>
+        <translation>Grindfrekvenser över (kHz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="183"/>
         <source>Level reduction (dB)</source>
-        <translation>Nivå minskning (dB)</translation>
+        <translation>Nivåminskning (dB)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="184"/>
@@ -8685,7 +8685,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="185"/>
         <source>Decay (ms)</source>
-        <translation>Decay (ms)</translation>
+        <translation>Avklingning (ms)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="186"/>
@@ -8694,9 +8694,9 @@ för höger kanal</translation>
                              is too high for selected track.~%~
                              Set the control below ~a kHz.</source>
         <translation>Fel.~%~
-                              Gatefrekvenser ovan: ~s kHz~%~
-                              är för hög för valt spår.~%~
-                              Ställ in kontrollen under ~a kHz.</translation>
+                              Grindfrekvenser över ~s kHz~%~
+                              är för höga för det valda spåret.~%~
+                              Ställ in värdet under ~a kHz.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="187"/>
@@ -8704,14 +8704,14 @@ för höger kanal</translation>
                             Insufficient audio selected.~%~
                             Make the selection longer than ~a ms.</source>
         <translation>Fel.~%~
-                             Otillräckligt ljud valt.~%~
+                             Det valda ljudet är för kort.~%~
                              Gör markeringen längre än ~a ms.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="188"/>
         <source>Peak based on first ~a seconds ~a dB~%~
                Suggested Threshold Setting ~a dB.</source>
-        <translation>Peak baserad på första ~a sekunder ~a dB~%~
+        <translation>Toppvärde baserat på de första ~a sekunderna: ~a dB~%~
                 Föreslagen tröskelinställning ~a dB.</translation>
     </message>
     <message>
@@ -8732,16 +8732,16 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="192"/>
         <source>Q (higher value reduces width)</source>
-        <translation>Q (högre värden reducerar bredden)</translation>
+        <translation>Q (högre värde minskar bandbredden)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="193"/>
         <source>Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
                Track sample rate is ~a Hz.~%~
                Frequency must be less than ~a Hz.</source>
-        <translation>Fel:~%~%Frekvensen (~a Hz) är för hög för spårets samplingsfrekvens.~%~%~
-               Spårets samplingsfrekvens är ~a Hz.~%~
-               Frekvensen måste vara lägre än ~a Hz.</translation>
+        <translation>Fel:~%~%Frekvens (~a Hz) är för hög för spårets samplingsfrekvens.~%~%~
+                Spårets samplingsfrekvens är ~a Hz.~%~
+                Frekvensen måste vara mindre än ~a Hz.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="194"/>
@@ -8761,27 +8761,27 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
         <source>Plug-in</source>
-        <translation>Plug-in</translation>
+        <translation>Insticksmodul</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="198"/>
         <source>Lisp file</source>
-        <translation>Lisp fil</translation>
+        <translation>Lisp-fil</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="199"/>
         <source>HTML file</source>
-        <translation>HTML fil</translation>
+        <translation>HTML-fil</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="200"/>
         <source>Text file</source>
-        <translation>Text fil</translation>
+        <translation>Textfil</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="201"/>
         <source>All supported</source>
-        <translation>Alla stöds</translation>
+        <translation>Alla format som stöds</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="202"/>
@@ -8796,7 +8796,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="204"/>
         <source>Disallow</source>
-        <translation>Otillåten</translation>
+        <translation>Tillåt inte</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="205"/>
@@ -8826,17 +8826,17 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
         <source>Plug-ins installed.~%(Use the Plug-in Manager to enable effects):</source>
-        <translation>Plug-ins installerade.~%(Använd Plug-in Manager för att välja ut effekter):</translation>
+        <translation>Insticksmoduler har installerats.~%(Använd hanteraren för insticksmoduler för att aktivera effekter):</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="210"/>
         <source>Plug-ins updated:</source>
-        <translation>Plug-ins updaterade:</translation>
+        <translation>Uppdaterade insticksmoduler:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
         <source>Files copied to plug-ins folder:</source>
-        <translation>Filer kopierade till plug-inmappen:</translation>
+        <translation>Filer som kopierats till mappen för insticksmoduler:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
@@ -8846,7 +8846,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="213"/>
         <source>Unsupported file type:</source>
-        <translation>Filtyper som inte stöds:</translation>
+        <translation>Filtyp som inte stöds:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
@@ -8856,7 +8856,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Cannot be written to plug-ins folder:</source>
-        <translation>Kan inte skrivas till plug-inmapp:</translation>
+        <translation>Kan inte skrivas till mappen för insticksmoduler:</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
@@ -8871,7 +8871,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
         <source>Pluck MIDI pitch</source>
-        <translation>Pluck MIDI tonhöjd</translation>
+        <translation>MIDI-tonhöjd för Pluck</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="220"/>
@@ -8926,7 +8926,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="230"/>
         <source>Swing amount</source>
-        <translation>Förvrängningsmängd</translation>
+        <translation>Swingmängd</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="231"/>
@@ -8961,7 +8961,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="237"/>
         <source>Start time offset</source>
-        <translation>Offset för starttid</translation>
+        <translation>Förskjutning av starttid</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="238"/>
@@ -9048,27 +9048,27 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="254"/>
         <source>Decay (seconds)</source>
-        <translation>Fördröjning (sekunder)</translation>
+        <translation>Avklingning (sekunder)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="255"/>
         <source>Center frequency of noise (Hz)</source>
-        <translation>Centrera brusfrekvens (Hz)</translation>
+        <translation>Brusets mittfrekvens (Hz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="256"/>
         <source>Width of noise band (Hz)</source>
-        <translation>Bredd för brusband (Hz)</translation>
+        <translation>Brusbandets bredd (Hz)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="257"/>
         <source>Amount of noise in mix (percent)</source>
-        <translation>Brusmängd i mix (procent)</translation>
+        <translation>Brusmängd i mixen (procent)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Amplitude (0 - 1)</source>
-        <translation>Amplitud (0-1)</translation>
+        <translation>Amplitud (0–1)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -9113,7 +9113,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="267"/>
         <source>samples</source>
-        <translation>sampel</translation>
+        <translation>samplar</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="268"/>
@@ -9138,12 +9138,12 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="272"/>
         <source>CSV files</source>
-        <translation>CSV filer</translation>
+        <translation>CSV-filer</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="273"/>
         <source>HTML files</source>
-        <translation>HTML filer</translation>
+        <translation>HTML-filer</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="274"/>
@@ -9153,17 +9153,17 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="275"/>
         <source>Sample Count</source>
-        <translation>Antal sampel</translation>
+        <translation>Antal samplar</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="276"/>
         <source>Time Indexed</source>
-        <translation>Indexerad tid</translation>
+        <translation>Tidsindexerad</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="277"/>
         <source>Include header information</source>
-        <translation>Inkludera sidhuvudsinformation</translation>
+        <translation>Inkludera rubrikinformation</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="278"/>
@@ -9188,7 +9188,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="282"/>
         <source>Channel layout for stereo</source>
-        <translation>Kanalutseende för stereo</translation>
+        <translation>Kanalordning för stereo</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="283"/>
@@ -9238,27 +9238,27 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>
         <source>Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a</source>
-        <translation>Samplingshastighet: ~a Hz.  Sampelvärden på skalan ~a.~%~a~%~a</translation>
+        <translation>Samplingsfrekvens: ~a Hz.  Samplingsvärden på skalan ~a.~%~a~%~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a   ~a~%~aSamplingshastighet: ~a Hz.~%Bearbetad längd: ~a sampel ~a sekunder.~a</translation>
+        <translation>~a   ~a~%~aSamplingsfrekvens: ~a Hz.~%Bearbetad längd: ~a samplar ~a sekunder.~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
                      Length processed: ~a samples ~a seconds.~a</source>
-        <translation>~a   ~a~%~aSamplingshastighet: ~a Hz. Sampelvärden på skalan ~a.~%~
-                     Bearbetad längd: ~a sampel ~a sekunder.~a</translation>
+        <translation>~a   ~a~%~aSamplingsfrekvens: ~a Hz. Samplingsvärden på skalan ~a.~%~
+                     Bearbetad längd: ~a samplar ~a sekunder.~a</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
         <source>~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
                   samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~
                   DC offset: ~a~a</source>
-        <translation>~a~%Samplingshastighet: ~a Hz. Sampelvärden på skalan ~a. ~a.~%~aBearbetad längd: ~a ~
-                  sampel, ~a sekunder.~%Maximal amplitud: ~a (linjär) ~a dB.  Unweighted RMS: ~a dB.~%~
+        <translation>~a~%Samplingsfrekvens: ~a Hz. Samplingsvärden på skalan ~a. ~a.~%~aBearbetad längd: ~a ~
+                  samplar, ~a sekunder.~%Maximal amplitud: ~a (linjär) ~a dB.  Oviktad RMS: ~a dB.~%~
                   DC-offset: ~a~a</translation>
     </message>
     <message>
@@ -9274,12 +9274,12 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="298"/>
         <source>Sample Data Export</source>
-        <translation>Exportera sampeldata</translation>
+        <translation>Exportera samplingsdata</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
         <source>~a samples.</source>
-        <translation>~a sampel.</translation>
+        <translation>~a samplar.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
@@ -9304,7 +9304,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
         <source>&lt;b&gt;RMS&lt;/b&gt; (unweighted): &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation>&lt;b&gt;RMS&lt;/b&gt; (ouppskattad): &amp;nbsp;&amp;nbsp;~a dB.</translation>
+        <translation>&lt;b&gt;RMS&lt;/b&gt; (oviktad): &amp;nbsp;&amp;nbsp;~a dB.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
@@ -9324,12 +9324,12 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="308"/>
         <source>sample data</source>
-        <translation>sampeldata</translation>
+        <translation>samplingsdata</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="309"/>
         <source>Sample #</source>
-        <translation>Sampelnr</translation>
+        <translation>Samplingsnummer</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="310"/>
@@ -9349,7 +9349,7 @@ för höger kanal</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="313"/>
         <source>audio sample value analysis</source>
-        <translation>värdesanalys av ljudsamling</translation>
+        <translation>analys av ljudsamplingsvärden</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="314"/>
@@ -9376,7 +9376,7 @@ för höger kanal</translation>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
 &lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
-        <translation>Producerad med &lt;span&gt;Sample Data Export&lt;/span&gt; för
+        <translation>Skapad med &lt;span&gt;Sample Data Export&lt;/span&gt; för
 &lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; av Steve
 Daulton</translation>
     </message>
@@ -9448,7 +9448,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="332"/>
         <source>Throw Error</source>
-        <translation>Kasta fel</translation>
+        <translation>Rapportera fel</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="333"/>
@@ -9495,7 +9495,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
         <source>Error.~%Track sample rate below 100 Hz is not supported.</source>
-        <translation>Fel.~%Spår sample rate under 100 Hz stöds inte.</translation>
+        <translation>Fel.~%Samplingsfrekvenser för spår under 100 Hz stöds inte.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="340"/>
@@ -9540,12 +9540,12 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="348"/>
         <source>Wet level (percent)</source>
-        <translation>Wet-nivå (procent)</translation>
+        <translation>Effektnivå (procent)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
         <source>Vocoder</source>
-        <translation>Vocoder</translation>
+        <translation>Vokoder</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="350"/>
@@ -9560,7 +9560,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="352"/>
         <source>Output choice</source>
-        <translation>Val av utmatning</translation>
+        <translation>Val av utdata</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="353"/>
@@ -9575,7 +9575,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="355"/>
         <source>Number of vocoder bands</source>
-        <translation>Antal vocoder-band</translation>
+        <translation>Antal vokoderband</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="356"/>
@@ -9699,19 +9699,19 @@ eller minska tidsupplösningen till mindre än %2 sekunder.</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="31"/>
         <source>Sets the peak amplitude of a one or more tracks</source>
-        <translation>Ändrar den maximala amplituden för ett eller fler spår</translation>
+        <translation>Ändrar toppamplituden för ett eller flera spår</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="71"/>
         <source>The Repair effect cannot be applied within stretched or shrunk clips</source>
-        <translation>Reparationseffekten kan inte appliceras i stretchade eller krympta clips</translation>
+        <translation>Effekten Reparera kan inte användas i tidsutsträckta eller förkortade klipp</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="77"/>
         <source>The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).
 
 Zoom in and select a tiny fraction of a second to repair.</source>
-        <translation>Reparationseffekten är gjord för att användas på en mycket kort del av skadat ljud (upp till 128 sampel).
+        <translation>Effekten Reparera är avsedd för mycket korta delar av skadat ljud (upp till 128 samplar).
 
 Zooma in och välj en liten bråkdel av en sekund att reparera.</translation>
     </message>
@@ -9737,7 +9737,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="70"/>
         <source>Ambience</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Ambience</translation>
+        <translation>Atmosfär</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="72"/>
@@ -9749,7 +9749,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="74"/>
         <source>Clean</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Rensa</translation>
+        <translation>Ren</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="76"/>
@@ -9773,19 +9773,19 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="83"/>
         <source>Dance Vocal</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Dans vokal</translation>
+        <translation>Danssång</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="85"/>
         <source>Modern Vocal</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Modern vokal</translation>
+        <translation>Modern sång</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="87"/>
         <source>Voice Tail</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Voice Tail</translation>
+        <translation>Röstsvans</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="90"/>
@@ -9833,7 +9833,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="104"/>
         <source>Big Cave</source>
         <extracomment>This is the name of an effect preset</extracomment>
-        <translation>Big Cave</translation>
+        <translation>Stor grotta</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="111"/>
@@ -9851,12 +9851,12 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="21"/>
         <source>Reverse</source>
-        <translation>Baklänges</translation>
+        <translation>Vänd baklänges</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverse/reverseeffect.cpp" line="30"/>
         <source>Reverses the selected audio</source>
-        <translation>Vänd på markerat ljud</translation>
+        <translation>Vänder det markerade ljudet baklänges</translation>
     </message>
 </context>
 <context>
@@ -9921,18 +9921,18 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="13"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Automatisk duckning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="112"/>
         <source>Control track</source>
-        <translation type="unfinished"/>
+        <translation>Kontrollspår</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
         <source>No available track</source>
-        <translation type="unfinished"/>
+        <translation>Inget tillgängligt spår</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
@@ -9942,37 +9942,37 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="192"/>
         <source>Duck start</source>
-        <translation type="unfinished"/>
+        <translation>Start för duckning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
         <source>Recovery end</source>
-        <translation type="unfinished"/>
+        <translation>Slut på återhämtning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
         <source>Duck end</source>
-        <translation type="unfinished"/>
+        <translation>Slut för duckning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
         <source>Gain reduction</source>
-        <translation type="unfinished"/>
+        <translation>Förstärkningsminskning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
         <source>Recovery start</source>
-        <translation type="unfinished"/>
+        <translation>Start för återhämtning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
         <source>Hold</source>
-        <translation type="unfinished"/>
+        <translation>Håll kvar</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
         <source>Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</source>
-        <translation type="unfinished"/>
+        <translation>Automatisk duckning behöver ett andra ljudspår för att utlösa duckning. Lägg till ett i projektet för att fortsätta.</translation>
     </message>
 </context>
 <context>
@@ -10128,7 +10128,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/CompressorView.qml" line="17"/>
         <source>Compressor</source>
-        <translation>Komprimerare</translation>
+        <translation>Kompressor</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
@@ -10138,7 +10138,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
         <source>Input</source>
-        <translation>Input</translation>
+        <translation>Indata</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="131"/>
@@ -10215,7 +10215,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="13"/>
         <source>Filter Curve EQ</source>
-        <translation>Filterkurva EQ</translation>
+        <translation>Filterkurve-EQ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
@@ -10255,7 +10255,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="12"/>
         <source>Graphic EQ</source>
-        <translation>Graphic EQ</translation>
+        <translation>Grafisk EQ</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqView.qml" line="82"/>
@@ -10430,7 +10430,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="203"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="217"/>
         <source>Frequency smoothing</source>
-        <translation>Släta ut frekvenser</translation>
+        <translation>Frekvensutjämning</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="223"/>
@@ -10684,7 +10684,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="120"/>
         <source>Action</source>
-        <translation>Handling</translation>
+        <translation>Åtgärd</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
@@ -10745,7 +10745,7 @@ Markera ett område som ska repareras med ljud på minst en sida (ju mer desto b
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="53"/>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="54"/>
         <source>samples</source>
-        <translation>sampel</translation>
+        <translation>samplar</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
@@ -10895,7 +10895,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="145"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="65"/>
         <source>File</source>
-        <translation>Arkiv</translation>
+        <translation>Fil</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="160"/>
@@ -10937,7 +10937,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="353"/>
         <source>Audio options</source>
-        <translation>Ljud alternativ</translation>
+        <translation>Ljudalternativ</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="370"/>
@@ -10968,7 +10968,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="522"/>
         <source>Open custom FFmpeg format options</source>
-        <translation>Öppna anpassade FFmpeg-formatsalterantiv</translation>
+        <translation>Öppna anpassade FFmpeg-formatalternativ</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="543"/>
@@ -10983,7 +10983,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="687"/>
         <source>Include audio before first label</source>
-        <translation>Inkludera ljud före första etiketten</translation>
+        <translation>Inkludera ljud innan första etiketten</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="656"/>
@@ -10993,7 +10993,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="670"/>
         <source>Trim blank space before first clip</source>
-        <translation>Trimma tom yta före första clip</translation>
+        <translation>Trimma tomt utrymme före första klippet</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="36"/>
@@ -11094,7 +11094,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="139"/>
         <source>Codecs</source>
-        <translation>Codecs</translation>
+        <translation>Kodekar</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="38"/>
@@ -11126,7 +11126,7 @@ Var god meddela Audacity-teamet på https://forum.audacityteam.org/.</translatio
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="141"/>
         <source>Cutoff</source>
-        <translation>Cutoff</translation>
+        <translation>Brytfrekvens</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="160"/>
@@ -11264,7 +11264,7 @@ Vissa kodekar godtar endast särskilda värden (128k, 192k, 256k osv.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="424"/>
         <source>There is no audio to export</source>
-        <translation type="unfinished"/>
+        <translation>Det finns inget ljud att exportera</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="471"/>
@@ -11416,12 +11416,12 @@ Mastereffekterna aktiveras igen efter exporten.</translation>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
         <source>Enabled</source>
-        <translation>Aktiverade</translation>
+        <translation>Aktiverad</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
         <source>Disabled</source>
-        <translation>Inaktiverade</translation>
+        <translation>Inaktiverad</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="187"/>
@@ -11560,7 +11560,7 @@ Mastereffekterna aktiveras igen efter exporten.</translation>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="348"/>
         <source>Rectangular</source>
-        <translation>Rekangulär</translation>
+        <translation>Rektangulär</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="351"/>
@@ -11668,7 +11668,7 @@ Kanske är %1 inte skrivbar eller så är disken full.</translation>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="56"/>
         <source>AUP3 project files</source>
         <extracomment>an Audacity project is the state of the program, stored as files that can be reopened to resume the session later</extracomment>
-        <translation>AUP3 projektfiler</translation>
+        <translation>AUP3-projektfiler</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="59"/>
@@ -11725,7 +11725,7 @@ Kanske är %1 inte skrivbar eller så är disken full.</translation>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="59"/>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="147"/>
         <source>Unsuitable</source>
-        <translation>Opassande</translation>
+        <translation>Olämplig</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="61"/>
@@ -11733,8 +11733,8 @@ Kanske är %1 inte skrivbar eller så är disken full.</translation>
         <source>The temporary files directory is on a FAT formatted drive.
 Resetting to default location.</source>
         <extracomment>FAT is a filesystem type name</extracomment>
-        <translation>Mappen för tempfiler finns på en FAT-formaterad disk.
-Återställ till standardplats.</translation>
+        <translation>Katalogen för temporära filer finns på en FAT-formaterad disk.
+Återställer till standardplatsen.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="149"/>
@@ -11953,7 +11953,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="104"/>
         <source>Success!</source>
-        <translation>Succé!</translation>
+        <translation>Klart!</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="141"/>
@@ -11981,7 +11981,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1071"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1314"/>
         <source>Success</source>
-        <translation>Succé</translation>
+        <translation>Klart</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1319"/>
@@ -12103,7 +12103,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
         <source>Collapse</source>
         <extracomment>Collapse a tree item</extracomment>
-        <translation>Fäll ihop</translation>
+        <translation>Minimera</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
@@ -12119,7 +12119,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="115"/>
         <source>Select</source>
-        <translation>Välj</translation>
+        <translation>Markera</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
@@ -13562,7 +13562,7 @@ Fel %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="93"/>
         <source>Export completed with error.</source>
-        <translation>Export komplett med fel.</translation>
+        <translation>Exporten slutfördes med fel.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="215"/>
@@ -13582,7 +13582,7 @@ Audacity kan inte öppna den här typen av fil.</translation>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
         <source>Importing files</source>
-        <translation>Importera filer</translation>
+        <translation>Importerar filer</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
@@ -13805,7 +13805,7 @@ men inget av dem kunde tolka filformatet.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="368"/>
         <source>Opus (OggOpus) Files (FFmpeg)</source>
-        <translation>Opus (OggOpus) Files (FFmpeg)</translation>
+        <translation>Opus-filer (OggOpus, FFmpeg)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="373"/>
@@ -13815,7 +13815,7 @@ men inget av dem kunde tolka filformatet.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="376"/>
         <source>Custom FFmpeg Export</source>
-        <translation>Anpassad exportering av FFmpeg</translation>
+        <translation>Anpassad FFmpeg-export</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="468"/>
@@ -13825,22 +13825,22 @@ men inget av dem kunde tolka filformatet.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="469"/>
         <source>2-level</source>
-        <translation>2-nivå</translation>
+        <translation>2 nivåer</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="470"/>
         <source>4-level</source>
-        <translation>4-nivå</translation>
+        <translation>4 nivåer</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="471"/>
         <source>8-level</source>
-        <translation>8-nivå</translation>
+        <translation>8 nivåer</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="472"/>
         <source>Full search</source>
-        <translation>Full sökning</translation>
+        <translation>Fullständig sökning</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
@@ -13857,7 +13857,7 @@ men inget av dem kunde tolka filformatet.</translation>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="166"/>
         <source>Try installing FFmpeg.
 </source>
-        <translation>Försök installera FFmpeg.
+        <translation>Prova att installera FFmpeg.
 </translation>
     </message>
     <message>
@@ -13891,7 +13891,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="167"/>
         <source>Quality (kbps)</source>
-        <translation>Kvalité (kbps)</translation>
+        <translation>Kvalitet (kbps)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="263"/>
@@ -13908,7 +13908,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="283"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="363"/>
         <source>2.5 ms</source>
-        <translation>2.5 ms</translation>
+        <translation>2,5 ms</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="284"/>
@@ -13944,7 +13944,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="295"/>
         <source>Vbr Mode</source>
         <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
-        <translation>Vbr läge</translation>
+        <translation>VBR-läge</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="299"/>
@@ -13985,13 +13985,13 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="310"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
         <source>Low Delay</source>
-        <translation>Låg delay</translation>
+        <translation>Låg fördröjning</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="316"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="392"/>
         <source>Cutoff</source>
-        <translation>Cutoff</translation>
+        <translation>Brytfrekvens</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="328"/>
@@ -14014,7 +14014,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="331"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="407"/>
         <source>Wideband</source>
-        <translation>Wideband</translation>
+        <translation>Bredband</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="332"/>
@@ -14026,7 +14026,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="333"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="409"/>
         <source>Fullband</source>
-        <translation>Fullband</translation>
+        <translation>Helband</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="699"/>
@@ -14098,32 +14098,32 @@ Stöd för denna kodek har förmodligen inte kompilerats.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1173"/>
         <source>FFmpeg : ERROR - Could not get sample buffer size</source>
-        <translation>FFmpeg: FEL – Det gick inte att hämta sampelbuffertens storlek</translation>
+        <translation>FFmpeg: FEL - kunde inte hämta samplingsbuffertens storlek</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1180"/>
         <source>FFmpeg : ERROR - Could not allocate bytes for samples buffer</source>
-        <translation>FFmpeg: FEL – Det gick inte att allokera byte för sampelbufferten</translation>
+        <translation>FFmpeg: FEL - kunde inte allokera byte för samplingsbufferten</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1189"/>
         <source>FFmpeg : ERROR - Could not setup audio frame</source>
-        <translation>FFmpeg : FEL - Kunde inte ställa in ljudbildruta</translation>
+        <translation>FFmpeg: FEL - kunde inte konfigurera ljudramen</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1270"/>
         <source>FFmpeg : ERROR - encoding frame failed</source>
-        <translation>FFmpeg : FEL - avkodning av bildruta misslyckades</translation>
+        <translation>FFmpeg: FEL - kodning av ljudramen misslyckades</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1295"/>
         <source>FFmpeg : ERROR - Too much remaining data.</source>
-        <translation>FFmpeg : FEL - För mycket återstående data.</translation>
+        <translation>FFmpeg: FEL - för mycket återstående data.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1370"/>
         <source>FFmpeg : ERROR - nAudioFrameSizeOut too large.</source>
-        <translation>FFmpeg : FEL - nAudioFrameSizeOut är för stor.</translation>
+        <translation>FFmpeg: FEL - nAudioFrameSizeOut är för stor.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1410"/>
@@ -14159,7 +14159,7 @@ Du kan konfigurera den under Inställningar &gt; Allmänt.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1562"/>
         <source>Resample</source>
-        <translation>Återsampla</translation>
+        <translation>Sampla om</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1568"/>
@@ -14178,7 +14178,7 @@ stöds inte av det nuvarande filformatet för utmatning.  </translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1574"/>
         <source>You may resample to one of the rates below.</source>
-        <translation>Du kan återsampla till någon av frekvenserna nedan.</translation>
+        <translation>Du kan sampla om till någon av frekvenserna nedan.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1581"/>
@@ -14201,14 +14201,14 @@ stöds inte av det nuvarande filformatet för utmatning.  </translation>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="129"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="53"/>
         <source>16 bit</source>
-        <translation>16 bitar</translation>
+        <translation>16 bit</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="90"/>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="129"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="54"/>
         <source>24 bit</source>
-        <translation>24 bitar</translation>
+        <translation>24 bit</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="95"/>
@@ -14319,7 +14319,7 @@ Status: %1</translation>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="708"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="388"/>
         <source>Unable to open target file for writing</source>
-        <translation>Kunde inte öppna målfil att skriva till</translation>
+        <translation>Kunde inte öppna målfilen för skrivning</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.cpp" line="381"/>
@@ -14349,52 +14349,52 @@ Status: %1</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="425"/>
         <source>220-260 kbps (Best Quality)</source>
-        <translation>220-260 kbps (Bäst kvalité)</translation>
+        <translation>220–260 kbps (bästa kvalitet)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="426"/>
         <source>200-250 kbps</source>
-        <translation>200-250 kbps</translation>
+        <translation>200–250 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="427"/>
         <source>170-210 kbps</source>
-        <translation>170-210 kbps</translation>
+        <translation>170–210 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="428"/>
         <source>155-195 kbps</source>
-        <translation>155-195 kbps</translation>
+        <translation>155–195 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="429"/>
         <source>145-185 kbps</source>
-        <translation>145-185 kbps</translation>
+        <translation>145–185 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="430"/>
         <source>110-150 kbps</source>
-        <translation>110-150 kbps</translation>
+        <translation>110–150 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="431"/>
         <source>95-135 kbps</source>
-        <translation>95-135 kbps</translation>
+        <translation>95–135 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="432"/>
         <source>80-120 kbps</source>
-        <translation>80-120 kbps</translation>
+        <translation>80–120 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="433"/>
         <source>65-105 kbps</source>
-        <translation>65-105 kbps</translation>
+        <translation>65–105 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="434"/>
         <source>45-85 kbps (Smaller files)</source>
-        <translation>45-85 kbps (Mindre filer)</translation>
+        <translation>45–85 kbps (mindre filer)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="443"/>
@@ -14404,17 +14404,17 @@ Status: %1</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="444"/>
         <source>Extreme, 220-260 kbps</source>
-        <translation>Extremt, 220-260 kbps</translation>
+        <translation>Extremt, 220–260 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="445"/>
         <source>Standard, 170-210 kbps</source>
-        <translation>Standard, 170-210 kbps</translation>
+        <translation>Standard, 170–210 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="446"/>
         <source>Medium, 145-185 kbps</source>
-        <translation>Medel, 145-185 kbps</translation>
+        <translation>Medel, 145–185 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="450"/>
@@ -14434,12 +14434,12 @@ Status: %1</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="453"/>
         <source>Medium</source>
-        <translation>Mellanstor</translation>
+        <translation>Medel</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="479"/>
         <source>Bit Rate Mode</source>
-        <translation>Bit rate läge</translation>
+        <translation>Bithastighetsläge</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="491"/>
@@ -14526,7 +14526,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1594"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1633"/>
         <source>Could not open MP3 encoding library!</source>
-        <translation>Kunde inte öppna biblioteket för avkodning av MP3!</translation>
+        <translation>Kunde inte öppna MP3-kodningsbiblioteket!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1597"/>
@@ -14536,12 +14536,12 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1627"/>
         <source>Could not initialize MP3 encoding library!</source>
-        <translation>Kunde inte öppna biblioteket för avkodning av MP3!</translation>
+        <translation>Kunde inte initiera MP3-kodningsbiblioteket!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1639"/>
         <source>Not a valid or supported MP3 encoding library!</source>
-        <translation>Inte ett giltigt eller stödjande avkodningsbibliotek för MP3!</translation>
+        <translation>MP3-kodningsbiblioteket är ogiltigt eller stöds inte!</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1724"/>
@@ -14586,7 +14586,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1996"/>
         <source>MP3 export library not found</source>
-        <translation>Hittade inte exportbiblioteket för MP3</translation>
+        <translation>MP3-exportbiblioteket hittades inte</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="2003"/>
@@ -14607,7 +14607,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
         <source>Quality %1 (~%2 kbit/s)</source>
-        <translation type="unfinished"/>
+        <translation>Kvalitet %1 (~%2 kbit/s)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="204"/>
@@ -14617,17 +14617,17 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="249"/>
         <source>Unable to export - rate or quality problem</source>
-        <translation>Kan inte exportera - värdefel eller fel kvalité</translation>
+        <translation>Kan inte exportera - problem med samplingsfrekvens eller kvalitet</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="262"/>
         <source>Unable to export - problem initialising</source>
-        <translation>Kan inte exportera - problem med igångstart</translation>
+        <translation>Kan inte exportera - problem vid initiering</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="274"/>
         <source>Unable to export - problem creating stream</source>
-        <translation>Kan inte exportera - problem med att skapa strömmande</translation>
+        <translation>Kan inte exportera - problem när strömmen skapades</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="295"/>
@@ -14667,7 +14667,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="394"/>
         <source>Vorbis version mismatch</source>
-        <translation>Vorbis-version överensstämmer inte</translation>
+        <translation>Vorbis-versionerna stämmer inte överens</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ImportOGG.cpp" line="397"/>
@@ -14688,22 +14688,22 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="344"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="404"/>
         <source>Auto</source>
-        <translation>Auto</translation>
+        <translation>Automatiskt</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="345"/>
         <source>Maximum</source>
-        <translation>Maximum</translation>
+        <translation>Maximalt</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="374"/>
         <source>VBR Mode</source>
-        <translation>VBR Läge</translation>
+        <translation>VBR-läge</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="383"/>
         <source>Optimize for</source>
-        <translation>Optimerat för</translation>
+        <translation>Optimera för</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="387"/>
@@ -14713,12 +14713,12 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="457"/>
         <source>Opus Files</source>
-        <translation>Opus filer</translation>
+        <translation>Opus-filer</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="578"/>
         <source>Unsupported sample rate</source>
-        <translation>Samplingsfrekvens stöds inte</translation>
+        <translation>Samplingsfrekvensen stöds inte</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="605"/>
@@ -14733,53 +14733,53 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="638"/>
         <source>Unable to create Opus encoder</source>
-        <translation>Det gick inte att skapa Opus encoder</translation>
+        <translation>Kunde inte skapa Opus-kodaren</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="645"/>
         <source>Unable to set bitrate</source>
-        <translation>Kan inte ställa bitrate</translation>
+        <translation>Kunde inte ange bithastigheten</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="652"/>
         <source>Unable to set complexity</source>
-        <translation>Det går inte att ställa in komplexitet</translation>
+        <translation>Kunde inte ange komplexiteten</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="659"/>
         <source>Unable to set bandwidth</source>
-        <translation>Det går inte att ställa bandbredd</translation>
+        <translation>Kunde inte ange bandbredden</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="666"/>
         <source>Unable to set VBR mode</source>
-        <translation>Det går inte att ställa in CVBR läge</translation>
+        <translation>Kunde inte ange VBR-läget</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="674"/>
         <source>Unable to set CVBR mode</source>
-        <translation>Det går inte att ställa in CVBR läge</translation>
+        <translation>Kunde inte ange CVBR-läget</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="685"/>
         <source>Unable to get lookahead</source>
-        <translation>Det gick inte att hämta framförhållningen</translation>
+        <translation>Kunde inte hämta fördröjningsvärdet</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="693"/>
         <source>Failed to calculate correct preskip</source>
-        <translation>Det gick inte att beräkna korrekt förhopp</translation>
+        <translation>Kunde inte beräkna rätt fördröjning före uppspelning</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="783"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="825"/>
         <source>Failed to encode input buffer</source>
-        <translation>Det gick inte att koda indatabuffert</translation>
+        <translation>Kunde inte koda indatabufferten</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="37"/>
         <source>no error</source>
-        <translation>inga fel</translation>
+        <translation>inget fel</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="39"/>
@@ -14790,7 +14790,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="41"/>
         <source>buffer too small</source>
-        <translation>buffer för liten</translation>
+        <translation>bufferten är för liten</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="43"/>
@@ -14808,7 +14808,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="47"/>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="348"/>
         <source>not implemented</source>
-        <translation>ej implementerat</translation>
+        <translation>inte implementerat</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="49"/>
@@ -14818,7 +14818,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="51"/>
         <source>memory allocation has failed</source>
-        <translation>minnesallokering misslyckades</translation>
+        <translation>Minnestilldelningen misslyckades</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="53"/>
@@ -14828,42 +14828,42 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="123"/>
         <source>Buffer overflow in OGG packet</source>
-        <translation>Buffertspill i OGG-paket</translation>
+        <translation>Buffertöverskridning i OGG-paketet</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="253"/>
         <source>Unable to write OGG page header</source>
-        <translation>Kunde inte skriva till OGG page header</translation>
+        <translation>Kunde inte skriva OGG-sidhuvudet</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="257"/>
         <source>Unable to write OGG page</source>
-        <translation>Kan inte skriva till OGG page</translation>
+        <translation>Kunde inte skriva OGG-sidan</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="22"/>
         <source>Opus files</source>
-        <translation>Opus filer</translation>
+        <translation>Opus-filer</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="209"/>
         <source>File has changed the number of channels in the middle.</source>
-        <translation>Filen har ändrat antalet kanaler i mitten.</translation>
+        <translation>Antalet kanaler ändras mitt i filen.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="344"/>
         <source>IO error reading from file</source>
-        <translation>IO-fel vid läsning från fil</translation>
+        <translation>I/O-fel vid läsning av filen</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="352"/>
         <source>not an Opus file</source>
-        <translation>är inte en Opus fil</translation>
+        <translation>inte en Opus-fil</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="354"/>
         <source>invalid header</source>
-        <translation>ogiltig rubrik</translation>
+        <translation>ogiltigt sidhuvud</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="356"/>
@@ -14873,7 +14873,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="360"/>
         <source>invalid stream structure</source>
-        <translation>ogiltig strömmande struktur</translation>
+        <translation>ogiltig strömstruktur</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="362"/>
@@ -14910,7 +14910,7 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="282"/>
         <source>Header</source>
-        <translation>Rubrik</translation>
+        <translation>Filhuvud</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="482"/>
@@ -14925,12 +14925,12 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="605"/>
         <source>WAVEX and GSM 6.10 formats are not compatible</source>
-        <translation>WAVEX och GSM 6.10 format är inte kompatibla</translation>
+        <translation>Formaten WAVEX och GSM 6.10 är inte kompatibla</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="618"/>
         <source>Cannot export audio in this format.</source>
-        <translation>Kan inte exportera ljud i detta format.</translation>
+        <translation>Kan inte exportera ljud i det här formatet.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="632"/>
@@ -14942,8 +14942,8 @@ Hämta den senaste versionen av ”LAME for Audacity”.</translation>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="665"/>
         <source>You have attempted to Export a WAV or AIFF file which would be greater than 4GB.
 Audacity cannot do this, the Export was abandoned.</source>
-        <translation>Du har försökt att exportera en WAV eller AIFF fil som skulle bli större än 4GB.
-Audacity kan inte göra det..</translation>
+        <translation>Du har försökt exportera en WAV- eller AIFF-fil som skulle bli större än 4 GB.
+Audacity kan inte göra detta. Exporten avbröts.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="674"/>
@@ -14967,12 +14967,12 @@ Libsndfile rapporterar ”%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="297"/>
         <source>WavPack Files</source>
-        <translation>WavPack filer</translation>
+        <translation>WavPack-filer</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="450"/>
         <source>Unable to create target file for writing</source>
-        <translation>Kunde inte skapa målfil att skriva till</translation>
+        <translation>Kunde inte skapa målfilen för skrivning</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="468"/>
@@ -14997,7 +14997,7 @@ Libsndfile rapporterar ”%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="48"/>
         <source>High Quality (Slow)</source>
-        <translation>Hög kvalitet (Långsam)</translation>
+        <translation>Hög kvalitet (långsam)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="49"/>
@@ -15018,7 +15018,7 @@ Libsndfile rapporterar ”%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="90"/>
         <source>Hybrid Mode</source>
-        <translation>Hybrid läge</translation>
+        <translation>Hybridläge</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="95"/>
@@ -15028,7 +15028,7 @@ Libsndfile rapporterar ”%2”</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="39"/>
         <source>WavPack files</source>
-        <translation>WavPack filer</translation>
+        <translation>WavPack-filer</translation>
     </message>
     <message numerus="yes">
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="258"/>
@@ -15128,12 +15128,12 @@ Libsndfile rapporterar ”%2”</translation>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="48"/>
         <source>SubRip text file</source>
-        <translation>SubRib text fil</translation>
+        <translation>SubRip-textfil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="49"/>
         <source>WebVTT file</source>
-        <translation>WebVTT fil</translation>
+        <translation>WebVTT-fil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="54"/>
@@ -15294,12 +15294,12 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="21"/>
         <source>Edit macro</source>
-        <translation type="unfinished"/>
+        <translation>Redigera makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="105"/>
         <source>Search commands</source>
-        <translation type="unfinished"/>
+        <translation>Sök kommandon</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="261"/>
@@ -15311,52 +15311,52 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="275"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="150"/>
         <source>Run on files…</source>
-        <translation type="unfinished"/>
+        <translation>Kör på filer…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="293"/>
         <source>Done</source>
-        <translation>Färdig</translation>
+        <translation>Klart</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/AvailableCommandsList.qml" line="33"/>
         <source>Available commands</source>
-        <translation type="unfinished"/>
+        <translation>Tillgängliga kommandon</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Moving %1. Use the up and down arrows to move it. Press Escape to stop.</source>
-        <translation type="unfinished"/>
+        <translation>Flyttar %1. Använd upp- och nedpilarna för att flytta den. Tryck på Esc för att stoppa.</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Move %1</source>
-        <translation type="unfinished"/>
+        <translation>Flytta %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="246"/>
         <source>Step %1</source>
-        <translation type="unfinished"/>
+        <translation>Steg %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="336"/>
         <source>Actions for %1</source>
-        <translation type="unfinished"/>
+        <translation>Åtgärder för %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="378"/>
         <source>Edit command</source>
-        <translation type="unfinished"/>
+        <translation>Redigera kommando</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="394"/>
         <source>Move up</source>
-        <translation type="unfinished"/>
+        <translation>Flytta upp</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="399"/>
         <source>Move down</source>
-        <translation type="unfinished"/>
+        <translation>Flytta ned</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="405"/>
@@ -15367,17 +15367,17 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="412"/>
         <source>Command menu</source>
-        <translation type="unfinished"/>
+        <translation>Kommandomeny</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="27"/>
         <source>Macro commands</source>
-        <translation type="unfinished"/>
+        <translation>Makrokommandon</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="96"/>
         <source>Step</source>
-        <translation type="unfinished"/>
+        <translation>Steg</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="128"/>
@@ -15387,17 +15387,17 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="160"/>
         <source>Actions</source>
-        <translation type="unfinished"/>
+        <translation>Åtgärder</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="258"/>
         <source>Double-click a command, or drag it, to add it to your macro</source>
-        <translation type="unfinished"/>
+        <translation>Dubbelklicka på ett kommando eller dra det för att lägga till det i makrot</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="107"/>
         <source>Run macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Kör makrot ”%1”</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="142"/>
@@ -15412,67 +15412,67 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="154"/>
         <source>Export…</source>
-        <translation type="unfinished"/>
+        <translation>Exportera…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="167"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="89"/>
         <source>Macro menu</source>
-        <translation type="unfinished"/>
+        <translation>Makromeny</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="48"/>
         <source>Macros</source>
-        <translation type="unfinished"/>
+        <translation>Makron</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="66"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="18"/>
         <source>New macro</source>
-        <translation type="unfinished"/>
+        <translation>Nytt makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="110"/>
         <source>Macro manager menu</source>
-        <translation type="unfinished"/>
+        <translation>Meny för makrohanteraren</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="69"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="26"/>
         <source>Rename macro</source>
-        <translation type="unfinished"/>
+        <translation>Byt namn på makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="73"/>
         <source>Export macro…</source>
-        <translation type="unfinished"/>
+        <translation>Exportera makro…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="78"/>
         <source>Remove all steps</source>
-        <translation type="unfinished"/>
+        <translation>Ta bort alla steg</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="82"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="50"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="56"/>
         <source>Delete macro</source>
-        <translation type="unfinished"/>
+        <translation>Ta bort makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="26"/>
         <source>Queued</source>
-        <translation type="unfinished"/>
+        <translation>Köad</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="28"/>
         <source>Processing</source>
-        <translation type="unfinished"/>
+        <translation>Bearbetar</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="30"/>
         <source>Complete</source>
-        <translation type="unfinished"/>
+        <translation>Slutförd</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="32"/>
@@ -15482,12 +15482,12 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="34"/>
         <source>Stopped</source>
-        <translation>Stoppades</translation>
+        <translation>Stoppad</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="43"/>
         <source>File path</source>
-        <translation type="unfinished"/>
+        <translation>Filsökväg</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="55"/>
@@ -15497,27 +15497,27 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="71"/>
         <source>Import macro…</source>
-        <translation type="unfinished"/>
+        <translation>Importera makro…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="98"/>
         <source>You don’t have any macros yet</source>
-        <translation type="unfinished"/>
+        <translation>Du har inga makron ännu</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="76"/>
         <source>Macro name</source>
-        <translation type="unfinished"/>
+        <translation>Makronamn</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="124"/>
         <source>A macro with this name already exists</source>
-        <translation type="unfinished"/>
+        <translation>Ett makro med detta namn finns redan</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="22"/>
         <source>Run on files</source>
-        <translation type="unfinished"/>
+        <translation>Kör på filer</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="103"/>
@@ -15527,145 +15527,146 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="147"/>
         <source>Step %1 of “%2”: %3</source>
-        <translation type="unfinished"/>
+        <translation>Steg %1 av ”%2”: %3</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="152"/>
         <source>The macro uses steps that do not exist:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>Makrot använder steg som inte finns:
+%1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="177"/>
         <source>macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>makrot ”%1”</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="285"/>
         <source>Macro “%1” not found</source>
-        <translation type="unfinished"/>
+        <translation>Makrot ”%1” hittades inte</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="334"/>
         <source>“%1” ran successfully</source>
-        <translation type="unfinished"/>
+        <translation>”%1” kördes utan fel</translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="335"/>
         <source>%n step(s) applied to the project</source>
-        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+        <translation><numerusform>%n steg tillämpades på projektet</numerusform><numerusform>%n steg tillämpades på projektet</numerusform></translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="338"/>
         <source>Macro completed</source>
-        <translation type="unfinished"/>
+        <translation>Makrot slutfördes</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="350"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="17"/>
         <source>The macro could not be completed</source>
-        <translation type="unfinished"/>
+        <translation>Makrot kunde inte slutföras</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="85"/>
         <source>macro has no name</source>
-        <translation type="unfinished"/>
+        <translation>makrot saknar namn</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="99"/>
         <source>macro step has no macro name</source>
-        <translation type="unfinished"/>
+        <translation>makrosteget saknar makronamn</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="108"/>
         <source>macro step has an invalid command</source>
-        <translation type="unfinished"/>
+        <translation>makrosteget har ett ogiltigt kommando</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="125"/>
         <source>Macro “%1” calls itself</source>
-        <translation type="unfinished"/>
+        <translation>Makrot ”%1” anropar sig självt</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="126"/>
         <source>Macro “%1” calls itself through “%2”</source>
-        <translation type="unfinished"/>
+        <translation>Makrot ”%1” anropar sig självt via ”%2”</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="327"/>
         <source>Invalid macro file</source>
-        <translation type="unfinished"/>
+        <translation>Ogiltig makrofil</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="36"/>
         <source>The macro could not be renamed</source>
-        <translation type="unfinished"/>
+        <translation>Makrot kunde inte byta namn</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="45"/>
         <source>“%1” will be deleted</source>
-        <translation type="unfinished"/>
+        <translation>”%1” kommer att tas bort</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="46"/>
         <source>“%1” is used by other macros. Deleting it will also remove it from: %2</source>
-        <translation type="unfinished"/>
+        <translation>”%1” används av andra makron. Om det tas bort tas det också bort från: %2</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="64"/>
         <source>The macro could not be deleted</source>
-        <translation type="unfinished"/>
+        <translation>Makrot kunde inte tas bort</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="71"/>
         <source>Export macro</source>
-        <translation type="unfinished"/>
+        <translation>Exportera makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="78"/>
         <source>The macro could not be exported</source>
-        <translation type="unfinished"/>
+        <translation>Makrot kunde inte exporteras</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="84"/>
         <source>Import macro</source>
-        <translation type="unfinished"/>
+        <translation>Importera makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="112"/>
         <source>Macro files</source>
-        <translation type="unfinished"/>
+        <translation>Makrofiler</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macrocommandsmodel.cpp" line="336"/>
         <source>The macro could not be saved</source>
-        <translation type="unfinished"/>
+        <translation>Makrot kunde inte sparas</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="131"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="145"/>
         <source>The macro could not be imported</source>
-        <translation type="unfinished"/>
+        <translation>Makrot kunde inte importeras</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="191"/>
         <source>Some commands of this macro are not available</source>
-        <translation type="unfinished"/>
+        <translation>Vissa kommandon i makrot är inte tillgängliga</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="192"/>
         <source>The macro can be imported, but it will fail at these steps:</source>
-        <translation type="unfinished"/>
+        <translation>Makrot kan importeras, men kommer att misslyckas vid dessa steg:</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="201"/>
         <source>Replace macro?</source>
-        <translation type="unfinished"/>
+        <translation>Ersätt makro?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="202"/>
         <source>A macro named “%1” already exists. Do you want to replace it?</source>
-        <translation type="unfinished"/>
+        <translation>Ett makro med namnet ”%1” finns redan. Vill du ersätta det?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
@@ -15675,7 +15676,7 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="56"/>
         <source>Select files</source>
-        <translation type="unfinished"/>
+        <translation>Välj filer</translation>
     </message>
 </context>
 <context>
@@ -15959,7 +15960,7 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="72"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="42"/>
         <source>GENRE</source>
-        <translation type="unfinished"/>
+        <translation>GENRE</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
@@ -16020,7 +16021,7 @@ Dessutom har Mastering MuseScore en hjälpsam gemenskap bestående av musiker, m
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="70"/>
         <source>Module Unsuitable</source>
-        <translation>Opassande modul</translation>
+        <translation>Olämplig modul</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="94"/>
@@ -16087,12 +16088,12 @@ Använd endast moduler från pålitliga källor</translation>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="326"/>
         <source>Audacity Module Loader</source>
-        <translation>Audacitys modulinläsare</translation>
+        <translation>Audacitys modulinläsning</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="329"/>
         <source>Try and load this module?</source>
-        <translation>Prova och läs in denna modul?</translation>
+        <translation>Vill du försöka läsa in den här modulen?</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="354"/>
@@ -16432,7 +16433,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="688"/>
         <source>01000,01000 seconds</source>
         <extracomment>Format string for displaying time in seconds. Change the comma * in the middle to the 1000s separator for your locale, and the 'seconds' * on the end to the word for seconds. Don't change the numbers.</extracomment>
-        <translation>01000,01000 sekunder</translation>
+        <translation>01000 01000 sekunder</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="694"/>
@@ -16444,7 +16445,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="700"/>
         <source>01000,01000&gt;01000 seconds</source>
         <extracomment>Format string for displaying time in seconds and milliseconds * as fractional seconds. Change the comma in the middle to the 1000s separator * for your locale, and the 'seconds' on the end to the word for seconds. * Don't change the numbers. The decimal separator is specified using '&lt;' if * your languages uses a ',' or to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>01000,01000&gt;01000 sekunder</translation>
+        <translation>01000 01000&lt;01000 sekunder</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="701"/>
@@ -16474,7 +16475,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="735"/>
         <source>0100 h 060 m 060&gt;0100 s</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and hundredths of a second. Change the 'h' to the abbreviation for hours, * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds * (the hundredths are shown as decimal seconds). Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060&gt;0100 s</translation>
+        <translation>0100 h 060 m 060&lt;0100 s</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="736"/>
@@ -16485,25 +16486,25 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="748"/>
         <source>0100 h 060 m 060&gt;01000 s</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes and 's' to the abbreviation for seconds (the * milliseconds are shown as decimal seconds) . Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060&gt;01000 s</translation>
+        <translation>0100 h 060 m 060&lt;01000 s</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="761"/>
         <source>0100 h 060 m 060 s+&gt;# samples</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and samples. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes, 's' to the abbreviation for seconds and * translate samples . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060 s+&gt;# sampel</translation>
+        <translation>0100 h 060 m 060 s+&lt;# samplar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="769"/>
         <source>samples</source>
         <extracomment>Name of time display format that shows time in samples (at the * current project sample rate). For example the number of a sample at 1 * second into a recording at 44.1KHz would be 44,100.</extracomment>
-        <translation>sampel</translation>
+        <translation>samplar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="774"/>
         <source>01000,01000,01000 samples|#</source>
         <extracomment>Format string for displaying time in samples (lots of samples). * Change the ',' to the 1000s separator for your locale, and translate * samples. If 1000s aren't a base multiple for your number system, then you * can change the numbers to an appropriate one, and put a 0 on the front</extracomment>
-        <translation>01000,01000,01000 sampel|#</translation>
+        <translation>01000 01000 01000 samplar|#</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="780"/>
@@ -16515,7 +16516,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="788"/>
         <source>0100 h 060 m 060 s+&gt;24 frames</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames at 24 frames per second. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames' . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060 s+&gt;24 bildrutor</translation>
+        <translation>0100 h 060 m 060 s+&lt;24 bildrutor</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="794"/>
@@ -16527,7 +16528,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="799"/>
         <source>01000,01000 frames|24</source>
         <extracomment>Format string for displaying time in frames at 24 frames per * second. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
-        <translation>01000,01000 bildrutor|24</translation>
+        <translation>01000 01000 bildrutor|24</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="806"/>
@@ -16539,7 +16540,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="813"/>
         <source>0100 h 060 m 060 s+&gt;30 frames|N</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the |N alone, it's important! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060 s+&gt;30 bildrutor|N</translation>
+        <translation>0100 h 060 m 060 s+&lt;30 bildrutor|N</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="820"/>
@@ -16551,7 +16552,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="828"/>
         <source>0100 h 060 m 060 s+&gt;030 frames| .999000999</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the | .999000999 alone, * the whole things really is slightly off-speed! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060 s+&gt;030 bildrutor| .999000999</translation>
+        <translation>0100 h 060 m 060 s+&lt;030 bildrutor| .999000999</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="834"/>
@@ -16563,7 +16564,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="840"/>
         <source>01000,01000 frames|29.97002997</source>
         <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone. That really is the frame * rate!</extracomment>
-        <translation>01000,01000 bildrutor|29.97002997</translation>
+        <translation>01000 01000 bildrutor|29.97002997</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="846"/>
@@ -16575,7 +16576,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="853"/>
         <source>0100 h 060 m 060 s+&gt;25 frames</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with PAL TV frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Nice simple time code! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060 s+&gt;25 bildrutor</translation>
+        <translation>0100 h 060 m 060 s+&lt;25 bildrutor</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="859"/>
@@ -16587,7 +16588,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="864"/>
         <source>01000,01000 frames|25</source>
         <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone.</extracomment>
-        <translation>01000,01000 bildrutor|25</translation>
+        <translation>01000 01000 bildrutor|25</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="870"/>
@@ -16599,7 +16600,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="877"/>
         <source>0100 h 060 m 060 s+&gt;75 frames</source>
         <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with CD Audio frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>0100 h 060 m 060 s+&gt;75 bildrutor</translation>
+        <translation>0100 h 060 m 060 s+&lt;75 bildrutor</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="883"/>
@@ -16611,13 +16612,13 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="888"/>
         <source>01000,01000 frames|75</source>
         <extracomment>Format string for displaying time in frames with CD Audio * frames. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
-        <translation>01000,01000 bildrutor|75</translation>
+        <translation>01000 01000 bildrutor|75</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="908"/>
         <source>010,01000&gt;0100 Hz</source>
         <extracomment>Format string for displaying frequency in hertz. Change * the decimal point for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>010,01000&gt;0100 Hz</translation>
+        <translation>010 01000&lt;0100 Hz</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="909"/>
@@ -16634,7 +16635,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="921"/>
         <source>01000&gt;01000 kHz|0.001</source>
         <extracomment>Format string for displaying frequency in kilohertz. Change * the decimal point for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>01000&gt;01000 kHz|0.001</translation>
+        <translation>01000&lt;01000 kHz|0.001</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="922"/>
@@ -16645,13 +16646,13 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="943"/>
         <source>100&gt;01000 octaves|1.442695041</source>
         <extracomment>Format string for displaying log of frequency in octaves. * Change the decimal points for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>100&gt;01000 oktaver|1.442695041</translation>
+        <translation>100&lt;01000 oktaver|1.442695041</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="945"/>
         <source>thousandths of octaves</source>
         <extracomment>an octave is a doubling of frequency</extracomment>
-        <translation>tusentals oktaver</translation>
+        <translation>tusendelar av oktaver</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="952"/>
@@ -16663,37 +16664,37 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="959"/>
         <source>1000 semitones &gt;0100 cents|17.312340491</source>
         <extracomment>Format string for displaying log of frequency in semitones * and cents. * Change the decimal points for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
-        <translation>1000 halvtoner &gt;0100 cent|17.312340491</translation>
+        <translation>1000 halvtoner &lt;0100 cent|17.312340491</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="961"/>
         <source>hundredths of cents</source>
         <extracomment>a cent is a hundredth of a semitone (which is 1/12 octave)</extracomment>
-        <translation>hundratals cent</translation>
+        <translation>hundradelar av cent</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="968"/>
         <source>decades</source>
         <extracomment>Name of display format that shows log of frequency * in decades</extracomment>
-        <translation>årtionden</translation>
+        <translation>dekader</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="972"/>
         <source>10&gt;01000 decades|0.434294482</source>
         <extracomment>Format string for displaying log of frequency in decades. * Change the decimal points for your locale. Don't change the numbers.</extracomment>
-        <translation>10&gt;01000 årtionden|0.434294482</translation>
+        <translation>10&lt;01000 dekader|0.434294482</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="974"/>
         <source>thousandths of decades</source>
         <extracomment>a decade is a tenfold increase of frequency</extracomment>
-        <translation>tusentals årtionden</translation>
+        <translation>tusendelar av dekader</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="86"/>
         <source>hh:mm:ss + samples</source>
         <extracomment>Name of time display format that shows time in hours, * minutes, seconds and samples (at the current project sample rate)</extracomment>
-        <translation>hh:mm:ss + sampel</translation>
+        <translation>hh:mm:ss + samplar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="92"/>
@@ -16717,7 +16718,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="113"/>
         <source>hh:mm:ss + hundredths</source>
         <extracomment>Name of time display format that shows time in hours, * minutes, seconds and hundredths of a second (1/100 second)</extracomment>
-        <translation>hh:mm:ss + hundratal</translation>
+        <translation>hh:mm:ss + hundradelar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="119"/>
@@ -16785,7 +16786,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="93"/>
         <source>Gradient</source>
-        <translation>Gradient</translation>
+        <translation>Färgövertoning</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="121"/>
@@ -16795,12 +16796,12 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="125"/>
         <source>Linear (dB)</source>
-        <translation>Linear (dB)</translation>
+        <translation>Linjär (dB)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="129"/>
         <source>Linear (amp)</source>
-        <translation>Linear (amp)</translation>
+        <translation>Linjär (amp)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="162"/>
@@ -17401,7 +17402,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="199"/>
         <source>Success</source>
-        <translation>Succé</translation>
+        <translation>Klart</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="147"/>
@@ -17720,7 +17721,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
         <source>Export behavior</source>
-        <translation>Export beteende</translation>
+        <translation>Exportbeteende</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
@@ -17730,7 +17731,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
         <source>Save behavior</source>
-        <translation>Spara beteende</translation>
+        <translation>Beteende vid sparande</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="29"/>
@@ -17750,12 +17751,12 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="15"/>
         <source>Sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Ljudaktiverad inspelning</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="22"/>
         <source>Turn on sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>Aktivera ljudaktiverad inspelning</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="14"/>
@@ -17765,17 +17766,17 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="33"/>
         <source>Default track visualization</source>
-        <translation type="unfinished"/>
+        <translation>Standardvisualisering för spår</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="56"/>
         <source>Default ruler format</source>
-        <translation type="unfinished"/>
+        <translation>Standardformat för linjal</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="85"/>
         <source>Default audio track name</source>
-        <translation type="unfinished"/>
+        <translation>Standardnamn för ljudspår</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="65"/>
@@ -17795,7 +17796,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="75"/>
         <source>Linear (amp)</source>
-        <translation>Linear (amp)</translation>
+        <translation>Linjär (amp)</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="76"/>
@@ -17805,7 +17806,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="77"/>
         <source>Linear (dB)</source>
-        <translation>Linear (dB)</translation>
+        <translation>Linjär (dB)</translation>
     </message>
 </context>
 <context>
@@ -17888,7 +17889,7 @@ Den kommer inte att läsas in.</translation>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="273"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="241"/>
         <source>Modified</source>
-        <translation>Modifierad</translation>
+        <translation>Ändrad</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="435"/>
@@ -18101,7 +18102,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="215"/>
         <source>Watch video</source>
-        <translation>Se video</translation>
+        <translation>Titta på video</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="243"/>
@@ -18230,7 +18231,7 @@ Den kommer inte att läsas in.</translation>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="644"/>
         <source>Load latest</source>
-        <translation>Ladda senaste</translation>
+        <translation>Läs in senaste</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
@@ -18316,25 +18317,27 @@ Du kan hantera filen från sidan med uppdaterade projekt på audio.com</translat
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="987"/>
         <source>Use default location</source>
-        <translation type="unfinished"/>
+        <translation>Använd standardplats</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="990"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1005"/>
         <source>Could not create a new project</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte skapa ett nytt projekt</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="991"/>
         <source>The temporary files location is not accessible: %1
 
 Use the default location instead? It can be changed later in Preferences.</source>
-        <translation type="unfinished"/>
+        <translation>Platsen för tillfälliga filer är inte tillgänglig: %1
+
+Använd standardplatsen i stället? Den kan ändras senare i Inställningar.</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1006"/>
         <source>Make sure the temporary files location is accessible: %1</source>
-        <translation type="unfinished"/>
+        <translation>Kontrollera att platsen för tillfälliga filer är tillgänglig: %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1090"/>
@@ -18366,12 +18369,12 @@ Use the default location instead? It can be changed later in Preferences.</sourc
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="754"/>
         <source>Save to computer</source>
         <extracomment>Label of a dialog button</extracomment>
-        <translation>Spara till dator</translation>
+        <translation>Spara på datorn</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectconfiguration.cpp" line="161"/>
         <source>Untitled</source>
-        <translation>Namnlös</translation>
+        <translation>Namnlöst</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="40"/>
@@ -18445,7 +18448,7 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="374"/>
         <source>Connection to project file is null</source>
-        <translation>Förbindelse med projektfil är noll</translation>
+        <translation>Anslutningen till projektfilen saknas</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
@@ -18467,7 +18470,7 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1079"/>
         <source>Discarding undo/redo history</source>
-        <translation>Radera Ångra/Gör om historik</translation>
+        <translation>Rensar ångra-/gör om-historiken</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="92"/>
@@ -18494,7 +18497,7 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="243"/>
         <source>Checkpointing project</source>
-        <translation>Kontrollpunkt projekt</translation>
+        <translation>Skapar kontrollpunkt för projektet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="249"/>
@@ -18507,7 +18510,7 @@ Ta bort skrivskyddet genom att kontrollera filens egenskaper, säkerställa att 
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1397"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2408"/>
         <source>This may take several seconds</source>
-        <translation>Detta kan ta flera minuter</translation>
+        <translation>Detta kan ta några sekunder</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="550"/>
@@ -18601,14 +18604,14 @@ Vänligen välj plats för en större temporär katalog under Kataloger i Instä
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="794"/>
         <source>This is not an Audacity project file</source>
-        <translation>Detta är inte en Audacity projektfil</translation>
+        <translation>Det här är inte en Audacity-projektfil</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="810"/>
         <source>This project was created with a newer version of Audacity.
 
 You will need to upgrade to open it.</source>
-        <translation>Detta projekt skapades av en tidigare version av Audacity.
+        <translation>Det här projektet skapades med en nyare version av Audacity.
 
 Du behöver uppdatera programmet för att kunna öppna filen.</translation>
     </message>
@@ -18653,7 +18656,7 @@ Filen kan vara skadad eller skrivskyddad.</translation>
         <source>Project is busy
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>Projektet arbetar
+        <translation>Projektet används
 (Kunde inte arbeta med blockfilerna)</translation>
     </message>
     <message>
@@ -18661,7 +18664,7 @@ Filen kan vara skadad eller skrivskyddad.</translation>
         <source>Project is corrupt
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>Projektet är korrupt
+        <translation>Projektet är skadat
 (Kunde inte arbeta med blockfilerna)</translation>
     </message>
     <message>
@@ -18669,7 +18672,7 @@ Filen kan vara skadad eller skrivskyddad.</translation>
         <source>Some permissions issue
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>Några tillståndsproblem
+        <translation>Problem med behörighet
 (Kunde inte arbeta med blockfilerna)</translation>
     </message>
     <message>
@@ -18677,7 +18680,7 @@ Filen kan vara skadad eller skrivskyddad.</translation>
         <source>A disk I/O error
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>Ett disk I/O fel
+        <translation>Ett disk-I/O-fel
 (Kunde inte arbeta med blockfilerna)</translation>
     </message>
     <message>
@@ -18685,7 +18688,7 @@ Filen kan vara skadad eller skrivskyddad.</translation>
         <source>Not authorized
 (Unable to work with the blockfiles)</source>
         <extracomment>An error message. Don't translate blockfiles.</extracomment>
-        <translation>Inte godkänd
+        <translation>Inte behörig
 (Kunde inte arbeta med blockfilerna)</translation>
     </message>
     <message>
@@ -18707,7 +18710,7 @@ Filen kan vara skadad eller skrivskyddad.</translation>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1115"/>
         <source>Unable to switch to fast journaling mode</source>
-        <translation>Det går inte att växla till snabbt journalföringsläge</translation>
+        <translation>Kunde inte växla till snabbt journalföringsläge</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1161"/>
@@ -18723,7 +18726,7 @@ Filen kan vara skadad eller skrivskyddad.</translation>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1194"/>
         <source>Failed to bind SQL parameter</source>
-        <translation>Misslyckades med att sätta samman SQL parameter</translation>
+        <translation>Kunde inte binda SQL-parametern</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1209"/>
@@ -18747,12 +18750,12 @@ Följande kommando misslyckades:
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1273"/>
         <source>Destination project could not be detached</source>
-        <translation>Projektet med denna destination kunde inte frigöras</translation>
+        <translation>Målprojektet kunde inte kopplas loss</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1397"/>
         <source>Copying Project</source>
-        <translation>Kopiera projekt</translation>
+        <translation>Kopierar projekt</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1411"/>
@@ -18816,7 +18819,7 @@ en nyare version för att kunna öppna denna fil.</translation>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2099"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2112"/>
         <source>Unable to bind to blob</source>
-        <translation>Det går inte att binda till blobben</translation>
+        <translation>Kunde inte binda BLOB-objektet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2212"/>
@@ -18836,7 +18839,7 @@ en nyare version för att kunna öppna denna fil.</translation>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2367"/>
         <source>Saving project</source>
-        <translation>Spara projekt</translation>
+        <translation>Sparar projektet</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="217"/>
@@ -18845,12 +18848,12 @@ en nyare version för att kunna öppna denna fil.</translation>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2443"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2473"/>
         <source>Error Saving Project</source>
-        <translation>Fel uppstod när projektet sparades</translation>
+        <translation>Fel när projektet sparades</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2408"/>
         <source>Syncing</source>
-        <translation>Synka</translation>
+        <translation>Synkroniserar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2425"/>
@@ -18879,18 +18882,18 @@ för lite utrymme på hårddisken.
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2499"/>
         <source>Backing up project</source>
-        <translation>Gör backup på projekt</translation>
+        <translation>Säkerhetskopierar projektet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2820"/>
         <source>Automatic database backup failed.</source>
-        <translation>Automatisk backup av databasen misslyckades.</translation>
+        <translation>Automatisk säkerhetskopiering av databasen misslyckades.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectSerializer.cpp" line="94"/>
         <source>This recovery file was saved by Audacity 2.3.0 or before.
 You need to run that version of Audacity to recover the project.</source>
-        <translation>Denna återställningsfil sparades av Audacity 2.3.0 tidigare.
+        <translation>Den här återställningsfilen sparades av Audacity 2.3.0 eller tidigare.
 Du behöver köra den versionen av Audacity för att återskapa projektet.</translation>
     </message>
 </context>
@@ -18950,7 +18953,7 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
         <source>Project is syncing with audio.com. Do you want to stop the sync process?</source>
-        <translation>Projektet synkar med audio.com. Vill du avsluta synkroniseringen?</translation>
+        <translation>Projektet synkroniseras med audio.com. Vill du avbryta synkroniseringen?</translation>
     </message>
 </context>
 <context>
@@ -18974,7 +18977,7 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="88"/>
         <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation>Laddar upp en okomprimerad ljudfil och genererar en delbar länk. Denna länk låter andra ladda ner filen i antingen .wav- eller .mp3-format.</translation>
+        <translation>Laddar upp en okomprimerad ljudfil och skapar en delbar länk. Med länken kan andra hämta filen i formatet .wav eller .mp3.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
@@ -19142,7 +19145,7 @@ Du behöver köra den versionen av Audacity för att återskapa projektet.</tran
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="526"/>
         <source>Save to computer</source>
-        <translation>Spara till dator</translation>
+        <translation>Spara på datorn</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
@@ -19379,12 +19382,12 @@ Försök igen med ett annat namn.</translation>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
         <source>Snap</source>
         <extracomment>Noun: label of the snapping control in the playback toolbar</extracomment>
-        <translation>Snap</translation>
+        <translation>Fäst</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="315"/>
         <source>Snapping</source>
-        <translation>Snapping</translation>
+        <translation>Fästning</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="316"/>
@@ -19537,7 +19540,7 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="162"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
-        <translation>Realtidseffekter förstör inte och kan ändras när som helst.</translation>
+        <translation>Realtidseffekter ändrar inte ljudet permanent och kan ändras när som helst.</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
@@ -19547,7 +19550,7 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
         <source>Realtime effects</source>
-        <translation>Realtime effekter</translation>
+        <translation>Realtidseffekter</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="91"/>
@@ -19658,12 +19661,12 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="197"/>
         <source>Deciseconds</source>
-        <translation>Tiondels sekunder</translation>
+        <translation>Tiondelssekunder</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="198"/>
         <source>Centiseconds</source>
-        <translation>Hudradels sekunder</translation>
+        <translation>Hundradelssekunder</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="199"/>
@@ -19673,7 +19676,7 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="200"/>
         <source>Samples</source>
-        <translation>Sampel</translation>
+        <translation>Samplar</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="203"/>
@@ -19688,12 +19691,12 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="210"/>
         <source>NTSC frames (29.97 fps)</source>
-        <translation>NTSC bildrutor (29.97 fps)</translation>
+        <translation>NTSC-bildrutor (29,97 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="211"/>
         <source>NTSC frames (30 fps)</source>
-        <translation>NTSC bildrutor (30 fps)</translation>
+        <translation>NTSC-bildrutor (30 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="212"/>
@@ -19713,7 +19716,7 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
         <source>CD frames</source>
-        <translation>CD bildrutor</translation>
+        <translation>CD-bildrutor</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="69"/>
@@ -19723,7 +19726,7 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="72"/>
         <source>Label text</source>
-        <translation>Etikettext</translation>
+        <translation>Etikettens text</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="78"/>
@@ -19843,12 +19846,12 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="640"/>
         <source>Moved Samples</source>
-        <translation>Flyttade sampel</translation>
+        <translation>Flyttade samplar</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="640"/>
         <source>Sample Edit</source>
-        <translation>Redigera sampel</translation>
+        <translation>Redigering av samplar</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="209"/>
@@ -19904,7 +19907,7 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml" line="93"/>
         <source>Track %1: %2, vertical ruler</source>
-        <translation type="unfinished"/>
+        <translation>Spår %1: %2, vertikal linjal</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
@@ -19917,7 +19920,7 @@ Försök igen med ett annat namn.</translation>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="15"/>
         <source>Silence</source>
-        <translation>Tystnad</translation>
+        <translation>Tysta</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="41"/>
@@ -20032,7 +20035,7 @@ Anslut en inmatningsenhet och sök igen.</translation>
     <message>
         <location filename="../../src/record/recorderrors.h" line="52"/>
         <source>Please select a time within a clip.</source>
-        <translation>Var god välj en tid i ett klipp.</translation>
+        <translation>Välj en tidpunkt i ett klipp.</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="55"/>
@@ -20042,7 +20045,7 @@ Anslut en inmatningsenhet och sök igen.</translation>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelControl.qml" line="70"/>
         <source>Activation level</source>
-        <translation type="unfinished"/>
+        <translation>Aktiveringsnivå</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="15"/>
@@ -20053,7 +20056,7 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
         <source>Timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Tidsinställd inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>
@@ -20065,7 +20068,7 @@ Anslut en inmatningsenhet och sök igen.</translation>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="170"/>
         <source>Date</source>
-        <translation type="unfinished"/>
+        <translation>Datum</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="187"/>
@@ -20075,33 +20078,33 @@ Anslut en inmatningsenhet och sök igen.</translation>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="318"/>
         <source>Start recording</source>
-        <translation type="unfinished"/>
+        <translation>Starta inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="325"/>
         <source>Now</source>
-        <translation type="unfinished"/>
+        <translation>Nu</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="337"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="396"/>
         <source>At a time</source>
-        <translation type="unfinished"/>
+        <translation>Vid en tidpunkt</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="377"/>
         <source>End recording</source>
-        <translation type="unfinished"/>
+        <translation>Avsluta inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="384"/>
         <source>For a duration</source>
-        <translation type="unfinished"/>
+        <translation>Under en tidslängd</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="474"/>
         <source>When recording is done</source>
-        <translation type="unfinished"/>
+        <translation>När inspelningen är klar</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="480"/>
@@ -20122,12 +20125,12 @@ Anslut en inmatningsenhet och sök igen.</translation>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="524"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Avsluta Audacity</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
         <source>Start timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Starta tidsstyrd inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="116"/>
@@ -20138,45 +20141,45 @@ Anslut en inmatningsenhet och sök igen.</translation>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="30"/>
         <source>%1d</source>
         <extracomment>Abbreviated number of days in a duration, e.g. &quot;2d&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 d</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="34"/>
         <source>%1h</source>
         <extracomment>Abbreviated number of hours in a duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 h</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="38"/>
         <source>%1m</source>
         <extracomment>Abbreviated number of minutes in a duration, e.g. &quot;30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 min</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="42"/>
         <source>%1s</source>
         <extracomment>Abbreviated number of seconds in a duration, e.g. &quot;45s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 s</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="159"/>
         <source>The end time has already passed.</source>
-        <translation type="unfinished"/>
+        <translation>Sluttiden har redan passerat.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="198"/>
         <source>Audacity was already recording.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity spelade redan in.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="208"/>
         <source>Recording couldn’t be started.</source>
-        <translation type="unfinished"/>
+        <translation>Inspelningen kunde inte startas.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="222"/>
         <source>Timed recording couldn’t start</source>
-        <translation type="unfinished"/>
+        <translation>Den tidsstyrda inspelningen kunde inte startas</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="246"/>
@@ -20186,28 +20189,28 @@ Anslut en inmatningsenhet och sök igen.</translation>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="249"/>
         <source>Stop timed recording</source>
-        <translation type="unfinished"/>
+        <translation>Stoppa tidsstyrd inspelning</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="250"/>
         <source>Your timed recording will be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>Din tidsstyrda inspelning stoppas.</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="287"/>
         <source>Timed recording complete</source>
-        <translation type="unfinished"/>
+        <translation>Tidsstyrd inspelning klar</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="289"/>
         <source>Recorded for %1</source>
         <extracomment>%1 is how long the timed recording lasted, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spelades in under %1</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="293"/>
         <source>Timed recording stopped</source>
-        <translation type="unfinished"/>
+        <translation>Tidsstyrd inspelning stoppad</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="328"/>
@@ -20217,53 +20220,53 @@ Anslut en inmatningsenhet och sök igen.</translation>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="330"/>
         <source>Couldn’t save the project</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte spara projektet</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="353"/>
         <source>Couldn’t export the audio</source>
-        <translation type="unfinished"/>
+        <translation>Kunde inte exportera ljudet</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="357"/>
         <source>Audio exported</source>
-        <translation type="unfinished"/>
+        <translation>Ljudet har exporterats</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="95"/>
         <source>Audacity will quit in %1</source>
         <extracomment>%1 is the time left until Audacity quits, e.g. &quot;59s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity avslutas om %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="99"/>
         <source>Recording ends in %1</source>
         <extracomment>%1 is the time left until the timed recording ends, e.g. &quot;59m 50s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Inspelningen slutar om %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="102"/>
         <source>Started: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Startade: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="106"/>
         <source>Recording starts in %1</source>
         <extracomment>%1 is the time left until the timed recording starts, e.g. &quot;5m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Inspelningen startar om %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="109"/>
         <source>Starts: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Startar: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="112"/>
         <source>Ends: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 13:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Slutar: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="159"/>
@@ -20271,7 +20274,10 @@ Anslut en inmatningsenhet och sök igen.</translation>
 %1
 
 Do you want to overwrite it?</source>
-        <translation type="unfinished"/>
+        <translation>Filen finns redan:
+%1
+
+Vill du skriva över den?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="161"/>
@@ -20279,7 +20285,10 @@ Do you want to overwrite it?</source>
 %1
 
 Do you want to overwrite them?</source>
-        <translation type="unfinished"/>
+        <translation>Dessa filer finns redan:
+%1
+
+Vill du skriva över dem?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="166"/>
@@ -20289,72 +20298,72 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="182"/>
         <source>Save project as</source>
-        <translation type="unfinished"/>
+        <translation>Spara projekt som</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="46"/>
         <source>%1 at %2</source>
         <extracomment>A date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 kl. %2</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="58"/>
         <source>Starts when you press Start timed recording and ends %1 (%2).</source>
         <extracomment>%1 is when the recording ends, e.g. &quot;today at 16:28:20&quot;, and %2 its duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Startar när du trycker på Starta tidsstyrd inspelning och slutar %1 (%2).</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="63"/>
         <source>Starts when you press Start timed recording and records for %1.</source>
         <extracomment>%1 is the duration of the recording, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Startar när du trycker på Starta tidsstyrd inspelning och spelar in under %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="67"/>
         <source>Starts %1 and records for %2.</source>
         <extracomment>%1 is when the recording starts, e.g. &quot;today at 12:23:30&quot; or &quot;in 43m 30s&quot;, and %2 its duration, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Startar %1 och spelar in under %2.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="73"/>
         <source>Start time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Starttiden har passerat. Välj en tid efter %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="79"/>
         <source>End time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>Sluttiden har passerat. Välj en tid efter %1.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="84"/>
         <source>End time must be after the start time.</source>
-        <translation type="unfinished"/>
+        <translation>Sluttiden måste vara efter starttiden.</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="102"/>
         <source>in %1</source>
         <extracomment>%1 is how long until the recording starts, e.g. &quot;43m 30s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>om %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="113"/>
         <source>today at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>i dag kl. %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="118"/>
         <source>tomorrow at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>i morgon kl. %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="122"/>
         <source>on %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sun 25 Oct 2026 at 16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>den %1</translation>
     </message>
 </context>
 <context>
@@ -20383,12 +20392,12 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-sample-track/SampleTrack.cpp" line="27"/>
         <source>Sample Track</source>
-        <translation>Sampelspår</translation>
+        <translation>Samplingsspår</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sample-track/SampleTrack.cpp" line="55"/>
         <source>Writable Sample Track</source>
-        <translation>Skrivbart sampelspår</translation>
+        <translation>Skrivbart samplingsspår</translation>
     </message>
 </context>
 <context>
@@ -20581,7 +20590,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="32"/>
         <source>Navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between panels and controls</extracomment>
-        <translation type="unfinished"/>
+        <translation>Navigering</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="34"/>
@@ -20605,25 +20614,25 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="40"/>
         <source>Track view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that work only while a track or a track item has the keyboard focus</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spårvy</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="44"/>
         <source>Project view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that change how the project is shown</extracomment>
-        <translation type="unfinished"/>
+        <translation>Projektvy</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
         <source>Editing</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that edit audio, clips, labels and tracks</extracomment>
-        <translation type="unfinished"/>
+        <translation>Redigering</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>
         <source>Track navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between tracks and track items</extracomment>
-        <translation type="unfinished"/>
+        <translation>Spårnavigering</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="50"/>
@@ -20641,7 +20650,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="55"/>
         <source>App</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that act on the whole application</extracomment>
-        <translation type="unfinished"/>
+        <translation>App</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="57"/>
@@ -20683,7 +20692,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="69"/>
         <source>Extensions</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of extensions (add-ons that users install)</extracomment>
-        <translation type="unfinished"/>
+        <translation>Tillägg</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="71"/>
@@ -20695,7 +20704,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="73"/>
         <source>Windows</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that manage application windows</extracomment>
-        <translation type="unfinished"/>
+        <translation>Fönster</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="75"/>
@@ -20713,7 +20722,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="79"/>
         <source>Testflow</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the automated test tool for developers; &quot;Testflow&quot; is a tool name, do not translate it</extracomment>
-        <translation type="unfinished"/>
+        <translation>Testflöde</translation>
     </message>
 </context>
 <context>
@@ -20819,12 +20828,12 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="22"/>
         <source>NTSC frames (29.97 fps)</source>
-        <translation>NTSC bildrutor (29.97 fps)</translation>
+        <translation>NTSC-bildrutor (29,97 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="24"/>
         <source>NTSC frames (30 fps)</source>
-        <translation>NTSC bildrutor (30 fps)</translation>
+        <translation>NTSC-bildrutor (30 fps)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="25"/>
@@ -20834,7 +20843,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="27"/>
         <source>CD frames</source>
-        <translation>CD bildrutor</translation>
+        <translation>CD-bildrutor</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="28"/>
@@ -20844,7 +20853,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="24"/>
         <source>Seconds &amp;&amp; samples</source>
-        <translation>Sekunder &amp;&amp; sampel</translation>
+        <translation>Sekunder &amp;&amp; samplar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="25"/>
@@ -20854,12 +20863,12 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="26"/>
         <source>Deciseconds</source>
-        <translation>Tiondels sekunder</translation>
+        <translation>Tiondelssekunder</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="27"/>
         <source>Centiseconds</source>
-        <translation>Hudradels sekunder</translation>
+        <translation>Hundradelssekunder</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="28"/>
@@ -20869,7 +20878,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="29"/>
         <source>Samples</source>
-        <translation>Sampel</translation>
+        <translation>Samplar</translation>
     </message>
 </context>
 <context>
@@ -20966,7 +20975,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="24"/>
         <source>Rectangular</source>
-        <translation>Rekangulär</translation>
+        <translation>Rektangulär</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="25"/>
@@ -21016,12 +21025,12 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="37"/>
         <source>8 - most wideband</source>
-        <translation>8 - mest bredband</translation>
+        <translation>8 - störst bandbredd</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="49"/>
         <source>32768 - most narrowband</source>
-        <translation>32768 - mest smalband</translation>
+        <translation>32768 - minst bandbredd</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="107"/>
@@ -21117,7 +21126,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="46"/>
         <source>SQLite3 error</source>
-        <translation>SQLite3 fel</translation>
+        <translation>SQLite3-fel</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="59"/>
@@ -21147,7 +21156,7 @@ Do you want to overwrite them?</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="71"/>
         <source>Callback routine requested an abort</source>
         <extracomment>database operation was aborted by the callback</extracomment>
-        <translation>Callback begärde ett avbrott</translation>
+        <translation>Återanropsrutinen begärde ett avbrott</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="74"/>
@@ -21171,19 +21180,19 @@ Do you want to overwrite them?</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="83"/>
         <source>Attempt to write a read-only database</source>
         <extracomment>database operation has failed because database is read-only</extracomment>
-        <translation>Försök att skriva en skrivskyddad databas</translation>
+        <translation>Försök att skriva till en skrivskyddad databas</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="86"/>
         <source>Operation terminated</source>
         <extracomment>database operation was interrupted</extracomment>
-        <translation>Driften avslutad</translation>
+        <translation>Åtgärden avslutades</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="89"/>
         <source>I/O error occurred</source>
         <extracomment>database operation has failed due to the I/O failure</extracomment>
-        <translation>I/O fel uppstod</translation>
+        <translation>I/O-fel uppstod</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="92"/>
@@ -21195,7 +21204,7 @@ Do you want to overwrite them?</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="95"/>
         <source>File not found</source>
         <extracomment>database operation has failed because the requested item was not found</extracomment>
-        <translation>Filen hittades inte.</translation>
+        <translation>Filen hittades inte</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="98"/>
@@ -21207,13 +21216,13 @@ Do you want to overwrite them?</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="101"/>
         <source>Unable to open the database file</source>
         <extracomment>database operation has failed because the file cannot be opened</extracomment>
-        <translation>Misslyckades med att öppna databasfil</translation>
+        <translation>Kunde inte öppna databasfilen</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="104"/>
         <source>Database lock protocol error</source>
         <extracomment>database operation has failed because the lock protocol has failed</extracomment>
-        <translation>Databas lås protokoll fel</translation>
+        <translation>Fel i databasens låsprotokoll</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="107"/>
@@ -21255,25 +21264,25 @@ Do you want to overwrite them?</source>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="125"/>
         <source>Authorization denied</source>
         <extracomment>database operation has failed due to the authorization error</extracomment>
-        <translation>Auktorisering nekad</translation>
+        <translation>Behörighet nekad</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="128"/>
         <source>Not used</source>
         <extracomment>database operation has failed due to the format error</extracomment>
-        <translation>Inte använd</translation>
+        <translation>Används inte</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="131"/>
         <source>2nd parameter to sqlite3_bind out of range</source>
         <extracomment>database operation has failed because the parameter is out of range</extracomment>
-        <translation>2:a parametern till sqlite3_bind utanför intervallet</translation>
+        <translation>Andra parametern till sqlite3_bind ligger utanför intervallet</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="134"/>
         <source>File opened that is not a database file </source>
         <extracomment>database operation has failed because the file opened is not a database file</extracomment>
-        <translation>Fil öppnad som inte är en databas fil </translation>
+        <translation>En öppnad fil är inte en databasfil </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="137"/>
@@ -21288,12 +21297,12 @@ Do you want to overwrite them?</source>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
         <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
-        <translation>Klipp ut/Kopiera/Klistra in</translation>
+        <translation>Klipp ut/kopiera/klistra in</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="99"/>
         <source>&amp;Cut/Copy/Paste Toolbar</source>
-        <translation>&amp;Klipp ut/Kopiera/Klistra in verktygsfält</translation>
+        <translation>Verktygsfält för &amp;klipp ut/kopiera/klistra in</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="190"/>
@@ -21405,7 +21414,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../au3/libraries/au3-time-frequency-selection/ViewInfo.cpp" line="231"/>
         <source>Enable &amp;Looping</source>
-        <translation>Aktivera &amp;Loopa</translation>
+        <translation>Aktivera &amp;loopning</translation>
     </message>
 </context>
 <context>
@@ -21465,7 +21474,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="49"/>
         <source>Success</source>
-        <translation>Succé</translation>
+        <translation>Klart</translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/toastlistmodel.cpp" line="106"/>
@@ -21694,7 +21703,7 @@ Vill du fortsätta?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="61"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="79"/>
         <source>Silence</source>
-        <translation>Tystnad</translation>
+        <translation>Tysta</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="79"/>
@@ -21724,7 +21733,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="110"/>
         <source>Pitch Shift</source>
-        <translation>Tonhöjd ändra</translation>
+        <translation>Ändra tonhöjd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="110"/>
@@ -21734,7 +21743,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="119"/>
         <source>Reset Clip Pitch</source>
-        <translation>Återställ Clip Pitch</translation>
+        <translation>Återställ klipptonhöjd</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="128"/>
@@ -21761,7 +21770,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="201"/>
         <source>Rendered time-stretched audio</source>
-        <translation>Renderat time-stretchat ljud</translation>
+        <translation>Renderat tidsutsträckt ljud</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="201"/>
@@ -21772,7 +21781,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="241"/>
         <source>Pasted from the clipboard</source>
-        <translation>Klistrade in från urklipp</translation>
+        <translation>Klistrade in från urklippet</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="241"/>
@@ -21784,7 +21793,7 @@ Vill du fortsätta?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="283"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1255"/>
         <source>Cut to the clipboard</source>
-        <translation>Klipp ut till urklipp</translation>
+        <translation>Klipp ut till urklippet</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="263"/>
@@ -21810,7 +21819,7 @@ Vill du fortsätta?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1075"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1077"/>
         <source>Remove</source>
-        <translation>Ta bort</translation>
+        <translation>Radera</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="354"/>
@@ -21850,13 +21859,13 @@ Vill du fortsätta?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="154"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="155"/>
         <source>Changed fade in</source>
-        <translation type="unfinished"/>
+        <translation>Ändrad intoning</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="166"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="167"/>
         <source>Changed fade out</source>
-        <translation type="unfinished"/>
+        <translation>Ändrad uttoning</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="424"/>
@@ -21896,7 +21905,7 @@ Vill du fortsätta?</translation>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="615"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="638"/>
         <source>Split-cut to the clipboard</source>
-        <translation>Dela och klipp ut till urklipp</translation>
+        <translation>Dela och klipp ut till urklippet</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="615"/>
@@ -22055,27 +22064,27 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Resampled audio track(s)</source>
-        <translation>Återsamplade ljudspår</translation>
+        <translation>Samplade om ljudspår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="973"/>
         <source>Rendered all audio in track ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>Renderade allt ljud i spåret ”%1”</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
         <source>Mixed and rendered %1 tracks into one new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Mixade och renderade %1 spår till ett nytt stereospår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="979"/>
         <source>Mixed and rendered %1 tracks into one new mono track</source>
-        <translation type="unfinished"/>
+        <translation>Mixade och renderade %1 spår till ett nytt monospår</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="981"/>
         <source>Mix and render</source>
-        <translation type="unfinished"/>
+        <translation>Mixa och rendera</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
@@ -22179,27 +22188,27 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1249"/>
         <source>Cut multiple items</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut flera objekt</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1251"/>
         <source>Cut multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut flera klipp</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1253"/>
         <source>Cut multiple labels</source>
-        <translation type="unfinished"/>
+        <translation>Klipp ut flera etiketter</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1317"/>
         <source>Items grouped</source>
-        <translation type="unfinished"/>
+        <translation>Objekt grupperade</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1326"/>
         <source>Items ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>Objekt uppdelade</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1344"/>
@@ -22268,7 +22277,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3interactionutils.cpp" line="320"/>
         <source>Resampling…</source>
-        <translation type="unfinished"/>
+        <translation>Samplar om…</translation>
     </message>
 </context>
 <context>
@@ -22475,7 +22484,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
         <source>Directories</source>
-        <translation>Mappar</translation>
+        <translation>Kataloger</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
@@ -22606,7 +22615,7 @@ Vill du fortsätta?</translation>
         <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
         <source>White</source>
         <extracomment>The name of the high contrast light ui theme</extracomment>
-        <translation>Vitt</translation>
+        <translation>Vit</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
@@ -22685,7 +22694,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="28"/>
         <source>hh:mm:ss + hundredths</source>
-        <translation>hh:mm:ss + hundratal</translation>
+        <translation>hh:mm:ss + hundradelar</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="31"/>
@@ -22695,12 +22704,12 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="35"/>
         <source>hh:mm:ss + samples</source>
-        <translation>hh:mm:ss + sampel</translation>
+        <translation>hh:mm:ss + samplar</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="38"/>
         <source>samples</source>
-        <translation>sampel</translation>
+        <translation>samplar</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="41"/>
@@ -22785,7 +22794,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
         <source>Open</source>
-        <translation>Öppen</translation>
+        <translation>Öppna</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
@@ -22885,7 +22894,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
         <source>Done</source>
-        <translation>Färdig</translation>
+        <translation>Klart</translation>
     </message>
 </context>
 <context>
@@ -22893,7 +22902,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="104"/>
         <source>%1 %2 is available!</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 är tillgänglig!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="120"/>
@@ -22920,7 +22929,7 @@ Vill du fortsätta?</translation>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
         <source>Restart &amp; update</source>
-        <translation type="unfinished"/>
+        <translation>Starta om och uppdatera</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22940,17 +22949,17 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="210"/>
         <source>Updated to %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>Uppdaterad till %1 %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="222"/>
         <source>%1 %2 is now ready to install.</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 är nu redo att installeras.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="225"/>
         <source>New update available</source>
-        <translation type="unfinished"/>
+        <translation>Ny uppdatering tillgänglig</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="228"/>
@@ -22983,7 +22992,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="297"/>
         <source>Restart to finish updating</source>
-        <translation type="unfinished"/>
+        <translation>Starta om för att slutföra uppdateringen</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="298"/>
@@ -23009,17 +23018,17 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="46"/>
         <source>Download and install future %1 updates automatically</source>
-        <translation type="unfinished"/>
+        <translation>Hämta och installera framtida uppdateringar av %1 automatiskt</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="60"/>
         <source>You can change this anytime in &lt;b&gt;Preferences &gt; General&lt;/b&gt;.</source>
-        <translation type="unfinished"/>
+        <translation>Du kan ändra detta när som helst i &lt;b&gt;Inställningar &gt; Allmänt&lt;/b&gt;.</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="377"/>
         <source>Preparing %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>Förbereder %1 %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="481"/>
@@ -23085,7 +23094,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="162"/>
         <source>VST3 Effects</source>
-        <translation>VST3 effekter</translation>
+        <translation>VST3-effekter</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="167"/>
@@ -23095,7 +23104,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="177"/>
         <source>Adds the ability to use VST3 effects in Audacity.</source>
-        <translation>Lägger till möjligheten att använda VST3-effekter i Audacity.</translation>
+        <translation>Ger Audacity stöd för VST3-effekter.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="274"/>
@@ -23121,7 +23130,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3Wrapper.cpp" line="775"/>
         <source>Failed to save VST3 preset to file</source>
-        <translation>Kunde inte spara VST3 förinställning till fil</translation>
+        <translation>Kunde inte spara VST3-förinställningen till fil</translation>
     </message>
 </context>
 <context>
@@ -23134,7 +23143,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="38"/>
         <source>Rendering Clip</source>
-        <translation>Rendering Klipp</translation>
+        <translation>Renderar klipp</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveChannelViewConstants.cpp" line="111"/>
@@ -23144,7 +23153,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1650"/>
         <source>Resampling failed.</source>
-        <translation>Omsamplingen misslyckades.</translation>
+        <translation>Återsampling misslyckades.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveClip.cpp" line="1651"/>
@@ -23160,7 +23169,7 @@ Vill du fortsätta?</translation>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="683"/>
         <source>Wave Track</source>
-        <translation>Våg spår</translation>
+        <translation>Vågformsspår</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="815"/>
@@ -23175,7 +23184,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2868"/>
         <source>A track has a corrupted sample sequence.</source>
-        <translation>Ett spår har en korrupt provsekvens.</translation>
+        <translation>Ett spår har en skadad samplingssekvens.</translation>
     </message>
 </context>
 <context>
@@ -23184,7 +23193,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="33"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="207"/>
         <source>Linear (amp)</source>
-        <translation>Linear (amp)</translation>
+        <translation>Linjär (amp)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="34"/>
@@ -23196,7 +23205,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="35"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="209"/>
         <source>Linear (dB)</source>
-        <translation>Linear (dB)</translation>
+        <translation>Linjär (dB)</translation>
     </message>
     <message>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="203"/>
@@ -23208,31 +23217,31 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="205"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="228"/>
         <source>-48 dB (PCM range of 8 bit samples)</source>
-        <translation>-48 dB (PCM-intervall av 8-bitars sampel)</translation>
+        <translation>-48 dB (PCM-intervall för 8-bitars samplar)</translation>
     </message>
     <message>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="207"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="229"/>
         <source>-60 dB (PCM range of 10 bit samples)</source>
-        <translation>-60 dB (PCM-intervall av 10-bitars sampel)</translation>
+        <translation>-60 dB (PCM-intervall för 10-bitars samplar)</translation>
     </message>
     <message>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="209"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="230"/>
         <source>-72 dB (PCM range of 12 bit samples)</source>
-        <translation>−72 dB (PCM-intervall för 12-bitars sampel)</translation>
+        <translation>-72 dB (PCM-intervall för 12-bitars samplar)</translation>
     </message>
     <message>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="211"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="231"/>
         <source>-84 dB (PCM range of 14 bit samples)</source>
-        <translation>−84 dB (PCM-intervall för 14-bitars sampel)</translation>
+        <translation>-84 dB (PCM-intervall för 14-bitars samplar)</translation>
     </message>
     <message>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="213"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="232"/>
         <source>-96 dB (PCM range of 16 bit samples)</source>
-        <translation>-96 dB (PCM-intervall av 16-bitars sampel)</translation>
+        <translation>-96 dB (PCM-intervall för 16-bitars samplar)</translation>
     </message>
     <message>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="215"/>
@@ -23244,7 +23253,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../src/playback/view/common/metermodel.cpp" line="217"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="234"/>
         <source>-145 dB (PCM range of 24 bit samples)</source>
-        <translation>-145 dB (PCM-intervall av 24-bitars sampel)</translation>
+        <translation>-145 dB (PCM-intervall för 24-bitars samplar)</translation>
     </message>
 </context>
 <context>
@@ -23253,7 +23262,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="79"/>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
         <source>Remove</source>
-        <translation>Ta bort</translation>
+        <translation>Radera</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
