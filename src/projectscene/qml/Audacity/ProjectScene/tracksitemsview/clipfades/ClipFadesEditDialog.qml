@@ -14,7 +14,7 @@ StyledDialogView {
 
     property int focusedFade: ClipSide.Left
 
-    title: qsTrc("projectscene", "Edit fades") + " - " + (fadesModel.clipCount > 1 ? qsTrc("projectscene", "%n clips", "", fadesModel.clipCount) : fadesModel.clipTitle)
+    title: qsTrc("projectscene", "Edit fades - %1").arg(fadesModel.clipCount > 1 ? qsTrc("projectscene", "%n clips", "", fadesModel.clipCount) : fadesModel.clipTitle)
 
     contentWidth: 320
     contentHeight: content.implicitHeight
