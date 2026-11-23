@@ -3,8 +3,12 @@
 */
 #include "trackcontextmenumodel.h"
 
-#include "framework/global/async/async.h"
+#include <algorithm>
 
+#include "framework/global/async/async.h"
+#include "framework/global/containers.h"
+
+#include "project/iaudacityproject.h"
 #include "project/projectcommands.h"
 #include "projectscene/projectscenecommands.h"
 #include "record/recordcommands.h"
@@ -134,6 +138,7 @@ void TrackContextMenuModel::load()
 
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList&) {
         updateTrackMonoState();
+        updateTrackHeightState();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     trackNavigationController()->openContextMenuRequested().onReceive(this, [this](const trackedit::TrackItemKey& key) {
@@ -175,6 +180,7 @@ void TrackContextMenuModel::load()
     updateTrackMonoState();
     updateTrackViewCheckedState();
     updateTrackHalfWaveCheckedState();
+    updateTrackHeightState();
     updateRecordingState();
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -188,6 +194,11 @@ void TrackContextMenuModel::load()
 
         project->viewState()->isHalfWave(m_trackId).ch.onReceive(this, [this](bool) {
             updateTrackHalfWaveCheckedState();
+        }, muse::async::Asyncable::Mode::SetReplace);
+
+        // Collapsing or expanding any track changes the total height
+        project->viewState()->totalTrackHeight().ch.onReceive(this, [this](int) {
+            updateTrackHeightState();
         }, muse::async::Asyncable::Mode::SetReplace);
     }
 }
@@ -254,6 +265,10 @@ void TrackContextMenuModel::onCommandStateChanged(const Command& command, const 
 
     if (command == trackedit::TRACKEDIT_TRACK_MAKE_STEREO_COMMAND) {
         updateTrackMonoState();
+    }
+
+    if (command == PROJECTSCENE_COLLAPSE_TRACKS_COMMAND || command == PROJECTSCENE_EXPAND_TRACKS_COMMAND) {
+        updateTrackHeightState();
     }
 }
 
@@ -402,6 +417,31 @@ void TrackContextMenuModel::updateTrackMonoState()
                          && (it + 1)->type == au::trackedit::TrackType::Mono;
 
     makeStereoItem.setEnabled(canMakeStereo);
+}
+
+void TrackContextMenuModel::updateTrackHeightState()
+{
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = project ? project->viewState() : nullptr;
+    if (!viewState) {
+        return;
+    }
+
+    const trackedit::TrackIdList selected = selectionController()->selectedTracks();
+    const trackedit::TrackIdList tracks = muse::contains(selected, m_trackId) ? selected : trackedit::TrackIdList { m_trackId };
+    const auto isCollapsed = [&viewState](const trackedit::TrackId trackId) {
+        return viewState->isTrackCollapsed(trackId).val;
+    };
+
+    MenuItem& collapseItem = findItem(PROJECTSCENE_COLLAPSE_TRACKS_COMMAND);
+    if (collapseItem.isValid()) {
+        collapseItem.setEnabled(!std::ranges::all_of(tracks, isCollapsed));
+    }
+
+    MenuItem& expandItem = findItem(PROJECTSCENE_EXPAND_TRACKS_COMMAND);
+    if (expandItem.isValid()) {
+        expandItem.setEnabled(std::ranges::any_of(tracks, isCollapsed));
+    }
 }
 
 void TrackContextMenuModel::updateRecordingState()

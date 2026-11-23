@@ -64,6 +64,7 @@ private:
     void updateTrackMonoState();
     void updateTrackViewCheckedState();
     void updateTrackHalfWaveCheckedState();
+    void updateTrackHeightState();
     void updateRecordingState();
 
     trackedit::TrackId m_trackId;
