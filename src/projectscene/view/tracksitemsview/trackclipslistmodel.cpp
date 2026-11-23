@@ -407,6 +407,22 @@ void TrackClipsListModel::cancelClipFadeEdit()
     m_fadeDrag.reset();
 }
 
+double TrackClipsListModel::findFadeGuideline(const ClipKey& key) const
+{
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!m_fadeDrag || m_fadeDrag->leadClip() != key.key || !prj) {
+        return TimelineContext::INVALID_GUIDELINE_TIME;
+    }
+    const trackedit::Clip clip = prj->clip(key.key);
+    if (!clip.isValid()) {
+        return TimelineContext::INVALID_GUIDELINE_TIME;
+    }
+    const double fadeEnd = m_fadeDrag->side() == ClipSide::Left ? clip.startTime + clip.fadeInDuration
+                           : clip.endTime - clip.fadeOutDuration;
+    const double guidelineTime = m_context->findGuideline(fadeEnd);
+    return m_context->isGuidelineValid(guidelineTime) ? guidelineTime : TimelineContext::INVALID_GUIDELINE_TIME;
+}
+
 bool TrackClipsListModel::changeClipFadeInType(const ClipKey& key, FadeTypes::Type type)
 {
     const trackedit::FadeType fadeType = toTrackeditFadeType(type);

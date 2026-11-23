@@ -16,6 +16,8 @@ TrackItemsContainer {
     property bool rightTrimContainsMouse: false
     property bool leftTrimPressedButtons: false
     property bool rightTrimPressedButtons: false
+    //! While a fade is dragged, the guideline follows the end of the fade rather than the cursor
+    property bool fadeEditActive: false
     property real dbRange: -60.0
     property color trackColor
     required property int headerHeight
@@ -578,11 +580,11 @@ TrackItemsContainer {
 
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
-                                    // While a clip is being moved or a trim/stretch handle is held the
-                                    // guideline follows the dragged clip edge (driven by handleClipGuideline),
-                                    // not the cursor — so only snap the guideline to the cursor when no such
-                                    // edit is in progress.
-                                    const editInProgress = root.moveActive || root.leftTrimPressedButtons || root.rightTrimPressedButtons
+                                    // While a clip is being moved, a trim/stretch handle is held, or a fade is dragged, the
+                                    // guideline follows the dragged clip edge or fade end (driven by handleClipGuideline
+                                    // and handleFadeGuideline), not the cursor — so only snap the guideline to the cursor
+                                    // when no such edit is in progress.
+                                    const editInProgress = root.moveActive || root.leftTrimPressedButtons || root.rightTrimPressedButtons || root.fadeEditActive
                                     if (!editInProgress) {
                                         let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
                                         root.updateItemGuideline(time)
@@ -618,14 +620,18 @@ TrackItemsContainer {
 
                                 onFadeEditStarted: function (side) {
                                     clipsModel.startClipFadeEdit(itemData.key, side)
+                                    root.fadeEditActive = true
+                                    root.clearItemGuideline()
                                 }
 
                                 onFadeDurationChangeRequested: function (duration, completed) {
                                     clipsModel.changeClipFade(itemData.key, duration, completed)
+                                    root.handleFadeGuideline(itemData.key, completed)
                                 }
 
                                 onFadeEditCanceled: {
                                     clipsModel.cancelClipFadeEdit()
+                                    root.handleFadeGuideline(itemData.key, true)
                                 }
 
                                 onFadeInTypeChangeRequested: function (type) {
@@ -852,6 +858,15 @@ TrackItemsContainer {
 
         function onStopAutoScroll() {
             root.context.stopAutoScroll()
+        }
+    }
+
+    function handleFadeGuideline(clipKey, completed) {
+        if (completed) {
+            root.fadeEditActive = false
+            root.clearItemGuideline()
+        } else {
+            updateItemGuideline(clipsModel.findFadeGuideline(clipKey))
         }
     }
 

@@ -62,6 +62,7 @@ public:
     Q_INVOKABLE void startClipFadeEdit(const ClipKey& key, ClipSides::Side side);
     Q_INVOKABLE bool changeClipFade(const ClipKey& key, double duration, bool completed);
     Q_INVOKABLE void cancelClipFadeEdit();
+    Q_INVOKABLE double findFadeGuideline(const ClipKey& key) const;
     Q_INVOKABLE bool changeClipFadeInType(const ClipKey& key, FadeTypes::Type type);
     Q_INVOKABLE bool changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type);
     Q_INVOKABLE void openClipFadeInLengthEdit(const ClipKey& key);
