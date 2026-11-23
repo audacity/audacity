@@ -996,6 +996,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 
 std::optional<Au3Record::RecordingStartSplit> Au3Record::splitClipAtRecordingStart(Au3WaveTrack& track, double recordingStart)
 {
+    recordingStart = track.SnapToSample(recordingStart);
     std::shared_ptr<Au3WaveClip> clip;
     for (const auto& interval : track.Intervals()) {
         if (interval->SplitsPlayRegion(recordingStart)) {
