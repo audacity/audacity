@@ -23,9 +23,12 @@ public:
 
     int GetHeight() const;
     void SetHeight(int height);
+    double GetChannelHeightRatio() const;
+    void SetChannelHeightRatio(double ratio);
 
 private:
     std::weak_ptr<Au3Track> mTrack;
     int mHeight{ 0 };  // 0 means use default height
+    double mChannelHeightRatio{ -1.0 };  // Negative means use the default ratio
 };
 }

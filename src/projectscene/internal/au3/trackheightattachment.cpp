@@ -9,6 +9,7 @@ static const AttachedTrackObjects::RegisteredFactory keyTrackHeight{
 };
 
 static constexpr auto HeightAttr = "height";
+static constexpr auto ChannelHeightRatioAttr = "channelHeightRatio";
 
 TrackHeightAttachment& TrackHeightAttachment::Get(Au3Track* track)
 {
@@ -34,11 +35,13 @@ void TrackHeightAttachment::CopyTo(Au3Track& track) const
 {
     auto& attachment = Get(&track);
     attachment.SetHeight(mHeight);
+    attachment.SetChannelHeightRatio(mChannelHeightRatio);
 }
 
 void TrackHeightAttachment::WriteXMLAttributes(XMLWriter& writer) const
 {
     writer.WriteAttr(HeightAttr, mHeight);
+    writer.WriteAttr(ChannelHeightRatioAttr, mChannelHeightRatio);
 }
 
 bool TrackHeightAttachment::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
@@ -46,6 +49,12 @@ bool TrackHeightAttachment::HandleXMLAttribute(const std::string_view& attr, con
     long nValue;
     if (attr == HeightAttr && valueView.TryGet(nValue)) {
         mHeight = static_cast<int>(nValue);
+        return true;
+    }
+
+    double ratio;
+    if (attr == ChannelHeightRatioAttr && valueView.TryGet(ratio)) {
+        mChannelHeightRatio = ratio;
         return true;
     }
     return false;
@@ -59,5 +68,15 @@ int TrackHeightAttachment::GetHeight() const
 void TrackHeightAttachment::SetHeight(int height)
 {
     mHeight = height;
+}
+
+double TrackHeightAttachment::GetChannelHeightRatio() const
+{
+    return mChannelHeightRatio;
+}
+
+void TrackHeightAttachment::SetChannelHeightRatio(double ratio)
+{
+    mChannelHeightRatio = ratio;
 }
 }
