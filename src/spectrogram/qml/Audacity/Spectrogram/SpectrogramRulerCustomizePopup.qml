@@ -17,7 +17,7 @@ StyledPopupView {
     contentWidth: mainColumn.width
     contentHeight: mainColumn.height
 
-    placementPolicies: PopupView.PreferLeft
+    placementPolicies: PopupView.PreferLeft | PopupView.PreferAbove
 
     property alias settingsModel: settingsModel
     property alias minMaxNavigationPanel: minMaxNavigationPanel

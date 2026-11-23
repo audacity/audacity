@@ -47,7 +47,7 @@ Item {
         isMinZoom: rulerModel.isMinZoom
         isHalfWave: rulerModel.isHalfWave
 
-        placementPolicies: PopupView.PreferLeft
+        placementPolicies: PopupView.PreferLeft | PopupView.PreferAbove
 
         onRulerTypeChangeRequested: function (rulerType) {
             rulerModel.rulerType = rulerType
