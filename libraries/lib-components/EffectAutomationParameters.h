@@ -48,6 +48,7 @@
 #include <wx/cmdline.h> // for wxCmdLineParser::ConvertStringToArgs
 #include <wx/fileconf.h> // to inherit
 #include <algorithm>
+#include <limits>
 
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
@@ -129,7 +130,34 @@ public:
 
    virtual bool DoWriteDouble(const wxString & key, double value) override
    {
-      return DoWriteString(key, wxString::Format(wxT("%.8g"), value));
+      return DoWriteString(key, FormatValue(value));
+   }
+
+   using wxFileConfig::Write;
+
+   // Replaces the inherited overload, which converts to double and would
+   // then write more digits than a float needs
+   bool Write(const wxString & key, float value)
+   {
+      return DoWriteString(key, FormatValue(value));
+   }
+
+   //! Formats with 8 significant digits, or as many more as are needed to
+   //! read back the same value
+   template<typename Float> static wxString FormatValue(Float value)
+   {
+      wxString result;
+      for (int digits = 8;
+         digits <= std::numeric_limits<Float>::max_digits10; ++digits)
+      {
+         result =
+            wxString::Format(wxT("%.*g"), digits, static_cast<double>(value));
+         double readBack;
+         if (result.ToDouble(&readBack) &&
+            static_cast<Float>(readBack) == value)
+            break;
+      }
+      return result;
    }
 
    bool ReadFloat(const wxString & key, float *pf) const
