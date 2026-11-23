@@ -186,6 +186,47 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::ZOOM_TOGGLE)
     },
     CommandInfo{
+        PROJECTSCENE_FIT_VERTICALLY_COMMAND,
+        TranslatableString("command", "Auto-fit height"),
+        TranslatableString("command_description", "Auto-fit height"),
+        InputSchema(),
+        Decoration(IconCode::Code::TRACKS_FIT_HEIGHT)
+    },
+    CommandInfo{
+        PROJECTSCENE_DECREASE_ALL_TRACK_HEIGHTS_COMMAND,
+        TranslatableString("command", "Decrease all track heights"),
+        TranslatableString("command_description", "Decrease all track heights"),
+        InputSchema(),
+        Decoration(IconCode::Code::TRACKS_COLLAPSE)
+    },
+    CommandInfo{
+        PROJECTSCENE_INCREASE_ALL_TRACK_HEIGHTS_COMMAND,
+        TranslatableString("command", "Increase all track heights"),
+        TranslatableString("command_description", "Increase all track heights"),
+        InputSchema(),
+        Decoration(IconCode::Code::TRACKS_EXPAND)
+    },
+    CommandInfo{
+        PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND,
+        TranslatableString("command", "Decrease track height"),
+        TranslatableString("command_description", "Decrease track height"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(IconCode::Code::TRACKS_COLLAPSE),
+        Availability::Internal | Availability::API
+    },
+    CommandInfo{
+        PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND,
+        TranslatableString("command", "Increase track height"),
+        TranslatableString("command_description", "Increase track height"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(IconCode::Code::TRACKS_EXPAND),
+        Availability::Internal | Availability::API
+    },
+    CommandInfo{
         PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Scroll timeline left one page"),
