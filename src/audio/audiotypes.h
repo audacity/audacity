@@ -3,6 +3,9 @@
 */
 #pragma once
 
+#include <cstddef>
+#include <cstdint>
+
 #include "framework/global/realfn.h"
 #include "framework/global/types/secs.h" // IWYU pragma: export
 
@@ -26,6 +29,13 @@ struct AudioSignalVal {
 struct MeterSignal {
     AudioSignalVal peak;
     AudioSignalVal rms;
+};
+
+struct MonitoredTrack {
+    int64_t trackId = 0;
+    size_t channels = 0;
+
+    bool operator ==(const MonitoredTrack& other) const = default;
 };
 
 struct AudioOutputParams {

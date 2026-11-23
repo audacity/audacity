@@ -24,6 +24,7 @@
 #include <mutex>
 #include <thread>
 #include <utility>
+#include <atomic>
 #include <array>
 #include <wx/atomic.h> // member variable
 #include <wx/thread.h>
@@ -216,6 +217,8 @@ public:
                                      const TimePoint& dacTime);
     void PushTrackMeterValues(const IMeterSenderPtr& sender, unsigned long frames, const TimePoint& dacTime);
     void PushInputMeterValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames, const TimePoint& dacTime);
+    void PushRoutedInputValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames, const TimePoint& dacTime,
+                               size_t channelIndex, const std::vector<size_t>& sources, int64_t trackId);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
@@ -244,6 +247,27 @@ public:
     std::vector<TrackChannelInfo> mCaptureChannelLayout;
     std::vector<std::vector<size_t> > mTrackChannelSourceMap;
     bool mCaptureNeedsMixdown{ false };
+    struct MonitoredChannel {
+        int64_t trackId{};
+        size_t channelIndex{};
+        std::vector<size_t> sources;
+    };
+    //! Which input channels go to the meters of the monitored tracks
+    struct MonitoredRouting {
+        //! The capture channel count it was made for
+        size_t inputChannels = 0;
+        std::vector<MonitoredChannel> channels;
+        //! Links the routings the audio callback is done with
+        MonitoredRouting* nextRetired = nullptr;
+    };
+    //! The main thread hands a new routing to the audio callback, which takes it and gives back the one it replaces,
+    //! for the main thread to delete: the callback never locks, allocates or frees.
+    std::atomic<MonitoredRouting*> mPendingMonitoredRouting{ nullptr };
+    std::atomic<MonitoredRouting*> mRetiredMonitoredRoutings{ nullptr };
+    //! Only used by the audio callback
+    MonitoredRouting* mMonitoredRouting = nullptr;
+    const MonitoredRouting* TakePendingMonitoredRouting();
+    void DeleteRetiredMonitoredRoutings();
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;
@@ -470,6 +494,13 @@ public:
     /** \brief Stop monitoring */
     void StopMonitoring() override;
 
+    struct MonitoredTrack {
+        int64_t trackId{};
+        size_t channels{};
+    };
+    //! The tracks whose meters show the input while monitoring, in the order they would be recorded into
+    void SetMonitoredTracks(std::vector<MonitoredTrack> tracks);
+
     /** \brief Wait for busy state to end */
     void WaitWhileBusy() const;
 
@@ -616,6 +647,9 @@ private:
 
     void ResetCaptureRouting();
     void ConfigureCaptureRouting(size_t requestedChannels);
+    void RouteMonitoredTracks();
+
+    std::vector<MonitoredTrack> mMonitoredTracks;
 
     //! First part of SequenceBufferExchange
     void FillPlayBuffers();

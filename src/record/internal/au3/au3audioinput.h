@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include <map>
+#include <vector>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -45,10 +45,6 @@ public:
 
     muse::async::Channel<audio::audioch_t, audio::MeterSignal> recordSignalChanges() const override;
     muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordTrackSignalChanges(int64_t key) const override;
-    muse::async::Channel<audio::audioch_t, au::audio::MeterSignal> recordInputChannelSignalChanges() const override;
-
-    TrackInputChannels monitoredInputChannels(trackedit::TrackId trackId) const override;
-    muse::async::Notification monitoredTracksChanged() const override;
 
 private:
     au3::Au3Project* projectRef() const;
@@ -56,7 +52,8 @@ private:
     void initMeter();
     bool isTrackMeterMonitoring() const;
     void subscribeToTrackChanges();
-    void updateMonitoredTracks();
+    void onRecordingTracksChanged();
+    bool updateMonitoredTracks();
 
     void updateAudioEngineMonitoring() const;
     void startAudioEngineMonitoring() const;
@@ -68,7 +65,6 @@ private:
     mutable muse::async::Channel<float> m_recordVolumeChanged;
     const std::shared_ptr<au::au3::Au3AudioMeter> m_inputMeter;
     int m_inputChannelsCount{};
-    std::map<trackedit::TrackId, TrackInputChannels> m_monitoredTracks;
-    muse::async::Notification m_monitoredTracksChanged;
+    std::vector<audio::MonitoredTrack> m_monitoredTracks;
 };
 }

@@ -91,8 +91,6 @@ protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
     void setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
-    void checkMainAudioInput();
-    void showInputSignal(const trackedit::audioch_t inputChannel, const audio::MeterSignal& meterSignal);
     void muteOrSoloChanged();
 
     bool isAudible() const override;
@@ -107,9 +105,16 @@ private:
 
     bool m_outputOnly = false;
 
-    record::TrackInputChannels m_inputChannels;
-    bool m_inputSignalLive = false;
-    std::array<float, 2> m_mixedInputPressure {};
-    std::array<float, 2> m_mixedInputRMS {};
+    struct ChannelLevels {
+        float pressure = playback::MIN_DISPLAYED_DBFS;
+        float rms = playback::MIN_DISPLAYED_DBFS;
+    };
+    using TrackLevels = std::array<ChannelLevels, 2>;
+
+    //! Playback and input can both reach a track's meter: the louder one is shown
+    void showSignal(TrackLevels& levels, const trackedit::audioch_t chNum, const audio::MeterSignal& meterSignal);
+
+    TrackLevels m_playbackLevels;
+    TrackLevels m_inputLevels;
 };
 }

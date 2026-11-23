@@ -27,6 +27,7 @@
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 
+using ::testing::_;
 using ::testing::Invoke;
 using ::testing::NiceMock;
 using ::testing::Return;
@@ -68,6 +69,10 @@ public:
         ON_CALL(*m_recordController, isRecording()).WillByDefault(Invoke([this]() { return m_recording; }));
         ON_CALL(*m_recordController, isRecordingChanged()).WillByDefault(Return(m_recordingChanged));
         ON_CALL(*m_trackNavigationController, focusedTrack()).WillByDefault(Return(trackedit::INVALID_TRACK));
+        ON_CALL(*m_audioEngine, setMonitoredTracks(_)).WillByDefault(Invoke([this](const std::vector<audio::MonitoredTrack>& tracks) {
+            m_monitoredTracks = tracks;
+            ++m_setMonitoredTracksCalls;
+        }));
 
         ON_CALL(*m_audioDriverController, inputDevices())
         .WillByDefault(Return(std::vector<std::string> { "Test Input Device" }));
@@ -148,10 +153,12 @@ public:
         m_projectChanged.notify();
     }
 
-    TrackInputChannels inputChannelsOf(const Au3WaveTrack* track) const
+    static audio::MonitoredTrack monitored(const Au3WaveTrack* track)
     {
-        return m_input->monitoredInputChannels(trackedit::TrackId(track->GetId()));
+        return { track->GetId(), track->NChannels() };
     }
+
+    using MonitoredTracks = std::vector<audio::MonitoredTrack>;
 
     std::shared_ptr<Au3AudioInput> m_input;
 
@@ -173,41 +180,44 @@ public:
     muse::async::Notification m_recordingChanged;
     muse::async::Channel<trackedit::Track, int> m_trackMoved;
     bool m_playing = false;
+    MonitoredTracks m_monitoredTracks;
+    int m_setMonitoredTracksCalls = 0;
     bool m_recording = false;
 
     std::shared_ptr<Au3ProjectAccessor> m_au3ProjectAccessor;
     std::string m_workingProjectPath;
 };
 
-TEST_F(Au3AudioInputTests, StereoInputIntoTwoSelectedMonoTracksShowsOneChannelOnEach)
+TEST_F(Au3AudioInputTests, SelectedTracksAreMonitoredInTrackOrder)
 {
-    //! [GIVEN] A stereo input and two selected mono tracks
+    //! [GIVEN] Two selected mono tracks
     Au3WaveTrack* first = addTrack(1, true);
     Au3WaveTrack* second = addTrack(1, true);
 
     //! [WHEN] The project is opened
     openProject();
 
-    //! [THEN] The first track shows the left input, the second the right one
-    EXPECT_EQ(inputChannelsOf(first), (TrackInputChannels { { 0 } }));
-    EXPECT_EQ(inputChannelsOf(second), (TrackInputChannels { { 1 } }));
+    //! [THEN] Both tracks are monitored, in track order
+    EXPECT_EQ(m_monitoredTracks, (MonitoredTracks { monitored(first), monitored(second) }));
 }
 
-TEST_F(Au3AudioInputTests, StereoInputIntoASelectedMonoTrackShowsBothChannels)
+TEST_F(Au3AudioInputTests, FocusedTrackIsMonitoredWhenNoTrackIsSelected)
 {
-    //! [GIVEN] A stereo input and one selected mono track
-    Au3WaveTrack* track = addTrack(1, true);
+    //! [GIVEN] A focused mono track, an unselected stereo track and a stereo input
+    Au3WaveTrack* focused = addTrack(1, false);
+    addTrack(2, false);
+    ON_CALL(*m_trackNavigationController, focusedTrack()).WillByDefault(Return(trackedit::TrackId(focused->GetId())));
 
     //! [WHEN] The project is opened
     openProject();
 
-    //! [THEN] The track shows both inputs, mixed
-    EXPECT_EQ(inputChannelsOf(track), (TrackInputChannels { { 0, 1 } }));
+    //! [THEN] Only the focused track is monitored
+    EXPECT_EQ(m_monitoredTracks, (MonitoredTracks { monitored(focused) }));
 }
 
-TEST_F(Au3AudioInputTests, MovingTracksSwapsTheirInputChannels)
+TEST_F(Au3AudioInputTests, MovingTracksChangesTheirMonitoringOrder)
 {
-    //! [GIVEN] A stereo input split over two selected mono tracks
+    //! [GIVEN] Two selected mono tracks
     Au3WaveTrack* first = addTrack(1, true);
     Au3WaveTrack* second = addTrack(1, true);
     openProject();
@@ -216,45 +226,58 @@ TEST_F(Au3AudioInputTests, MovingTracksSwapsTheirInputChannels)
     Au3TrackList::Get(projectRef()).MoveUp(*second);
     m_trackMoved.send(trackedit::Track {}, 0);
 
-    //! [THEN] The input channels follow the new track order
-    EXPECT_EQ(inputChannelsOf(second), (TrackInputChannels { { 0 } }));
-    EXPECT_EQ(inputChannelsOf(first), (TrackInputChannels { { 1 } }));
+    //! [THEN] The monitoring order follows the new track order
+    EXPECT_EQ(m_monitoredTracks, (MonitoredTracks { monitored(second), monitored(first) }));
 }
 
-TEST_F(Au3AudioInputTests, NoTrackShowsInputWhilePlaying)
+TEST_F(Au3AudioInputTests, UnchangedTracksAreNotSentAgain)
 {
-    //! [GIVEN] A selected track showing the input
+    //! [GIVEN] A monitored track
+    addTrack(1, true);
+    openProject();
+    const int calls = m_setMonitoredTracksCalls;
+
+    //! [WHEN] A track event leaves the tracks to record into unchanged
+    m_trackMoved.send(trackedit::Track {}, 0);
+
+    //! [THEN] The audio engine is not updated again
+    EXPECT_EQ(m_setMonitoredTracksCalls, calls);
+}
+
+TEST_F(Au3AudioInputTests, NoTrackIsMonitoredWhilePlaying)
+{
+    //! [GIVEN] A selected track being monitored
     Au3WaveTrack* track = addTrack(1, true);
     openProject();
-    ASSERT_FALSE(inputChannelsOf(track).empty());
+    ASSERT_FALSE(m_monitoredTracks.empty());
 
     //! [WHEN] Playback starts
     m_playing = true;
     m_playingChanged.notify();
 
-    //! [THEN] The track stops showing the input
-    EXPECT_TRUE(inputChannelsOf(track).empty());
+    //! [THEN] No track is monitored
+    EXPECT_TRUE(m_monitoredTracks.empty());
 
     //! [WHEN] Playback stops
     m_playing = false;
     m_playingChanged.notify();
 
-    //! [THEN] The track shows the input again
-    EXPECT_EQ(inputChannelsOf(track), (TrackInputChannels { { 0, 1 } }));
+    //! [THEN] The track is monitored again
+    EXPECT_EQ(m_monitoredTracks, (MonitoredTracks { monitored(track) }));
 }
 
-TEST_F(Au3AudioInputTests, NoTrackShowsInputWhileRecording)
+TEST_F(Au3AudioInputTests, NoTrackIsMonitoredWhileRecording)
 {
-    //! [GIVEN] A selected track showing the input
-    Au3WaveTrack* track = addTrack(1, true);
+    //! [GIVEN] A selected track being monitored
+    addTrack(1, true);
     openProject();
-    ASSERT_FALSE(inputChannelsOf(track).empty());
+    ASSERT_FALSE(m_monitoredTracks.empty());
 
     //! [WHEN] Recording starts
     m_recording = true;
     m_recordingChanged.notify();
 
-    //! [THEN] The track stops showing the input
-    EXPECT_TRUE(inputChannelsOf(track).empty());
+    //! [THEN] No track is monitored
+    EXPECT_TRUE(m_monitoredTracks.empty());
 }
 }

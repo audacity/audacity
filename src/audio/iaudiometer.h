@@ -48,7 +48,6 @@ public:
     };
 
     static constexpr int64_t MainMeterTrackId = -2;
-    static constexpr int64_t InputChannelsTrackId = -3;
 
     using OptionalTimePoint = std::optional<TimePoint>;
 

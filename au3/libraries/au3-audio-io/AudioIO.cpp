@@ -856,6 +856,47 @@ void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
     mCaptureNeedsMixdown = routing.needsMixdown;
 }
 
+void AudioIO::SetMonitoredTracks(std::vector<MonitoredTrack> tracks)
+{
+    mMonitoredTracks = std::move(tracks);
+    RouteMonitoredTracks();
+}
+
+void AudioIO::RouteMonitoredTracks()
+{
+    std::vector<MonitoredChannel> channels;
+    for (const auto& track : mMonitoredTracks) {
+        for (size_t channel = 0; channel < track.channels; ++channel) {
+            channels.push_back({ track.trackId, channel, {} });
+        }
+    }
+
+    CaptureRouting routing = MakeCaptureRouting(mNumCaptureChannels, channels.size());
+    for (size_t i = 0; i < routing.trackChannelSources.size(); ++i) {
+        channels[i].sources = std::move(routing.trackChannelSources[i]);
+    }
+    std::erase_if(channels, [](const MonitoredChannel& channel) { return channel.sources.empty(); });
+
+    DeleteRetiredMonitoredRoutings();
+
+    auto newRouting = std::make_unique<MonitoredRouting>();
+    newRouting->inputChannels = mNumCaptureChannels;
+    newRouting->channels = std::move(channels);
+
+    // One the audio callback hasn't taken yet is replaced, and is still the main thread's to delete
+    delete mPendingMonitoredRouting.exchange(newRouting.release(), std::memory_order_acq_rel);
+}
+
+void AudioIoCallback::DeleteRetiredMonitoredRoutings()
+{
+    MonitoredRouting* routing = mRetiredMonitoredRoutings.exchange(nullptr, std::memory_order_acquire);
+    while (routing) {
+        MonitoredRouting* next = routing->nextRetired;
+        delete routing;
+        routing = next;
+    }
+}
+
 void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
 {
     if (IsBusy()) {
@@ -897,6 +938,7 @@ void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
     }
 
     SetOwningProject(options.pProject);
+    RouteMonitoredTracks();
 
     // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
     // Now start the PortAudio stream!
@@ -3190,9 +3232,12 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
     }
 
     if (mCaptureSequences.empty()) {
-        for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
-            sender->push(ch, { values + ch, frames, mNumCaptureChannels, dacTime },
-                         IMeterSender::TrackId { IMeterSender::InputChannelsTrackId });
+        // Monitoring: the tracks that would be recorded into show the input as it would be recorded
+        const MonitoredRouting* routing = TakePendingMonitoredRouting();
+        if (routing && routing->inputChannels == mNumCaptureChannels) {
+            for (const auto& channel : routing->channels) {
+                PushRoutedInputValues(sender, values, frames, dacTime, channel.channelIndex, channel.sources, channel.trackId);
+            }
         }
     }
 
@@ -3200,28 +3245,11 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
     const size_t routedChannels = std::min(mCaptureChannelLayout.size(), mTrackChannelSourceMap.size());
     for (size_t i = 0; i < routedChannels; ++i) {
         const auto& info = mCaptureChannelLayout[i];
-        const auto& sources = mTrackChannelSourceMap[i];
-        if (sources.empty() || info.sequenceIndex >= mCaptureSequences.size()) {
+        if (info.sequenceIndex >= mCaptureSequences.size()) {
             continue;
         }
-
-        const IMeterSender::TrackId trackId { mCaptureSequences[info.sequenceIndex]->GetRecordableSequenceId() };
-        if (sources.size() == 1) {
-            sender->push(info.channelIndex, { values + sources.front(), frames, mNumCaptureChannels, dacTime }, trackId);
-            continue;
-        }
-
-        // Several input channels mixed into one track channel: show their average, as recorded
-        const auto mixed = stackAllocate(float, frames);
-        const float gain = 1.0f / static_cast<float>(sources.size());
-        for (size_t frame = 0; frame < frames; ++frame) {
-            float sum = 0.0f;
-            for (const auto source : sources) {
-                sum += values[frame * mNumCaptureChannels + source];
-            }
-            mixed[frame] = sum * gain;
-        }
-        sender->push(info.channelIndex, { mixed, frames, 1, dacTime }, trackId);
+        PushRoutedInputValues(sender, values, frames, dacTime, info.channelIndex, mTrackChannelSourceMap[i],
+                              mCaptureSequences[info.sequenceIndex]->GetRecordableSequenceId());
     }
 
     // Update main meter
@@ -3246,6 +3274,32 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
             sender->push(ch, { mainTrackInput + ch * frames, frames, 1, dacTime });
         }
     }
+}
+
+void AudioIoCallback::PushRoutedInputValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames,
+                                            const TimePoint& dacTime, size_t channelIndex, const std::vector<size_t>& sources,
+                                            int64_t trackId)
+{
+    if (sources.empty()) {
+        return;
+    }
+
+    if (sources.size() == 1) {
+        sender->push(channelIndex, { values + sources.front(), frames, mNumCaptureChannels, dacTime }, IMeterSender::TrackId { trackId });
+        return;
+    }
+
+    // Several input channels mixed into one track channel: show their average, as recorded
+    const auto mixed = stackAllocate(float, frames);
+    const float gain = 1.0f / static_cast<float>(sources.size());
+    for (size_t frame = 0; frame < frames; ++frame) {
+        float sum = 0.0f;
+        for (const auto source : sources) {
+            sum += values[frame * mNumCaptureChannels + source];
+        }
+        mixed[frame] = sum * gain;
+    }
+    sender->push(channelIndex, { mixed, frames, 1, dacTime }, IMeterSender::TrackId { trackId });
 }
 
 void AudioIoCallback::PushMasterOutputMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels,
@@ -3325,6 +3379,27 @@ AudioIoCallback::AudioIoCallback()
 
 AudioIoCallback::~AudioIoCallback()
 {
+    // No callback runs anymore: whatever routing is left is ours to delete
+    delete mPendingMonitoredRouting.exchange(nullptr);
+    delete mMonitoredRouting;
+    DeleteRetiredMonitoredRoutings();
+}
+
+const AudioIoCallback::MonitoredRouting* AudioIoCallback::TakePendingMonitoredRouting()
+{
+    MonitoredRouting* pending = mPendingMonitoredRouting.exchange(nullptr, std::memory_order_acq_rel);
+    if (!pending) {
+        return mMonitoredRouting;
+    }
+
+    // The replaced routing goes back to the main thread, which deletes it
+    if (MonitoredRouting* replaced = std::exchange(mMonitoredRouting, pending)) {
+        replaced->nextRetired = mRetiredMonitoredRoutings.load(std::memory_order_relaxed);
+        while (!mRetiredMonitoredRoutings.compare_exchange_weak(replaced->nextRetired, replaced, std::memory_order_release,
+                                                                std::memory_order_relaxed)) {
+        }
+    }
+    return mMonitoredRouting;
 }
 
 int AudioIoCallback::AudioCallback(
