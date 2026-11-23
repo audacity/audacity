@@ -62,7 +62,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
         <source>Repeat %1</source>
-        <translation type="unfinished"/>
+        <translation>%1 を繰り返し</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
@@ -231,7 +231,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="434"/>
         <source>Macro manager</source>
-        <translation type="unfinished"/>
+        <translation>マクロマネージャー</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="476"/>
@@ -501,7 +501,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
         <source>Mix and render to new track</source>
-        <translation type="unfinished"/>
+        <translation>ミックスして新規トラックにレンダリング</translation>
     </message>
 </context>
 <context>
@@ -696,7 +696,7 @@ SakiPapa 2022-2026</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="17"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="168"/>
         <source>Automatic crash recovery</source>
-        <translation type="unfinished"/>
+        <translation>自動クラッシュ復旧</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="62"/>
@@ -715,12 +715,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
         <source>Not selected</source>
-        <translation type="unfinished"/>
+        <translation>未選択</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="157"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Audacity を終了</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
@@ -730,12 +730,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
         <source>Discard selected</source>
-        <translation type="unfinished"/>
+        <translation>選択項目を破棄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="209"/>
         <source>Recover selected</source>
-        <translation type="unfinished"/>
+        <translation>選択項目を復元</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="30"/>
@@ -752,12 +752,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="164"/>
         <source>Are you sure you want to discard the selected projects?</source>
-        <translation type="unfinished"/>
+        <translation>選択したプロジェクトを破棄しますか?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
         <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
-        <translation type="unfinished"/>
+        <translation>&quot;はい&quot;を選択すると、選択したプロジェクトが直ちに完全に削除されます。</translation>
     </message>
 </context>
 <context>
@@ -3438,7 +3438,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="133"/>
         <source>Editing</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>編集</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="143"/>
@@ -3469,7 +3469,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="193"/>
         <source>&amp;Macro manager</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>マクロマネージャー(&amp;M)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="202"/>
@@ -3524,7 +3524,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="18"/>
         <source>Show audio.com tour</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>audio.com ツアーを表示</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="28"/>
@@ -3542,13 +3542,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="52"/>
         <source>View profile on audio.com</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>audio.com でプロフィールを表示</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="62"/>
         <source>Open audacity URL</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity URLを開く</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
@@ -3585,7 +3585,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="75"/>
         <source>Import startup media</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>起動時メディアをインポート</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="88"/>
@@ -3663,7 +3663,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="217"/>
         <source>Custom channel mapping</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>カスタムチャンネルマッピング</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="21"/>
@@ -3777,13 +3777,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="191"/>
         <source>Scroll timeline left one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイムラインを 1ページ左へスクロール</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="200"/>
         <source>Scroll timeline right one page</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイムラインを 1ページ右へスクロール</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="209"/>
@@ -3795,7 +3795,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="222"/>
         <source>Timeline context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイムラインのコンテキストメニュー</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="232"/>
@@ -3927,7 +3927,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="57"/>
         <source>Play tracks</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックを再生</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="66"/>
@@ -3959,13 +3959,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="102"/>
         <source>Seek</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>シーク</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="115"/>
         <source>Change play region</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>再生範囲を変更</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="128"/>
@@ -4139,19 +4139,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
         <source>Timed recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイマー録音</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="104"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>サウンド起動録音をオンにする</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="113"/>
         <source>Set sound activation level…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>サウンド起動レベルを設定…</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="23"/>
@@ -4187,31 +4187,31 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="76"/>
         <source>Cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>クリップを切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="89"/>
         <source>Copy clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>クリップをコピー</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="102"/>
         <source>Delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>クリップを削除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="115"/>
         <source>Split cut clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>クリップを分割切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="128"/>
         <source>Split delete clip</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>クリップを分割削除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="141"/>
@@ -4241,7 +4241,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="190"/>
         <source>Split tracks at</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックを指定位置で分割</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="203"/>
@@ -4332,7 +4332,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="331"/>
         <source>Mix and render</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>ミックスしてレンダリング</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="343"/>
@@ -4350,13 +4350,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="361"/>
         <source>Group</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>グループ化</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="370"/>
         <source>Ungroup</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>グループ解除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="379"/>
@@ -4410,19 +4410,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
         <source>Set selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>選択範囲を設定</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="464"/>
         <source>Select track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックを選択</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="476"/>
         <source>At zero crossings</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>ゼロクロスで</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="485"/>
@@ -4578,7 +4578,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="804"/>
         <source>Split track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックを分割</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="816"/>
@@ -4698,7 +4698,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1009"/>
         <source>Open ruler context menu</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>ルーラーのコンテキストメニューを開く</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
@@ -4752,19 +4752,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="170"/>
         <source>Apply %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 を適用</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="181"/>
         <source>Configure %1</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 を設定</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="19"/>
         <source>Export as MP3</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>MP3 としてエクスポート</translation>
     </message>
 </context>
 <context>
@@ -4797,7 +4797,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="65"/>
         <source>About Qt</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Qt について</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="75"/>
@@ -4809,7 +4809,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="85"/>
         <source>Ask for help</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>ヘルプ</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="95"/>
@@ -4833,19 +4833,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="125"/>
         <source>Open shortcuts preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>ショートカットの環境設定を開く</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="135"/>
         <source>Open editing preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>編集の環境設定を開く</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="145"/>
         <source>Open spectrogram preferences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>スペクトログラムの環境設定を開く</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="165"/>
@@ -4869,7 +4869,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="195"/>
         <source>Show/hide macro manager</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>マクロマネージャーの表示/非表示</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="204"/>
@@ -4923,7 +4923,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="20"/>
         <source>Open the audio.com tour page, signing in first if needed</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>必要に応じて先にサインインし、audio.com のツアーページを開きます</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="30"/>
@@ -4941,13 +4941,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="54"/>
         <source>Open the signed in user’s audio.com profile page</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>サインイン中のユーザーの audio.com プロフィールページを開きます</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="64"/>
         <source>Handle an audacity:// URL</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>audacity:// URL を処理します</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="23"/>
@@ -4965,7 +4965,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="44"/>
         <source>Open cloud project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>クラウドプロジェクトを開く</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="57"/>
@@ -4983,7 +4983,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="77"/>
         <source>Import media files into a new project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>メディアファイルを新規プロジェクトにインポートします</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="90"/>
@@ -5061,13 +5061,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="209"/>
         <source>Open the custom FFmpeg export options</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>カスタム FFmpeg エクスポートオプションを開きます</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="219"/>
         <source>Open the custom export channel mapping</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>カスタムエクスポートチャンネルマッピングを開きます</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="23"/>
@@ -5181,13 +5181,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="193"/>
         <source>Scroll the timeline left by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイムラインを画面 1つ分左へスクロールします</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="202"/>
         <source>Scroll the timeline right by one screen width</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイムラインを画面 1つ分右へスクロールします</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="211"/>
@@ -5199,7 +5199,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="224"/>
         <source>Open the timeline context menu</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイムラインのコンテキストメニューを開きます</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="234"/>
@@ -5331,7 +5331,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="59"/>
         <source>Play the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したトラックを再生します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="68"/>
@@ -5362,13 +5362,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="104"/>
         <source>Move the playhead to the given time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>再生ヘッドを指定した時刻へ移動します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="117"/>
         <source>Change the playback region</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>再生範囲を変更します</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="130"/>
@@ -5548,13 +5548,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
         <source>Set up a timed recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>タイマー録音を設定します</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="106"/>
         <source>Turn on sound activated recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>サウンド起動録音をオンにします</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
@@ -5572,7 +5572,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="41"/>
         <source>Cancel the current interaction or clear the selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>現在の操作をキャンセルするか、選択を解除します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="51"/>
@@ -5596,31 +5596,31 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="78"/>
         <source>Cut the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したクリップをクリップボードに切り取ります</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="91"/>
         <source>Copy the given clip into the clipboard</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したクリップをクリップボードにコピーします</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="104"/>
         <source>Delete the given clip</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したクリップを削除します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="117"/>
         <source>Cut the given clip into the clipboard and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したクリップをクリップボードに切り取り、空白を残します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="130"/>
         <source>Delete the given clip and leave a gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したクリップを削除し、空白を残します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="143"/>
@@ -5650,7 +5650,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="192"/>
         <source>Split the given tracks at the given positions</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したトラックを指定した位置で分割します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="205"/>
@@ -5722,7 +5722,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="304"/>
         <source>Set a custom track sample rate</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>カスタムのトラックサンプリングレートを設定します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="314"/>
@@ -5740,7 +5740,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="333"/>
         <source>Mix the selected tracks into one track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>選択したトラックを 1つのトラックにミックスします</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="345"/>
@@ -5758,13 +5758,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="363"/>
         <source>Group the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>選択したクリップとラベルをグループ化します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="372"/>
         <source>Ungroup the selected clips and labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>選択したクリップとラベルのグループを解除します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="381"/>
@@ -5788,55 +5788,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
         <source>Select from a chosen time to the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定した時刻から再生位置まで選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="417"/>
         <source>Select from the playback position to a chosen time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>再生位置から指定した時刻まで選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="426"/>
         <source>Select from the track start to the cursor</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックの先頭からカーソルまで選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="435"/>
         <source>Select from the cursor to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>カーソルからトラックの末尾まで選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="444"/>
         <source>Select from the track start to the track end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックの先頭から末尾まで選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="453"/>
         <source>Set the time selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>時間選択を設定します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="466"/>
         <source>Select the track at the given index</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したインデックスのトラックを選択します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="478"/>
         <source>Move the cursor to the nearest zero crossing</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>カーソルを最も近いゼロクロスへ移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="487"/>
         <source>Use the track color for the selected clips</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>選択したクリップにトラックの色を使用します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="496"/>
@@ -5950,13 +5950,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="688"/>
         <source>Merge the clips in the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したトラックの指定した時間範囲にあるクリップを結合します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="702"/>
         <source>Duplicate the given time range on the given tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したトラックの指定した時間範囲を複製します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
@@ -5974,7 +5974,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="770"/>
         <source>Move the selection into a new track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>選択範囲を新しいトラックに移動します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
@@ -5998,7 +5998,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="806"/>
         <source>Split the given track at the playback position</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したトラックを再生位置で分割します</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="818"/>
@@ -6118,13 +6118,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1001"/>
         <source>Open the context menu of the focused track item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>フォーカス中のトラック項目のコンテキストメニューを開きます</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1011"/>
         <source>Open the context menu of the focused ruler</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>フォーカス中のルーラーのコンテキストメニューを開きます</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
@@ -6142,7 +6142,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
         <source>Apply preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>プリセットを適用</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
@@ -6154,7 +6154,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="81"/>
         <source>Save preset as</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>プリセットに名前を付けて保存</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="93"/>
@@ -6178,19 +6178,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="172"/>
         <source>Apply %1 with the given parameters</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>指定したパラメーターで %1 を適用します</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="183"/>
         <source>Choose the parameters of %1 without applying it</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence. %1 is the effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 を適用せずにパラメーターを選択します</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/exportcommandsregister.cpp" line="21"/>
         <source>Export the project audio as an MP3 file into the macro-output folder</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>プロジェクトの音声を MP3 ファイルとして macro-output フォルダーにエクスポートします</translation>
     </message>
 </context>
 <context>
@@ -6203,7 +6203,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
         <source>This will create a .zip file with information about your %1 setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
-        <translation type="unfinished"/>
+        <translation>これにより、%1 のセットアップに関する情報を含む.zip ファイルが作成され、問題の診断に役立てることができます。このファイルの内容は、誰かに送信する前に確認できます。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="35"/>
@@ -7273,7 +7273,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="31"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>オートダッキング</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
@@ -9923,18 +9923,18 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="13"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>オートダッキング</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="112"/>
         <source>Control track</source>
-        <translation type="unfinished"/>
+        <translation>コントロールトラック</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
         <source>No available track</source>
-        <translation type="unfinished"/>
+        <translation>使用可能なトラックがありません</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
@@ -9944,37 +9944,37 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="192"/>
         <source>Duck start</source>
-        <translation type="unfinished"/>
+        <translation>ダック開始</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
         <source>Recovery end</source>
-        <translation type="unfinished"/>
+        <translation>リカバリー終了</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
         <source>Duck end</source>
-        <translation type="unfinished"/>
+        <translation>ダック終了</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
         <source>Gain reduction</source>
-        <translation type="unfinished"/>
+        <translation>ゲイン低減</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
         <source>Recovery start</source>
-        <translation type="unfinished"/>
+        <translation>リカバリー開始</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
         <source>Hold</source>
-        <translation type="unfinished"/>
+        <translation>ホールド</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
         <source>Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</source>
-        <translation type="unfinished"/>
+        <translation>オートダッキングを実行するには、トリガーとなる 2つ目のオーディオトラックが必要です。続行するには、プロジェクトにオーディオトラックを追加してください。</translation>
     </message>
 </context>
 <context>
@@ -11266,7 +11266,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="424"/>
         <source>There is no audio to export</source>
-        <translation type="unfinished"/>
+        <translation>エクスポートする音声がありません</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="471"/>
@@ -14610,7 +14610,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
         <source>Quality %1 (~%2 kbit/s)</source>
-        <translation type="unfinished"/>
+        <translation>品質 %1 (~%2 kbit/s)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="204"/>
@@ -15297,12 +15297,12 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="21"/>
         <source>Edit macro</source>
-        <translation type="unfinished"/>
+        <translation>マクロを編集</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="105"/>
         <source>Search commands</source>
-        <translation type="unfinished"/>
+        <translation>コマンドを検索</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="261"/>
@@ -15314,7 +15314,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="275"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="150"/>
         <source>Run on files…</source>
-        <translation type="unfinished"/>
+        <translation>ファイルに対して実行…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="293"/>
@@ -15324,42 +15324,42 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/AvailableCommandsList.qml" line="33"/>
         <source>Available commands</source>
-        <translation type="unfinished"/>
+        <translation>使用可能なコマンド</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Moving %1. Use the up and down arrows to move it. Press Escape to stop.</source>
-        <translation type="unfinished"/>
+        <translation>%1 を移動中です。上下の矢印キーで移動します。Escキーで中止します。</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Move %1</source>
-        <translation type="unfinished"/>
+        <translation>%1 を移動</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="246"/>
         <source>Step %1</source>
-        <translation type="unfinished"/>
+        <translation>ステップ %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="336"/>
         <source>Actions for %1</source>
-        <translation type="unfinished"/>
+        <translation>%1 のアクション</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="378"/>
         <source>Edit command</source>
-        <translation type="unfinished"/>
+        <translation>コマンドを編集</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="394"/>
         <source>Move up</source>
-        <translation type="unfinished"/>
+        <translation>上へ移動</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="399"/>
         <source>Move down</source>
-        <translation type="unfinished"/>
+        <translation>下へ移動</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="405"/>
@@ -15370,17 +15370,17 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="412"/>
         <source>Command menu</source>
-        <translation type="unfinished"/>
+        <translation>コマンドメニュー</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="27"/>
         <source>Macro commands</source>
-        <translation type="unfinished"/>
+        <translation>マクロのコマンド</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="96"/>
         <source>Step</source>
-        <translation type="unfinished"/>
+        <translation>ステップ</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="128"/>
@@ -15390,17 +15390,17 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="160"/>
         <source>Actions</source>
-        <translation type="unfinished"/>
+        <translation>アクション</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="258"/>
         <source>Double-click a command, or drag it, to add it to your macro</source>
-        <translation type="unfinished"/>
+        <translation>コマンドをダブルクリックするかドラッグして、マクロに追加します</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="107"/>
         <source>Run macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>マクロ &quot;%1&quot; を実行</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="142"/>
@@ -15415,67 +15415,67 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="154"/>
         <source>Export…</source>
-        <translation type="unfinished"/>
+        <translation>エクスポート…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="167"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="89"/>
         <source>Macro menu</source>
-        <translation type="unfinished"/>
+        <translation>マクロメニュー</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="48"/>
         <source>Macros</source>
-        <translation type="unfinished"/>
+        <translation>マクロ</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="66"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="18"/>
         <source>New macro</source>
-        <translation type="unfinished"/>
+        <translation>新規マクロ</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="110"/>
         <source>Macro manager menu</source>
-        <translation type="unfinished"/>
+        <translation>マクロマネージャーメニュー</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="69"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="26"/>
         <source>Rename macro</source>
-        <translation type="unfinished"/>
+        <translation>マクロの名前を変更</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="73"/>
         <source>Export macro…</source>
-        <translation type="unfinished"/>
+        <translation>マクロをエクスポート…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="78"/>
         <source>Remove all steps</source>
-        <translation type="unfinished"/>
+        <translation>すべてのステップを削除</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="82"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="50"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="56"/>
         <source>Delete macro</source>
-        <translation type="unfinished"/>
+        <translation>マクロを削除</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="26"/>
         <source>Queued</source>
-        <translation type="unfinished"/>
+        <translation>待機中</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="28"/>
         <source>Processing</source>
-        <translation type="unfinished"/>
+        <translation>処理中</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="30"/>
         <source>Complete</source>
-        <translation type="unfinished"/>
+        <translation>完了</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="32"/>
@@ -15490,7 +15490,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="43"/>
         <source>File path</source>
-        <translation type="unfinished"/>
+        <translation>ファイルパス</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="55"/>
@@ -15500,27 +15500,27 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="71"/>
         <source>Import macro…</source>
-        <translation type="unfinished"/>
+        <translation>マクロをインポート…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="98"/>
         <source>You don’t have any macros yet</source>
-        <translation type="unfinished"/>
+        <translation>マクロはまだありません</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="76"/>
         <source>Macro name</source>
-        <translation type="unfinished"/>
+        <translation>マクロ名</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="124"/>
         <source>A macro with this name already exists</source>
-        <translation type="unfinished"/>
+        <translation>この名前のマクロは既に存在します</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="22"/>
         <source>Run on files</source>
-        <translation type="unfinished"/>
+        <translation>ファイルに対して実行</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/RunOnFilesDialog.qml" line="103"/>
@@ -15530,145 +15530,146 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="147"/>
         <source>Step %1 of “%2”: %3</source>
-        <translation type="unfinished"/>
+        <translation>ステップ %1 / &quot;%2&quot;: %3</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="152"/>
         <source>The macro uses steps that do not exist:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>マクロに存在しないステップが使用されています:
+%1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="177"/>
         <source>macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>マクロ&quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="285"/>
         <source>Macro “%1” not found</source>
-        <translation type="unfinished"/>
+        <translation>マクロ &quot;%1&quot; が見つかりません</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="334"/>
         <source>“%1” ran successfully</source>
-        <translation type="unfinished"/>
+        <translation>&quot;%1&quot; は正常に実行されました</translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="335"/>
         <source>%n step(s) applied to the project</source>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>プロジェクトに %n 個のステップを適用しました</numerusform></translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="338"/>
         <source>Macro completed</source>
-        <translation type="unfinished"/>
+        <translation>マクロが完了しました</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrorunner.cpp" line="350"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="17"/>
         <source>The macro could not be completed</source>
-        <translation type="unfinished"/>
+        <translation>マクロを完了できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="85"/>
         <source>macro has no name</source>
-        <translation type="unfinished"/>
+        <translation>マクロに名前がありません</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="99"/>
         <source>macro step has no macro name</source>
-        <translation type="unfinished"/>
+        <translation>マクロのステップにマクロ名がありません</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macroserialization.cpp" line="108"/>
         <source>macro step has an invalid command</source>
-        <translation type="unfinished"/>
+        <translation>マクロのステップに無効なコマンドがあります</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="125"/>
         <source>Macro “%1” calls itself</source>
-        <translation type="unfinished"/>
+        <translation>マクロ &quot;%1&quot; が自分自身を呼び出しています</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="126"/>
         <source>Macro “%1” calls itself through “%2”</source>
-        <translation type="unfinished"/>
+        <translation>マクロ &quot;%1&quot; が &quot;%2&quot; を介して自分自身を呼び出しています</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/internal/macrosrepository.cpp" line="327"/>
         <source>Invalid macro file</source>
-        <translation type="unfinished"/>
+        <translation>無効なマクロファイル</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="36"/>
         <source>The macro could not be renamed</source>
-        <translation type="unfinished"/>
+        <translation>マクロの名前を変更できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="45"/>
         <source>“%1” will be deleted</source>
-        <translation type="unfinished"/>
+        <translation>&quot;%1&quot; は削除されます</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="46"/>
         <source>“%1” is used by other macros. Deleting it will also remove it from: %2</source>
-        <translation type="unfinished"/>
+        <translation>&quot;%1&quot; は他のマクロで使用されています。削除すると、次のマクロからも削除されます: %2</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="64"/>
         <source>The macro could not be deleted</source>
-        <translation type="unfinished"/>
+        <translation>マクロを削除できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="71"/>
         <source>Export macro</source>
-        <translation type="unfinished"/>
+        <translation>マクロをエクスポート</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="78"/>
         <source>The macro could not be exported</source>
-        <translation type="unfinished"/>
+        <translation>マクロをエクスポートできませんでした</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="84"/>
         <source>Import macro</source>
-        <translation type="unfinished"/>
+        <translation>マクロをインポート</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="112"/>
         <source>Macro files</source>
-        <translation type="unfinished"/>
+        <translation>マクロファイル</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macrocommandsmodel.cpp" line="336"/>
         <source>The macro could not be saved</source>
-        <translation type="unfinished"/>
+        <translation>マクロを保存できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="131"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="145"/>
         <source>The macro could not be imported</source>
-        <translation type="unfinished"/>
+        <translation>マクロをインポートできませんでした</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="191"/>
         <source>Some commands of this macro are not available</source>
-        <translation type="unfinished"/>
+        <translation>このマクロの一部のコマンドは使用できません</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="192"/>
         <source>The macro can be imported, but it will fail at these steps:</source>
-        <translation type="unfinished"/>
+        <translation>マクロはインポートできますが、次のステップで失敗します:</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="201"/>
         <source>Replace macro?</source>
-        <translation type="unfinished"/>
+        <translation>マクロを置き換えますか?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macromanagermodel.cpp" line="202"/>
         <source>A macro named “%1” already exists. Do you want to replace it?</source>
-        <translation type="unfinished"/>
+        <translation>&quot;%1&quot; という名前のマクロは既に存在します。置き換えますか?</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
@@ -15678,7 +15679,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="56"/>
         <source>Select files</source>
-        <translation type="unfinished"/>
+        <translation>ファイルを選択</translation>
     </message>
 </context>
 <context>
@@ -15962,7 +15963,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="72"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="42"/>
         <source>GENRE</source>
-        <translation type="unfinished"/>
+        <translation>ジャンル</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
@@ -17753,12 +17754,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="15"/>
         <source>Sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>サウンド起動録音</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="22"/>
         <source>Turn on sound activated recording</source>
-        <translation type="unfinished"/>
+        <translation>サウンド起動録音をオンにする</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="14"/>
@@ -17768,17 +17769,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="33"/>
         <source>Default track visualization</source>
-        <translation type="unfinished"/>
+        <translation>既定のトラック表示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="56"/>
         <source>Default ruler format</source>
-        <translation type="unfinished"/>
+        <translation>既定のルーラー形式</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TrackDisplaySection.qml" line="85"/>
         <source>Default audio track name</source>
-        <translation type="unfinished"/>
+        <translation>既定のオーディオトラック名</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="65"/>
@@ -18319,25 +18320,27 @@ audio.comのアップデートされたプロジェクトページから、こ�
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="987"/>
         <source>Use default location</source>
-        <translation type="unfinished"/>
+        <translation>既定の場所を使用</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="990"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1005"/>
         <source>Could not create a new project</source>
-        <translation type="unfinished"/>
+        <translation>新規プロジェクトを作成できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="991"/>
         <source>The temporary files location is not accessible: %1
 
 Use the default location instead? It can be changed later in Preferences.</source>
-        <translation type="unfinished"/>
+        <translation>一時ファイルの場所にアクセスできません: %1
+
+代わりに既定の場所を使用しますか? 後で環境設定で変更できます。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1006"/>
         <source>Make sure the temporary files location is accessible: %1</source>
-        <translation type="unfinished"/>
+        <translation>一時ファイルの場所にアクセスできることを確認してください: %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1090"/>
@@ -19907,7 +19910,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml" line="93"/>
         <source>Track %1: %2, vertical ruler</source>
-        <translation type="unfinished"/>
+        <translation>トラック %1: %2、縦ルーラー</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanKnob.qml" line="29"/>
@@ -20045,7 +20048,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelControl.qml" line="70"/>
         <source>Activation level</source>
-        <translation type="unfinished"/>
+        <translation>起動レベル</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="15"/>
@@ -20056,7 +20059,7 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
         <source>Timed recording</source>
-        <translation type="unfinished"/>
+        <translation>タイマー録音</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>
@@ -20068,7 +20071,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="170"/>
         <source>Date</source>
-        <translation type="unfinished"/>
+        <translation>日付</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="187"/>
@@ -20078,33 +20081,33 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="318"/>
         <source>Start recording</source>
-        <translation type="unfinished"/>
+        <translation>録音を開始</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="325"/>
         <source>Now</source>
-        <translation type="unfinished"/>
+        <translation>今すぐ</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="337"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="396"/>
         <source>At a time</source>
-        <translation type="unfinished"/>
+        <translation>指定時刻</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="377"/>
         <source>End recording</source>
-        <translation type="unfinished"/>
+        <translation>録音を終了</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="384"/>
         <source>For a duration</source>
-        <translation type="unfinished"/>
+        <translation>指定時間</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="474"/>
         <source>When recording is done</source>
-        <translation type="unfinished"/>
+        <translation>録音終了時</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="480"/>
@@ -20125,12 +20128,12 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="524"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Audacity を終了</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
         <source>Start timed recording</source>
-        <translation type="unfinished"/>
+        <translation>タイマー録音を開始</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="116"/>
@@ -20141,45 +20144,45 @@ Please connect an input device and rescan.</source>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="30"/>
         <source>%1d</source>
         <extracomment>Abbreviated number of days in a duration, e.g. &quot;2d&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 日</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="34"/>
         <source>%1h</source>
         <extracomment>Abbreviated number of hours in a duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 時間</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="38"/>
         <source>%1m</source>
         <extracomment>Abbreviated number of minutes in a duration, e.g. &quot;30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 分</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingformatter.cpp" line="42"/>
         <source>%1s</source>
         <extracomment>Abbreviated number of seconds in a duration, e.g. &quot;45s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 秒</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="159"/>
         <source>The end time has already passed.</source>
-        <translation type="unfinished"/>
+        <translation>終了時刻は既に過ぎています。</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="198"/>
         <source>Audacity was already recording.</source>
-        <translation type="unfinished"/>
+        <translation>Audacityは既に録音中でした。</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="208"/>
         <source>Recording couldn’t be started.</source>
-        <translation type="unfinished"/>
+        <translation>録音を開始できませんでした。</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="222"/>
         <source>Timed recording couldn’t start</source>
-        <translation type="unfinished"/>
+        <translation>タイマー録音を開始できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="246"/>
@@ -20189,28 +20192,28 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="249"/>
         <source>Stop timed recording</source>
-        <translation type="unfinished"/>
+        <translation>タイマー録音を停止</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="250"/>
         <source>Your timed recording will be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>タイマー録音は停止されます。</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="287"/>
         <source>Timed recording complete</source>
-        <translation type="unfinished"/>
+        <translation>タイマー録音が完了しました</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="289"/>
         <source>Recorded for %1</source>
         <extracomment>%1 is how long the timed recording lasted, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 間録音しました</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="293"/>
         <source>Timed recording stopped</source>
-        <translation type="unfinished"/>
+        <translation>タイマー録音を停止しました</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="328"/>
@@ -20220,53 +20223,53 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="330"/>
         <source>Couldn’t save the project</source>
-        <translation type="unfinished"/>
+        <translation>プロジェクトを保存できませんでした</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="353"/>
         <source>Couldn’t export the audio</source>
-        <translation type="unfinished"/>
+        <translation>音声をエクスポートできませんでした</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="357"/>
         <source>Audio exported</source>
-        <translation type="unfinished"/>
+        <translation>音声をエクスポートしました</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="95"/>
         <source>Audacity will quit in %1</source>
         <extracomment>%1 is the time left until Audacity quits, e.g. &quot;59s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 後に Audacity を終了します</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="99"/>
         <source>Recording ends in %1</source>
         <extracomment>%1 is the time left until the timed recording ends, e.g. &quot;59m 50s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 後に録音が終了します</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="102"/>
         <source>Started: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>開始: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="106"/>
         <source>Recording starts in %1</source>
         <extracomment>%1 is the time left until the timed recording starts, e.g. &quot;5m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 後に録音が開始します</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="109"/>
         <source>Starts: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>開始: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingprogressmodel.cpp" line="112"/>
         <source>Ends: %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sat 24 Oct 2026 at 13:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>終了: %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="159"/>
@@ -20274,7 +20277,10 @@ Please connect an input device and rescan.</source>
 %1
 
 Do you want to overwrite it?</source>
-        <translation type="unfinished"/>
+        <translation>このファイルは既に存在します:
+%1
+
+上書きしますか?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="161"/>
@@ -20282,7 +20288,10 @@ Do you want to overwrite it?</source>
 %1
 
 Do you want to overwrite them?</source>
-        <translation type="unfinished"/>
+        <translation>これらのファイルは既に存在します:
+%1
+
+上書きしますか?</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="166"/>
@@ -20292,72 +20301,72 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="182"/>
         <source>Save project as</source>
-        <translation type="unfinished"/>
+        <translation>プロジェクトに名前を付けて保存</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="46"/>
         <source>%1 at %2</source>
         <extracomment>A date and a time, e.g. &quot;Sat 24 Oct 2026 at 12:23:30&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="58"/>
         <source>Starts when you press Start timed recording and ends %1 (%2).</source>
         <extracomment>%1 is when the recording ends, e.g. &quot;today at 16:28:20&quot;, and %2 its duration, e.g. &quot;1h&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>&quot;タイマー録音を開始&quot;を押すと開始し、%1に終了します(%2)。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="63"/>
         <source>Starts when you press Start timed recording and records for %1.</source>
         <extracomment>%1 is the duration of the recording, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>&quot;タイマー録音を開始&quot;を押すと開始し、%1間録音します。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="67"/>
         <source>Starts %1 and records for %2.</source>
         <extracomment>%1 is when the recording starts, e.g. &quot;today at 12:23:30&quot; or &quot;in 43m 30s&quot;, and %2 its duration, e.g. &quot;1h 30m&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 に開始し、%2 間録音します。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="73"/>
         <source>Start time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>開始時刻は過ぎています。%1 より後の時刻を選択してください。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="79"/>
         <source>End time has passed. Choose a time after %1.</source>
         <extracomment>%1 is the current time of day, e.g. &quot;12:25:14&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>終了時刻は過ぎています。%1 より後の時刻を選択してください。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="84"/>
         <source>End time must be after the start time.</source>
-        <translation type="unfinished"/>
+        <translation>終了時刻は開始時刻より後にしてください。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="102"/>
         <source>in %1</source>
         <extracomment>%1 is how long until the recording starts, e.g. &quot;43m 30s&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 後</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="113"/>
         <source>today at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>今日 の%1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="118"/>
         <source>tomorrow at %1</source>
         <extracomment>%1 is a time of day, e.g. &quot;16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>明日の %1</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingviewformatter.cpp" line="122"/>
         <source>on %1</source>
         <extracomment>%1 is a date and a time, e.g. &quot;Sun 25 Oct 2026 at 16:28:20&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1</translation>
     </message>
 </context>
 <context>
@@ -20584,7 +20593,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="32"/>
         <source>Navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between panels and controls</extracomment>
-        <translation type="unfinished"/>
+        <translation>ナビゲーション</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="34"/>
@@ -20608,25 +20617,25 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="40"/>
         <source>Track view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that work only while a track or a track item has the keyboard focus</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックビュー</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="44"/>
         <source>Project view</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that change how the project is shown</extracomment>
-        <translation type="unfinished"/>
+        <translation>プロジェクトビュー</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="46"/>
         <source>Editing</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that edit audio, clips, labels and tracks</extracomment>
-        <translation type="unfinished"/>
+        <translation>編集</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="48"/>
         <source>Track navigation</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that move the keyboard focus between tracks and track items</extracomment>
-        <translation type="unfinished"/>
+        <translation>トラックナビゲーション</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="50"/>
@@ -20644,7 +20653,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="55"/>
         <source>App</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that act on the whole application</extracomment>
-        <translation type="unfinished"/>
+        <translation>アプリ</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="57"/>
@@ -20686,7 +20695,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="69"/>
         <source>Extensions</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of extensions (add-ons that users install)</extracomment>
-        <translation type="unfinished"/>
+        <translation>拡張機能</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="71"/>
@@ -20698,7 +20707,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="73"/>
         <source>Windows</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that manage application windows</extracomment>
-        <translation type="unfinished"/>
+        <translation>ウィンドウ</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="75"/>
@@ -20716,7 +20725,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="79"/>
         <source>Testflow</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of the automated test tool for developers; &quot;Testflow&quot; is a tool name, do not translate it</extracomment>
-        <translation type="unfinished"/>
+        <translation>Testflow</translation>
     </message>
 </context>
 <context>
@@ -21853,13 +21862,13 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="154"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="155"/>
         <source>Changed fade in</source>
-        <translation type="unfinished"/>
+        <translation>フェードインを変更しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="166"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="167"/>
         <source>Changed fade out</source>
-        <translation type="unfinished"/>
+        <translation>フェードアウトを変更しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="424"/>
@@ -22063,22 +22072,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="973"/>
         <source>Rendered all audio in track ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>トラック &apos;%1&apos; のすべての音声をレンダリングしました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
         <source>Mixed and rendered %1 tracks into one new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>%1 個のトラックをミックスして新しい 1つのステレオトラックにレンダリングしました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="979"/>
         <source>Mixed and rendered %1 tracks into one new mono track</source>
-        <translation type="unfinished"/>
+        <translation>%1 個のトラックをミックスして新しい 1つのモノラルトラックにレンダリングしました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="981"/>
         <source>Mix and render</source>
-        <translation type="unfinished"/>
+        <translation>ミックスしてレンダリング</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
@@ -22182,27 +22191,27 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1249"/>
         <source>Cut multiple items</source>
-        <translation type="unfinished"/>
+        <translation>複数の項目を切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1251"/>
         <source>Cut multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>複数のクリップを切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1253"/>
         <source>Cut multiple labels</source>
-        <translation type="unfinished"/>
+        <translation>複数のラベルを切り取り</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1317"/>
         <source>Items grouped</source>
-        <translation type="unfinished"/>
+        <translation>項目をグループ化しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1326"/>
         <source>Items ungrouped</source>
-        <translation type="unfinished"/>
+        <translation>項目のグループを解除しました</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1344"/>
@@ -22271,7 +22280,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3interactionutils.cpp" line="320"/>
         <source>Resampling…</source>
-        <translation type="unfinished"/>
+        <translation>リサンプリング中…</translation>
     </message>
 </context>
 <context>
@@ -22896,7 +22905,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="104"/>
         <source>%1 %2 is available!</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 が利用可能です!</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="120"/>
@@ -22923,7 +22932,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="90"/>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="229"/>
         <source>Restart &amp; update</source>
-        <translation type="unfinished"/>
+        <translation>再起動して更新</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
@@ -22943,17 +22952,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="210"/>
         <source>Updated to %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 に更新しました</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="222"/>
         <source>%1 %2 is now ready to install.</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 をインストールする準備ができました。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="225"/>
         <source>New update available</source>
-        <translation type="unfinished"/>
+        <translation>新しいアップデートがあります</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="228"/>
@@ -22986,7 +22995,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="297"/>
         <source>Restart to finish updating</source>
-        <translation type="unfinished"/>
+        <translation>再起動して更新を完了</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="298"/>
@@ -23012,17 +23021,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="46"/>
         <source>Download and install future %1 updates automatically</source>
-        <translation type="unfinished"/>
+        <translation>今後の %1 のアップデートを自動的にダウンロードしてインストールする</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="60"/>
         <source>You can change this anytime in &lt;b&gt;Preferences &gt; General&lt;/b&gt;.</source>
-        <translation type="unfinished"/>
+        <translation>この設定は、&lt;b&gt;環境設定 &gt; 全般&lt;/b&gt;でいつでも変更できます。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="377"/>
         <source>Preparing %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 を準備中</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdateservice.cpp" line="481"/>

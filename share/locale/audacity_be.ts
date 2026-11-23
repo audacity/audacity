@@ -260,7 +260,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="462"/>
         <source>Revert</source>
-        <translation type="unfinished"/>
+        <translation>Скінуць</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="464"/>
@@ -285,7 +285,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="485"/>
         <source>Restart Audacity</source>
-        <translation type="unfinished"/>
+        <translation>Перезапусціць Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="54"/>
@@ -718,7 +718,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation>Прапусціць</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
@@ -776,13 +776,13 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="39"/>
         <source>Audacity notifies you in-app when a new version is available to download.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity паведамляе ў праграме, калі для спампоўвання даступная новая версія.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="40"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
-        <translation type="unfinished"/>
+        <translation>Вы можаце адключыць гэта ў любы момант у %1.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
@@ -1070,12 +1070,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Getting started</source>
-        <translation type="unfinished"/>
+        <translation>Першыя крокі</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="144"/>
         <source>Accept &amp; continue</source>
-        <translation type="unfinished"/>
+        <translation>Прыняць і працягнуць</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="150"/>
@@ -1086,7 +1086,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="164"/>
         <source>Select a theme</source>
-        <translation type="unfinished"/>
+        <translation>Выберыце тэму</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="169"/>
@@ -1137,7 +1137,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="220"/>
         <source>Choose an accent color for the interface</source>
-        <translation type="unfinished"/>
+        <translation>Выберыце колер акцэнту для інтэрфейсу</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="225"/>
@@ -1186,7 +1186,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="257"/>
         <source>%1. Accent color selected</source>
         <extracomment>%1 is the base description with current theme and system theme status</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. Выбраны колер акцэнту</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="34"/>
@@ -1196,12 +1196,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="35"/>
         <source>A clearer interface. Ideal for new users</source>
-        <translation type="unfinished"/>
+        <translation>Больш зразумелы інтэрфейс. Ідэальны для новых карыстальнікаў</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="46"/>
         <source>Closely matches the layout of Audacity 3</source>
-        <translation type="unfinished"/>
+        <translation>Максімальна адпавядае кампаноўцы Audacity 3</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="99"/>
@@ -1602,7 +1602,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
         <source>Accent color</source>
-        <translation type="unfinished"/>
+        <translation>Колер акцэнту</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="14"/>
@@ -3011,7 +3011,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="136"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
-        <translation type="unfinished"/>
+        <translation>Мой профіль</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="136"/>
@@ -3026,7 +3026,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
-        <translation type="unfinished"/>
+        <translation>Выйсці</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="164"/>
@@ -11843,7 +11843,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="141"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation>Прапусціць</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="40"/>
@@ -16950,12 +16950,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="23"/>
         <source>Short skip</source>
-        <translation type="unfinished"/>
+        <translation>Кароткі пропуск</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="43"/>
         <source>Long skip</source>
-        <translation type="unfinished"/>
+        <translation>Доўгі пропуск</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectBehaviorSection.qml" line="14"/>
@@ -17165,7 +17165,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
         <source>Accent color</source>
-        <translation type="unfinished"/>
+        <translation>Колер акцэнту</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="55"/>
@@ -17939,7 +17939,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="215"/>
         <source>Accent color</source>
-        <translation type="unfinished"/>
+        <translation>Колер акцэнту</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="541"/>
