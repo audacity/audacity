@@ -3,7 +3,9 @@
 */
 #include "recordingcapture.h"
 
+#include <algorithm>
 #include <chrono>
+#include <cmath>
 #include <new>
 
 #include "framework/global/log.h"
@@ -23,7 +25,8 @@ RecordingCapture::RecordingCapture(AudacityProject& project, Settings settings, 
                                    std::function<void()> stopTransport)
     : m_project{project}, m_startTime{settings.startTime},
     m_streamStartTime{settings.startTime - settings.leadInTime}, m_deviceRate{settings.deviceRate}, m_listener{std::move(listener)},
-    m_meter{std::move(meter)}, m_inputVolume{inputVolume}, m_playThrough{playThrough}, m_stopTransport{std::move(stopTransport)},
+    m_meter{std::move(meter)}, m_inputVolume{inputVolume}, m_playThrough{playThrough},
+    m_soundActivationLevel{settings.soundActivationLevel}, m_stopTransport{std::move(stopTransport)},
     m_input{settings.numInputChannels, settings.maxFrames}, m_scratch(static_cast<size_t>(settings.maxFrames)),
     m_inputPointers(static_cast<size_t>(settings.numInputChannels))
 {
@@ -108,6 +111,23 @@ void RecordingCapture::finish()
 void RecordingCapture::drain(bool force, bool streamActive)
 {
     m_sink.Drain(force, [streamActive] { return streamActive; }, m_listener.get(), m_stopTransport);
+}
+
+bool RecordingCapture::waitsForSound(const float* const* input, int frames, double time)
+{
+    if (!m_soundActivationLevel || time < m_startTime) {
+        return false;
+    }
+    float peak = 0.f;
+    for (int ch = 0; ch < m_input.numChannels(); ++ch) {
+        if (input[ch]) {
+            for (int i = 0; i < frames; ++i) {
+                peak = std::max(peak, std::abs(input[ch][i]));
+            }
+        }
+    }
+    m_waitingForSound = peak * m_inputVolume.load(std::memory_order_relaxed) < *m_soundActivationLevel;
+    return m_waitingForSound;
 }
 
 void RecordingCapture::process(const float* const* input, float* const* output, int numOutputChannels, int offset, int frames,

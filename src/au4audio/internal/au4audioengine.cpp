@@ -8,6 +8,7 @@
 
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
+#include "framework/global/types/ratio.h"
 
 #include "au3-preferences/Prefs.h"
 #include "au3-project/Project.h"
@@ -125,6 +126,9 @@ int Au4AudioEngine::startTransport(const TransportSequences& sequences, double s
         settings.numInputChannels = device->numInputChannels();
         settings.deviceRate = rate;
         settings.maxFrames = device->blockSize();
+        if (options.soundActivatedRecording) {
+            settings.soundActivationLevel = muse::db_to_linear(static_cast<float>(options.soundActivationLevelDb));
+        }
         if (settings.numInputChannels == 0) {
             m_lastError = u"The input device has no channels";
             return 0;

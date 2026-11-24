@@ -6,6 +6,7 @@
 #include <atomic>
 #include <functional>
 #include <memory>
+#include <optional>
 #include <thread>
 #include <utility>
 #include <vector>
@@ -40,6 +41,8 @@ public:
         double deviceRate = 0.0;
         //! The most frames processed at once
         int maxFrames = 0;
+        //! For sound activated recording: the level, linear, the input must reach for the recording to go on
+        std::optional<float> soundActivationLevel;
     };
 
     //! @param stopTransport called on the main thread if recording fails, e.g. the disk is full
@@ -55,6 +58,10 @@ public:
     //! Whether the stream is past the lead-in, at `time` in the timeline
     bool isCapturing(double time) const { return time >= m_startTime; }
     int numInputChannels() const { return m_input.numChannels(); }
+
+    //! Device thread, before process(): whether a sound activated recording, at `time` in the timeline, waits for the
+    //! `frames` frames of `input` to reach the activation level. As AudioIO, not during the lead-in.
+    bool waitsForSound(const float* const* input, int frames, double time);
 
     //! Device thread: `frames` frames of input, one buffer per channel, captured unless `paused`, but for the last
     //! `unplayed`: the transport didn't advance by them, so that the recording stays in step with what played. The input
@@ -77,6 +84,9 @@ private:
     const audio::IAudioMeterPtr m_meter;
     const std::atomic<float>& m_inputVolume;
     const bool m_playThrough;
+    const std::optional<float> m_soundActivationLevel;
+    //! As AudioIO, a sound activated recording without lead-in waits from the start
+    bool m_waitingForSound = true;
     const std::function<void()> m_stopTransport;
 
     CaptureSink m_sink;

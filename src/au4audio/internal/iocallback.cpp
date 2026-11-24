@@ -290,12 +290,13 @@ void IoCallback::process(const float* const* inputChannelData, int numInputChann
         return;
     }
     // As AudioIO, a paused recording still meters, and plays through, the input
-    const bool paused = m_paused;
-    if (paused && !m_capture) {
+    if (m_paused && !m_capture) {
         return;
     }
     // The input of the channels the capture records, if the device gives them
     const auto input = m_capture && numInputChannels >= m_capture->numInputChannels() ? inputChannelData : nullptr;
+    // As AudioIO, a sound activated recording is paused while the input is quiet
+    const bool paused = m_paused || (input && m_capture->waitsForSound(input, numSamples, position()));
 
     const auto dacTime = std::chrono::steady_clock::now()
                          + std::chrono::duration_cast<std::chrono::steady_clock::duration>(
