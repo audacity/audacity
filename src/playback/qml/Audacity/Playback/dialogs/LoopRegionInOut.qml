@@ -46,6 +46,26 @@ StyledDialogView {
         playRegionController.setPreviewEndTime(end)
     }
 
+    NavigationPanel {
+        id: loopInNavPanel
+        name: "LoopInInput"
+        section: root.navigationSection
+        order: 0
+        direction: NavigationPanel.Horizontal
+        enabled: timeIn.enabled && timeIn.visible
+        accessible.name: loopInLabel.text
+    }
+
+    NavigationPanel {
+        id: loopOutNavPanel
+        name: "LoopOutInput"
+        section: root.navigationSection
+        order: 1
+        direction: NavigationPanel.Horizontal
+        enabled: timeOut.enabled && timeOut.visible
+        accessible.name: loopOutLabel.text
+    }
+
     ColumnLayout {
         anchors.fill: parent
 
@@ -57,6 +77,8 @@ StyledDialogView {
             spacing: 8
 
             StyledTextLabel {
+                id: loopInLabel
+
                 Layout.fillWidth: true
 
                 horizontalAlignment: Text.AlignLeft
@@ -78,6 +100,10 @@ StyledDialogView {
                 upperTimeSignature: selectionModel.upperTimeSignature
                 lowerTimeSignature: selectionModel.lowerTimeSignature
 
+                navigation.panel: loopInNavPanel
+                navigation.order: 0
+                accessibleName: loopInLabel.text + " "
+
                 onValueChanged: {
                     root.start = value
                 }
@@ -94,6 +120,8 @@ StyledDialogView {
             spacing: 8
 
             StyledTextLabel {
+                id: loopOutLabel
+
                 Layout.fillWidth: true
 
                 horizontalAlignment: Text.AlignLeft
@@ -115,6 +143,10 @@ StyledDialogView {
                 upperTimeSignature: selectionModel.upperTimeSignature
                 lowerTimeSignature: selectionModel.lowerTimeSignature
 
+                navigation.panel: loopOutNavPanel
+                navigation.order: 0
+                accessibleName: loopOutLabel.text + " "
+
                 onValueChanged: {
                     root.end = value
                 }
@@ -133,6 +165,7 @@ StyledDialogView {
             id: buttonBox
 
             navigationPanel.section: root.navigationSection
+            navigationPanel.order: 2
 
             Layout.fillWidth: true
             Layout.rightMargin: 8
