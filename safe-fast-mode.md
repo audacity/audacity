@@ -141,9 +141,9 @@ tracktion_graph nor JUCE.
 
 - Each playback track renders its whole chain ahead on a worker of its own, behind its own `LockFreeQueueNode`: the
   tracks' effects render in parallel, one thread per track, and absorb peaks as in safe mode.
-- The track the input is monitored through reads its sequence ahead only, as in fast mode: its effects, the mix and the
-  master's effects render in the callback, so the input is heard through them at once. That part is sequential anyway:
-  the monitored track feeds the master.
+- The track the input is monitored through reads its sequence ahead only, as in fast mode: its effects, mute/solo and
+  volume/pan, the mix and the master's effects render in the callback, so the input is heard through them at once. That
+  part is sequential anyway: the monitored track feeds the master.
 - The callback waits for the workers, as in safe mode: it plays only as many frames as every queue has; the rest is
   silence, the transport doesn't advance, and what is captured meanwhile isn't recorded.
 - The tracks' effects process on several threads at once, each in a scope of its own: `RealtimeEffects::ProcessingScope`
@@ -155,22 +155,32 @@ flowchart LR
     T1["track chain (w/ fx)"] --> Q1[LockFreeQueueNode] --> M1["MeterTapNode"]
     T2["track chain (w/ fx)"] --> Q2[LockFreeQueueNode] --> M2["MeterTapNode"]
     W((a worker per track)) -.->|render into| Q1 & Q2
-    S3[PlayheadMappingNode] --> Q3[LockFreeQueueNode] --> R3["rest of the monitored track's chain<br/>(MonitoredInputNode, fx)"]
+    S3[PlayheadMappingNode] --> Q3[LockFreeQueueNode] --> E3[EndOfTrackNode] --> IM3[SequentialMixNode]
+    I3[MonitoredInputNode] --> IM3 --> FX3[EffectsNode] --> MS3[MuteSoloNode] --> GP3[GainPanNode] --> M3["MeterTapNode"]
     W3((worker)) -.->|reads into| Q3
-    M1 & M2 & R3 -->|one after the other| Mix[SequentialMixNode] --> MFX["EffectsNode (master)"] --> MMeter["MeterTapNode (master)"] --> MSend[MeterSendNode] -->|callback| D(device)
+    M1 & M2 & M3 -->|one after the other| Mix[SequentialMixNode] --> MFX["EffectsNode (master)"] --> MMeter["MeterTapNode (master)"] --> MSend[MeterSendNode] -->|callback| D(device)
     style Q1 fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style M1 fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style Q2 fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style M2 fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style S3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style Q3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
+    style E3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
+    style IM3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
+    style I3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
+    style FX3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
+    style MS3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
+    style GP3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
+    style M3 fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style Mix fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style MFX fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style MMeter fill:#a5c9a1,stroke:#4f7a4a,color:#000
     style MSend fill:#a5c9a1,stroke:#4f7a4a,color:#000
 ```
 
-Here the playback tracks' chains stop before their meter's tap, which the callback reads after the queue, where the device is.
+Here the playback tracks' chains, mute/solo and volume/pan included, stop before their meter's tap, which the callback reads
+after the queue, where the device is. The monitored track's chain runs in the callback from its `EndOfTrackNode` on: its
+mute/solo and volume/pan are heard at once.
 
 ### S3: PortAudio fast, parallel mixing
 
