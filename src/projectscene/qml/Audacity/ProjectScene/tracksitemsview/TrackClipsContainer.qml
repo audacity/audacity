@@ -324,7 +324,10 @@ TrackItemsContainer {
                         width: Math.max(3, itemData.width)
                         x: itemData.x
 
-                        visible: !itemData.dragged
+                        //! NOTE: The scene graph doesn't skip items outside the window: clips
+                        //! outside the view are hidden, so that each frame only syncs and draws
+                        //! the visible ones. A focused clip stays visible to keep its focus.
+                        visible: !itemData.dragged && (inView || itemData.focused)
                         enabled: !itemData.dragged && !itemData.isDragGhost
 
                         readonly property bool inView: (itemData.x + itemData.width) >= -clipsModel.cacheBufferPx && itemData.x <= clipsContainer.width + clipsModel.cacheBufferPx
