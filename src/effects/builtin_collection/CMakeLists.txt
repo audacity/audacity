@@ -113,6 +113,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/echo/echoeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/echo/echoeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echoviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echoviewmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.h

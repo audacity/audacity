@@ -46,6 +46,7 @@
 #include "basstreble/basstrebleeffect.h"
 #include "basstreble/basstrebleviewmodel.h"
 #include "echo/echoeffect.h"
+#include "echo/echoviewmodel.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
@@ -170,6 +171,8 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(BassTrebleViewModelFactory);
     regView(BassTrebleEffect::Symbol, u"qrc:/basstreble/BassTrebleView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(EchoViewModelFactory);
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
