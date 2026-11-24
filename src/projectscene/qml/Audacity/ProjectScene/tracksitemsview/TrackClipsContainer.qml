@@ -453,11 +453,13 @@ TrackItemsContainer {
                                 channelHeightRatio: root.trackViewState.channelHeightRatio
                                 showChannelSplitter: clipsModel.isStereo
 
-                                navigation.name: Boolean(itemData) ? itemData.key.itemId() : ""
-                                navigation.panel: root.navigationPanel
-                                navigation.column: itemData ? Math.floor(itemData.x) : 0
-                                navigation.onActiveChanged: {
-                                    if (navigation.highlight) {
+                                interactive: loader.inView || itemData.focused || itemData.selected
+
+                                navigationName: Boolean(itemData) ? itemData.key.itemId() : ""
+                                navigationPanel: root.navigationPanel
+                                navigationColumn: itemData ? Math.floor(itemData.x) : 0
+                                onNavigationActiveChanged: {
+                                    if (navigation && navigation.highlight) {
                                         root.context.animatedInsureVisible(itemData.time.startTime)
                                         root.ensureVerticallyVisible()
                                     }
