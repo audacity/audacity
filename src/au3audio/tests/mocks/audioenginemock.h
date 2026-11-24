@@ -49,6 +49,7 @@ public:
     MOCK_METHOD(void, handleDeviceChange, (), (override));
 
     MOCK_METHOD(muse::String, lastErrorString, (), (const, override));
+    MOCK_METHOD((std::vector<std::pair<double, double> >), lostCaptureIntervals, (), (const, override));
     MOCK_METHOD(double, getPlaybackSampleRate, (), (const, override));
     MOCK_METHOD(void, updateTimePosition, (unsigned long newlyConsumedSamples), (override));
     MOCK_METHOD(std::optional<AudioCallbackInfo>, consumeNextCallbackInfo, (), (override));

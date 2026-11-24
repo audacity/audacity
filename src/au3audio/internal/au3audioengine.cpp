@@ -261,6 +261,11 @@ muse::String Au3AudioEngine::lastErrorString() const
     return au::au3::wxToString(AudioIO::Get()->LastPaErrorString());
 }
 
+std::vector<std::pair<double, double> > Au3AudioEngine::lostCaptureIntervals() const
+{
+    return AudioIO::Get()->LostCaptureIntervals();
+}
+
 double Au3AudioEngine::getPlaybackSampleRate() const
 {
     return AudioIO::Get()->GetPlaybackSampleRate();

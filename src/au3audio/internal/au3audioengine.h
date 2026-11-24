@@ -58,6 +58,7 @@ public:
 
     void handleDeviceChange() override;
     muse::String lastErrorString() const override;
+    std::vector<std::pair<double, double> > lostCaptureIntervals() const override;
     double getPlaybackSampleRate() const override;
     void updateTimePosition(unsigned long newlyConsumedSamples) override;
     std::optional<au::audio::AudioCallbackInfo> consumeNextCallbackInfo() override;

@@ -6,6 +6,7 @@
 #include <chrono>
 #include <memory>
 #include <optional>
+#include <utility>
 #include <vector>
 
 #include "framework/global/async/channel.h"
@@ -93,6 +94,8 @@ public:
     virtual void handleDeviceChange() = 0;
 
     virtual muse::String lastErrorString() const = 0;
+    //! Where the last recording lost input, as pairs of start time and duration.
+    virtual std::vector<std::pair<double, double> > lostCaptureIntervals() const = 0;
     virtual double getPlaybackSampleRate() const = 0;
     virtual void updateTimePosition(unsigned long newlyConsumedSamples) = 0;
     virtual std::optional<AudioCallbackInfo> consumeNextCallbackInfo() = 0;

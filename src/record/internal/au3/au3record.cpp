@@ -12,7 +12,6 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
-#include "au3-audio-io/AudioIO.h"
 #include "au3-label-track/LabelTrack.h"
 #include "au3-mixer/Envelope.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
@@ -982,7 +981,7 @@ void Au3Record::cancelRecording()
 
 bool Au3Record::labelDropouts()
 {
-    const auto& intervals = AudioIO::Get()->LostCaptureIntervals();
+    const auto intervals = audioEngine()->lostCaptureIntervals();
     if (intervals.empty()) {
         return false;
     }
