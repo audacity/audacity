@@ -48,6 +48,7 @@
 #include "echo/echoeffect.h"
 #include "echo/echoviewmodel.h"
 #include "phaser/phasereffect.h"
+#include "phaser/phaserviewmodel.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
@@ -176,6 +177,8 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(EchoViewModelFactory);
     regView(EchoEffect::Symbol, u"qrc:/echo/EchoView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PhaserViewModelFactory);
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");

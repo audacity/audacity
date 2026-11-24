@@ -118,6 +118,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/phaser/phasereffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/phaser/phasereffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phaserviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phaserviewmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.h
