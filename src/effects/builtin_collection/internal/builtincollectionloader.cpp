@@ -49,6 +49,7 @@
 #include "echo/echoviewmodel.h"
 #include "phaser/phasereffect.h"
 #include "phaser/phaserviewmodel.h"
+#include "wahwah/wahwaheffect.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
@@ -108,6 +109,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< BassTrebleEffect > regBassTreble;
     static BuiltinEffectsModule::Registration< EchoEffect > regEcho;
     static BuiltinEffectsModule::Registration< PhaserEffect > regPhaser;
+    static BuiltinEffectsModule::Registration< WahWahEffect > regWahWah;
     static BuiltinEffectsModule::Registration< PaulstretchEffect > regPaulstretch;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< SlidingStretchEffect > regSlidingStretch;
