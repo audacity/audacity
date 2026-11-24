@@ -18,7 +18,7 @@
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
-#include "trackedit/clipfadedrag.h"
+#include "trackedit/iclipfades.h"
 
 namespace au::projectscene {
 class TrackClipsListModel : public TrackItemsListModel
@@ -38,6 +38,7 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::ContextInject<au::record::IRecordController> recordController { this };
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
     muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
+    muse::ContextInject<trackedit::IClipFades> clipFades { this };
 
     friend class TrackClipsFadeEditTests;
 
@@ -103,6 +104,7 @@ private:
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
     trackedit::ClipKeyList clipsForFadeEdit(const ClipKey& key) const;
+    std::optional<trackedit::IClipFades::DraggedFade> fadeDragOf(const ClipKey& key) const;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
 
@@ -116,7 +118,6 @@ private:
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
-    std::unique_ptr<trackedit::ClipFadeDrag> m_fadeDrag;
     trackedit::ClipKeyList m_clipsMovingWithSelection;
 };
 }

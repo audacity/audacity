@@ -39,11 +39,6 @@ void TrackClipsListModel::onInit()
         });
     }
 
-    // Escape
-    trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this] {
-        cancelClipFadeEdit();
-    });
-
     selectionController()->clipsSelected().onReceive(this, [this](const ClipKeyList& keyList) {
         if (keyList.empty()) {
             resetSelectedClips();
@@ -363,29 +358,23 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
 
 void TrackClipsListModel::startClipFadeEdit(const ClipKey& key, ClipSides::Side side)
 {
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj || !prj->clip(key.key).isValid()) {
-        return;
-    }
+    clipFades()->startFadeDrag(clipsForFadeEdit(key), key.key, toTrackeditClipSide(side));
+}
 
-    // The previous drag, if any, gives the clips their fades back and ends its user interaction before this one reads
-    // the clips and starts its own
-    m_fadeDrag.reset();
-    const ClipKeyList keys = clipsForFadeEdit(key);
-    trackedit::Clips clips;
-    std::ranges::transform(keys, std::back_inserter(clips),
-                           [&](const trackedit::ClipKey& clipKey) { return prj->clip(clipKey); });
-    m_fadeDrag = ClipFadeDrag::start(*trackeditInteraction(), *projectHistory(), prj, std::move(clips), key.key, toTrackeditClipSide(side));
+std::optional<au::trackedit::IClipFades::DraggedFade> TrackClipsListModel::fadeDragOf(const ClipKey& key) const
+{
+    const std::optional<trackedit::IClipFades::DraggedFade> drag = clipFades()->draggedFade();
+    return drag && drag->leadClip == key.key ? drag : std::nullopt;
 }
 
 bool TrackClipsListModel::changeClipFade(const ClipKey& key, double duration, bool completed)
 {
-    ClipFadeDrag* const drag = m_fadeDrag && m_fadeDrag->leadClip() == key.key ? m_fadeDrag.get() : nullptr;
+    const std::optional<trackedit::IClipFades::DraggedFade> drag = fadeDragOf(key);
     if (!drag) {
         return false;
     }
     if (const TrackClipItem* item = clipItemByKey(key.key)) {
-        if (drag->side() == ClipSide::Left) {
+        if (drag->side == ClipSide::Left) {
             const double start = item->time().startTime;
             duration = m_context->applyDetectedSnap(start + duration) - start;
         } else {
@@ -393,31 +382,30 @@ bool TrackClipsListModel::changeClipFade(const ClipKey& key, double duration, bo
             duration = end - m_context->applyDetectedSnap(end - duration);
         }
     }
-    const bool changed = drag->changeFade(duration);
+    const bool changed = clipFades()->changeFade(duration);
     if (!completed) {
         return changed;
     }
-    const bool committed = drag->commit();
-    m_fadeDrag.reset();
-    return committed;
+    return clipFades()->commitFadeDrag();
 }
 
 void TrackClipsListModel::cancelClipFadeEdit()
 {
-    m_fadeDrag.reset();
+    clipFades()->cancelFadeDrag();
 }
 
 double TrackClipsListModel::findFadeGuideline(const ClipKey& key) const
 {
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!m_fadeDrag || m_fadeDrag->leadClip() != key.key || !prj) {
+    const std::optional<trackedit::IClipFades::DraggedFade> drag = fadeDragOf(key);
+    if (!drag || !prj) {
         return TimelineContext::INVALID_GUIDELINE_TIME;
     }
     const trackedit::Clip clip = prj->clip(key.key);
     if (!clip.isValid()) {
         return TimelineContext::INVALID_GUIDELINE_TIME;
     }
-    const double fadeEnd = m_fadeDrag->side() == ClipSide::Left ? clip.startTime + clip.fadeInDuration
+    const double fadeEnd = drag->side == ClipSide::Left ? clip.startTime + clip.fadeInDuration
                            : clip.endTime - clip.fadeOutDuration;
     const double guidelineTime = m_context->findGuideline(fadeEnd);
     return m_context->isGuidelineValid(guidelineTime) ? guidelineTime : TimelineContext::INVALID_GUIDELINE_TIME;

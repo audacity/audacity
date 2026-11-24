@@ -4,7 +4,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "trackedit/clipfadedrag.h"
+#include "trackedit/internal/clipfadedrag.h"
 #include "trackedit/tests/mocks/projecthistorymock.h"
 #include "trackedit/tests/mocks/trackeditinteractionmock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"

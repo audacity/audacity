@@ -24,8 +24,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackeditclipboard.h
     ${CMAKE_CURRENT_LIST_DIR}/iclipboarddata.h
-    ${CMAKE_CURRENT_LIST_DIR}/clipfadedrag.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/clipfadedrag.h
+    ${CMAKE_CURRENT_LIST_DIR}/iclipfades.h
     ${CMAKE_CURRENT_LIST_DIR}/timespan.cpp
     ${CMAKE_CURRENT_LIST_DIR}/timespan.h
     ${CMAKE_CURRENT_LIST_DIR}/trackediterrors.h
@@ -58,6 +57,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/trackeditcommandsstate.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracknavigationcontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clipfadedrag.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clipfadedrag.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clipfades.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clipfades.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tracksviewrequestsservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/itracknavigationcontroller.h
