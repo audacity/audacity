@@ -20052,7 +20052,7 @@ Podłącz urządzenie wejściowe i przeskanuj ponownie.</translation>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingProgressDialog.qml" line="15"/>
         <source>Timed recording</source>
-        <translation>Nagrywanie czasowe</translation>
+        <translation>Nagrywanie zaplanowane</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="33"/>

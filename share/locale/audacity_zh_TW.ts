@@ -4,12 +4,12 @@
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="72"/>
         <source>Meter style</source>
-        <translation type="unfinished"/>
+        <translation>音頻表樣式</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
         <source>Meter type</source>
-        <translation type="unfinished"/>
+        <translation>音頻表類型</translation>
     </message>
 </context>
 <context>
@@ -30,7 +30,7 @@
     <message>
         <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
         <source>%1 panel</source>
-        <translation type="unfinished"/>
+        <translation>%1 面板</translation>
     </message>
 </context>
 <context>
@@ -51,23 +51,23 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="188"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="59"/>
         <source>Undo ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>撤銷 ‘%1’</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="194"/>
         <location filename="../../src/projectscene/view/toolbars/undoredotoolbarmodel.cpp" line="67"/>
         <source>Redo ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>重做 ‘%1’</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
         <source>Repeat %1</source>
-        <translation type="unfinished"/>
+        <translation>重複 ‘%1’</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
         <source>Silence audio</source>
-        <translation type="unfinished"/>
+        <translation>靜音</translation>
     </message>
     <message>
         <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="57"/>
@@ -77,35 +77,35 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="569"/>
         <source>Manage labels</source>
-        <translation type="unfinished"/>
+        <translation>管理標籤</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="293"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation>資料編輯器</translation>
     </message>
     <message>
         <location filename="../../src/project/view/cloudprojectcontextmenumodel.cpp" line="20"/>
         <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="23"/>
         <source>Show in Finder</source>
-        <translation type="unfinished"/>
+        <translation>在搜尋中顯示</translation>
     </message>
     <message>
         <location filename="../../src/project/view/cloudprojectcontextmenumodel.cpp" line="22"/>
         <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="25"/>
         <source>Show in Explorer</source>
-        <translation type="unfinished"/>
+        <translation>在資源管理器中顯示</translation>
     </message>
     <message>
         <location filename="../../src/project/view/cloudprojectcontextmenumodel.cpp" line="24"/>
         <location filename="../../src/project/view/recentprojectcontextmenumodel.cpp" line="27"/>
         <source>Show in File Manager</source>
-        <translation type="unfinished"/>
+        <translation>在文件管理器中顯示</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="50"/>
         <source>Rename</source>
-        <translation type="unfinished"/>
+        <translation>重命名</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
@@ -120,12 +120,12 @@
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
         <source>Edit workspaces…</source>
-        <translation type="unfinished"/>
+        <translation>編輯工作區…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
         <source>Edit workspaces</source>
-        <translation type="unfinished"/>
+        <translation>編輯工作區</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
@@ -138,7 +138,7 @@
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="51"/>
         <source>Rename track</source>
-        <translation type="unfinished"/>
+        <translation>重命名音軌</translation>
     </message>
 </context>
 <context>
@@ -147,12 +147,12 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
         <source>Cloud account</source>
-        <translation type="unfinished"/>
+        <translation>雲賬戶</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
         <source>Home menu</source>
-        <translation type="unfinished"/>
+        <translation>首頁選單</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
@@ -164,17 +164,17 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="73"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="97"/>
         <source>Plugins</source>
-        <translation type="unfinished"/>
+        <translation>外掛</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="110"/>
         <source>Plugins search</source>
-        <translation type="unfinished"/>
+        <translation>外掛搜尋</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation>類別：</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="138"/>
@@ -186,12 +186,12 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/MainToolBar.qml" line="64"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WindowContent.qml" line="61"/>
         <source>Main toolbar</source>
-        <translation type="unfinished"/>
+        <translation>主工具欄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="59"/>
         <source>Application menu</source>
-        <translation type="unfinished"/>
+        <translation>應用選單</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="77"/>
@@ -201,37 +201,37 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="172"/>
         <source>Project toolbar</source>
-        <translation type="unfinished"/>
+        <translation>專案工具欄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="195"/>
         <source>Workspaces toolbar</source>
-        <translation type="unfinished"/>
+        <translation>工作區工具欄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="218"/>
         <source>Undo/redo toolbar</source>
-        <translation type="unfinished"/>
+        <translation>撤銷/重做工具欄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="240"/>
         <source>Play toolbar</source>
-        <translation type="unfinished"/>
+        <translation>播放工具欄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="306"/>
         <source>Tracks</source>
-        <translation>軌道</translation>
+        <translation>音軌</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="407"/>
         <source>Playback meter</source>
-        <translation type="unfinished"/>
+        <translation>回放音頻表</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="434"/>
         <source>Macro manager</source>
-        <translation type="unfinished"/>
+        <translation>巨集管理員</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="476"/>
@@ -241,39 +241,41 @@
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="81"/>
         <source>Produce MIDI 2.0 output if supported by the receiver</source>
-        <translation type="unfinished"/>
+        <translation>如果接收器支援，則生成 MIDI 2.0 輸出</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="449"/>
         <source>Are you sure you want to revert to factory settings?</source>
-        <translation type="unfinished"/>
+        <translation>您確定要恢復出廠設定嗎？</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="450"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation type="unfinished"/>
+        <translation>此操作將重置您的所有應用偏好設定和自定義 UI 配置。它還會刪除您的自定義工作區和快捷方式。您還需要重新掃描所有第三方外掛。
+
+此操作不會刪除您的任何專案。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="462"/>
         <source>Revert</source>
-        <translation type="unfinished"/>
+        <translation>恢復</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="464"/>
         <source>Revert to factory settings</source>
-        <translation type="unfinished"/>
+        <translation>恢復預設設定</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="476"/>
         <source>Would you like to restart Audacity now?</source>
-        <translation type="unfinished"/>
+        <translation>您現在要重新啟動 Audacity 嗎？</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="477"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
-        <translation type="unfinished"/>
+        <translation>需要重啟 Audacity 才能使這些更改生效。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="483"/>
@@ -283,67 +285,67 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="485"/>
         <source>Restart Audacity</source>
-        <translation type="unfinished"/>
+        <translation>重啟 Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="54"/>
         <source>Loading…‎</source>
-        <translation type="unfinished"/>
+        <translation>正在載入...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="97"/>
         <source>Version %1</source>
-        <translation type="unfinished"/>
+        <translation>版本 %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="41"/>
         <source>Loading new project…‎</source>
-        <translation type="unfinished"/>
+        <translation>正在載入新專案…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="45"/>
         <source>Loading “%1”…‎</source>
-        <translation type="unfinished"/>
+        <translation>正在載入 “%1”…‎</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="51"/>
         <source>Loading project…‎</source>
-        <translation type="unfinished"/>
+        <translation>正在載入專案…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="35"/>
         <source>Validate audio plugins</source>
-        <translation type="unfinished"/>
+        <translation>驗證音訊外掛</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="36"/>
         <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 檢測到一些外掛需要先掃描才能使用。您是否需要立刻掃描？</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
         <source>Skip this time</source>
-        <translation type="unfinished"/>
+        <translation>跳過這次時間</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="44"/>
         <source>Validate</source>
-        <translation type="unfinished"/>
+        <translation>掃描</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="48"/>
         <source>Audio plugin validation</source>
-        <translation type="unfinished"/>
+        <translation>音訊外掛掃描</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="94"/>
         <source>Home</source>
-        <translation type="unfinished"/>
+        <translation>主頁</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="99"/>
         <source>DevTools</source>
-        <translation type="unfinished"/>
+        <translation>開發者工具</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
@@ -354,17 +356,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
-        <translation type="unfinished"/>
+        <translation>%1 %2 - %3</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
-        <translation type="unfinished"/>
+        <translation>*</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectStatusBar.qml" line="43"/>
         <source>Selection status</source>
-        <translation type="unfinished"/>
+        <translation>選擇狀態</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
@@ -385,12 +387,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="289"/>
         <source>Clip</source>
-        <translation type="unfinished"/>
+        <translation>片段</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="539"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation>重命名片段</translation>
     </message>
 </context>
 <context>
@@ -398,27 +400,27 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="470"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation>系统(&amp;S)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="492"/>
         <source>A&amp;ctions</source>
-        <translation type="unfinished"/>
+        <translation>操作(&amp;C)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="493"/>
         <source>&amp;Accessibility</source>
-        <translation type="unfinished"/>
+        <translation>無障礙(&amp;A)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="494"/>
         <source>E&amp;xtensions</source>
-        <translation type="unfinished"/>
+        <translation>擴充套件(&amp;X)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="495"/>
         <source>Test&amp;flow</source>
-        <translation type="unfinished"/>
+        <translation>測試流程(&amp;F)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="500"/>
@@ -439,12 +441,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="395"/>
         <source>&amp;Effect</source>
-        <translation type="unfinished"/>
+        <translation>效果(&amp;E)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="651"/>
         <source>Add track effects</source>
-        <translation type="unfinished"/>
+        <translation>新增即時效果器</translation>
     </message>
 </context>
 <context>
@@ -452,7 +454,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="242"/>
         <source>Open &amp;recent</source>
-        <translation type="unfinished"/>
+        <translation>開啟最近(&amp;R)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="267"/>
@@ -486,7 +488,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="561"/>
         <source>Rename label</source>
-        <translation type="unfinished"/>
+        <translation>重新命名標籤</translation>
     </message>
 </context>
 <context>
@@ -499,7 +501,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
         <source>Mix and render to new track</source>
-        <translation type="unfinished"/>
+        <translation>混音並渲染至新音軌</translation>
     </message>
 </context>
 <context>
@@ -515,12 +517,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="312"/>
         <source>Region</source>
-        <translation type="unfinished"/>
+        <translation>區域</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="314"/>
         <source>Looping</source>
-        <translation type="unfinished"/>
+        <translation>迴圈</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="318"/>
@@ -533,7 +535,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="405"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"/>
+        <translation>工具(&amp;T)</translation>
     </message>
 </context>
 <context>
@@ -541,7 +543,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="385"/>
         <source>&amp;Tracks</source>
-        <translation>軌道(&amp;T)</translation>
+        <translation>音軌(&amp;T)</translation>
     </message>
 </context>
 <context>
@@ -549,7 +551,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="340"/>
         <source>W&amp;orkspaces</source>
-        <translation type="unfinished"/>
+        <translation>工作區(&amp;O)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="354"/>
@@ -570,27 +572,27 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="14"/>
         <source>Audacity 4</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 4</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="273"/>
         <source>Unstable prerelease for %1</source>
-        <translation type="unfinished"/>
+        <translation>不穩定的預釋出版本 %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="329"/>
         <source>Audacity Team Members</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 團隊成員</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="330"/>
         <source>Emeritus</source>
-        <translation type="unfinished"/>
+        <translation>榮譽成員</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="331"/>
         <source>Distinguished Audacity Team members, not currently active</source>
-        <translation type="unfinished"/>
+        <translation>傑出的 Audacity 團隊成員，目前不活躍</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="333"/>
@@ -606,14 +608,15 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="341"/>
         <source>translator_credits</source>
         <translation>正體中文翻譯：&lt;br&gt;&lt;ul&gt;
-&lt;li&gt;風逸蘭&lt;/li&gt;
-&lt;li&gt;mkpoli, 2017.&lt;/li&gt;
-&lt;li&gt;pan93412, 2019, 2020.&lt;/li&gt;
-&lt;li&gt;Walter Cheuk, 2019.&lt;/li&gt;
-&lt;li&gt;Bill, 2021&lt;/li&gt;
-&lt;li&gt;傑西大叔 x 這裡胡說PODCAST, 2021-2023.&lt;/li&gt;
-&lt;li&gt;taijuin, 2024.&lt;/li&gt;
-&lt;/ul&gt;</translation>
+		&lt;li&gt;風逸蘭&lt;/li&gt;
+		&lt;li&gt;mkpoli, 2017.&lt;/li&gt;
+		&lt;li&gt;pan93412, 2019, 2020.&lt;/li&gt;
+		&lt;li&gt;Walter Cheuk, 2019.&lt;/li&gt;
+		&lt;li&gt;Bill, 2021&lt;/li&gt;
+		&lt;li&gt;傑西大叔 x 這裡胡說PODCAST, 2021-2023.&lt;/li&gt;
+		&lt;li&gt;taijuin, 2024.&lt;/li&gt;
+		&lt;li&gt;大樹dasu88, 2026.&lt;/li&gt;
+		&lt;/ul&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="343"/>
@@ -628,17 +631,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="347"/>
         <source>Audacity includes code from the following projects:</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 包含了以下專案的程式碼：</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="349"/>
         <source>Special Thanks</source>
-        <translation type="unfinished"/>
+        <translation>特別感謝</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
         <source>About Audacity</source>
-        <translation type="unfinished"/>
+        <translation>關於 Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
@@ -653,7 +656,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
         <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 是一款免費、開源、跨平臺的音訊錄製和編輯軟體。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
@@ -663,32 +666,32 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
         <source>Audacity website: %1</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 網站: %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
         <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Audacity®&lt;/b&gt; 軟體版權歸 Audacity 團隊所有 © 1999-%1 Audacity 團隊。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
         <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
-        <translation type="unfinished"/>
+        <translation>&lt;b&gt;Audacity&lt;/b&gt; 名稱是註冊商標。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="27"/>
         <source>Privacy</source>
-        <translation type="unfinished"/>
+        <translation>隱私</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="28"/>
         <source>App update checking and error reporting require network access. These features are optional.&lt;br&gt;See our %1 for more info.</source>
-        <translation type="unfinished"/>
+        <translation>應用程式更新檢查和錯誤報告需要網路連線。這些功能是可選的。&lt;br&gt;請參閱我們的 %1 瞭解更多資訊。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="54"/>
         <source>privacy policy</source>
-        <translation type="unfinished"/>
+        <translation>應用更新檢查和錯誤報告需要網路連線。這些功能是可選的。&lt;br&gt;請參閱我們的 %1 瞭解更多資訊。</translation>
     </message>
 </context>
 <context>
@@ -716,27 +719,27 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="109"/>
         <source>Not selected</source>
-        <translation type="unfinished"/>
+        <translation>未選擇</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="157"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>離開 Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="176"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation>跳過</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="192"/>
         <source>Discard selected</source>
-        <translation type="unfinished"/>
+        <translation>捨棄所選項目</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AutoRecoveryDialog.qml" line="209"/>
         <source>Recover selected</source>
-        <translation type="unfinished"/>
+        <translation>還原所選項目</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="30"/>
@@ -753,12 +756,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="164"/>
         <source>Are you sure you want to discard the selected projects?</source>
-        <translation type="unfinished"/>
+        <translation>您是否確定要捨棄所選項目?</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/autorecoverymodel.cpp" line="165"/>
         <source>Choosing “Yes” permanently deletes the selected projects immediately.</source>
-        <translation type="unfinished"/>
+        <translation>選擇 “是” 將立即永久刪除所選專案。</translation>
     </message>
 </context>
 <context>
@@ -790,12 +793,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="40"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="43"/>
         <source>You can turn this off anytime in %1.</source>
-        <translation type="unfinished"/>
+        <translation>您可以在 %1 內隨時關閉此功能。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="36"/>
         <source>Preferences → General</source>
-        <translation type="unfinished"/>
+        <translation>首選項 → 常規</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="38"/>
@@ -805,12 +808,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="41"/>
         <source>Crash reports</source>
-        <translation type="unfinished"/>
+        <translation>崩潰報告</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="42"/>
         <source>Audacity automatically sends crash reports to help us improve product quality.</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 會自動傳送崩潰報告，以幫助我們提高產品質量。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="44"/>
@@ -820,17 +823,17 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="46"/>
         <source>privacy policy</source>
-        <translation type="unfinished"/>
+        <translation>隱私政策</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="47"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.</source>
-        <translation type="unfinished"/>
+        <translation>為了幫助我們瞭解使用者使用 Audacity 的頻率，我們會為每次安裝生成一個隨機 ID (UUID)。此 ID 不包含任何個人身份資訊。想了解更多資訊？請檢視我們的 %1。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="48"/>
         <source>You can disable this anytime in %1.</source>
-        <translation type="unfinished"/>
+        <translation>您可以隨時在 %1 中停用此功能。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="49"/>
@@ -841,7 +844,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
         <source>UpdatesUsage. %1</source>
         <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)</extracomment>
-        <translation type="unfinished"/>
+        <translation>更新使用情况。%1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/DoublePage.qml" line="48"/>
@@ -860,7 +863,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
 %1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
 ----------
 %1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. %2</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/PlaybackPage.qml" line="31"/>
@@ -875,7 +878,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="16"/>
         <source>Connect to your audio.com account</source>
-        <translation type="unfinished"/>
+        <translation>連線到您的 audio.com 帳號</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="29"/>
@@ -885,7 +888,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
         <source>Or use email and password</source>
-        <translation type="unfinished"/>
+        <translation>或者使用電子郵件和密碼</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="36"/>
@@ -900,22 +903,22 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=&quot;%1&quot;&gt;忘記密碼了嗎？&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
         <source>Don’t have an account?</source>
-        <translation type="unfinished"/>
+        <translation>還沒有賬號？</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="41"/>
         <source>Create new account</source>
-        <translation type="unfinished"/>
+        <translation>建立新帳戶</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
         <source>Already have an account?</source>
-        <translation type="unfinished"/>
+        <translation>已有賬號？</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="43"/>
@@ -926,7 +929,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="46"/>
         <source>Loading…</source>
-        <translation type="unfinished"/>
+        <translation>正在載入...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
@@ -936,87 +939,88 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="99"/>
         <source>Social sign-in options</source>
-        <translation type="unfinished"/>
+        <translation>社交登入選項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="164"/>
         <source>Email field</source>
-        <translation type="unfinished"/>
+        <translation>電子郵件欄位</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="224"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="231"/>
         <source>Forgot password</source>
-        <translation type="unfinished"/>
+        <translation>忘記密碼</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="266"/>
         <source>Password field</source>
-        <translation type="unfinished"/>
+        <translation>密碼欄位</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="311"/>
         <source>Form action</source>
-        <translation type="unfinished"/>
+        <translation>表單操作</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Sign in link</source>
-        <translation type="unfinished"/>
+        <translation>登入連結</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="355"/>
         <source>Create account link</source>
-        <translation type="unfinished"/>
+        <translation>建立賬戶連結</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/TutorialsPage.qml" line="31"/>
         <source>Video tutorials</source>
-        <translation type="unfinished"/>
+        <translation>影片教程</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/TutorialsPage.qml" line="32"/>
         <source>Behind this dialog is the ‘Learn’ section, where you’ll find tutorials to get you started
 (Video tutorials require an internet connection)</source>
-        <translation type="unfinished"/>
+        <translation>此對話方塊後面是“學習”部分，您可以在這裡找到入門教程。
+（影片教程需要網路連線）</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/UnderConstructionPage.qml" line="12"/>
         <source>Pre-alpha build</source>
-        <translation type="unfinished"/>
+        <translation>預 Alpha 版本</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/UnderConstructionPage.qml" line="13"/>
         <source>Many features are currently unavailable, but our team is actively developing and implementing them for future releases.</source>
-        <translation type="unfinished"/>
+        <translation>目前許多功能尚不可用，但我們的團隊正在積極開發和實現這些功能，以便在未來的版本中推出。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
         <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 主題</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
         <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
-        <translation type="unfinished"/>
+        <translation>選擇 %1 主題</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="97"/>
         <source>%1. Currently selected</source>
         <extracomment>%1 is the base description with theme selection</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. 當前所選</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="26"/>
         <source>Colorful</source>
-        <translation type="unfinished"/>
+        <translation>多彩</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="27"/>
         <source>Each track gets a new color</source>
-        <translation type="unfinished"/>
+        <translation>每條軌道都會獲得一種新的顏色</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="34"/>
@@ -1027,63 +1031,63 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="35"/>
         <source>The clips you know and love</source>
-        <translation type="unfinished"/>
+        <translation>你熟悉和喜愛的片段</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="85"/>
         <source>Clip visualization</source>
-        <translation type="unfinished"/>
+        <translation>片段視覺化</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="90"/>
         <source>Clip visualization options</source>
-        <translation type="unfinished"/>
+        <translation>片段視覺化選項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="95"/>
         <source>Choose how audio clips are displayed in the timeline</source>
-        <translation type="unfinished"/>
+        <translation>選擇音訊片段在時間軸中的顯示方式</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="100"/>
         <source>Select your preferred clip visualization style. Preview is shown on the right.</source>
-        <translation type="unfinished"/>
+        <translation>選擇您喜歡的影片片段視覺化樣式。預覽顯示在右側。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="105"/>
         <source>Clip visualization preview</source>
-        <translation type="unfinished"/>
+        <translation>片段視覺化預覽</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="110"/>
         <source>Preview of how audio clips will appear with the selected visualization style</source>
-        <translation type="unfinished"/>
+        <translation>預覽音訊片段在所選視覺化樣式下的顯示效果</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="115"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="139"/>
         <source>Currently selected</source>
-        <translation type="unfinished"/>
+        <translation>目前所選</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="120"/>
         <source>Click to select this style</source>
-        <translation type="unfinished"/>
+        <translation>點選選擇此樣式</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="125"/>
         <source>Available option</source>
-        <translation type="unfinished"/>
+        <translation>可用選項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Getting started</source>
-        <translation type="unfinished"/>
+        <translation>入門指南</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="144"/>
         <source>Accept &amp; continue</source>
-        <translation type="unfinished"/>
+        <translation>接受並繼續</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="150"/>
@@ -1094,68 +1098,68 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="164"/>
         <source>Select a theme</source>
-        <translation type="unfinished"/>
+        <translation>選擇一個主題</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="169"/>
         <source>Choose your preferred theme, follow system theme option, and accent color</source>
-        <translation type="unfinished"/>
+        <translation>選擇您喜歡的主題、跟隨系統主題選項和強調色</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="174"/>
         <source>Theme options</source>
-        <translation type="unfinished"/>
+        <translation>主題選項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="179"/>
         <source>Additional theme configuration options</source>
-        <translation type="unfinished"/>
+        <translation>其他主題配置選項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="184"/>
         <source>Theme selection</source>
-        <translation type="unfinished"/>
+        <translation>主題選擇</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="189"/>
         <source>Choose between light, dark, or system theme</source>
-        <translation type="unfinished"/>
+        <translation>選擇淺色、深色或系統主題</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="194"/>
         <source>Follow system theme</source>
-        <translation type="unfinished"/>
+        <translation>跟隨系統主題</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="199"/>
         <source>When enabled, the theme will automatically match your system’s theme setting</source>
-        <translation type="unfinished"/>
+        <translation>啟用後，主題將自動匹配您的系統主題設定</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="204"/>
         <source>Enable high-contrast</source>
-        <translation type="unfinished"/>
+        <translation>啟用高對比度</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
         <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>啟用高對比度模式以獲得更佳的可視性 %1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="220"/>
         <source>Choose an accent color for the interface</source>
-        <translation type="unfinished"/>
+        <translation>為介面選擇一種強調色</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="225"/>
         <source>Further options for high contrast mode can be found in Preferences</source>
-        <translation type="unfinished"/>
+        <translation>更多高對比度模式選項可在“首選項”中找到</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="230"/>
         <source>Theme configuration</source>
-        <translation type="unfinished"/>
+        <translation>主題配置</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="237"/>
@@ -1176,25 +1180,25 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="245"/>
         <source>Current theme: %1</source>
         <extracomment>%1 is the current theme name (Light, Dark, or System)</extracomment>
-        <translation type="unfinished"/>
+        <translation>目前主題：%1</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="249"/>
         <source>%1. Following system theme</source>
         <extracomment>%1 is the base description with current theme</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. 跟隨系統主題</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="254"/>
         <source>%1. High contrast enabled</source>
         <extracomment>%1 is the base description with current theme and system theme status</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. 高對比度功能</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="257"/>
         <source>%1. Accent color selected</source>
         <extracomment>%1 is the base description with current theme and system theme status</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1. 所選強調色</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="34"/>
@@ -1204,93 +1208,93 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="35"/>
         <source>A clearer interface. Ideal for new users</source>
-        <translation type="unfinished"/>
+        <translation>更清晰的介面，非常適合新使用者</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="46"/>
         <source>Closely matches the layout of Audacity 3</source>
-        <translation type="unfinished"/>
+        <translation>與 Audacity 3 的佈局非常接近</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="99"/>
         <source>What UI layout (workspace) do you want?</source>
-        <translation type="unfinished"/>
+        <translation>您想要什麼樣的使用者介面佈局（工作區）？</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="124"/>
         <source>Workspace layout options</source>
-        <translation type="unfinished"/>
+        <translation>工作區佈局選項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="129"/>
         <source>Choose your preferred workspace layout for the Audacity interface</source>
-        <translation type="unfinished"/>
+        <translation>選擇您喜歡的 Audacity 介面工作區佈局</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="134"/>
         <source>Select a workspace layout that suits your workflow. You can change this later.</source>
-        <translation type="unfinished"/>
+        <translation>選擇適合您工作流程的工作區佈局。您可以稍後更改此設定。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="144"/>
         <source>Click to select this workspace</source>
-        <translation type="unfinished"/>
+        <translation>單擊以選擇此工作區</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="149"/>
         <source>Available workspace</source>
-        <translation type="unfinished"/>
+        <translation>可用工作區</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="154"/>
         <source>You can change between these layouts at any time using our new ‘workspaces’ feature.</source>
-        <translation type="unfinished"/>
+        <translation>您可以使用我們全新的“工作區”功能隨時切換這些佈局。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="159"/>
         <source>Additional information</source>
-        <translation type="unfinished"/>
+        <translation>附加資訊</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="164"/>
         <source>Workspace layout preview</source>
-        <translation type="unfinished"/>
+        <translation>工作區佈局預覽</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="169"/>
         <source>Preview of the selected workspace layout showing the arrangement of interface elements</source>
-        <translation type="unfinished"/>
+        <translation>預覽所選工作區佈局，顯示介面元素的排列方式</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="131"/>
         <source>Authorization failed</source>
-        <translation type="unfinished"/>
+        <translation>授權失敗</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="42"/>
         <source>No access token</source>
-        <translation type="unfinished"/>
+        <translation>無存取令牌</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="90"/>
         <source>Not authorized</source>
-        <translation type="unfinished"/>
+        <translation>未經授權</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="152"/>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="159"/>
         <source>Registration failed. Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>註冊失敗，請重試。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="173"/>
         <source>Incorrect email or password. Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>郵箱或密碼錯誤，請重試。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="181"/>
         <source>Authentication failed. Please try again.</source>
-        <translation type="unfinished"/>
+        <translation>身份驗證失敗，請重試。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="189"/>
@@ -1303,7 +1307,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="717"/>
         <source>Edit metadata</source>
-        <translation type="unfinished"/>
+        <translation>編輯後設資料</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="309"/>
@@ -1313,7 +1317,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="279"/>
         <source>Bit reservoir</source>
-        <translation type="unfinished"/>
+        <translation>位元池</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="294"/>
@@ -1323,52 +1327,52 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="33"/>
         <source>Audio engine</source>
-        <translation type="unfinished"/>
+        <translation>音訊引擎</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="36"/>
         <source>Restart audio and MIDI devices</source>
-        <translation type="unfinished"/>
+        <translation>重啟音訊和 MIDI 裝置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="32"/>
         <source>Automatic update check</source>
-        <translation type="unfinished"/>
+        <translation>自動更新檢查</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="44"/>
         <source>Check to see if a new version of Audacity is available</source>
-        <translation type="unfinished"/>
+        <translation>檢查是否有新版本的 Audacity 可用</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
         <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished"/>
+        <translation>更新檢查需要網路連線。為了保護您的隱私，Audacity 不會儲存任何個人資訊。請參閱我們的 &lt;a href=&quot;%1&quot;&gt;隱私政策&lt;/a&gt; 瞭解更多資訊。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
         <source>Auto save</source>
-        <translation type="unfinished"/>
+        <translation>自動儲存</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
         <source>Auto save every</source>
-        <translation type="unfinished"/>
+        <translation>自動儲存每</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="78"/>
         <source>Auto save every %1 %2</source>
-        <translation type="unfinished"/>
+        <translation>每 %1 %2 自動儲存</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
         <source>Character set used when importing binary files</source>
-        <translation type="unfinished"/>
+        <translation>匯入二進位制檔案時使用的字元集</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="39"/>
         <source>Overture import character set:</source>
-        <translation type="unfinished"/>
+        <translation>Overture 匯入字元集：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="64"/>
@@ -1378,204 +1382,204 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ColorAndWallpaperSection.qml" line="97"/>
         <source>Wallpaper:</source>
-        <translation type="unfinished"/>
+        <translation>牆紙：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/DefaultFilesSection.qml" line="33"/>
         <source>Default files</source>
-        <translation type="unfinished"/>
+        <translation>預設檔案</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FoldersSection.qml" line="33"/>
         <source>Folders</source>
-        <translation type="unfinished"/>
+        <translation>資料夾</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FoldersSection.qml" line="65"/>
         <source>Choose %1 folder</source>
-        <translation type="unfinished"/>
+        <translation>選擇 %1 資料夾</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ImportStyleSection.qml" line="32"/>
         <source>Style used for import</source>
-        <translation type="unfinished"/>
+        <translation>用於匯入的樣式</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ImportStyleSection.qml" line="53"/>
         <source>Built-in style</source>
-        <translation type="unfinished"/>
+        <translation>內建樣式</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ImportStyleSection.qml" line="77"/>
         <source>Use style file:</source>
-        <translation type="unfinished"/>
+        <translation>使用樣式檔案：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="33"/>
         <source>Keyboard layout</source>
-        <translation type="unfinished"/>
+        <translation>鍵盤佈局</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/KeyboardLayoutsSection.qml" line="49"/>
         <source>Keyboard layout %1</source>
-        <translation type="unfinished"/>
+        <translation>鍵盤佈局 %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="32"/>
         <source>MEI</source>
         <extracomment>MEI refers to a file format that can be imported and exported in MuseScore. It stands for Music Encoding Initiative.</extracomment>
-        <translation type="unfinished"/>
+        <translation>MEI</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeiSection.qml" line="42"/>
         <source>Import MEI layout</source>
-        <translation type="unfinished"/>
+        <translation>匯入 MEI 佈局</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="44"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="31"/>
         <source>MIDI</source>
-        <translation type="unfinished"/>
+        <translation>MIDI</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
         <source>MIDI input</source>
-        <translation type="unfinished"/>
+        <translation>MIDI 輸入</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="65"/>
         <source>MIDI output</source>
-        <translation type="unfinished"/>
+        <translation>MIDI 輸出</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="41"/>
         <source>Shortest note:</source>
-        <translation type="unfinished"/>
+        <translation>最短音符：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MiscellaneousSection.qml" line="32"/>
         <source>Miscellaneous</source>
-        <translation type="unfinished"/>
+        <translation>雜項</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MiscellaneousSection.qml" line="41"/>
         <source>Proximity for selecting elements:</source>
-        <translation type="unfinished"/>
+        <translation>選擇元素的鄰近性：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation>混合器</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="45"/>
         <source>Toggle track mute by showing/hiding instruments in the Instruments panel</source>
-        <translation type="unfinished"/>
+        <translation>在“樂器”面板中顯示/隱藏樂器，即可切換軌道靜音。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="31"/>
         <source>MusicXML</source>
-        <translation type="unfinished"/>
+        <translation>MusicXML</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="45"/>
         <source>Import layout</source>
-        <translation type="unfinished"/>
+        <translation>匯入佈局</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="60"/>
         <source>Import system and page breaks</source>
-        <translation type="unfinished"/>
+        <translation>匯入系統和分頁符</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MusicXmlSection.qml" line="75"/>
         <source>Apply default typeface (Edwin) to imported projects</source>
-        <translation type="unfinished"/>
+        <translation>套用預設字型（Edwin）到匯入的專案</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="46"/>
         <source>Play notes when editing</source>
-        <translation type="unfinished"/>
+        <translation>編輯時播放音符</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="61"/>
         <source>Default duration:</source>
-        <translation type="unfinished"/>
+        <translation>預設持續時間：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="84"/>
         <source>Play chord when editing</source>
-        <translation type="unfinished"/>
+        <translation>編輯時播放和絃</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="101"/>
         <source>Play chord symbol when editing</source>
-        <translation type="unfinished"/>
+        <translation>編輯時播放和絃符號</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="33"/>
         <source>Note input</source>
-        <translation type="unfinished"/>
+        <translation>備註輸入</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="49"/>
         <source>Advance to next note on key release (MIDI)</source>
-        <translation type="unfinished"/>
+        <translation>鬆開按鍵時進入下一個音符（MIDI）</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="64"/>
         <source>Color notes outside of usable pitch range</source>
-        <translation type="unfinished"/>
+        <translation>超出可用音域的色彩音符</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="79"/>
         <source>Color guitar bends outside of playable range</source>
-        <translation type="unfinished"/>
+        <translation>彩色吉他音色超出了可演奏範圍</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="93"/>
         <source>Delay between notes in automatic real time mode:</source>
-        <translation type="unfinished"/>
+        <translation>自動即時模式下音符之間的延遲：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PreferencesButtonsPanel.qml" line="50"/>
         <source>Reset preferences</source>
-        <translation type="unfinished"/>
+        <translation>重設首選項</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="32"/>
         <source>Program start</source>
-        <translation type="unfinished"/>
+        <translation>程式啟動</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="80"/>
         <source>Choose starting project</source>
-        <translation type="unfinished"/>
+        <translation>選擇起始專案</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="33"/>
         <source>OSC remote control</source>
-        <translation type="unfinished"/>
+        <translation>OSC 遙控器</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="52"/>
         <source>Port number:</source>
-        <translation type="unfinished"/>
+        <translation>埠號：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="33"/>
         <source>Save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>儲存到雲端</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveToCloudSection.qml" line="43"/>
         <source>Generate MP3 audio for private cloud projects</source>
-        <translation type="unfinished"/>
+        <translation>為私有云專案生成 MP3 音訊</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="32"/>
         <source>Scroll pages</source>
-        <translation type="unfinished"/>
+        <translation>滾動頁面</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="51"/>
@@ -1590,7 +1594,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ScrollPagesSection.qml" line="88"/>
         <source>Limit scroll area to page borders</source>
-        <translation type="unfinished"/>
+        <translation>限制滾動區域至頁面邊框</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="32"/>
@@ -1600,17 +1604,17 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
         <source>Default zoom:</source>
-        <translation type="unfinished"/>
+        <translation>預設縮放：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
         <source>Mouse zoom precision:</source>
-        <translation type="unfinished"/>
+        <translation>滑鼠縮放精度：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
         <source>Accent color</source>
-        <translation type="unfinished"/>
+        <translation>強調色</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="14"/>
@@ -1620,32 +1624,32 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="25"/>
         <source>Send anonymous usage info</source>
-        <translation type="unfinished"/>
+        <translation>傳送匿名使用資訊</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
-        <translation type="unfinished"/>
+        <translation>為了幫助我們瞭解使用者使用 Audacity 的頻率，我們會為每次安裝生成一個隨機 ID（UUID）。此 ID 不包含任何個人身份資訊。想了解更多資訊？請檢視我們的 &lt;a href=&quot;%1&quot;&gt;隱私政策&lt;/a&gt;。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
         <source>Zoom toggle (magnifying glass)</source>
-        <translation type="unfinished"/>
+        <translation>縮放切換（放大鏡）</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
         <source>A special tool in the top bar that toggles between two different zoom states.</source>
-        <translation type="unfinished"/>
+        <translation>頂部欄中有一個特殊工具，可以在兩種不同的縮放狀態之間切換。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="34"/>
         <source>Zoom state 1:</source>
-        <translation type="unfinished"/>
+        <translation>縮放狀態 1：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="55"/>
         <source>Zoom state 2:</source>
-        <translation type="unfinished"/>
+        <translation>縮放狀態 2：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="246"/>
@@ -1725,17 +1729,17 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="14"/>
         <source>Automatic crash reports</source>
-        <translation type="unfinished"/>
+        <translation>自動崩潰報告</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="25"/>
         <source>Send crash reports</source>
-        <translation type="unfinished"/>
+        <translation>傳送崩潰報告</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CrashReportsSection.qml" line="39"/>
         <source>Crash reports require network access. When Audacity crashes, it sends a report that helps us find and fix the cause. These reports don’t contain your audio or personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished"/>
+        <translation>崩潰報告需要網路存取。當 Audacity 崩潰時，它會發送一份報告，幫助我們找到並修復原因。這些報告不包含您的音訊或個人資訊。請參閱我們的 &lt;a href=&quot;%1&quot;&gt;隱私政策&lt;/a&gt; 瞭解更多資訊。</translation>
     </message>
 </context>
 <context>
@@ -1758,7 +1762,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSelectionSection.qml" line="21"/>
         <source>Use global settings</source>
-        <translation type="unfinished"/>
+        <translation>使用全域性設定</translation>
     </message>
 </context>
 <context>
@@ -1766,27 +1770,27 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="34"/>
         <source>Welcome</source>
-        <translation type="unfinished"/>
+        <translation>歡迎使用</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="115"/>
         <source>Previous item</source>
-        <translation type="unfinished"/>
+        <translation>上一項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="165"/>
         <source>Next item</source>
-        <translation type="unfinished"/>
+        <translation>下一項</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="276"/>
         <source>Don’t show welcome dialog on startup</source>
-        <translation type="unfinished"/>
+        <translation>啟動時不顯示歡迎對話方塊</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="49"/>
         <source>Video: find out what’s new in Audacity 4</source>
-        <translation type="unfinished"/>
+        <translation>影片：瞭解 Audacity 4 的新功能</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="52"/>
@@ -1796,7 +1800,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="58"/>
         <source>Complete your Audacity cloud setup with Audio.com</source>
-        <translation type="unfinished"/>
+        <translation>使用 Audio.com 完成您的 Audacity 雲端設定。</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="83"/>
@@ -1826,12 +1830,12 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="71"/>
         <source>Explore free plugins for sculpting your audio</source>
-        <translation type="unfinished"/>
+        <translation>探索用於塑造音訊的免費外掛</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="74"/>
         <source>View free plugins</source>
-        <translation type="unfinished"/>
+        <translation>檢視免費外掛</translation>
     </message>
 </context>
 <context>
@@ -1839,17 +1843,17 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="47"/>
         <source>Increase BPM</source>
-        <translation type="unfinished"/>
+        <translation>提高 BPM</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/BPM.qml" line="66"/>
         <source>Decrease BPM</source>
-        <translation type="unfinished"/>
+        <translation>降低 BPM</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/TimeSignature.qml" line="26"/>
         <source>Time Signature: %1/%2</source>
-        <translation type="unfinished"/>
+        <translation>節拍：%1/%2</translation>
     </message>
 </context>
 <context>
@@ -1859,7 +1863,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <source>%1 #%2</source>
         <comment>clip name template</comment>
         <extracomment>a numerical suffix added to distinguish otherwise like-named clips when new record started %1 is the track name, %2 is the numerical suffix distinguishing like-named clips</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 #%2</translation>
     </message>
 </context>
 <context>
@@ -1867,19 +1871,19 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>Audio plugins scan completed</source>
-        <translation type="unfinished"/>
+        <translation>音訊外掛掃描已完成</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="74"/>
         <source>All audio plugins are up to date.</source>
-        <translation type="unfinished"/>
+        <translation>所有音訊外掛均已更新。</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="85"/>
         <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="321"/>
         <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="208"/>
         <source>Validating audio plugins</source>
-        <translation type="unfinished"/>
+        <translation>驗證音訊外掛</translation>
     </message>
 </context>
 <context>
@@ -1887,22 +1891,22 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="71"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation>主機</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="72"/>
         <source>Playback device</source>
-        <translation type="unfinished"/>
+        <translation>播放裝置</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="73"/>
         <source>Recording device</source>
-        <translation type="unfinished"/>
+        <translation>錄製裝置</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="74"/>
         <source>Recording channels</source>
-        <translation type="unfinished"/>
+        <translation>錄製聲道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="113"/>
@@ -1915,7 +1919,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="114"/>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="153"/>
         <source>System default: %1</source>
-        <translation type="unfinished"/>
+        <translation>系統預設：%1</translation>
     </message>
 </context>
 <context>
@@ -1924,7 +1928,8 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="838"/>
         <source>Stream is active … unable to gather information.
 </source>
-        <translation type="unfinished"/>
+        <translation>資料流處於活動狀態… 無法取得資訊。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="851"/>
@@ -2046,7 +2051,8 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="933"/>
         <source>No recording device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>未找到適用於 “%1” 的錄製裝置。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="938"/>
@@ -2060,7 +2066,8 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="940"/>
         <source>No playback device found for “%1”.
 </source>
-        <translation type="unfinished"/>
+        <translation>未找到適用於 “%1” 的播放裝置。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="948"/>
@@ -2187,7 +2194,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="56"/>
         <source>Failed to encode preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法從 %1 編碼預設</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
@@ -2205,19 +2212,19 @@ After recovery, save the projects to ensure changes are written to disk.</source
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="547"/>
         <source>Couldn’t open “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法開啟 %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="533"/>
         <source>Failed to write XML preset to “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法將 XML 預設寫入 %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="555"/>
         <source>Unable to read the preset from “%1”</source>
         <extracomment>%1 is the preset file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法從 %1 讀取預設</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
@@ -2245,22 +2252,22 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="195"/>
         <source>Audio Unit Generators</source>
-        <translation type="unfinished"/>
+        <translation>Audio Unit 生成器</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="196"/>
         <source>Audio Unit Mixers</source>
-        <translation type="unfinished"/>
+        <translation>Audio Unit 混音器</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="197"/>
         <source>Audio Unit Music Effects</source>
-        <translation type="unfinished"/>
+        <translation>Audio Unit 音樂效果</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="198"/>
         <source>Audio Unit Panners</source>
-        <translation type="unfinished"/>
+        <translation>音訊單元聲像定位器</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="223"/>
@@ -2275,22 +2282,22 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="352"/>
         <source>Failed to decode “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>無法解碼“%1”預設</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="361"/>
         <source>Failed to convert “%1” preset to internal format</source>
-        <translation type="unfinished"/>
+        <translation>無法將“%1”預設轉換為內部格式</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="373"/>
         <source>Failed to create property list for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>無法為“%1”預設建立屬性列表</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="379"/>
         <source>Failed to set class info for “%1” preset</source>
-        <translation type="unfinished"/>
+        <translation>無法為“%1”預設設定類資訊</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="484"/>
@@ -2315,17 +2322,17 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="210"/>
         <source>The plugin “%1” does not support the required block size</source>
-        <translation type="unfinished"/>
+        <translation>外掛“%1”不支援所需的塊大小</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="316"/>
         <source>The plugin “%1” has crashed while processing audio</source>
-        <translation type="unfinished"/>
+        <translation>外掛“%1”在處理音訊時崩潰了</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitInstance.cpp" line="482"/>
         <source>Realtime effect error</source>
-        <translation type="unfinished"/>
+        <translation>即時效果誤差</translation>
     </message>
 </context>
 <context>
@@ -2359,7 +2366,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="52"/>
         <source>Change pitch</source>
-        <translation type="unfinished"/>
+        <translation>改變音高</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangePitchBase.cpp" line="80"/>
@@ -2665,7 +2672,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="281"/>
         <source>To apply Equalization, select one or more audio tracks.</source>
-        <translation type="unfinished"/>
+        <translation>若要套用均衡處理，請選擇一個或多個音訊軌道。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="292"/>
@@ -2703,7 +2710,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurvesList.cpp" line="280"/>
         <source>Requested curve not found, using ‘unnamed’</source>
-        <translation type="unfinished"/>
+        <translation>未找到請求的曲線，使用“未命名”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
@@ -2909,7 +2916,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="90"/>
         <source>Truncate silence</source>
-        <translation type="unfinished"/>
+        <translation>截去靜音</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="123"/>
@@ -2924,7 +2931,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/WahWahBase.cpp" line="57"/>
         <source>Rapid tone quality variations, like that guitar sound so popular in the 1970’s</source>
-        <translation type="unfinished"/>
+        <translation>音色的快速變化，比如那種在 20 世紀 70 年代風靡一時的吉他音色</translation>
     </message>
 </context>
 <context>
@@ -2932,22 +2939,22 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="27"/>
         <source>Paste and overlap</source>
-        <translation type="unfinished"/>
+        <translation>貼上並重疊</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="29"/>
         <source>Paste and make room on this track</source>
-        <translation type="unfinished"/>
+        <translation>貼上並騰出此軌道空間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="31"/>
         <source>Paste and make room on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>貼上並騰出所有軌道空間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="36"/>
         <source>Paste and…</source>
-        <translation type="unfinished"/>
+        <translation>貼上並…</translation>
     </message>
 </context>
 <context>
@@ -2960,57 +2967,57 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="44"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="46"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="51"/>
         <source>Delete and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>刪除並保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="53"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="55"/>
         <source>Delete and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation>重新命名片段</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="60"/>
         <source>Clip color</source>
-        <translation type="unfinished"/>
+        <translation>片段顏色</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="67"/>
         <source>Cut and…</source>
-        <translation type="unfinished"/>
+        <translation>剪下並...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="68"/>
         <source>Delete and…</source>
-        <translation type="unfinished"/>
+        <translation>刪除並...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="71"/>
         <source>Split at silences</source>
-        <translation type="unfinished"/>
+        <translation>在靜音處分割</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="224"/>
         <source>Same as track color</source>
-        <translation type="unfinished"/>
+        <translation>跟隨軌道顏色</translation>
     </message>
 </context>
 <context>
@@ -3023,7 +3030,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1186"/>
         <source>Deselect</source>
-        <translation type="unfinished"/>
+        <translation>取消選擇</translation>
     </message>
 </context>
 <context>
@@ -3031,7 +3038,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="18"/>
         <source>Audio.com</source>
-        <translation type="unfinished"/>
+        <translation>Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="51"/>
@@ -3074,7 +3081,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="21"/>
         <source>Project name</source>
-        <translation type="unfinished"/>
+        <translation>專案名稱</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
@@ -3101,7 +3108,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1008"/>
         <source>Invalid project</source>
         <extracomment>Error message of a failed cloud operation</extracomment>
-        <translation type="unfinished"/>
+        <translation>無效專案</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="493"/>
@@ -3110,80 +3117,80 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="991"/>
         <source>Service destroyed</source>
         <extracomment>Error message shown when a cloud operation is interrupted by the application closing</extracomment>
-        <translation type="unfinished"/>
+        <translation>服務已損壞</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="512"/>
         <source>Internal error</source>
-        <translation type="unfinished"/>
+        <translation>內部錯誤</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="599"/>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="605"/>
         <source>Project is not saved to the cloud</source>
-        <translation type="unfinished"/>
+        <translation>專案未儲存到雲端</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="611"/>
         <source>Project is not synced with the cloud</source>
-        <translation type="unfinished"/>
+        <translation>專案未與雲端同步</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="713"/>
         <source>Failed to get audio preview upload URLs</source>
-        <translation type="unfinished"/>
+        <translation>無法取得音訊預覽上傳 URL</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="853"/>
         <source>Invalid audio ID</source>
-        <translation type="unfinished"/>
+        <translation>無效的音訊 ID</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="920"/>
         <source>Project not found in cloud database</source>
-        <translation type="unfinished"/>
+        <translation>雲資料庫中未找到該專案</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1003"/>
         <source>No valid current project</source>
-        <translation type="unfinished"/>
+        <translation>目前沒有有效的專案</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1069"/>
         <source>Upload succeeded but payload is missing</source>
-        <translation type="unfinished"/>
+        <translation>上傳成功，但有效載荷缺失</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="1094"/>
         <source>Failed to delete cloud project from database</source>
-        <translation type="unfinished"/>
+        <translation>無法從資料庫中刪除雲專案</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="188"/>
         <source>Sign in successful! You’re good to go back to Audacity.</source>
-        <translation type="unfinished"/>
+        <translation>登入成功！您可以返回 Audacity。</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/oauthhttpserverreplyhandler.cpp" line="200"/>
         <source>Sign in failed. Please return to Audacity and try again.</source>
-        <translation type="unfinished"/>
+        <translation>登入失敗。請返回 Audacity 並重試。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="616"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1078"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1320"/>
         <source>View on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>在 audio.com 檢視</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1288"/>
         <source>Track title</source>
-        <translation type="unfinished"/>
+        <translation>曲目標題</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1289"/>
         <source>Share audio</source>
-        <translation type="unfinished"/>
+        <translation>分享音訊</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1290"/>
@@ -3193,32 +3200,32 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1315"/>
         <source>Audio shared to audio.com</source>
-        <translation type="unfinished"/>
+        <translation>音訊已分享到 audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1335"/>
         <source>Sharing audio to audio.com…</source>
-        <translation type="unfinished"/>
+        <translation>分享音訊到 audio.com…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1396"/>
         <source>Downloading audio from cloud…</source>
-        <translation type="unfinished"/>
+        <translation>正在從雲端下載音訊…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1436"/>
         <source>The project must be saved before updating the audio preview</source>
-        <translation type="unfinished"/>
+        <translation>必須先儲存專案才能更新音訊預覽</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1437"/>
         <source>Save your changes to continue, or cancel the update.</source>
-        <translation type="unfinished"/>
+        <translation>儲存更改以繼續，或取消更新。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1441"/>
         <source>Unsaved changes</source>
-        <translation type="unfinished"/>
+        <translation>未儲存的更改</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1462"/>
@@ -3229,27 +3236,27 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1538"/>
         <source>Generate audio preview</source>
         <extracomment>Title of an error dialog shown when generating the audio preview fails</extracomment>
-        <translation type="unfinished"/>
+        <translation>生成音訊預覽</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1492"/>
         <source>Audio preview is up to date</source>
-        <translation type="unfinished"/>
+        <translation>音訊預覽已是最新狀態</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1493"/>
         <source>The audio preview already matches the latest saved version of this project.</source>
-        <translation type="unfinished"/>
+        <translation>音訊預覽已與該專案的最新儲存版本一致。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1503"/>
         <source>Updating cloud audio preview…</source>
-        <translation type="unfinished"/>
+        <translation>正在更新雲端音訊預覽…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1532"/>
         <source>Could not determine the local path of the downloaded project</source>
-        <translation type="unfinished"/>
+        <translation>無法確定已下載專案的本地路徑</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="582"/>
@@ -3261,28 +3268,28 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="808"/>
         <source>Audio download failed</source>
-        <translation type="unfinished"/>
+        <translation>音訊下載失敗</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="816"/>
         <source>Open audio from cloud</source>
-        <translation type="unfinished"/>
+        <translation>開啟雲端音訊</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Create an account on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>在 audio.com 上建立帳戶</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
         <source>Sign in to audio.com</source>
-        <translation type="unfinished"/>
+        <translation>登入 audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
         <source>Sign in buttons</source>
-        <translation type="unfinished"/>
+        <translation>登入按鈕</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
@@ -3369,7 +3376,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="21"/>
         <source>Exit</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="33"/>
@@ -3381,49 +3388,49 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="43"/>
         <source>&amp;Full screen</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>全屏(&amp;F)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="53"/>
         <source>&amp;About Audacity…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>關於 Audacity(&amp;A)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="63"/>
         <source>About &amp;Qt…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>關於 Qt(&amp;Q)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="73"/>
         <source>Online &amp;handbook</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>線上手冊(&amp;H)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="83"/>
         <source>As&amp;k for help</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>尋求說明(&amp;K)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="93"/>
         <source>&amp;Preferences</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>首選項(&amp;P)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="103"/>
         <source>Revert to &amp;factory settings</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>恢復預設設定(&amp;F)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="113"/>
         <source>Audio settings</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>音訊設定</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="123"/>
@@ -3448,7 +3455,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="163"/>
         <source>&amp;Playback controls</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放控制(&amp;P)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="173"/>
@@ -3460,7 +3467,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="183"/>
         <source>Show history</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示歷史記錄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="193"/>
@@ -3472,7 +3479,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="202"/>
         <source>&amp;Status bar</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>狀態列(&amp;S)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="723"/>
@@ -3527,13 +3534,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="28"/>
         <source>View project on audio.com</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>在 audio.com 檢視專案</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="40"/>
         <source>View on audio.com</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>在 audio.com 檢視</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="52"/>
@@ -3551,13 +3558,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="21"/>
         <source>&amp;New…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增(&amp;N)...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="30"/>
         <source>&amp;Open…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟(&amp;O)...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="42"/>
@@ -3570,13 +3577,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="55"/>
         <source>&amp;Clear recent files</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>清除最近檔案(&amp;C)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="64"/>
         <source>Import…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯入</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="75"/>
@@ -3594,67 +3601,67 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="97"/>
         <source>Save &amp;as…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>另存為(&amp;A)...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="106"/>
         <source>Save to clo&amp;ud…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>儲存到雲端(&amp;U)...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="116"/>
         <source>&amp;Close project</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>關閉專案(&amp;C)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="125"/>
         <source>Share audio</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>分享音訊</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="147"/>
         <source>Update cloud audio preview</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更新雲端音訊預覽</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="156"/>
         <source>Update audio preview</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更新音訊預覽</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="168"/>
         <source>&amp;Export audio…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯出音訊(&amp;E)...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="177"/>
         <source>&amp;Export labels</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯出標籤(&amp;E)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="188"/>
         <source>&amp;Export MIDI</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯出 MIDI(&amp;E)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="197"/>
         <source>Show metadata editor</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示後設資料編輯器</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="207"/>
         <source>Custom FFmpeg options</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>自訂 FFmpeg 選項</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="217"/>
@@ -3666,109 +3673,109 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="21"/>
         <source>Minutes &amp;&amp; seconds</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>分鐘和秒</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="30"/>
         <source>Beats &amp;&amp; measures</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>節拍和小節</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="39"/>
         <source>Show vertical rulers</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示垂直標尺</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="48"/>
         <source>Show RMS in waveform</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>在波形中顯示均方根</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="57"/>
         <source>Show clipping in waveform</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>在波形中顯示削波</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="66"/>
         <source>Update display while playing</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放過程中更新顯示</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="75"/>
         <source>Pinned playhead</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>固定播放頭</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="84"/>
         <source>Click ruler to start playback</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>點選標尺開始播放</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="93"/>
         <source>Half-wave</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>半波</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="105"/>
         <source>Clip gain</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪輯增益</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="114"/>
         <source>Pitch and speed</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="127"/>
         <source>Show label editor</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示標籤編輯器</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="137"/>
         <source>Zoom in</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>放大</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="146"/>
         <source>Zoom out</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮小</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="155"/>
         <source>Zoom default</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>預設縮放</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="164"/>
         <source>Zoom to selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮放到選取範圍</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="173"/>
         <source>Zoom to fit project</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮放到適合專案</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="182"/>
         <source>Zoom toggle</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮放切換</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="191"/>
@@ -3786,7 +3793,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="209"/>
         <source>Center view on playhead</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>檢視居中於播放頭</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="222"/>
@@ -3798,55 +3805,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="232"/>
         <source>Move playhead left</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標向左移動</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="241"/>
         <source>Move playhead right</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標向右移動</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="250"/>
         <source>Extend selection left</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向左擴充選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="259"/>
         <source>Extend selection right</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向右擴充選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="268"/>
         <source>Contract selection from left</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>從左側收縮選取範圍</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="277"/>
         <source>Contract selection from right</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>從右側收縮選取範圍</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="286"/>
         <source>Move playhead to selection start</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標移至選取範圍開始</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="295"/>
         <source>Move playhead to selection end</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標移至選取範圍結束</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="304"/>
         <source>Show effects panel</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示即時效果器面板</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="351"/>
@@ -3858,55 +3865,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="314"/>
         <source>Audio setup</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>音訊設定</translation>
     </message>
     <message>
         <location filename="../../src/musehub/internal/musehubcommandsregister.cpp" line="31"/>
         <source>Get effects</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>取得效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="324"/>
         <source>Split tool</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>分割工具</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="333"/>
         <source>Move realtime effect up</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向上移動即時效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="342"/>
         <source>Move realtime effect down</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向下移動即時效果</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="21"/>
         <source>Record on current track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>在目前軌道錄製</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="30"/>
         <source>Record on new track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>在新的軌道錄製</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="21"/>
         <source>Play/Pause</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放/暫停</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="30"/>
         <source>Play/Stop</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放/停止</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="39"/>
@@ -3918,7 +3925,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="48"/>
         <source>Play selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放選擇</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="57"/>
@@ -3944,13 +3951,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="84"/>
         <source>Rewind to start</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>倒回開始</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="93"/>
         <source>Rewind to end</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>倒回結束</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="102"/>
@@ -3968,79 +3975,79 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="128"/>
         <source>Change audio host</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改音訊主機</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="140"/>
         <source>Change playback device</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改播放裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="153"/>
         <source>Change recording device</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改錄音裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="166"/>
         <source>Change input channels</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改輸入聲道</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="178"/>
         <source>Rescan audio devices</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>重新掃描音訊裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="187"/>
         <source>Play repeats</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放重複</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="196"/>
         <source>Pan automatically</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>自動平移</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="205"/>
         <source>Loop playback</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>迴圈播放</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="214"/>
         <source>Clear loop region</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>清除迴圈區域</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="223"/>
         <source>Set loop region to selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定迴圈選取範圍為選擇</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="232"/>
         <source>Set selection to loop</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定選擇到迴圈</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="241"/>
         <source>Set loop region in out</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定迴圈區域輸入/輸出</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="250"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>建立迴圈也會選取音訊</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="259"/>
@@ -4082,19 +4089,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="315"/>
         <source>Playback level</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放電平</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="325"/>
         <source>Metronome</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>節拍器</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="335"/>
         <source>Timecode</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>時間碼</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="345"/>
@@ -4106,31 +4113,31 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="355"/>
         <source>Time signature</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>拍號</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="57"/>
         <source>Record level</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>錄音電平</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="67"/>
         <source>Show mic metering</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示麥克風計量</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="76"/>
         <source>Turn on input monitoring</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟輸入監控</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="85"/>
         <source>Lead-in Recording</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯入錄音</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="94"/>
@@ -4154,7 +4161,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="23"/>
         <source>Spectrogram settings…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>頻譜圖設定…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="39"/>
@@ -4166,19 +4173,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="49"/>
         <source>Paste (pushes clips on selected track)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>貼上（將片段推送到所選軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="58"/>
         <source>Paste (overlaps other clips)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>貼上（與其他片段重疊）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="67"/>
         <source>Paste (preserves synchronization on all tracks)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>貼上（保持所有軌道同步）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="76"/>
@@ -4214,25 +4221,25 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="141"/>
         <source>Open pitch and speed dialog</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟音高和速度對話方塊</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="151"/>
         <source>Render pitch and speed</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>算繪音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="164"/>
         <source>Reset pitch and speed</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>重設音高與速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="177"/>
         <source>Stretch with tempo changes</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>拉伸並伴隨節奏變化</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="190"/>
@@ -4244,19 +4251,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="203"/>
         <source>New mono track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增單聲道軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="212"/>
         <source>New stereo track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增立體聲軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="221"/>
         <source>New label track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="230"/>
@@ -4269,61 +4276,61 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="239"/>
         <source>Move track up</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>上移軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="248"/>
         <source>Move track down</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>下移軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="257"/>
         <source>Move track to top</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動軌道到頂部</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="266"/>
         <source>Move track to bottom</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動軌道到底部</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="275"/>
         <source>Swap stereo channels</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>交換立體聲聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="284"/>
         <source>Split stereo to L/R mono</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>立體聲轉換為左/右單聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="293"/>
         <source>Split stereo to center mono</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>立體聲分離到中央單聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="302"/>
         <source>Other…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>其它...</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="312"/>
         <source>Make stereo track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>製作立體聲軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="321"/>
         <source>Resample track…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>重新取樣軌道…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="331"/>
@@ -4335,7 +4342,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="343"/>
         <source>Trim</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>修剪</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="352"/>
@@ -4359,7 +4366,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="379"/>
         <source>Select all</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>全選</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="388"/>
@@ -4371,37 +4378,37 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="397"/>
         <source>Select all tracks</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>選擇所有軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="406"/>
         <source>Left of playback position</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放位置左側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="415"/>
         <source>Right of playback position</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放位置右側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="424"/>
         <source>Track start to cursor</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>軌道開始到游標</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="433"/>
         <source>Cursor to track end</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>游標到軌道結束</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="442"/>
         <source>Track start to end</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>軌道開始到結束</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="451"/>
@@ -4425,37 +4432,37 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="485"/>
         <source>Same as track color</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>跟隨軌道顏色</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="494"/>
         <source>Change clip color</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改片段顏色</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="506"/>
         <source>Change track color</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改軌道顏色</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="518"/>
         <source>Change track format</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改軌道格式</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="530"/>
         <source>Change track sample rate</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改軌道取樣率</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="542"/>
         <source>Toggle spectral view</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>切換光譜檢視</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="551"/>
@@ -4467,79 +4474,79 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="575"/>
         <source>Multi-view</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>多檢視</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="587"/>
         <source>Add label</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="596"/>
         <source>Rename item (clip/label)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>重新命名項目（剪輯/標籤）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="606"/>
         <source>Move item left</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動項目左側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="616"/>
         <source>Move item right</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動項目右側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="626"/>
         <source>Move item up</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>上移項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="636"/>
         <source>Move item down</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>下移項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="646"/>
         <source>Extend item left</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向左擴充項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="656"/>
         <source>Extend item right</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向右擴充項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="666"/>
         <source>Reduce item left</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向左縮短項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="676"/>
         <source>Reduce item right</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>向右縮短項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="686"/>
         <source>Merge selected clips</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>合併所選片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="700"/>
         <source>Duplicate selected</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>重複已選擇</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="714"/>
@@ -4557,19 +4564,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="768"/>
         <source>Split into new track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>分割到新軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="777"/>
         <source>Join selected clips</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>合併所選片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="786"/>
         <source>Split clips at silences</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>在靜音處分割片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="804"/>
@@ -4587,109 +4594,109 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="825"/>
         <source>Cut and close gap (per clip)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合縫隙（每個片段）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="834"/>
         <source>Cut and close gap (per track)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合間隙（每個軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="843"/>
         <source>Cut and close gap (all tracks)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合間隙（所有軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="852"/>
         <source>Delete and leave gap</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="861"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合縫隙（每個片段）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="870"/>
         <source>Delete and close gap (per track)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合間隙（每個軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="879"/>
         <source>Delete and close gap (all tracks)</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合間隙（所有軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="889"/>
         <source>Next panel</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>下一個面板</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="899"/>
         <source>Previous panel</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>上一個面板</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="909"/>
         <source>First track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>第一個軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="919"/>
         <source>Last track</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>最後一個軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="929"/>
         <source>Above item</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>以上項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="939"/>
         <source>Below item</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>以下項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="949"/>
         <source>Select track/track item</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>選擇軌道/軌道項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="959"/>
         <source>Add track or track item to selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增音訊或音訊項目到選擇</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="969"/>
         <source>Track range selection</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>軌道範圍選擇</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="979"/>
         <source>Multi track selection previous</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>多軌選擇上一個</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="989"/>
         <source>Multi track selection next</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>多軌選擇下一個</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1009"/>
@@ -4701,49 +4708,49 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="22"/>
         <source>Repeat last effect</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>重複上一個效果</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="31"/>
         <source>Plugin manager</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>外掛管理器</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="53"/>
         <source>&amp;Apply preset</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>套用預設(&amp;A)</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="66"/>
         <source>&amp;Save preset</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>儲存預設(&amp;S)</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="79"/>
         <source>Save preset as…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>儲存預設為…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="91"/>
         <source>&amp;Delete preset</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除預設(&amp;D)</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="104"/>
         <source>&amp;Import…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯入(&amp;I)...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="116"/>
         <source>&amp;Export…</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯出(&amp;E)...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="170"/>
@@ -4770,7 +4777,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="23"/>
         <source>Exit</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>退出</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="35"/>
@@ -4782,13 +4789,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="45"/>
         <source>Full screen</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>全屏</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="55"/>
         <source>About Audacity</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>關於 Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="65"/>
@@ -4800,7 +4807,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="75"/>
         <source>Open online handbook</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟線上手冊</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="85"/>
@@ -4812,19 +4819,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="95"/>
         <source>Preferences…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>首選項...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="105"/>
         <source>Revert to factory settings</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>恢復預設設定</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="115"/>
         <source>Open audio setup dialog</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟音訊設定對話方塊</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="125"/>
@@ -4848,19 +4855,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="165"/>
         <source>Show/hide playback controls</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示/隱藏播放控制</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="175"/>
         <source>Show/hide tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示/隱藏軌道</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="185"/>
         <source>Show history</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示歷史記錄</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="195"/>
@@ -4872,7 +4879,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/appshell/internal/appshellcommandsregister.cpp" line="204"/>
         <source>Show/hide status bar</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示/隱藏狀態列</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="725"/>
@@ -4926,13 +4933,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="30"/>
         <source>View project on audio.com</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在 audio.com 檢視專案</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="42"/>
         <source>View on audio.com</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在 audio.com 檢視</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/cloudcommandsregister.cpp" line="54"/>
@@ -4950,13 +4957,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="23"/>
         <source>New…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="32"/>
         <source>Open…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="44"/>
@@ -4968,13 +4975,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="57"/>
         <source>Clear recent files</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>清除最近檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="66"/>
         <source>Import…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯入</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="77"/>
@@ -4992,55 +4999,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="99"/>
         <source>Save as…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>另存為...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="108"/>
         <source>Save to cloud…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>儲存到雲端</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="118"/>
         <source>Close project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>關閉專案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="127"/>
         <source>Share audio</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>分享音訊</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="137"/>
         <source>Open cloud audio file</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟雲端音訊檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="149"/>
         <source>Update cloud audio preview</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更新雲端音訊預覽</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="158"/>
         <source>Update audio preview</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更新音訊預覽</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="170"/>
         <source>Export audio…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯出音訊...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="179"/>
         <source>Export labels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯出標籤</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="190"/>
@@ -5052,7 +5059,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="199"/>
         <source>Show metadata editor</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示後設資料編輯器</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectcommandsregister.cpp" line="209"/>
@@ -5070,109 +5077,109 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="23"/>
         <source>Minutes &amp;&amp; seconds</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>分鐘和秒</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="32"/>
         <source>Beats &amp;&amp; measures</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>節拍和小節</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="41"/>
         <source>Show vertical rulers</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示垂直標尺</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="50"/>
         <source>Show RMS in waveform</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在波形中顯示均方根</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="59"/>
         <source>Show clipping in waveform</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在波形中顯示削波</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="68"/>
         <source>Update display while playing</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放過程中更新顯示</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="77"/>
         <source>Pinned playhead</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>固定播放頭</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="86"/>
         <source>Click ruler to start playback</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>點選標尺開始播放</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="95"/>
         <source>Half-wave</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>半波</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="107"/>
         <source>Clip gain</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪輯增益</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="116"/>
         <source>Pitch and speed</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="129"/>
         <source>Show label editor</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示標籤編輯器</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="139"/>
         <source>Zoom in</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>放大</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="148"/>
         <source>Zoom out</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮小</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="157"/>
         <source>Zoom default</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>預設縮放</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="166"/>
         <source>Zoom to selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮放到選取範圍</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="175"/>
         <source>Zoom to fit project</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮放到適合專案</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="184"/>
         <source>Zoom toggle</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮放切換</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="193"/>
@@ -5190,7 +5197,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="211"/>
         <source>Center view on playhead</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>檢視居中於播放頭</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="224"/>
@@ -5202,55 +5209,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="234"/>
         <source>Move playhead left</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標向左移動</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="243"/>
         <source>Move playhead right</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標向右移動</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="252"/>
         <source>Extend selection left</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向左擴充選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="261"/>
         <source>Extend selection right</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向右擴充選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="270"/>
         <source>Contract selection from left</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>從左側收縮選取範圍</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="279"/>
         <source>Contract selection from right</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>從右側收縮選取範圍</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="288"/>
         <source>Move playhead to selection start</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標移至選取範圍開始</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="297"/>
         <source>Move playhead to selection end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放游標移至選取範圍結束</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="306"/>
         <source>Show effects panel</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示即時效果器面板</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="353"/>
@@ -5262,55 +5269,55 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="316"/>
         <source>Open audio setup context menu</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟音訊設定上下文選單</translation>
     </message>
     <message>
         <location filename="../../src/musehub/internal/musehubcommandsregister.cpp" line="33"/>
         <source>Open Get effects dialog</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟取得效果對話方塊</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="326"/>
         <source>Split tool</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>分割工具</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="335"/>
         <source>Move realtime effect up</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向上移動即時效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectscenecommandsregister.cpp" line="344"/>
         <source>Move realtime effect down</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向下移動即時效果</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="23"/>
         <source>Record on current track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在目前軌道錄製</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="32"/>
         <source>Record on new track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在新的軌道錄製</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="23"/>
         <source>Play/Pause</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放/暫停</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="32"/>
         <source>Play/Stop</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放/停止</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="41"/>
@@ -5322,7 +5329,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="50"/>
         <source>Play selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放選擇</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="59"/>
@@ -5341,19 +5348,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="77"/>
         <source>Stop playback</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>停止播放</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="86"/>
         <source>Rewind to start</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>倒回開始</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="95"/>
         <source>Rewind to end</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>倒回結束</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="104"/>
@@ -5371,79 +5378,79 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="130"/>
         <source>Change audio host</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改音訊主機</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="142"/>
         <source>Change playback device</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改播放裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="155"/>
         <source>Change recording device</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改錄音裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="168"/>
         <source>Change input channels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改輸入聲道</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="180"/>
         <source>Rescan audio devices</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>重新掃描音訊裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="189"/>
         <source>Play repeats</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放重複</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="198"/>
         <source>Pan automatically during playback</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>播放過程中自動平移樂譜</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="207"/>
         <source>Toggle ‘Loop playback’</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>切換“迴圈播放”</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="216"/>
         <source>Clear loop region</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>清除迴圈區域</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="225"/>
         <source>Set loop region to selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定迴圈選取範圍為選擇</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="234"/>
         <source>Set selection to loop</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定選擇到迴圈</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="243"/>
         <source>Set loop region in out</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定迴圈區域輸入/輸出</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="252"/>
         <source>Creating a loop also selects audio</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>建立迴圈也會選取音訊</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="261"/>
@@ -5485,61 +5492,61 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="317"/>
         <source>Set playback level</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定播放電平</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="327"/>
         <source>Toggle metronome playback</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>切換節拍器播放</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="337"/>
         <source>Set playback time</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定播放時間</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="347"/>
         <source>Set playback tempo</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定播放速度</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcommandsregister.cpp" line="357"/>
         <source>Set playback time signature</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定播放拍號</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="50"/>
         <source>Stop record</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>停止錄製</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="59"/>
         <source>Set record level</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定錄音電平</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="69"/>
         <source>Show mic metering</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>顯示麥克風計量</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="78"/>
         <source>Turn on input monitoring</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟輸入監控</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="87"/>
         <source>Start lead-in recording</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開始導引錄音</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="96"/>
@@ -5557,13 +5564,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/record/internal/recordcommandsregister.cpp" line="115"/>
         <source>Set sound activation level</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定聲音啟用電平</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramcommandsregister.cpp" line="25"/>
         <source>Spectrogram settings…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>頻譜圖設定…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="41"/>
@@ -5575,19 +5582,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="51"/>
         <source>Paste (pushes clips on selected track)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>貼上（將片段推送到所選軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="60"/>
         <source>Paste (overlaps other clips)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>貼上（與其他片段重疊）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="69"/>
         <source>Paste (preserves synchronization on all tracks)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>貼上（保持所有軌道同步）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="78"/>
@@ -5623,25 +5630,25 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="143"/>
         <source>Open pitch and speed dialog</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>開啟音高和速度對話方塊</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="153"/>
         <source>Render pitch and speed</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>算繪音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="166"/>
         <source>Reset pitch and speed</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>重設音高與速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="179"/>
         <source>Stretch with tempo changes</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>拉伸並伴隨節奏變化</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="192"/>
@@ -5653,67 +5660,67 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="205"/>
         <source>New mono track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增單聲道軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="214"/>
         <source>New stereo track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增立體聲軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="223"/>
         <source>New label track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="232"/>
         <source>Duplicate track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>重複軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="241"/>
         <source>Move track up</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>上移軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="250"/>
         <source>Move track down</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>下移軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="259"/>
         <source>Move track to top</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動軌道到頂部</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="268"/>
         <source>Move track to bottom</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動軌道到底部</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="277"/>
         <source>Swap stereo channels</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>交換立體聲聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="286"/>
         <source>Split stereo to L/R mono</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>立體聲轉換為左/右單聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="295"/>
         <source>Split stereo to center mono</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>立體聲分離到中央單聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="304"/>
@@ -5725,13 +5732,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="314"/>
         <source>Make stereo track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>製作立體聲軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="323"/>
         <source>Resample track…</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>重新取樣軌道…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="333"/>
@@ -5767,7 +5774,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="381"/>
         <source>Select all</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>全選</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="390"/>
@@ -5779,7 +5786,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="399"/>
         <source>Select all tracks</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>選擇所有軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="408"/>
@@ -5839,31 +5846,31 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="496"/>
         <source>Change clip color</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改片段顏色</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="508"/>
         <source>Change track color</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改軌道顏色</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="520"/>
         <source>Change track format</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改軌道格式</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="532"/>
         <source>Change track sample rate</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>更改軌道取樣率</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="544"/>
         <source>Toggle spectral view</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>切換光譜檢視</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="553"/>
@@ -5881,67 +5888,67 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="577"/>
         <source>Multi-view</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>多檢視</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="589"/>
         <source>Add label</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="598"/>
         <source>Rename item (clip/label)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>重新命名項目（剪輯/標籤）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="608"/>
         <source>Move item left</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動項目左側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="618"/>
         <source>Move item right</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>移動項目右側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="628"/>
         <source>Move item up</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>上移項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="638"/>
         <source>Move item down</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>下移項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="648"/>
         <source>Extend item left</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向左擴充項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="658"/>
         <source>Extend item right</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向右擴充項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="668"/>
         <source>Reduce item left</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向左縮短項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="678"/>
         <source>Reduce item right</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>向右縮短項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="688"/>
@@ -5959,7 +5966,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="716"/>
         <source>Delete track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="761"/>
@@ -5977,13 +5984,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="779"/>
         <source>Join selected clips</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>合併所選片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="788"/>
         <source>Split clips at silences</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在靜音處分割片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="797"/>
@@ -6007,109 +6014,109 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="827"/>
         <source>Cut and close gap (per clip)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合縫隙（每個片段）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="836"/>
         <source>Cut and close gap (per track)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合間隙（每個軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="845"/>
         <source>Cut and close gap (all tracks)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合間隙（所有軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="854"/>
         <source>Delete and leave gap</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="863"/>
         <source>Delete and close gap (per clip)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合縫隙（每個片段）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="872"/>
         <source>Delete and close gap (per track)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合間隙（每個軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="881"/>
         <source>Delete and close gap (all tracks)</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合間隙（所有軌道）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="891"/>
         <source>Next panel</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>下一個面板</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="901"/>
         <source>Previous panel</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>上一個面板</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="911"/>
         <source>First track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>第一個軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="921"/>
         <source>Last track</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>最後一個軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="931"/>
         <source>Above item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>以上項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="941"/>
         <source>Below item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>以下項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="951"/>
         <source>Select track/track item</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>選擇軌道/軌道項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="961"/>
         <source>Add track or track item to selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增音訊或音訊項目到選擇</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="971"/>
         <source>Track range selection</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>軌道範圍選擇</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="981"/>
         <source>Multi track selection previous</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>多軌選擇上一個</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="991"/>
         <source>Multi track selection next</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>多軌選擇下一個</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1001"/>
@@ -6127,13 +6134,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
         <source>Repeat last effect</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>重複上一個效果</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="33"/>
         <source>Plugin manager</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>外掛管理器</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
@@ -6145,7 +6152,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
         <source>Save preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>儲存預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="81"/>
@@ -6157,19 +6164,19 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="93"/>
         <source>Delete preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="106"/>
         <source>Import preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯入預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="118"/>
         <source>Export preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>匯出預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="172"/>
@@ -6212,82 +6219,82 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="43"/>
         <source>Show paths…</source>
-        <translation type="unfinished"/>
+        <translation>顯示路徑…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="44"/>
         <source>Show paths</source>
-        <translation type="unfinished"/>
+        <translation>顯示路徑</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="51"/>
         <source>Show profiler…</source>
-        <translation type="unfinished"/>
+        <translation>顯示配置檔案…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="52"/>
         <source>Show profiler</source>
-        <translation type="unfinished"/>
+        <translation>顯示分析器</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="59"/>
         <source>Show graphics info…</source>
-        <translation type="unfinished"/>
+        <translation>顯示圖形資訊…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="60"/>
         <source>Show graphics info</source>
-        <translation type="unfinished"/>
+        <translation>顯示圖形資訊</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="67"/>
         <source>Show navigation tree…</source>
-        <translation type="unfinished"/>
+        <translation>顯示導航樹…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="68"/>
         <source>Show navigation tree</source>
-        <translation type="unfinished"/>
+        <translation>顯示導航樹狀圖</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="75"/>
         <source>Show accessibility tree…</source>
-        <translation type="unfinished"/>
+        <translation>顯示輔助功能樹…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="76"/>
         <source>Show accessibility tree</source>
-        <translation type="unfinished"/>
+        <translation>顯示無障礙樹狀圖</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="83"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="84"/>
         <source>Dump accessibility tree to console</source>
-        <translation type="unfinished"/>
+        <translation>將無障礙樹轉儲到控制台</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="91"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="92"/>
         <source>Show engraving elements</source>
-        <translation type="unfinished"/>
+        <translation>顯示排版元素</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="99"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="100"/>
         <source>Show engraving undo stack</source>
-        <translation type="unfinished"/>
+        <translation>顯示制譜復原棧</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="107"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="108"/>
         <source>Show engraving style options list</source>
-        <translation type="unfinished"/>
+        <translation>顯示排版樣式選項列表</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="115"/>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="116"/>
         <source>Show actions list</source>
-        <translation type="unfinished"/>
+        <translation>顯示操作列表</translation>
     </message>
     <message>
         <location filename="../../muse/framework/diagnostics/internal/diagnosticscommandsregister.cpp" line="123"/>
@@ -6514,36 +6521,36 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="320"/>
         <source>Stop preview</source>
         <extracomment>Shown on a button that stops effect preview</extracomment>
-        <translation type="unfinished"/>
+        <translation>停止預覽</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="322"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
-        <translation type="unfinished"/>
+        <translation>預覽</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="89"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="102"/>
         <source>Select preset</source>
-        <translation type="unfinished"/>
+        <translation>選擇預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="180"/>
         <source>Reset preset</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>重設預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="218"/>
         <source>Preset options</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>預設選項</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="465"/>
         <source>Unknown parameter type: %1</source>
-        <translation type="unfinished"/>
+        <translation>未知引數類型：%1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="163"/>
@@ -6551,40 +6558,40 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="48"/>
         <source>Save preset</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>儲存預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="24"/>
         <source>Preset name cannot contain %1 or %2</source>
         <extracomment>%1 is a forward slash, %2 is a backslash; neither character is allowed in a preset name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>預設名稱不能包含 %1 或 %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="69"/>
         <source>Preset name</source>
         <extracomment>Placeholder text of the preset name input field</extracomment>
-        <translation type="unfinished"/>
+        <translation>預設名稱</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
         <source>Enter Nyquist command:</source>
-        <translation type="unfinished"/>
+        <translation>輸入 Nyquist 命令： </translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
         <source>Debug</source>
-        <translation type="unfinished"/>
+        <translation>除錯</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="94"/>
         <source>Enter Nyquist code here…</source>
         <extracomment>Placeholder text of the Nyquist code editor</extracomment>
-        <translation type="unfinished"/>
+        <translation>在此輸入 Nyquist 程式碼…</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="107"/>
         <source>Load</source>
-        <translation type="unfinished"/>
+        <translation>載入</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="118"/>
@@ -6612,13 +6619,13 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="16"/>
         <source>Make-up gain</source>
-        <translation type="unfinished"/>
+        <translation>增益補償</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="17"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>Knee width</source>
-        <translation type="unfinished"/>
+        <translation>拐點寬度</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="18"/>
@@ -6629,7 +6636,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="19"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="17"/>
         <source>Lookahead</source>
-        <translation type="unfinished"/>
+        <translation>超前</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="21"/>
@@ -6639,18 +6646,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>ms</source>
         <extracomment>Abbreviation of milliseconds, used as a unit suffix</extracomment>
-        <translation type="unfinished"/>
+        <translation>毫秒</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="22"/>
         <source>Attack</source>
-        <translation type="unfinished"/>
+        <translation>觸發</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="23"/>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="18"/>
         <source>Release</source>
-        <translation type="unfinished"/>
+        <translation>釋出</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="15"/>
@@ -6660,12 +6667,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="39"/>
         <source>Effect load failed</source>
-        <translation type="unfinished"/>
+        <translation>效果載入失敗</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="41"/>
         <source>Internal error</source>
-        <translation type="unfinished"/>
+        <translation>內部錯誤</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="43"/>
@@ -6675,32 +6682,32 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="45"/>
         <source>Effect not found</source>
-        <translation type="unfinished"/>
+        <translation>效果未找到</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="47"/>
         <source>No audio selected</source>
-        <translation type="unfinished"/>
+        <translation>沒有選擇音訊</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="49"/>
         <source>Multiple-clip selection not supported</source>
-        <translation type="unfinished"/>
+        <translation>不支援多片段選擇</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="51"/>
         <source>Applying effect failed</source>
-        <translation type="unfinished"/>
+        <translation>套用效果失敗</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="53"/>
         <source>Not valid presets file</source>
-        <translation type="unfinished"/>
+        <translation>無效的預設檔案</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="55"/>
         <source>Preset mismatch</source>
-        <translation type="unfinished"/>
+        <translation>預設不匹配</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="506"/>
@@ -6710,20 +6717,20 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="49"/>
         <source>Preset “%1” already exists, replace?</source>
-        <translation type="unfinished"/>
+        <translation>預設“%1”已存在，是否替換？</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="199"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="89"/>
         <source>Delete preset</source>
         <extracomment>Tooltip of a button in the effect presets bar</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="91"/>
         <source>Are you sure you want to delete “%1”?</source>
         <extracomment>%1 is the name of the preset to delete</extracomment>
-        <translation type="unfinished"/>
+        <translation>您確定要刪除“%1”嗎？</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="108"/>
@@ -6733,53 +6740,53 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="118"/>
         <source>Import effect parameters</source>
-        <translation type="unfinished"/>
+        <translation>匯入效果引數</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="151"/>
         <source>Export effect parameters</source>
-        <translation type="unfinished"/>
+        <translation>匯出效果引數</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="135"/>
         <source>%1: is not a valid presets file.</source>
         <extracomment>%1 is the path of the preset file being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1：不是有效的預設檔案。</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="138"/>
         <source>%1: is for a different Effect, Generator or Analyzer.</source>
         <extracomment>%1 is the path of the preset file being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1：用於不同的效果器、生成器或分析器。</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="762"/>
         <source>Generating %1…</source>
-        <translation type="unfinished"/>
+        <translation>正在生成 %1…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="762"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
         <source>Applying %1…</source>
         <extracomment>%1 is the name of the effect being applied</extracomment>
-        <translation type="unfinished"/>
+        <translation>正在套用 %1…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="1001"/>
         <source>Effect preview</source>
-        <translation type="unfinished"/>
+        <translation>效果預覽</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="41"/>
         <source>Use vendor UI</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>使用 vendor UI</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="43"/>
         <source>Toggle between vendor UI and fallback UI</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>在 vendor UI 和使用者 UI 之間切換</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="242"/>
@@ -6790,49 +6797,49 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="281"/>
         <source>Added %1 to %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Added Compressor to Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>將 %1 新增到 %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="284"/>
         <source>Add %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Add Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>新增 %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="322"/>
         <source>Removed %1 from %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Removed Compressor from Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>從 %2 中移除 %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="325"/>
         <source>Remove %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Remove Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>移除 %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="347"/>
         <source>Replaced %1 with %2</source>
         <extracomment>History entry. %1 and %2 are effect names, e.g. &quot;Replaced Compressor with Limiter&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>將 %1 替換為 %2</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="350"/>
         <source>Replace %1</source>
         <extracomment>Undo entry name. %1 is an effect name, e.g. &quot;Replace Compressor&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>替換 %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="386"/>
         <source>Moved %1 up in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor up in Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%2 中向上移動了 %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="390"/>
         <source>Moved %1 down in %2</source>
         <extracomment>History entry. %1 is an effect name, %2 is a track name, e.g. &quot;Moved Compressor down in Track 1&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%2 中向下移動了 %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="394"/>
@@ -6843,33 +6850,33 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="106"/>
         <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="108"/>
         <source>Default preset</source>
-        <translation type="unfinished"/>
+        <translation>刪除預設</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="578"/>
         <source>custom</source>
-        <translation type="unfinished"/>
+        <translation>自訂</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="88"/>
         <source>Save as…</source>
-        <translation type="unfinished"/>
+        <translation>另存為...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="56"/>
         <source>Unknown effect</source>
-        <translation type="unfinished"/>
+        <translation>未知效果</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="72"/>
         <source>No parameters available for this effect</source>
-        <translation type="unfinished"/>
+        <translation>此效果沒有可用引數。</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="42"/>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="24"/>
         <source>Nyquist prompt</source>
-        <translation type="unfinished"/>
+        <translation>Nyquist 提示符</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="48"/>
@@ -6903,38 +6910,38 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="163"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="168"/>
         <source>Nyquist debug output</source>
-        <translation type="unfinished"/>
+        <translation>Nyquist 除錯輸出</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="169"/>
         <source>No debug output generated.</source>
-        <translation type="unfinished"/>
+        <translation>未生成除錯輸出。</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished"/>
+        <translation>管理外掛</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="91"/>
         <source>Rescan plugins</source>
-        <translation type="unfinished"/>
+        <translation>重新掃描外掛</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="107"/>
         <source>Include plugins with errors</source>
-        <translation type="unfinished"/>
+        <translation>包含有錯誤的外掛</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished"/>
+        <translation>缺失外掛</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
         <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation type="unfinished"/>
+        <translation>未找到本專案中使用的某些外掛。雙擊條目可檢視其位置。</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
@@ -6946,12 +6953,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
         <source>Plugin details</source>
-        <translation type="unfinished"/>
+        <translation>外掛詳細資訊</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
         <source>Vendor:</source>
-        <translation type="unfinished"/>
+        <translation>提供者：</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
@@ -6962,7 +6969,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation>路徑：</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="242"/>
@@ -6978,7 +6985,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="58"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation>顯示：</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="64"/>
@@ -6988,46 +6995,46 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="70"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation>類別：</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="76"/>
         <source>Status:</source>
-        <translation type="unfinished"/>
+        <translation>狀態：</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>初始速度變化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>最終速度變化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>初始音高偏移</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation>半音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>最終音高變換</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="57"/>
         <source>Not validated</source>
         <extracomment>The plugin was found but the user chose to validate it later</extracomment>
-        <translation type="unfinished"/>
+        <translation>未驗證</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="59"/>
@@ -7037,7 +7044,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="63"/>
         <source>Broken</source>
-        <translation type="unfinished"/>
+        <translation>損壞</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="155"/>
@@ -7062,7 +7069,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="312"/>
         <source>Status</source>
-        <translation type="unfinished"/>
+        <translation>狀態</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
@@ -7073,7 +7080,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="314"/>
         <source>Vendor</source>
-        <translation type="unfinished"/>
+        <translation>提供者</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
@@ -7090,7 +7097,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
-        <translation type="unfinished"/>
+        <translation>缺失 - “%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/Effect.cpp" line="55"/>
@@ -7153,18 +7160,18 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/RealtimeEffectViewerDialog.qml" line="188"/>
         <source>Bypass effect</source>
         <extracomment>Tooltip of the effect power button</extracomment>
-        <translation type="unfinished"/>
+        <translation>旁通效果</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="55"/>
         <location filename="../../src/effects/extensions/internal/extensioneffect.cpp" line="387"/>
         <source>Extension</source>
-        <translation type="unfinished"/>
+        <translation>擴充</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="341"/>
         <source>Volume and compression</source>
-        <translation type="unfinished"/>
+        <translation>音量和壓縮</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="343"/>
@@ -7174,27 +7181,27 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="345"/>
         <source>Pitch and tempo</source>
-        <translation type="unfinished"/>
+        <translation>音高和節奏</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="347"/>
         <source>EQ and filters</source>
-        <translation type="unfinished"/>
+        <translation>均衡器和濾波器</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="349"/>
         <source>Noise removal and repair</source>
-        <translation type="unfinished"/>
+        <translation>噪音消除和修復</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="351"/>
         <source>Delay and reverb</source>
-        <translation type="unfinished"/>
+        <translation>延遲和混響</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="353"/>
         <source>Distortion and modulation</source>
-        <translation type="unfinished"/>
+        <translation>失真和變調</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="355"/>
@@ -7204,7 +7211,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="357"/>
         <source>Spectral tools</source>
-        <translation type="unfinished"/>
+        <translation>光譜工具</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="359"/>
@@ -7214,7 +7221,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="361"/>
         <source>Third-party</source>
-        <translation type="unfinished"/>
+        <translation>第三者</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsutils.cpp" line="385"/>
@@ -7244,7 +7251,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/extensions/internal/extensionparameterextractor.cpp" line="125"/>
         <source>Generated audio duration</source>
-        <translation type="unfinished"/>
+        <translation>生成的音訊時長</translation>
     </message>
 </context>
 <context>
@@ -7257,12 +7264,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="202"/>
         <source>No audio selected</source>
-        <translation type="unfinished"/>
+        <translation>沒有選擇音訊</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyeffect.cpp" line="222"/>
         <source>The selected audio is silent, so there is nothing to amplify.</source>
-        <translation type="unfinished"/>
+        <translation>所選音訊靜音，因此無需放大。</translation>
     </message>
 </context>
 <context>
@@ -7275,7 +7282,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
         <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation type="unfinished"/>
+        <translation>當指定“控制”軌道的音量達到特定級別時，降低（閃避）一個或多個軌道的音量。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="212"/>
@@ -7288,7 +7295,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitcheffect.cpp" line="10"/>
         <source>Change pitch</source>
-        <translation type="unfinished"/>
+        <translation>改變音高</translation>
     </message>
 </context>
 <context>
@@ -7296,12 +7303,12 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="51"/>
         <source>Click removal</source>
-        <translation type="unfinished"/>
+        <translation>點選移除</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="75"/>
         <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation type="unfinished"/>
+        <translation>爆音去除功能旨在消除音訊軌道上的爆音。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="126"/>
@@ -7311,7 +7318,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovaleffect.cpp" line="143"/>
         <source>Selection must be larger than 4096 samples.</source>
-        <translation type="unfinished"/>
+        <translation>所選範圍必須大於 4096 個取樣點。</translation>
     </message>
 </context>
 <context>
@@ -7337,7 +7344,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressoreffect.cpp" line="58"/>
         <source>Reduces “dynamic range”, or differences between loud and quiet parts.</source>
-        <translation type="unfinished"/>
+        <translation>減小“動態範圍”，即響亮部分與輕柔部分之間的差異。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitereffect.cpp" line="13"/>
@@ -7426,7 +7433,8 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
         <source>Normalizing Loudness…
 </source>
-        <translation type="unfinished"/>
+        <translation>正在標準化響度…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
@@ -7479,7 +7487,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="290"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation>未選擇音訊。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="304"/>
@@ -7519,25 +7527,29 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="97"/>
         <source>Removing DC offset and Normalizing…
 </source>
-        <translation type="unfinished"/>
+        <translation>去除直流偏置並進行歸一化…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="99"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>正在去除直流偏置…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="101"/>
         <source>Normalizing without removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>在不去除直流偏置的情況下進行歸一化…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="103"/>
         <source>Not doing anything…
 </source>
-        <translation type="unfinished"/>
+        <translation>什麼也沒做…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="129"/>
@@ -7584,7 +7596,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="17"/>
         <source>Nyquist prompt</source>
-        <translation type="unfinished"/>
+        <translation>Nyquist 提示符</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistprompteffect.cpp" line="23"/>
@@ -7609,7 +7621,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="60"/>
         <source>Applying Nyquist Effect…</source>
-        <translation type="unfinished"/>
+        <translation>正在套用 Nyquist 效果器…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="68"/>
@@ -7640,13 +7652,14 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>To use ‘Spectral effects’, enable ‘Spectral Selection’
 in the track Spectrogram settings and select the
 frequency range for the effect to act on.</source>
-        <translation type="unfinished"/>
+        <translation>若要使用“頻譜效果”，請在軌道頻譜圖設定中啟用“頻譜選擇”功能，並選擇該效果作用的頻率範圍。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="658"/>
         <source>error: File “%1” specified in header but not found in plug-in path.
 </source>
-        <translation type="unfinished"/>
+        <translation>錯誤：標頭檔案中指定了檔案“%1”，但在外掛路徑中未找到該檔案。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="824"/>
@@ -7664,14 +7677,16 @@ frequency range for the effect to act on.</source>
         <source>‘;type tool’ effects cannot return audio from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>“type tool” 效果無法從 Nyquist 返回音訊。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1401"/>
         <source>‘;type tool’ effects cannot return labels from Nyquist.
 </source>
         <extracomment>Don't translate ';type tool'.</extracomment>
-        <translation type="unfinished"/>
+        <translation>“type tool” 效果無法從 Nyquist 返回標籤。
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1411"/>
@@ -7748,7 +7763,12 @@ For SAL, use a return statement such as:
 or for LISP, begin with an open parenthesis such as:
 	(mult *track* 0.1)
  .</source>
-        <translation type="unfinished"/>
+        <translation>你的程式碼看起來像是 SAL 語法，但缺少了 `return` 語句。
+對於 SAL，請使用類似這樣的 return 語句：
+	return *track* * 0.1
+或者對於 LISP，以左括號開頭，例如：
+	(mult *track* 0.1)
+ .</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2624"/>
@@ -7758,7 +7778,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished"/>
+        <translation>擱架濾波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -7803,7 +7823,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="17"/>
         <source>Delete selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>刪除所選取心頻率</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="18"/>
@@ -7829,7 +7849,9 @@ or for LISP, begin with an open parenthesis such as:
         <source>~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
                       or reduce the filter ‘Width’.</source>
-        <translation type="unfinished"/>
+        <translation>~無法應用陷波濾波器引數。~%~
+                      請嘗試提高低頻邊界~%~
+                      或減小濾波器“寬度”。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="22"/>
@@ -7839,7 +7861,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="23"/>
         <source>Amplify selection center frequency</source>
-        <translation type="unfinished"/>
+        <translation>放大選擇中心頻率</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="24"/>
@@ -7882,7 +7904,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="30"/>
         <source>Amplify selection</source>
-        <translation type="unfinished"/>
+        <translation>放大選取範圍</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
@@ -7892,7 +7914,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished"/>
+        <translation>錄音室淡出</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -7902,7 +7924,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished"/>
+        <translation>可調節漸變</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -8056,7 +8078,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished"/>
+        <translation>尋找節拍</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -8066,7 +8088,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished"/>
+        <translation>削波失真修復</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -8086,7 +8108,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished"/>
+        <translation>交叉漸變片段</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -8106,7 +8128,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished"/>
+        <translation>交叉漸變軌道</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -8246,7 +8268,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="103"/>
         <source>Regular interval labels</source>
-        <translation type="unfinished"/>
+        <translation>常規間隔標籤</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="104"/>
@@ -8391,7 +8413,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished"/>
+        <translation>高通濾波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -8445,7 +8467,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished"/>
+        <translation>標示聲音</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -8536,7 +8558,8 @@ or for LISP, begin with an open parenthesis such as:
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
         <source>No sounds found.~%~
                  Try lowering ‘Threshold level (dB)’.</source>
-        <translation type="unfinished"/>
+        <translation>未找到聲音。~%~
+                 嘗試降低“閾值級別 (dB)”。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="161"/>
@@ -8550,7 +8573,7 @@ or for LISP, begin with an open parenthesis such as:
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished"/>
+        <translation>傳統限制器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -8609,12 +8632,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished"/>
+        <translation>低通濾波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished"/>
+        <translation>噪聲門</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -8644,7 +8667,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="180"/>
         <source>Don’t Link Stereo</source>
-        <translation type="unfinished"/>
+        <translation>不要連結立體聲</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="181"/>
@@ -8706,7 +8729,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished"/>
+        <translation>陷波濾波器</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -8730,7 +8753,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="194"/>
         <source>Nyquist plugin installer</source>
-        <translation type="unfinished"/>
+        <translation>Nyquist 外掛安裝程式</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="195"/>
@@ -8740,7 +8763,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="196"/>
         <source>Browse…</source>
-        <translation type="unfinished"/>
+        <translation>瀏覽...</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="197"/>
@@ -8790,22 +8813,22 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
         <source>Error~%</source>
-        <translation type="unfinished"/>
+        <translation>錯誤~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
         <source>Success~%Files written to:~%~s~%</source>
-        <translation type="unfinished"/>
+        <translation>成功~%檔案已寫入：~%~s~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
         <source>Warning~%Failed to copy some files:~%</source>
-        <translation type="unfinished"/>
+        <translation>警告~%未能複製某些檔案：~%</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
         <source>Error~%No file selected.</source>
-        <translation type="unfinished"/>
+        <translation>錯誤~%未選擇檔案。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
@@ -8835,7 +8858,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
         <source>Files already installed (‘Allow Overwriting’ disabled):</source>
-        <translation type="unfinished"/>
+        <translation>已安裝的檔案（&quot;允許檔案被覆蓋&quot; 已停用）：</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
@@ -8880,7 +8903,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
         <source>Rhythm track</source>
-        <translation type="unfinished"/>
+        <translation>節奏軌道</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="225"/>
@@ -8920,7 +8943,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
         <source>Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.</source>
-        <translation type="unfinished"/>
+        <translation>設定“小節數”為零以啟用“節奏軌道持續時長”。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
@@ -8940,7 +8963,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="236"/>
         <source>Used if ‘Number of bars’ = 0</source>
-        <translation type="unfinished"/>
+        <translation>如果“條數”= 0，則使用</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="237"/>
@@ -9016,12 +9039,13 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Set either ‘Number of bars’ or~%~
                     ‘Rhythm track duration’ to greater than zero.</source>
-        <translation type="unfinished"/>
+        <translation>將“小節數”或~%~
+                    “節奏軌道時長”設定為大於零。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
         <source>Risset drum</source>
-        <translation type="unfinished"/>
+        <translation>Risset 鼓</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="253"/>
@@ -9056,12 +9080,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>Measure RMS</source>
-        <translation type="unfinished"/>
+        <translation>測量均方根值</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation>左</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -9071,22 +9095,22 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation>右</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation>立體聲</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation>單聲道</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation>取樣資料匯出</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="266"/>
@@ -9411,12 +9435,12 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
         <source>Error.~%“~a” cannot be written.</source>
-        <translation type="unfinished"/>
+        <translation>錯誤。~%“~a”無法寫入。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
         <source>Sample data Import</source>
-        <translation type="unfinished"/>
+        <translation>取樣資料匯入</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
@@ -9443,21 +9467,27 @@ Daulton</source>
         <source>Error~%~
                         ‘~a’ could not be opened.~%~
                         Check that file exists.</source>
-        <translation type="unfinished"/>
+        <translation>錯誤~%~
+                        無法開啟 &quot;~a&quot;。~%~
+                        檢查檔案是否存在。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="335"/>
         <source>Error:~%~
               The file must contain only plain ASCII text.~%~
               (Invalid byte ‘~a’ at byte number: ~a)</source>
-        <translation type="unfinished"/>
+        <translation>錯誤：~%~
+              檔案必須僅有純 ASCII 文本。~%~
+              （無效的位元組“~a”在位置 ~a ）</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="336"/>
         <source>Error~%~
               Data must be numbers in plain ASCII text.~%~
               ‘~a’ is not a numeric value.</source>
-        <translation type="unfinished"/>
+        <translation>錯誤：~%~
+              資料必須是純 ASCII 文本的數字。~%~
+              “~a”不是一個數字值。</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
@@ -9467,7 +9497,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
         <source>Delete selection</source>
-        <translation type="unfinished"/>
+        <translation>刪除所選</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
@@ -9590,7 +9620,7 @@ Daulton</source>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="103"/>
         <source>Paulstretch is only for an extreme time-stretch or “stasis” effect</source>
-        <translation type="unfinished"/>
+        <translation>Paulstretch 僅適用於極端的延時拉伸或“靜止”效果。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="187"/>
@@ -9604,7 +9634,10 @@ Daulton</source>
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>音訊選取範圍過短，無法預覽。
+
+請嘗試將音訊選取範圍延長至至少 %1 秒，
+或將“時間解析度”減小至 %2 秒以下。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="234"/>
@@ -9613,7 +9646,10 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
 For the current audio selection, the maximum
 ‘Time Resolution’ is %1 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法預覽。
+
+對於目前選擇的音訊，最大
+“時間解析度”為 %1 秒。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretcheffect.cpp" line="243"/>
@@ -9622,7 +9658,10 @@ For the current audio selection, the maximum
 Try increasing the audio selection to at least %1 seconds,
 or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
         <extracomment>'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="unfinished"/>
+        <translation>對於目前選定內容而言，“時間解析度”設定過長。
+
+請嘗試將音訊選定範圍增加至至少 %1 秒，
+或將“時間解析度”減小至 %2 秒以下。</translation>
     </message>
 </context>
 <context>
@@ -9630,18 +9669,19 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="30"/>
         <source>Remove DC offset</source>
-        <translation type="unfinished"/>
+        <translation>移除 DC 偏移</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="49"/>
         <source>Removes DC offset (centers audio on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation>移除 DC 偏移（垂直中心位於 0.0）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="67"/>
         <source>Removing DC offset…
 </source>
-        <translation type="unfinished"/>
+        <translation>正在去除直流偏置…
+</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
@@ -9687,7 +9727,9 @@ Zoom in and select a tiny fraction of a second to repair.</source>
         <source>The Repair effect needs some data to go on.
 
 Please select an area to repair with some audio on at least one side (the more the better).</source>
-        <translation type="unfinished"/>
+        <translation>“修復”效果需要一些資料作為依據。
+
+請選擇一個至少在一側包含音訊的區域進行修復（音訊內容越豐富，效果越好）。</translation>
     </message>
 </context>
 <context>
@@ -9808,7 +9850,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="120"/>
         <source>Adds ambience or a “hall effect”</source>
-        <translation type="unfinished"/>
+        <translation>新增氛圍效果或者“大廳效果器”</translation>
     </message>
 </context>
 <context>
@@ -9829,7 +9871,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>滑動拉伸</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -9855,7 +9897,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceeffect.cpp" line="10"/>
         <source>Truncate silence</source>
-        <translation type="unfinished"/>
+        <translation>截去靜音</translation>
     </message>
 </context>
 <context>
@@ -9868,17 +9910,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="31"/>
         <source>Amplification</source>
-        <translation type="unfinished"/>
+        <translation>增益</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="79"/>
         <source>New peak amplitude</source>
-        <translation type="unfinished"/>
+        <translation>新增峰值振幅</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="127"/>
         <source>Allow clipping</source>
-        <translation type="unfinished"/>
+        <translation>允許削波</translation>
     </message>
 </context>
 <context>
@@ -9950,7 +9992,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/BassTrebleView.qml" line="60"/>
         <source>Auto-adjust volume to preserve loudness</source>
-        <translation type="unfinished"/>
+        <translation>自動調節音量以保持響度</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="70"/>
@@ -9965,7 +10007,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/basstreble/basstrebleviewmodel.cpp" line="109"/>
         <source>Output volume</source>
-        <translation type="unfinished"/>
+        <translation>輸出音量</translation>
     </message>
 </context>
 <context>
@@ -9973,53 +10015,53 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="22"/>
         <source>Change pitch</source>
-        <translation type="unfinished"/>
+        <translation>改變音高</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="34"/>
         <source>Estimated start pitch: %1%2 (%3 Hz)</source>
         <extracomment>%1 = pitch name (e.g. C), %2 = octave number, %3 = frequency in Hz</extracomment>
-        <translation type="unfinished"/>
+        <translation>預計起始音高：%1%2 (%3 Hz)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="43"/>
         <source>From pitch</source>
-        <translation type="unfinished"/>
+        <translation>從音高</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="210"/>
         <source>To pitch</source>
-        <translation type="unfinished"/>
+        <translation>到音高</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="320"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation>半音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="403"/>
         <source>Cents</source>
-        <translation type="unfinished"/>
+        <translation>音分</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="448"/>
         <source>From frequency</source>
-        <translation type="unfinished"/>
+        <translation>從頻率</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="534"/>
         <source>To frequency</source>
-        <translation type="unfinished"/>
+        <translation>到頻率</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="616"/>
         <source>Percentage change</source>
-        <translation type="unfinished"/>
+        <translation>百分比變化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="681"/>
         <source>Use high quality stretching (slow)</source>
-        <translation type="unfinished"/>
+        <translation>使用高質量拉伸（慢）</translation>
     </message>
 </context>
 <context>
@@ -10032,7 +10074,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="118"/>
         <source>Frequency sweep</source>
-        <translation type="unfinished"/>
+        <translation>頻率掃描</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="128"/>
@@ -10047,22 +10089,22 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="173"/>
         <source>Start frequency</source>
-        <translation type="unfinished"/>
+        <translation>起始頻率</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="195"/>
         <source>End frequency</source>
-        <translation type="unfinished"/>
+        <translation>結束頻率</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="244"/>
         <source>Start amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation>起始振幅（0-1）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="268"/>
         <source>End amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation>結束振幅（0-1）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="294"/>
@@ -10075,17 +10117,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="18"/>
         <source>Click removal</source>
-        <translation type="unfinished"/>
+        <translation>點選移除</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="23"/>
         <source>Threshold (lower is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation>閾值（越低越敏感）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="63"/>
         <source>Max spike width (higher is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation>最大脈衝寬度（越高越敏感）</translation>
     </message>
 </context>
 <context>
@@ -10098,7 +10140,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation>顯示：</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
@@ -10121,22 +10163,22 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="19"/>
         <source>DTMF tones</source>
-        <translation type="unfinished"/>
+        <translation>DTMF 音色</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="65"/>
         <source>DTMF sequence</source>
-        <translation type="unfinished"/>
+        <translation>DTMF 序列</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="97"/>
         <source>For each tone you wish to generate, enter numbers from 0 to 9, lower case letters from a to z, and the * and # characters.</source>
-        <translation type="unfinished"/>
+        <translation>對於您想要生成的每個音調，請輸入 0 到 9 的數字、a 到 z 的小寫字母以及 * 和 # 字元。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="106"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation>振幅（0-1）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="129"/>
@@ -10146,22 +10188,22 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="181"/>
         <source>Tone/silence ratio</source>
-        <translation type="unfinished"/>
+        <translation>音調/靜音比率</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="230"/>
         <source>Duty cycle</source>
-        <translation type="unfinished"/>
+        <translation>佔空比</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="234"/>
         <source>%1%</source>
-        <translation type="unfinished"/>
+        <translation>%1%</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="244"/>
         <source>Tone duration</source>
-        <translation type="unfinished"/>
+        <translation>音調持續時間</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="248"/>
@@ -10172,7 +10214,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="258"/>
         <source>Silence duration</source>
-        <translation type="unfinished"/>
+        <translation>靜音持續時間</translation>
     </message>
 </context>
 <context>
@@ -10185,12 +10227,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished"/>
+        <translation>線性頻率縮放</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
         <source>Grid lines</source>
-        <translation type="unfinished"/>
+        <translation>網格線</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="113"/>
@@ -10206,13 +10248,13 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="143"/>
         <source>Zoom in</source>
         <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
-        <translation type="unfinished"/>
+        <translation>放大</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="160"/>
         <source>Zoom out</source>
         <extracomment>Tooltip of a zoom button in the EQ curve view</extracomment>
-        <translation type="unfinished"/>
+        <translation>縮小</translation>
     </message>
 </context>
 <context>
@@ -10235,7 +10277,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/graphiceq/GraphicEqBoard.qml" line="205"/>
         <source>%1 Hz</source>
-        <translation type="unfinished"/>
+        <translation>%1 Hz</translation>
     </message>
 </context>
 <context>
@@ -10251,7 +10293,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="27"/>
         <source>Normalize loudness</source>
-        <translation type="unfinished"/>
+        <translation>音量標準化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="33"/>
@@ -10261,7 +10303,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="34"/>
         <source>Perceived loudness</source>
-        <translation type="unfinished"/>
+        <translation>感知響度</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="53"/>
@@ -10277,12 +10319,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="132"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation>獨立地對立體聲通道進行歸一化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="137"/>
         <source>Treat mono as dual mono (recommended)</source>
-        <translation type="unfinished"/>
+        <translation>將單聲道視為雙單聲道（推薦）</translation>
     </message>
 </context>
 <context>
@@ -10291,27 +10333,28 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/lv2/qml/Audacity/Lv2/Lv2Viewer.qml" line="97"/>
         <source>No available UI:
 %1</source>
-        <translation type="unfinished"/>
+        <translation>沒有可用的介面：
+%1</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="197"/>
         <source>No UI provided by the plugin (Please report if AU3 provides a UI for this plugin)</source>
-        <translation type="unfinished"/>
+        <translation>該外掛未提供使用者介面（如果 AU3 為此外掛提供了介面，請報告）</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="241"/>
         <source>X11 UI refusing to be externalized</source>
-        <translation type="unfinished"/>
+        <translation>X11 UI 拒絕被外部化</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="242"/>
         <source>Unknown reason (please report)</source>
-        <translation type="unfinished"/>
+        <translation>原因未知（請報告）</translation>
     </message>
     <message>
         <location filename="../../src/effects/lv2/view/lv2viewmodel.cpp" line="256"/>
         <source>Idle UI creation failed</source>
-        <translation type="unfinished"/>
+        <translation>空閒 UI 建立失敗</translation>
     </message>
 </context>
 <context>
@@ -10324,7 +10367,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="67"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation>振幅（0-1）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="90"/>
@@ -10360,12 +10403,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="78"/>
         <source>Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.</source>
-        <translation type="unfinished"/>
+        <translation>選擇幾秒鐘的隔離噪聲，以便 Audacity 知道要過濾掉什麼，然後單擊“取得噪聲配置檔案”。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
         <source>Get noise profile</source>
-        <translation type="unfinished"/>
+        <translation>取得噪聲配置檔案</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
@@ -10375,7 +10418,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="131"/>
         <source>Select all of the audio you want filtered, choose how much noise you want filtered out, and then click “Apply” to reduce noise.</source>
-        <translation type="unfinished"/>
+        <translation>選擇所有要過濾的音訊，選擇要過濾掉的噪音量，然後單擊“套用”以降低噪音。</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
@@ -10399,7 +10442,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="223"/>
         <source>bands</source>
-        <translation type="unfinished"/>
+        <translation>頻段</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="242"/>
@@ -10409,12 +10452,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="269"/>
         <source>Audio with noise removed</source>
-        <translation type="unfinished"/>
+        <translation>已去除噪音的音訊</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="284"/>
         <source>Noise only</source>
-        <translation type="unfinished"/>
+        <translation>僅噪音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="150"/>
@@ -10438,17 +10481,17 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="42"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation>移除直流偏移（垂直中心位於 0.0）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="63"/>
         <source>Normalize peak amplitude to</source>
-        <translation type="unfinished"/>
+        <translation>標準化峰值振幅至</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="99"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation>獨立地對立體聲通道進行歸一化</translation>
     </message>
 </context>
 <context>
@@ -10461,12 +10504,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
         <source>Stretch factor</source>
-        <translation type="unfinished"/>
+        <translation>拉伸係數</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
         <source>Time resolution</source>
-        <translation type="unfinished"/>
+        <translation>時間解析度</translation>
     </message>
 </context>
 <context>
@@ -10479,57 +10522,57 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="269"/>
         <source>Wet only</source>
-        <translation type="unfinished"/>
+        <translation>僅溼聲</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="38"/>
         <source>Room size</source>
-        <translation type="unfinished"/>
+        <translation>房間大小</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="48"/>
         <source>Pre-delay</source>
-        <translation type="unfinished"/>
+        <translation>預延遲</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="49"/>
         <source>ms</source>
-        <translation type="unfinished"/>
+        <translation>毫秒</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="57"/>
         <source>Reverberance</source>
-        <translation type="unfinished"/>
+        <translation>混響</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="66"/>
         <source>Damping</source>
-        <translation type="unfinished"/>
+        <translation>減震</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="75"/>
         <source>Low tone</source>
-        <translation type="unfinished"/>
+        <translation>低音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="84"/>
         <source>High tone</source>
-        <translation type="unfinished"/>
+        <translation>高音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="93"/>
         <source>Wet gain</source>
-        <translation type="unfinished"/>
+        <translation>溼聲增益</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="102"/>
         <source>Dry gain</source>
-        <translation type="unfinished"/>
+        <translation>幹聲增益</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="111"/>
         <source>Stereo width</source>
-        <translation type="unfinished"/>
+        <translation>立體聲寬度</translation>
     </message>
 </context>
 <context>
@@ -10537,37 +10580,37 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="29"/>
         <source>Semitones (%1 → %2)</source>
-        <translation type="unfinished"/>
+        <translation>半音 (%1 → %2)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchPitchControls.qml" line="61"/>
         <source>Percentage change</source>
-        <translation type="unfinished"/>
+        <translation>百分比變化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished"/>
+        <translation>滑動拉伸</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation>初始速度變化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation>最終速度變化</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>初始音高偏移</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished"/>
+        <translation>最終音高變換</translation>
     </message>
 </context>
 <context>
@@ -10590,7 +10633,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="102"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation>振幅（0-1）</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="125"/>
@@ -10628,12 +10671,12 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="20"/>
         <source>Truncate silence</source>
-        <translation type="unfinished"/>
+        <translation>截去靜音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="25"/>
         <source>Detect silence</source>
-        <translation type="unfinished"/>
+        <translation>檢測靜音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="30"/>
@@ -10653,32 +10696,32 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
         <source>Truncate to</source>
-        <translation type="unfinished"/>
+        <translation>截斷到</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="185"/>
         <source>Truncate detected silence</source>
-        <translation type="unfinished"/>
+        <translation>截去檢測到的靜音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="230"/>
         <source>Compress to</source>
-        <translation type="unfinished"/>
+        <translation>壓縮到</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="235"/>
         <source>Compress excess silence</source>
-        <translation type="unfinished"/>
+        <translation>壓縮多餘的靜音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="280"/>
         <source>Truncate tracks independently</source>
-        <translation type="unfinished"/>
+        <translation>分別截斷軌道</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="285"/>
         <source>Compress tracks independently</source>
-        <translation type="unfinished"/>
+        <translation>獨立壓縮軌道</translation>
     </message>
 </context>
 <context>
@@ -10698,7 +10741,7 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
         <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>毫秒</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="46"/>
@@ -10731,7 +10774,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="73"/>
         <source>kilohertz</source>
-        <translation type="unfinished"/>
+        <translation>千赫茲</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
@@ -10742,7 +10785,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="83"/>
         <source>decibels</source>
-        <translation type="unfinished"/>
+        <translation>分貝</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
@@ -10759,29 +10802,29 @@ Please select an area to repair with some audio on at least one side (the more t
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="101"/>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="102"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation>半音</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
         <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>每分鐘節拍數</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="112"/>
         <source>beats per minute</source>
-        <translation type="unfinished"/>
+        <translation>每分鐘節拍數</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="121"/>
         <source>°</source>
         <extracomment>Symbol of &quot;degrees&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>°</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="122"/>
         <source>degrees</source>
-        <translation type="unfinished"/>
+        <translation>度</translation>
     </message>
 </context>
 <context>
@@ -10819,30 +10862,30 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="17"/>
         <source>Custom FFmpeg options</source>
-        <translation type="unfinished"/>
+        <translation>自訂 FFmpeg 選項</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="459"/>
         <source>Edit mapping</source>
-        <translation type="unfinished"/>
+        <translation>編輯對映</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="48"/>
         <source>Channel count</source>
-        <translation type="unfinished"/>
+        <translation>聲道數量</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="65"/>
         <source>Channel count %1</source>
-        <translation type="unfinished"/>
+        <translation>聲道數 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="727"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="888"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>匯出音訊</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="91"/>
@@ -10870,7 +10913,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="185"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
-        <translation type="unfinished"/>
+        <translation>檔名稱</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="185"/>
@@ -10891,12 +10934,12 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="248"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
-        <translation type="unfinished"/>
+        <translation>資料夾</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="316"/>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation>格式</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="353"/>
@@ -10911,23 +10954,23 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="395"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation>單聲道</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="413"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation>立體聲</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="430"/>
         <source>Custom mapping</source>
-        <translation type="unfinished"/>
+        <translation>自訂對映</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="477"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="220"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation>取樣率</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="522"/>
@@ -10952,7 +10995,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="656"/>
         <source>Rendering</source>
-        <translation type="unfinished"/>
+        <translation>正在算繪</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="670"/>
@@ -10972,7 +11015,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="73"/>
         <source>Compression %1</source>
-        <translation type="unfinished"/>
+        <translation>壓縮 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="86"/>
@@ -10982,7 +11025,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="105"/>
         <source>LPC %1</source>
-        <translation type="unfinished"/>
+        <translation>LPC %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="118"/>
@@ -10992,7 +11035,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="137"/>
         <source>Min. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>最小輸出功率 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="150"/>
@@ -11002,27 +11045,27 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="169"/>
         <source>Min. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>最小峰值輸出 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="193"/>
         <source>Frame</source>
-        <translation type="unfinished"/>
+        <translation>影格</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="212"/>
         <source>Frame %1</source>
-        <translation type="unfinished"/>
+        <translation>影格 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="222"/>
         <source>PdO method</source>
-        <translation type="unfinished"/>
+        <translation>輸出功率方式</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="238"/>
         <source>PdO method %1</source>
-        <translation type="unfinished"/>
+        <translation>輸出功率方式 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="248"/>
@@ -11032,7 +11075,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="267"/>
         <source>Max. PdO %1</source>
-        <translation type="unfinished"/>
+        <translation>最大輸出功率 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="277"/>
@@ -11042,7 +11085,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="296"/>
         <source>Max. PtO %1</source>
-        <translation type="unfinished"/>
+        <translation>最大峰值輸出 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="62"/>
@@ -11053,7 +11096,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="68"/>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="145"/>
         <source>Show all</source>
-        <translation type="unfinished"/>
+        <translation>顯示全部</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="139"/>
@@ -11063,13 +11106,13 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="38"/>
         <source>General options</source>
-        <translation type="unfinished"/>
+        <translation>常規選項</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="56"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="70"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation>語言</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="83"/>
@@ -11085,7 +11128,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="128"/>
         <source>Quality %1</source>
-        <translation type="unfinished"/>
+        <translation>質量 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="141"/>
@@ -11095,17 +11138,17 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="160"/>
         <source>Cutoff %1</source>
-        <translation type="unfinished"/>
+        <translation>截止頻率 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="184"/>
         <source>Bit rate</source>
-        <translation type="unfinished"/>
+        <translation>位元率</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="203"/>
         <source>Bit rate %1</source>
-        <translation type="unfinished"/>
+        <translation>位元率 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="213"/>
@@ -11113,43 +11156,46 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
 Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
 192000 - recommended</source>
-        <translation type="unfinished"/>
+        <translation>位元率（位元/秒）— 影響最終檔案的大小和質量
+某些編解碼器可能只接受特定值（128k、192k、256k 等）
+0 - 自動
+192000 - 推薦</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="239"/>
         <source>Sample rate %1</source>
-        <translation type="unfinished"/>
+        <translation>取樣率 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="249"/>
         <source>Profile</source>
-        <translation type="unfinished"/>
+        <translation>配置檔案</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="265"/>
         <source>Profile %1</source>
-        <translation type="unfinished"/>
+        <translation>配置檔案 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="17"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation>後設資料編輯器</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
         <source>Load template</source>
-        <translation type="unfinished"/>
+        <translation>載入模板</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="61"/>
         <source>Save template</source>
-        <translation type="unfinished"/>
+        <translation>儲存模板</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="76"/>
         <source>Set as default</source>
-        <translation type="unfinished"/>
+        <translation>設定為預設</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="96"/>
@@ -11160,7 +11206,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="111"/>
         <source>Add tag</source>
-        <translation type="unfinished"/>
+        <translation>新增標籤</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="37"/>
@@ -11170,57 +11216,57 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="53"/>
         <source>Mux rate</source>
-        <translation type="unfinished"/>
+        <translation>複用速率</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="72"/>
         <source>Mux rate %1</source>
-        <translation type="unfinished"/>
+        <translation>複用位元速率 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="95"/>
         <source>Packet size</source>
-        <translation type="unfinished"/>
+        <translation>包大小</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="114"/>
         <source>Packet size %1</source>
-        <translation type="unfinished"/>
+        <translation>包大小 %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation>匯出標籤</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
         <source>File type</source>
-        <translation type="unfinished"/>
+        <translation>檔案類型</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="182"/>
         <source>Label tracks</source>
-        <translation type="unfinished"/>
+        <translation>標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="191"/>
         <source>Included label tracks</source>
-        <translation type="unfinished"/>
+        <translation>包含標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="60"/>
         <source>Download FFmpeg</source>
-        <translation type="unfinished"/>
+        <translation>下載 FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="73"/>
         <source>Locate existing installation</source>
-        <translation type="unfinished"/>
+        <translation>找到現有安裝位置</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="335"/>
         <source>All selected audio is muted</source>
-        <translation type="unfinished"/>
+        <translation>所有選擇的音訊已靜音</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="424"/>
@@ -11246,32 +11292,32 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="45"/>
         <source>Other…</source>
-        <translation type="unfinished"/>
+        <translation>其它...</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="50"/>
         <source>%1 Hz (custom)</source>
-        <translation type="unfinished"/>
+        <translation>%1 Hz（自訂）</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="237"/>
         <source>No loop region</source>
-        <translation type="unfinished"/>
+        <translation>無迴圈區域</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="238"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
-        <translation type="unfinished"/>
+        <translation>匯出迴圈區域的音訊需要專案中存在迴圈。請返回並建立一個迴圈，然後重試。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="249"/>
         <source>No selected audio</source>
-        <translation type="unfinished"/>
+        <translation>未選擇音訊</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="250"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
-        <translation type="unfinished"/>
+        <translation>匯出選定音訊需要先在專案中選擇音訊資料。請返回專案，進行選擇，然後重試。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="256"/>
@@ -11298,12 +11344,12 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="578"/>
         <source>Set sample rate</source>
-        <translation type="unfinished"/>
+        <translation>設定取樣率</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="728"/>
         <source>Could not export to “%1”: the destination folder could not be created. Check that the path is valid and that you have permission to write to it.</source>
-        <translation type="unfinished"/>
+        <translation>無法匯出到“%1”：無法建立目標資料夾。請檢查路徑是否有效，並確認您擁有該路徑的寫入許可權。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="777"/>
@@ -11314,7 +11360,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="789"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="229"/>
         <source>Do you want to overwrite?</source>
-        <translation type="unfinished"/>
+        <translation>是否要覆蓋？</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="810"/>
@@ -11325,7 +11371,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="820"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="227"/>
         <source>Overwrite</source>
-        <translation type="unfinished"/>
+        <translation>覆蓋</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="778"/>
@@ -11362,7 +11408,9 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
-        <translation type="unfinished"/>
+        <translation>要使用自訂通道對映匯出檔案，必須暫時關閉主效果器。
+
+匯出完成後，主效果器將自動重新開啟。</translation>
     </message>
 </context>
 <context>
@@ -11370,7 +11418,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="168"/>
         <source>Reload plugins</source>
-        <translation type="unfinished"/>
+        <translation>重新載入外掛</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
@@ -11428,42 +11476,42 @@ Master effects will be turned back on after export.</source>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
         <source>Failed to install extension</source>
-        <translation type="unfinished"/>
+        <translation>未能安裝擴充</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
         <source>The extension does not contain a valid manifest file.</source>
-        <translation type="unfinished"/>
+        <translation>擴充不包含有效的實體描述檔案。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
         <source>The extension is already installed.</source>
-        <translation type="unfinished"/>
+        <translation>已經安裝該擴充。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
         <source>This extension cannot be updated.</source>
-        <translation type="unfinished"/>
+        <translation>無法更新此擴充。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
         <source>The currently installed version cannot be uninstalled.</source>
-        <translation type="unfinished"/>
+        <translation>無法解除安裝目前安裝的版本。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
         <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
-        <translation type="unfinished"/>
+        <translation>已經安裝擴充“%1”的另一版本（版本 %2）。您想要將其替換為版本 %3 嗎？</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
         <source>Update extension</source>
-        <translation type="unfinished"/>
+        <translation>更新擴充</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="101"/>
         <source>Error code: %1</source>
-        <translation type="unfinished"/>
+        <translation>錯誤程式碼：%1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="74"/>
@@ -11499,7 +11547,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="123"/>
         <source>Not specified</source>
         <extracomment>No version is specified for this plugin.</extracomment>
-        <translation type="unfinished"/>
+        <translation>未指定</translation>
     </message>
     <message>
         <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="129"/>
@@ -11808,7 +11856,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="114"/>
         <source>Select all</source>
-        <translation type="unfinished"/>
+        <translation>全選</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
@@ -11822,7 +11870,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="75"/>
         <source>min</source>
         <comment>abbreviation of minutes</comment>
-        <translation type="unfinished"/>
+        <translation>最小</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="53"/>
@@ -11832,7 +11880,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
         <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>毫秒</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="31"/>
@@ -11845,12 +11893,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
         <source>pt</source>
         <extracomment>Abbreviation of &quot;points&quot;, used to specify a font size</extracomment>
-        <translation type="unfinished"/>
+        <translation>點</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="138"/>
         <source>Don’t show again</source>
-        <translation type="unfinished"/>
+        <translation>不再顯示</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="124"/>
@@ -11881,7 +11929,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="278"/>
         <source>Size</source>
         <comment>file size</comment>
-        <translation type="unfinished"/>
+        <translation>大小</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
@@ -11917,7 +11965,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="141"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation>跳過</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="40"/>
@@ -12041,7 +12089,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
         <source>Hours</source>
-        <translation type="unfinished"/>
+        <translation>小時</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
@@ -12145,7 +12193,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
         <source>%Ln byte(s)</source>
         <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>%Ln位元組</numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
@@ -12220,12 +12268,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="527"/>
         <source>Downloading %1…</source>
-        <translation type="unfinished"/>
+        <translation>正在下載 %1…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="542"/>
         <source>Unpacking %1…</source>
-        <translation type="unfinished"/>
+        <translation>正在解包 %1…</translation>
     </message>
 </context>
 <context>
@@ -12328,842 +12376,842 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="31"/>
         <source>C-1</source>
-        <translation type="unfinished"/>
+        <translation>C-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="32"/>
         <source>C♯-1</source>
-        <translation type="unfinished"/>
+        <translation>C♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="33"/>
         <source>D♭-1</source>
-        <translation type="unfinished"/>
+        <translation>D♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="34"/>
         <source>D-1</source>
-        <translation type="unfinished"/>
+        <translation>D-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="35"/>
         <source>D♯-1</source>
-        <translation type="unfinished"/>
+        <translation>D♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="36"/>
         <source>E♭-1</source>
-        <translation type="unfinished"/>
+        <translation>E♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="37"/>
         <source>E-1</source>
-        <translation type="unfinished"/>
+        <translation>E-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="38"/>
         <source>E♯-1</source>
-        <translation type="unfinished"/>
+        <translation>E♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="39"/>
         <source>F♭-1</source>
-        <translation type="unfinished"/>
+        <translation>F♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="40"/>
         <source>F-1</source>
-        <translation type="unfinished"/>
+        <translation>F-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="41"/>
         <source>F♯-1</source>
-        <translation type="unfinished"/>
+        <translation>F♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="42"/>
         <source>G♭-1</source>
-        <translation type="unfinished"/>
+        <translation>G♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="43"/>
         <source>G-1</source>
-        <translation type="unfinished"/>
+        <translation>G-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="44"/>
         <source>G♯-1</source>
-        <translation type="unfinished"/>
+        <translation>G♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="45"/>
         <source>A♭-1</source>
-        <translation type="unfinished"/>
+        <translation>A♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="46"/>
         <source>A-1</source>
-        <translation type="unfinished"/>
+        <translation>A-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="47"/>
         <source>A♯-1</source>
-        <translation type="unfinished"/>
+        <translation>A♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="48"/>
         <source>B♭-1</source>
-        <translation type="unfinished"/>
+        <translation>B♭-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="49"/>
         <source>B-1</source>
-        <translation type="unfinished"/>
+        <translation>B-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="50"/>
         <source>B♯-1</source>
-        <translation type="unfinished"/>
+        <translation>B♯-1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="52"/>
         <source>C♭0</source>
-        <translation type="unfinished"/>
+        <translation>C♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="53"/>
         <source>C0</source>
-        <translation type="unfinished"/>
+        <translation>C0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="54"/>
         <source>C♯0</source>
-        <translation type="unfinished"/>
+        <translation>C♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="55"/>
         <source>D♭0</source>
-        <translation type="unfinished"/>
+        <translation>D♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="56"/>
         <source>D0</source>
-        <translation type="unfinished"/>
+        <translation>D0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="57"/>
         <source>D♯0</source>
-        <translation type="unfinished"/>
+        <translation>D♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="58"/>
         <source>E♭0</source>
-        <translation type="unfinished"/>
+        <translation>E♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="59"/>
         <source>E0</source>
-        <translation type="unfinished"/>
+        <translation>E0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="60"/>
         <source>E♯0</source>
-        <translation type="unfinished"/>
+        <translation>E♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="61"/>
         <source>F♭0</source>
-        <translation type="unfinished"/>
+        <translation>F♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="62"/>
         <source>F0</source>
-        <translation type="unfinished"/>
+        <translation>F0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="63"/>
         <source>F♯0</source>
-        <translation type="unfinished"/>
+        <translation>F♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="64"/>
         <source>G♭0</source>
-        <translation type="unfinished"/>
+        <translation>G♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="65"/>
         <source>G0</source>
-        <translation type="unfinished"/>
+        <translation>G0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="66"/>
         <source>G♯0</source>
-        <translation type="unfinished"/>
+        <translation>G♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="67"/>
         <source>A♭0</source>
-        <translation type="unfinished"/>
+        <translation>A♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="68"/>
         <source>A0</source>
-        <translation type="unfinished"/>
+        <translation>A0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="69"/>
         <source>A♯0</source>
-        <translation type="unfinished"/>
+        <translation>A♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="70"/>
         <source>B♭0</source>
-        <translation type="unfinished"/>
+        <translation>B♭0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="71"/>
         <source>B0</source>
-        <translation type="unfinished"/>
+        <translation>B0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="72"/>
         <source>B♯0</source>
-        <translation type="unfinished"/>
+        <translation>B♯0</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="74"/>
         <source>C♭1</source>
-        <translation type="unfinished"/>
+        <translation>C♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="75"/>
         <source>C1</source>
-        <translation type="unfinished"/>
+        <translation>C1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="76"/>
         <source>C♯1</source>
-        <translation type="unfinished"/>
+        <translation>C♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="77"/>
         <source>D♭1</source>
-        <translation type="unfinished"/>
+        <translation>D♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="78"/>
         <source>D1</source>
-        <translation type="unfinished"/>
+        <translation>D1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="79"/>
         <source>D♯1</source>
-        <translation type="unfinished"/>
+        <translation>D♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="80"/>
         <source>E♭1</source>
-        <translation type="unfinished"/>
+        <translation>E♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="81"/>
         <source>E1</source>
-        <translation type="unfinished"/>
+        <translation>E1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="82"/>
         <source>E♯1</source>
-        <translation type="unfinished"/>
+        <translation>E♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="83"/>
         <source>F♭1</source>
-        <translation type="unfinished"/>
+        <translation>F♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="84"/>
         <source>F1</source>
-        <translation type="unfinished"/>
+        <translation>F1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="85"/>
         <source>F♯1</source>
-        <translation type="unfinished"/>
+        <translation>F♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="86"/>
         <source>G♭1</source>
-        <translation type="unfinished"/>
+        <translation>G♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="87"/>
         <source>G1</source>
-        <translation type="unfinished"/>
+        <translation>G1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="88"/>
         <source>G♯1</source>
-        <translation type="unfinished"/>
+        <translation>G♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="89"/>
         <source>A♭1</source>
-        <translation type="unfinished"/>
+        <translation>A♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="90"/>
         <source>A1</source>
-        <translation type="unfinished"/>
+        <translation>A1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="91"/>
         <source>A♯1</source>
-        <translation type="unfinished"/>
+        <translation>A♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="92"/>
         <source>B♭1</source>
-        <translation type="unfinished"/>
+        <translation>B♭1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="93"/>
         <source>B1</source>
-        <translation type="unfinished"/>
+        <translation>B1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="94"/>
         <source>B♯1</source>
-        <translation type="unfinished"/>
+        <translation>B♯1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="96"/>
         <source>C♭2</source>
-        <translation type="unfinished"/>
+        <translation>C♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="97"/>
         <source>C2</source>
-        <translation type="unfinished"/>
+        <translation>C2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="98"/>
         <source>C♯2</source>
-        <translation type="unfinished"/>
+        <translation>C♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="99"/>
         <source>D♭2</source>
-        <translation type="unfinished"/>
+        <translation>D♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="100"/>
         <source>D2</source>
-        <translation type="unfinished"/>
+        <translation>D2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="101"/>
         <source>D♯2</source>
-        <translation type="unfinished"/>
+        <translation>D♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="102"/>
         <source>E♭2</source>
-        <translation type="unfinished"/>
+        <translation>E♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="103"/>
         <source>E2</source>
-        <translation type="unfinished"/>
+        <translation>E2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="104"/>
         <source>E♯2</source>
-        <translation type="unfinished"/>
+        <translation>E♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="105"/>
         <source>F♭2</source>
-        <translation type="unfinished"/>
+        <translation>F♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="106"/>
         <source>F2</source>
-        <translation type="unfinished"/>
+        <translation>F2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="107"/>
         <source>F♯2</source>
-        <translation type="unfinished"/>
+        <translation>F♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="108"/>
         <source>G♭2</source>
-        <translation type="unfinished"/>
+        <translation>G♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="109"/>
         <source>G2</source>
-        <translation type="unfinished"/>
+        <translation>G2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="110"/>
         <source>G♯2</source>
-        <translation type="unfinished"/>
+        <translation>G♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="111"/>
         <source>A♭2</source>
-        <translation type="unfinished"/>
+        <translation>A♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="112"/>
         <source>A2</source>
-        <translation type="unfinished"/>
+        <translation>A2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="113"/>
         <source>A♯2</source>
-        <translation type="unfinished"/>
+        <translation>A♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="114"/>
         <source>B♭2</source>
-        <translation type="unfinished"/>
+        <translation>B♭2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="115"/>
         <source>B2</source>
-        <translation type="unfinished"/>
+        <translation>B2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="116"/>
         <source>B♯2</source>
-        <translation type="unfinished"/>
+        <translation>B♯2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="118"/>
         <source>C♭3</source>
-        <translation type="unfinished"/>
+        <translation>C♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="119"/>
         <source>C3</source>
-        <translation type="unfinished"/>
+        <translation>C3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="120"/>
         <source>C♯3</source>
-        <translation type="unfinished"/>
+        <translation>C♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="121"/>
         <source>D♭3</source>
-        <translation type="unfinished"/>
+        <translation>D♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="122"/>
         <source>D3</source>
-        <translation type="unfinished"/>
+        <translation>D3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="123"/>
         <source>D♯3</source>
-        <translation type="unfinished"/>
+        <translation>D♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="124"/>
         <source>E♭3</source>
-        <translation type="unfinished"/>
+        <translation>E♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="125"/>
         <source>E3</source>
-        <translation type="unfinished"/>
+        <translation>E3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="126"/>
         <source>E♯3</source>
-        <translation type="unfinished"/>
+        <translation>E♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="127"/>
         <source>F♭3</source>
-        <translation type="unfinished"/>
+        <translation>F♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="128"/>
         <source>F3</source>
-        <translation type="unfinished"/>
+        <translation>F3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="129"/>
         <source>F♯3</source>
-        <translation type="unfinished"/>
+        <translation>F♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="130"/>
         <source>G♭3</source>
-        <translation type="unfinished"/>
+        <translation>G♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="131"/>
         <source>G3</source>
-        <translation type="unfinished"/>
+        <translation>G3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="132"/>
         <source>G♯3</source>
-        <translation type="unfinished"/>
+        <translation>G♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="133"/>
         <source>A♭3</source>
-        <translation type="unfinished"/>
+        <translation>A♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="134"/>
         <source>A3</source>
-        <translation type="unfinished"/>
+        <translation>A3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="135"/>
         <source>A♯3</source>
-        <translation type="unfinished"/>
+        <translation>A♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="136"/>
         <source>B♭3</source>
-        <translation type="unfinished"/>
+        <translation>B♭3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="137"/>
         <source>B3</source>
-        <translation type="unfinished"/>
+        <translation>B3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="138"/>
         <source>B♯3</source>
-        <translation type="unfinished"/>
+        <translation>B♯3</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="140"/>
         <source>C♭4</source>
-        <translation type="unfinished"/>
+        <translation>C♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="141"/>
         <source>C4</source>
-        <translation type="unfinished"/>
+        <translation>C4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="142"/>
         <source>C♯4</source>
-        <translation type="unfinished"/>
+        <translation>C♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="143"/>
         <source>D♭4</source>
-        <translation type="unfinished"/>
+        <translation>D♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="144"/>
         <source>D4</source>
-        <translation type="unfinished"/>
+        <translation>D4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="145"/>
         <source>D♯4</source>
-        <translation type="unfinished"/>
+        <translation>D♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="146"/>
         <source>E♭4</source>
-        <translation type="unfinished"/>
+        <translation>E♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="147"/>
         <source>E4</source>
-        <translation type="unfinished"/>
+        <translation>E4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="148"/>
         <source>E♯4</source>
-        <translation type="unfinished"/>
+        <translation>E♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="149"/>
         <source>F♭4</source>
-        <translation type="unfinished"/>
+        <translation>F♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="150"/>
         <source>F4</source>
-        <translation type="unfinished"/>
+        <translation>F4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="151"/>
         <source>F♯4</source>
-        <translation type="unfinished"/>
+        <translation>F♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="152"/>
         <source>G♭4</source>
-        <translation type="unfinished"/>
+        <translation>G♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="153"/>
         <source>G4</source>
-        <translation type="unfinished"/>
+        <translation>G4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="154"/>
         <source>G♯4</source>
-        <translation type="unfinished"/>
+        <translation>G♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="155"/>
         <source>A♭4</source>
-        <translation type="unfinished"/>
+        <translation>A♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="156"/>
         <source>A4</source>
-        <translation type="unfinished"/>
+        <translation>A4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="157"/>
         <source>A♯4</source>
-        <translation type="unfinished"/>
+        <translation>A♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="158"/>
         <source>B♭4</source>
-        <translation type="unfinished"/>
+        <translation>B♭4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="159"/>
         <source>B4</source>
-        <translation type="unfinished"/>
+        <translation>B4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="160"/>
         <source>B♯4</source>
-        <translation type="unfinished"/>
+        <translation>B♯4</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="162"/>
         <source>C♭5</source>
-        <translation type="unfinished"/>
+        <translation>C♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="163"/>
         <source>C5</source>
-        <translation type="unfinished"/>
+        <translation>C5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="164"/>
         <source>C♯5</source>
-        <translation type="unfinished"/>
+        <translation>C♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="165"/>
         <source>D♭5</source>
-        <translation type="unfinished"/>
+        <translation>D♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="166"/>
         <source>D5</source>
-        <translation type="unfinished"/>
+        <translation>D5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="167"/>
         <source>D♯5</source>
-        <translation type="unfinished"/>
+        <translation>D♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="168"/>
         <source>E♭5</source>
-        <translation type="unfinished"/>
+        <translation>E♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="169"/>
         <source>E5</source>
-        <translation type="unfinished"/>
+        <translation>E5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="170"/>
         <source>E♯5</source>
-        <translation type="unfinished"/>
+        <translation>E♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="171"/>
         <source>F♭5</source>
-        <translation type="unfinished"/>
+        <translation>F♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="172"/>
         <source>F5</source>
-        <translation type="unfinished"/>
+        <translation>F5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="173"/>
         <source>F♯5</source>
-        <translation type="unfinished"/>
+        <translation>F♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="174"/>
         <source>G♭5</source>
-        <translation type="unfinished"/>
+        <translation>G♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="175"/>
         <source>G5</source>
-        <translation type="unfinished"/>
+        <translation>G5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="176"/>
         <source>G♯5</source>
-        <translation type="unfinished"/>
+        <translation>G♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="177"/>
         <source>A♭5</source>
-        <translation type="unfinished"/>
+        <translation>A♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="178"/>
         <source>A5</source>
-        <translation type="unfinished"/>
+        <translation>A5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="179"/>
         <source>A♯5</source>
-        <translation type="unfinished"/>
+        <translation>A♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="180"/>
         <source>B♭5</source>
-        <translation type="unfinished"/>
+        <translation>B♭5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="181"/>
         <source>B5</source>
-        <translation type="unfinished"/>
+        <translation>B5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="182"/>
         <source>B♯5</source>
-        <translation type="unfinished"/>
+        <translation>B♯5</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="184"/>
         <source>C♭6</source>
-        <translation type="unfinished"/>
+        <translation>C♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="185"/>
         <source>C6</source>
-        <translation type="unfinished"/>
+        <translation>C6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="186"/>
         <source>C♯6</source>
-        <translation type="unfinished"/>
+        <translation>C♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="187"/>
         <source>D♭6</source>
-        <translation type="unfinished"/>
+        <translation>D♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="188"/>
         <source>D6</source>
-        <translation type="unfinished"/>
+        <translation>D6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="189"/>
         <source>D♯6</source>
-        <translation type="unfinished"/>
+        <translation>D♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="190"/>
         <source>E♭6</source>
-        <translation type="unfinished"/>
+        <translation>E♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="191"/>
         <source>E6</source>
-        <translation type="unfinished"/>
+        <translation>E6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="192"/>
         <source>E♯6</source>
-        <translation type="unfinished"/>
+        <translation>E♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="193"/>
         <source>F♭6</source>
-        <translation type="unfinished"/>
+        <translation>F♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="194"/>
         <source>F6</source>
-        <translation type="unfinished"/>
+        <translation>F6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="195"/>
         <source>F♯6</source>
-        <translation type="unfinished"/>
+        <translation>F♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="196"/>
         <source>G♭6</source>
-        <translation type="unfinished"/>
+        <translation>G♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="197"/>
         <source>G6</source>
-        <translation type="unfinished"/>
+        <translation>G6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="198"/>
         <source>G♯6</source>
-        <translation type="unfinished"/>
+        <translation>G♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="199"/>
         <source>A♭6</source>
-        <translation type="unfinished"/>
+        <translation>A♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="200"/>
         <source>A6</source>
-        <translation type="unfinished"/>
+        <translation>A6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="201"/>
         <source>A♯6</source>
-        <translation type="unfinished"/>
+        <translation>A♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="202"/>
         <source>B♭6</source>
-        <translation type="unfinished"/>
+        <translation>B♭6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="203"/>
         <source>B6</source>
-        <translation type="unfinished"/>
+        <translation>B6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="204"/>
         <source>B♯6</source>
-        <translation type="unfinished"/>
+        <translation>B♯6</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="206"/>
         <source>C♭7</source>
-        <translation type="unfinished"/>
+        <translation>C♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="207"/>
@@ -13173,12 +13221,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="208"/>
         <source>C♯7</source>
-        <translation type="unfinished"/>
+        <translation>C♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="209"/>
         <source>D♭7</source>
-        <translation type="unfinished"/>
+        <translation>D♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="210"/>
@@ -13188,12 +13236,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="211"/>
         <source>D♯7</source>
-        <translation type="unfinished"/>
+        <translation>D♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="212"/>
         <source>E♭7</source>
-        <translation type="unfinished"/>
+        <translation>E♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="213"/>
@@ -13203,12 +13251,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="214"/>
         <source>E♯7</source>
-        <translation type="unfinished"/>
+        <translation>E♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="215"/>
         <source>F♭7</source>
-        <translation type="unfinished"/>
+        <translation>F♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="216"/>
@@ -13218,12 +13266,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="217"/>
         <source>F♯7</source>
-        <translation type="unfinished"/>
+        <translation>F♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="218"/>
         <source>G♭7</source>
-        <translation type="unfinished"/>
+        <translation>G♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="219"/>
@@ -13233,12 +13281,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="220"/>
         <source>G♯7</source>
-        <translation type="unfinished"/>
+        <translation>G♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="221"/>
         <source>A♭7</source>
-        <translation type="unfinished"/>
+        <translation>A♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="222"/>
@@ -13248,12 +13296,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="223"/>
         <source>A♯7</source>
-        <translation type="unfinished"/>
+        <translation>A♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="224"/>
         <source>B♭7</source>
-        <translation type="unfinished"/>
+        <translation>B♭7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="225"/>
@@ -13263,182 +13311,182 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="226"/>
         <source>B♯7</source>
-        <translation type="unfinished"/>
+        <translation>B♯7</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="228"/>
         <source>C♭8</source>
-        <translation type="unfinished"/>
+        <translation>C♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="229"/>
         <source>C8</source>
-        <translation type="unfinished"/>
+        <translation>C8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="230"/>
         <source>C♯8</source>
-        <translation type="unfinished"/>
+        <translation>C♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="231"/>
         <source>D♭8</source>
-        <translation type="unfinished"/>
+        <translation>D♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="232"/>
         <source>D8</source>
-        <translation type="unfinished"/>
+        <translation>D8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="233"/>
         <source>D♯8</source>
-        <translation type="unfinished"/>
+        <translation>D♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="234"/>
         <source>E♭8</source>
-        <translation type="unfinished"/>
+        <translation>E♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="235"/>
         <source>E8</source>
-        <translation type="unfinished"/>
+        <translation>E8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="236"/>
         <source>E♯8</source>
-        <translation type="unfinished"/>
+        <translation>E♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="237"/>
         <source>F♭8</source>
-        <translation type="unfinished"/>
+        <translation>F♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="238"/>
         <source>F8</source>
-        <translation type="unfinished"/>
+        <translation>F8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="239"/>
         <source>F♯8</source>
-        <translation type="unfinished"/>
+        <translation>F♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="240"/>
         <source>G♭8</source>
-        <translation type="unfinished"/>
+        <translation>G♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="241"/>
         <source>G8</source>
-        <translation type="unfinished"/>
+        <translation>G8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="242"/>
         <source>G♯8</source>
-        <translation type="unfinished"/>
+        <translation>G♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="243"/>
         <source>A♭8</source>
-        <translation type="unfinished"/>
+        <translation>A♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="244"/>
         <source>A8</source>
-        <translation type="unfinished"/>
+        <translation>A8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="245"/>
         <source>A♯8</source>
-        <translation type="unfinished"/>
+        <translation>A♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="246"/>
         <source>B♭8</source>
-        <translation type="unfinished"/>
+        <translation>B♭8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="247"/>
         <source>B8</source>
-        <translation type="unfinished"/>
+        <translation>B8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="248"/>
         <source>B♯8</source>
-        <translation type="unfinished"/>
+        <translation>B♯8</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="250"/>
         <source>C♭9</source>
-        <translation type="unfinished"/>
+        <translation>C♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="251"/>
         <source>C9</source>
-        <translation type="unfinished"/>
+        <translation>C9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="252"/>
         <source>C♯9</source>
-        <translation type="unfinished"/>
+        <translation>C♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="253"/>
         <source>D♭9</source>
-        <translation type="unfinished"/>
+        <translation>D♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="254"/>
         <source>D9</source>
-        <translation type="unfinished"/>
+        <translation>D9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="255"/>
         <source>D♯9</source>
-        <translation type="unfinished"/>
+        <translation>D♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="256"/>
         <source>E♭9</source>
-        <translation type="unfinished"/>
+        <translation>E♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="257"/>
         <source>E9</source>
-        <translation type="unfinished"/>
+        <translation>E9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="258"/>
         <source>E♯9</source>
-        <translation type="unfinished"/>
+        <translation>E♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="259"/>
         <source>F♭9</source>
-        <translation type="unfinished"/>
+        <translation>F♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="260"/>
         <source>F9</source>
-        <translation type="unfinished"/>
+        <translation>F9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="261"/>
         <source>F♯9</source>
-        <translation type="unfinished"/>
+        <translation>F♯9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="262"/>
         <source>G♭9</source>
-        <translation type="unfinished"/>
+        <translation>G♭9</translation>
     </message>
     <message>
         <location filename="../../muse/framework/global/utils.cpp" line="263"/>
         <source>G9</source>
-        <translation type="unfinished"/>
+        <translation>G9</translation>
     </message>
 </context>
 <context>
@@ -13447,17 +13495,17 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="134"/>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="167"/>
         <source>Loop tempo detected at %1 BPM. What would you like to do?</source>
-        <translation type="unfinished"/>
+        <translation>檢測到迴圈速度為每分鐘 %1 拍。您想做什麼？</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="138"/>
         <source>Match project tempo to loop</source>
-        <translation type="unfinished"/>
+        <translation>專案節奏與迴圈節奏相匹配</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="139"/>
         <source>Match loop to project tempo</source>
-        <translation type="unfinished"/>
+        <translation>迴圈節奏與專案節奏匹配</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="140"/>
@@ -13469,12 +13517,12 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="144"/>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="176"/>
         <source>Loop Tempo Detected</source>
-        <translation type="unfinished"/>
+        <translation>檢測到迴圈速度</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="171"/>
         <source>Stretch loop to project tempo</source>
-        <translation type="unfinished"/>
+        <translation>迴圈素材拉伸至匹配工程速度</translation>
     </message>
 </context>
 <context>
@@ -13497,7 +13545,7 @@ Abbreviation of decibels, used as a unit suffix</extracomment>
         <source>%1 %2</source>
         <comment>clip name template</comment>
         <extracomment>Name default name assigned to a clip on track import</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 %2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Export.cpp" line="134"/>
@@ -13534,7 +13582,9 @@ Error %1</source>
 is a not an audio file. 
 Audacity cannot open this type of file.</source>
         <extracomment>%1 is the name of the file</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 
+這不是音訊檔案。
+Audacity 無法開啟此類檔案。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
@@ -13545,7 +13595,7 @@ Audacity cannot open this type of file.</source>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
         <source>Importing %1…</source>
         <extracomment>%1 is the name of the file being imported</extracomment>
-        <translation type="unfinished"/>
+        <translation>正在匯入 %1……</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
@@ -13565,7 +13615,9 @@ Audacity cannot open audio CDs directly.
 Extract (rip) the CD tracks to an audio format that 
 Audacity can import, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是音訊 CD 曲目。
+Audacity 無法直接開啟音訊 CD。
+請將 CD 曲目提取（抓取）為 Audacity 能夠匯入的音訊格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="705"/>
@@ -13573,7 +13625,9 @@ Audacity can import, such as WAV or AIFF.</source>
 Audacity cannot open this file because it only contains links to other files. 
 You may be able to open it in a text editor and download the actual audio files.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一個播放列表檔案。
+Audacity 無法開啟此檔案，因為它僅包含指向其他檔案的連結。
+您可以嘗試用文本編輯器開啟它，並下載實際的音訊檔案。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="712"/>
@@ -13581,7 +13635,9 @@ You may be able to open it in a text editor and download the actual audio files.
 Audacity cannot open this type of file due to patent restrictions. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一個 Windows Media Audio 檔案。
+由於專利限制，Audacity 無法開啟此類檔案。
+您需要將其轉換為受支援的音訊格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="722"/>
@@ -13589,7 +13645,11 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Without the optional FFmpeg library, Audacity cannot open this type of file.
 Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一個高階音訊編碼檔案。
+
+如果沒有可選的 FFmpeg 庫，Audacity 將無法開啟此類檔案。
+
+否則，您需要將其轉換為支援的音訊格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="729"/>
@@ -13599,7 +13659,11 @@ Audacity cannot open this type of file due to the encryption.
 Try recording the file into Audacity, or burn it to audio CD then 
 extract the CD track to a supported audio format such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一個加密音訊檔案。
+此類檔案通常來自線上音樂商店。
+由於存在加密，Audacity 無法開啟該類型的檔案。
+您可以嘗試將該檔案錄製到 Audacity 中，或者將其燒錄為音訊 CD，
+然後再將 CD 曲目提取為 WAV 或 AIFF 等受支援的音訊格式。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="736"/>
@@ -13607,7 +13671,9 @@ extract the CD track to a supported audio format such as WAV or AIFF.</source>
 Audacity cannot open this proprietary format. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一個 RealPlayer 媒體檔案。
+Audacity 無法開啟這種專有格式。
+您需要將其轉換為受支援的音訊格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="744"/>
@@ -13616,7 +13682,9 @@ Audacity cannot open this type of file.
 Try converting it to an audio file such as WAV or AIFF and 
 then import it, or record it into Audacity.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是基於音符的檔案，而非音訊檔案。
+Audacity 無法開啟此類檔案。
+請嘗試將其轉換為 WAV 或 AIFF 等音訊檔案後再匯入，或者將其錄製到 Audacity 中。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="752"/>
@@ -13626,7 +13694,11 @@ If you think it might be an mp3 file, rename it to end with “.mp3”
 and try importing it again. Otherwise you need to convert it to a supported audio 
 format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是一個 Musepack 音訊檔案。
+Audacity 無法開啟此類檔案。
+如果您認為它可能是 MP3 檔案，請將其重新命名為以“.mp3”結尾，
+然後再次嘗試匯入。否則，您需要將其轉換為受支援的音訊格式，
+例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="760"/>
@@ -13634,7 +13706,9 @@ format, such as WAV or AIFF.</source>
 Audacity cannot open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是一個 Wavpack 音訊檔案。
+Audacity 無法開啟此類檔案。
+您需要將其轉換為受支援的音訊格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="768"/>
@@ -13642,7 +13716,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一個 Dolby Digital 音訊檔案。
+Audacity 目前無法開啟此類檔案。
+您需要將其轉換為受支援的音訊格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="776"/>
@@ -13650,7 +13726,9 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to convert it to a supported audio format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1” 是一個 Ogg Speex 音訊檔案。
+Audacity 目前無法開啟此類檔案。
+您需要將其轉換為受支援的音訊格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="789"/>
@@ -13658,12 +13736,14 @@ You need to convert it to a supported audio format, such as WAV or AIFF.</source
 Audacity cannot currently open this type of file. 
 You need to extract the audio to a supported format, such as WAV or AIFF.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>“%1”是一個影片檔案。
+Audacity 目前無法開啟此類檔案。
+您需要將音訊提取為受支援的格式，例如 WAV 或 AIFF。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="795"/>
         <source>File “%1” not found.</source>
-        <translation type="unfinished"/>
+        <translation>未找到檔案“%1”。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="810"/>
@@ -13671,7 +13751,9 @@ You need to extract the audio to a supported format, such as WAV or AIFF.</sourc
 
 %2For uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity 無法識別檔案“%1”的類型。
+
+%2 對於未壓縮檔案，也可以嘗試“檔案”&gt;“匯入”&gt;“原始資料”。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
@@ -13686,7 +13768,10 @@ Importers supposedly supporting such files are:
 %2,
 but none of them understood this file format.</source>
         <extracomment>%s will be the filename</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audacity 識別出了檔案“%1”的類型。
+理論上支援此類檔案的匯入器包括：
+%2，
+但它們均無法識別該檔案格式。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ImportUtils.h" line="42"/>
@@ -13954,30 +14039,30 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="699"/>
         <source>FFmpeg : ERROR - Can’t determine format description for file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：錯誤 - 無法確定檔案“%1”的格式描述。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="707"/>
         <source>FFmpeg : ERROR - Can’t allocate output format context.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：錯誤 - 無法分配輸出格式上下文。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="718"/>
         <source>FFmpeg : ERROR - Can’t add audio stream to output file “%1”.</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：錯誤 - 無法向輸出檔案“%1”新增音訊串流。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="745"/>
         <source>FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：錯誤 - 無法開啟輸出檔案“%1”進行寫入。錯誤程式碼為 %2。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="780"/>
         <source>FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.</source>
         <extracomment>%1 is the file path, %2 is the error code</extracomment>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：錯誤 - 無法將檔案頭寫入輸出檔案“%1”。錯誤程式碼為 %2。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1001"/>
@@ -14003,17 +14088,19 @@ Support for this codec is probably not compiled in.</source>
 
 %3</source>
         <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法開啟音訊編解碼器“%1” (0x%2)
+
+%3</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1113"/>
         <source>FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg：錯誤 - 無法分配緩衝區以從音訊 FIFO 讀取資料。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1142"/>
         <source>FFmpeg : ERROR - Couldn’t write audio frame to output file.</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg : 錯誤 - 無法向輸出檔案寫入音訊影格。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1173"/>
@@ -14049,7 +14136,8 @@ Support for this codec is probably not compiled in.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1410"/>
         <source>Properly configured FFmpeg is required to proceed.
 You can configure it at Preferences &gt; General.</source>
-        <translation type="unfinished"/>
+        <translation>需要正確配置 FFmpeg 才能繼續。
+您可以在“首選項” &gt; “常規”中進行配置。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1418"/>
@@ -14195,7 +14283,7 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="355"/>
         <source>FLAC export couldn’t open %1</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>FLAC 匯出無法開啟 %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="365"/>
@@ -14394,7 +14482,8 @@ Status: %1</source>
         <source>You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.
 Please download the latest version of ‘LAME for Audacity’.</source>
         <extracomment>%1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version</extracomment>
-        <translation type="unfinished"/>
+        <translation>您正在連結到 lame_enc.dll v%1.%2。該版本與 Audacity %3.%4.%5 不相容。
+請下載最新版本的“LAME for Audacity”。</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1284"/>
@@ -14518,7 +14607,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="284"/>
         <source>%1 kbit/s</source>
         <extracomment>kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 kbit/s</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
@@ -14872,7 +14961,8 @@ Audacity 做不到，已中止匯出。</translation>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
         <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>寫入 %1 檔案時出錯（磁碟已滿？）。
+Libsndfile 提示：“%2”</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ImportPCM.cpp" line="84"/>
@@ -14949,7 +15039,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="258"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>解碼 WavPack 檔案時遇到 %1 個錯誤！</numerusform></translation>
     </message>
 </context>
 <context>
@@ -14957,17 +15047,17 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../src/importexport/labels/internal/labelsconfiguration.cpp" line="23"/>
         <source>Text file (*.txt)</source>
-        <translation type="unfinished"/>
+        <translation>文本檔案（*.txt）</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/internal/labelsconfiguration.cpp" line="24"/>
         <source>SubRip text file (*.srt)</source>
-        <translation type="unfinished"/>
+        <translation>SubRip 文本檔案 (*.srt)</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/internal/labelsconfiguration.cpp" line="25"/>
         <source>WebVTT file (*.vtt)</source>
-        <translation type="unfinished"/>
+        <translation>WebVTT 檔案 (*.vtt)</translation>
     </message>
 </context>
 <context>
@@ -14980,62 +15070,62 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="21"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="23"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="28"/>
         <source>Paste and overlap</source>
-        <translation type="unfinished"/>
+        <translation>貼上並重疊</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="30"/>
         <source>Paste and make room on this track</source>
-        <translation type="unfinished"/>
+        <translation>貼上並騰出此軌道空間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="32"/>
         <source>Paste and make room on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>貼上並騰出所有軌道空間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="37"/>
         <source>Delete and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>刪除並保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="39"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="41"/>
         <source>Delete and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
         <source>Rename label</source>
-        <translation type="unfinished"/>
+        <translation>重新命名標籤</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="51"/>
         <source>Cut and…</source>
-        <translation type="unfinished"/>
+        <translation>剪下並...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="52"/>
         <source>Paste and…</source>
-        <translation type="unfinished"/>
+        <translation>貼上並…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="53"/>
         <source>Delete and…</source>
-        <translation type="unfinished"/>
+        <translation>刪除並...</translation>
     </message>
 </context>
 <context>
@@ -15322,7 +15412,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="146"/>
         <source>Rename</source>
-        <translation type="unfinished"/>
+        <translation>重新命名</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="154"/>
@@ -15407,7 +15497,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="55"/>
         <source>Status</source>
-        <translation type="unfinished"/>
+        <translation>狀態</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="71"/>
@@ -15585,7 +15675,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="48"/>
         <source>Audio files</source>
-        <translation type="unfinished"/>
+        <translation>音訊檔案</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/runonfileslauncher.cpp" line="56"/>
@@ -15811,12 +15901,12 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="70"/>
         <source>tag</source>
-        <translation type="unfinished"/>
+        <translation>標籤</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="72"/>
         <source>value</source>
-        <translation type="unfinished"/>
+        <translation>值</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="119"/>
@@ -15833,42 +15923,42 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="164"/>
         <source>Error saving template</source>
-        <translation type="unfinished"/>
+        <translation>儲存模板時出錯</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="165"/>
         <source>Unable to save metadata template into given file.</source>
-        <translation type="unfinished"/>
+        <translation>無法將後設資料模板儲存到指定檔案中。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="67"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="37"/>
         <source>TITLE</source>
-        <translation type="unfinished"/>
+        <translation>標題</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="68"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="38"/>
         <source>ARTIST</source>
-        <translation type="unfinished"/>
+        <translation>藝術家</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="69"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="39"/>
         <source>ALBUM</source>
-        <translation type="unfinished"/>
+        <translation>專輯</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="70"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="40"/>
         <source>TRACKNUMBER</source>
-        <translation type="unfinished"/>
+        <translation>曲目編號</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="71"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="41"/>
         <source>YEAR</source>
-        <translation type="unfinished"/>
+        <translation>年代</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="72"/>
@@ -15880,39 +15970,39 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation type="unfinished"/>
+        <translation>註釋</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="131"/>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="170"/>
         <source>Error loading template</source>
-        <translation type="unfinished"/>
+        <translation>載入模板時出錯</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
         <source>Unable to load metadata template from given file.</source>
-        <translation type="unfinished"/>
+        <translation>無法從給定檔案載入後設資料模板。</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="99"/>
         <source>Artist name</source>
-        <translation type="unfinished"/>
+        <translation>藝術家姓名</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="100"/>
         <source>Track title</source>
-        <translation type="unfinished"/>
+        <translation>曲目標題</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="101"/>
         <source>Album title</source>
-        <translation type="unfinished"/>
+        <translation>專輯名稱</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="102"/>
         <source>Track number</source>
-        <translation type="unfinished"/>
+        <translation>曲目編號</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="103"/>
@@ -15943,14 +16033,18 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
 
 Error: %2</source>
         <extracomment>%1 is the module name, %2 is the system error message</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法載入“%1”模組。
+
+錯誤：%2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="126"/>
         <source>The module “%1” does not provide a version string.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>模組“%1”未提供版本字串。
+
+它將不會被載入。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="137"/>
@@ -15958,19 +16052,23 @@ It will not be loaded.</source>
 
 It will not be loaded.</source>
         <extracomment>%1 is the module name, %2 is the Audacity version string the module targets</extracomment>
-        <translation type="unfinished"/>
+        <translation>模組“%1”與 Audacity 版本“%2”匹配。
+
+它將不會被載入。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="160"/>
         <source>The module “%1” failed to initialize.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>模組“%1”初始化失敗。
+
+它將不會被載入。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="320"/>
         <source>Module “%1” found.</source>
-        <translation type="unfinished"/>
+        <translation>已找到模組“%1”。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="321"/>
@@ -16006,7 +16104,9 @@ Only use modules from trusted sources</source>
         <source>The module “%1” does not provide any of the required functions.
 
 It will not be loaded.</source>
-        <translation type="unfinished"/>
+        <translation>模組“%1”未提供任何所需功能。
+
+它將不會被載入。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="414"/>
@@ -16047,37 +16147,37 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="29"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="31"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="36"/>
         <source>Delete and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>刪除並保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="38"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="40"/>
         <source>Delete and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="48"/>
         <source>Cut and…</source>
-        <translation type="unfinished"/>
+        <translation>剪下並...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="49"/>
         <source>Delete and…</source>
-        <translation type="unfinished"/>
+        <translation>刪除並...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="53"/>
@@ -16091,12 +16191,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="34"/>
         <source>Multiinstances</source>
-        <translation type="unfinished"/>
+        <translation>多例項</translation>
     </message>
     <message>
         <location filename="../../muse/framework/multiwindows/internal/multiwindowscommandsregister.cpp" line="35"/>
         <source>Show multiwindows info</source>
-        <translation type="unfinished"/>
+        <translation>顯示多視窗資訊</translation>
     </message>
 </context>
 <context>
@@ -16104,92 +16204,92 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="33"/>
         <source>Escape</source>
-        <translation type="unfinished"/>
+        <translation>Escape</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="34"/>
         <source>Navigate escape</source>
-        <translation type="unfinished"/>
+        <translation>導航退出</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="41"/>
         <source>Next section</source>
-        <translation type="unfinished"/>
+        <translation>下一節</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="42"/>
         <source>Navigate next section</source>
-        <translation type="unfinished"/>
+        <translation>導航至下一節</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="49"/>
         <source>Previous section</source>
-        <translation type="unfinished"/>
+        <translation>上一節</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="50"/>
         <source>Navigate previous section</source>
-        <translation type="unfinished"/>
+        <translation>導航至上一節</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="57"/>
         <source>Next panel</source>
-        <translation type="unfinished"/>
+        <translation>下一個面板</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="58"/>
         <source>Navigate next panel</source>
-        <translation type="unfinished"/>
+        <translation>導航至下一個面板</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="65"/>
         <source>Previous panel</source>
-        <translation type="unfinished"/>
+        <translation>上一個面板</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="66"/>
         <source>Navigate previous panel</source>
-        <translation type="unfinished"/>
+        <translation>導航至上一個面板</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="73"/>
         <source>Next tab</source>
-        <translation type="unfinished"/>
+        <translation>下一個標籤頁</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="74"/>
         <source>Navigate next tab</source>
-        <translation type="unfinished"/>
+        <translation>導航至下一個標籤頁</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="81"/>
         <source>Previous tab</source>
-        <translation type="unfinished"/>
+        <translation>上一個標籤頁</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="82"/>
         <source>Navigate previous tab</source>
-        <translation type="unfinished"/>
+        <translation>導航至上一個標籤頁</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="89"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation>右</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="90"/>
         <source>Navigate right</source>
-        <translation type="unfinished"/>
+        <translation>向右導航</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="97"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation>左</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="98"/>
         <source>Navigate left</source>
-        <translation type="unfinished"/>
+        <translation>向左導航</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="105"/>
@@ -16199,67 +16299,67 @@ It will not be loaded.</source>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="106"/>
         <source>Navigate up</source>
-        <translation type="unfinished"/>
+        <translation>向上導航</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="113"/>
         <source>Down</source>
-        <translation type="unfinished"/>
+        <translation>向下</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="114"/>
         <source>Navigate down</source>
-        <translation type="unfinished"/>
+        <translation>向下導航</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="121"/>
         <source>First control</source>
-        <translation type="unfinished"/>
+        <translation>第一個控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="122"/>
         <source>Navigate first control</source>
-        <translation type="unfinished"/>
+        <translation>導航至第一個控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="129"/>
         <source>Last control</source>
-        <translation type="unfinished"/>
+        <translation>最後控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="130"/>
         <source>Navigate last control</source>
-        <translation type="unfinished"/>
+        <translation>導航至最後一個控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="137"/>
         <source>Next row control</source>
-        <translation type="unfinished"/>
+        <translation>下一行控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="138"/>
         <source>Navigate next row control</source>
-        <translation type="unfinished"/>
+        <translation>導航到下一行控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="145"/>
         <source>Previous row control</source>
-        <translation type="unfinished"/>
+        <translation>上一行控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="146"/>
         <source>Navigate previous row control</source>
-        <translation type="unfinished"/>
+        <translation>導航到上一行控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="153"/>
         <source>Trigger control</source>
-        <translation type="unfinished"/>
+        <translation>觸發控制</translation>
     </message>
     <message>
         <location filename="../../muse/framework/ui/internal/navigationcommandsregister.cpp" line="154"/>
         <source>Navigate trigger control</source>
-        <translation type="unfinished"/>
+        <translation>導航到觸發控制</translation>
     </message>
 </context>
 <context>
@@ -16670,17 +16770,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="47"/>
         <source>Top bar (horizontal)</source>
-        <translation type="unfinished"/>
+        <translation>頂部欄（水平）</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="51"/>
         <source>Side bar (vertical)</source>
-        <translation type="unfinished"/>
+        <translation>側邊欄（垂直）</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="85"/>
         <source>Default</source>
-        <translation type="unfinished"/>
+        <translation>預設</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="89"/>
@@ -16710,27 +16810,27 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="162"/>
         <source>dB range</source>
-        <translation type="unfinished"/>
+        <translation>分貝範圍</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Low quality</source>
-        <translation type="unfinished"/>
+        <translation>低質量</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Medium quality</source>
-        <translation type="unfinished"/>
+        <translation>中等質量</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>High quality</source>
-        <translation type="unfinished"/>
+        <translation>高質量</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="19"/>
         <source>Best quality</source>
-        <translation type="unfinished"/>
+        <translation>最佳質量</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
@@ -16755,7 +16855,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml" line="44"/>
         <source>Time signature</source>
-        <translation type="unfinished"/>
+        <translation>拍號</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="39"/>
@@ -16771,7 +16871,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="66"/>
         <source>Moved pan dial</source>
-        <translation type="unfinished"/>
+        <translation>移動了聲相旋鈕</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="68"/>
@@ -16783,120 +16883,120 @@ It will not be loaded.</source>
         <location filename="../../src/playback/qml/Audacity/Playback/components/VerticalVolumeSlider.qml" line="79"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="135"/>
         <source>Playback volume</source>
-        <translation type="unfinished"/>
+        <translation>播放音量</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="27"/>
         <source>Playback meter</source>
-        <translation type="unfinished"/>
+        <translation>回放音頻表</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/panels/PlaybackMeterPanel.qml" line="63"/>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackLevel.qml" line="61"/>
         <source>Playback meter settings</source>
         <extracomment>Tooltip of the playback meter settings button</extracomment>
-        <translation type="unfinished"/>
+        <translation>回放計量表設定</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="24"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>音訊設定已經被更改。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="26"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>所選音訊設定無效。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="28"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>所選的音訊路由無效。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="30"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>沒有可用的音訊 API。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="32"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>沒有可用的 ASIO 裝置。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="34"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>無法停止活動的音訊串流。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="36"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>更改音訊設定時發生內部錯誤。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="138"/>
         <source>No playback device is available.</source>
-        <translation type="unfinished"/>
+        <translation>沒有可用的播放裝置。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="139"/>
         <source>“%1” is now used for playback.</source>
-        <translation type="unfinished"/>
+        <translation>“%1”現已用於播放。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="141"/>
         <source>Playback device changed</source>
-        <translation type="unfinished"/>
+        <translation>播放裝置已更改</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="146"/>
         <source>No recording device is available.</source>
-        <translation type="unfinished"/>
+        <translation>沒有可用的錄音裝置。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="147"/>
         <source>“%1” is now used for recording.</source>
-        <translation type="unfinished"/>
+        <translation>現在使用“%1”進行錄製。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="149"/>
         <source>Recording device changed</source>
-        <translation type="unfinished"/>
+        <translation>錄音裝置已更改</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="988"/>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1013"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>無法恢復之前的音訊狀態。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="989"/>
         <source>Unable to rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation>無法重新掃描音訊裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="998"/>
         <source>The audio stream could not be restored after rescanning audio devices.</source>
-        <translation type="unfinished"/>
+        <translation>重新掃描音訊裝置後，無法恢復音訊串流。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1000"/>
         <source>Audio devices</source>
-        <translation type="unfinished"/>
+        <translation>音訊裝置</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1014"/>
         <source>Unable to change audio settings</source>
-        <translation type="unfinished"/>
+        <translation>無法更改音訊設定</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1023"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>更改音訊設定後，無法恢復音訊串流。</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="1025"/>
         <source>Audio settings</source>
-        <translation type="unfinished"/>
+        <translation>音訊設定</translation>
     </message>
 </context>
 <context>
@@ -16904,12 +17004,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="64"/>
         <source>Loop in</source>
-        <translation type="unfinished"/>
+        <translation>迴圈起點</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="101"/>
         <source>Loop out</source>
-        <translation type="unfinished"/>
+        <translation>迴圈終點</translation>
     </message>
 </context>
 <context>
@@ -16917,7 +17017,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="72"/>
         <source>Preference</source>
-        <translation type="unfinished"/>
+        <translation>首選項</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="74"/>
@@ -16934,60 +17034,60 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AdvancedTopSection.qml" line="69"/>
         <source>Search advanced</source>
         <extracomment>Search advanced preferences</extracomment>
-        <translation type="unfinished"/>
+        <translation>高階搜尋</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="16"/>
         <source>Asymmetric stereo heights</source>
-        <translation type="unfinished"/>
+        <translation>非對稱立體高度</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="55"/>
         <source>Dragging on the center line may adjust the height of the channel:</source>
-        <translation type="unfinished"/>
+        <translation>拖動中心線可以調整通道高度：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="61"/>
         <source>Always</source>
-        <translation type="unfinished"/>
+        <translation>總是</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="88"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="76"/>
         <source>Depending on workspace</source>
-        <translation type="unfinished"/>
+        <translation>根據工作空間而定</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="114"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="102"/>
         <source>Never</source>
-        <translation type="unfinished"/>
+        <translation>從不</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="31"/>
         <source>Inputs and outputs</source>
-        <translation type="unfinished"/>
+        <translation>輸入和輸出</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="49"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation>主機</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="32"/>
         <source>Buffer and latency</source>
-        <translation type="unfinished"/>
+        <translation>緩衝區和延遲</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="45"/>
         <source>Buffer length</source>
-        <translation type="unfinished"/>
+        <translation>緩衝區長度</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="71"/>
         <source>Latency compensation</source>
-        <translation type="unfinished"/>
+        <translation>延遲補償</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="105"/>
@@ -16997,12 +17097,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="38"/>
         <source>Clip style</source>
-        <translation type="unfinished"/>
+        <translation>片段樣式</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="69"/>
         <source>Colorful</source>
-        <translation type="unfinished"/>
+        <translation>多彩</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="100"/>
@@ -17012,62 +17112,62 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="88"/>
         <source>Playback device</source>
-        <translation type="unfinished"/>
+        <translation>播放裝置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="66"/>
         <source>Recording device</source>
-        <translation type="unfinished"/>
+        <translation>錄製裝置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="105"/>
         <source>Recording channels</source>
-        <translation type="unfinished"/>
+        <translation>錄製聲道</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="15"/>
         <source>Move cursor along the timeline during playback</source>
-        <translation type="unfinished"/>
+        <translation>在播放過程中沿時間軸移動游標</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="23"/>
         <source>Short skip</source>
-        <translation type="unfinished"/>
+        <translation>短跳</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="43"/>
         <source>Long skip</source>
-        <translation type="unfinished"/>
+        <translation>長跳</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectBehaviorSection.qml" line="14"/>
         <source>Effect behavior</source>
-        <translation type="unfinished"/>
+        <translation>效果行為</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectBehaviorSection.qml" line="29"/>
         <source>Apply effects to all audio when no selection is made</source>
-        <translation type="unfinished"/>
+        <translation>未進行任何選擇時，對所有音訊套用效果</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="14"/>
         <source>Effect menu organization</source>
-        <translation type="unfinished"/>
+        <translation>效果選單組織</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="34"/>
         <source>Group effects</source>
-        <translation type="unfinished"/>
+        <translation>群組效果</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="47"/>
         <source>Display effects in one flat list</source>
-        <translation type="unfinished"/>
+        <translation>在一個扁平列表中顯示效果</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="26"/>
         <source>FFmpeg library version:</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg 庫版本：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="42"/>
@@ -17077,122 +17177,122 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FFmpegLibrarySection.qml" line="44"/>
         <source>FFmpeg library path</source>
-        <translation type="unfinished"/>
+        <translation>FFmpeg 庫路徑</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
         <source>Free space</source>
-        <translation type="unfinished"/>
+        <translation>可用空間</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="52"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation>語言</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="67"/>
         <source>Language %1</source>
-        <translation type="unfinished"/>
+        <translation>語言 %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="80"/>
         <source>Restart required</source>
-        <translation type="unfinished"/>
+        <translation>需要重啟</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
         <source>Meter dB range</source>
-        <translation type="unfinished"/>
+        <translation>音頻表分貝範圍</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="27"/>
         <source>dB range</source>
-        <translation type="unfinished"/>
+        <translation>分貝範圍</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="11"/>
         <source>Mono &amp; stereo conversion</source>
-        <translation type="unfinished"/>
+        <translation>單聲道和立體聲轉換</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="26"/>
         <source>Always convert to mono without prompt</source>
-        <translation type="unfinished"/>
+        <translation>無需提示始終轉換為單聲道</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="44"/>
         <source>Number format</source>
-        <translation type="unfinished"/>
+        <translation>數字格式</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="58"/>
         <source>Number format %1</source>
-        <translation type="unfinished"/>
+        <translation>數字格式 %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NumberFormatSection.qml" line="70"/>
         <source>Example: 1,000,000.99</source>
-        <translation type="unfinished"/>
+        <translation>例如：1,000,000.99</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PasteBehaviorSection.qml" line="58"/>
         <source>Always paste audio as a new clip</source>
-        <translation type="unfinished"/>
+        <translation>始終將音訊貼上為新片段</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="14"/>
         <source>Playback performance</source>
-        <translation type="unfinished"/>
+        <translation>回放效能</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="24"/>
         <source>Playback quality</source>
-        <translation type="unfinished"/>
+        <translation>回放質量</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="40"/>
         <source>Dithering</source>
-        <translation type="unfinished"/>
+        <translation>抖動</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="14"/>
         <source>Recording behavior</source>
-        <translation type="unfinished"/>
+        <translation>錄製行為</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="27"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
-        <translation type="unfinished"/>
+        <translation>開啟輸入監聽（錄音時可以聽到自己的聲音）</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="45"/>
         <source>Show mic metering when not recording</source>
-        <translation type="unfinished"/>
+        <translation>未錄音時顯示麥克風音頻表</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="32"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation>取樣率</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="46"/>
         <source>Default sample rate</source>
-        <translation type="unfinished"/>
+        <translation>預設取樣率</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="66"/>
         <source>Default sample format</source>
-        <translation type="unfinished"/>
+        <translation>預設取樣格式</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="89"/>
         <source>Custom sample rate</source>
-        <translation type="unfinished"/>
+        <translation>自訂取樣率</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="110"/>
         <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
-        <translation type="unfinished"/>
+        <translation>預設的取樣率和格式僅適用於新增立的軌道。對於已存在的軌道進行錄製時，則會使用該軌道自身的取樣率和格式。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="17"/>
@@ -17202,27 +17302,27 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TemporaryFilesSection.qml" line="46"/>
         <source>Temporary files location</source>
-        <translation type="unfinished"/>
+        <translation>暫存檔案位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TemporaryFilesSection.qml" line="57"/>
         <source>Choose temporary files location</source>
-        <translation type="unfinished"/>
+        <translation>選擇暫存檔案位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/TemporaryFilesSection.qml" line="73"/>
         <source>Folder in which unsaved projects and other data are kept</source>
-        <translation type="unfinished"/>
+        <translation>用於存放未儲存專案及其他資料的資料夾</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemeAdditionalOptionsSection.qml" line="40"/>
         <source>Invert project</source>
-        <translation type="unfinished"/>
+        <translation>轉化專案</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
         <source>High-contrast theme</source>
-        <translation type="unfinished"/>
+        <translation>高對比度主題</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
@@ -17232,53 +17332,53 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="80"/>
         <source>Follow system theme</source>
-        <translation type="unfinished"/>
+        <translation>跟隨系統主題</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="95"/>
         <source>Enable high-contrast</source>
-        <translation type="unfinished"/>
+        <translation>啟用高對比度</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="34"/>
         <source>UI colors</source>
-        <translation type="unfinished"/>
+        <translation>UI 顏色</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
         <source>Accent color</source>
-        <translation type="unfinished"/>
+        <translation>強調色</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="55"/>
         <source>Text and icons</source>
-        <translation type="unfinished"/>
+        <translation>文本和圖示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="60"/>
         <source>Disabled text</source>
-        <translation type="unfinished"/>
+        <translation>停用文本</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="65"/>
         <source>Border color</source>
-        <translation type="unfinished"/>
+        <translation>邊框顏色</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="199"/>
         <source>Appearance</source>
-        <translation type="unfinished"/>
+        <translation>外觀</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="44"/>
         <source>Font face</source>
-        <translation type="unfinished"/>
+        <translation>字型樣式</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="59"/>
         <source>Body text size</source>
-        <translation type="unfinished"/>
+        <translation>正文字型大小</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PreferencesDialog.qml" line="31"/>
@@ -17294,13 +17394,13 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="130"/>
         <source>The selected path does not exist.</source>
-        <translation type="unfinished"/>
+        <translation>所選路徑不存在。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="139"/>
         <source>Please select a path that contains “%1”</source>
         <extracomment>%1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)</extracomment>
-        <translation type="unfinished"/>
+        <translation>請選擇包含“%1”的路徑。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="146"/>
@@ -17312,17 +17412,17 @@ It will not be loaded.</source>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="147"/>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="200"/>
         <source>Please restart the application for the changes to take effect.</source>
-        <translation type="unfinished"/>
+        <translation>請重啟應用程式以使更改生效。</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="154"/>
         <source>Installation found</source>
-        <translation type="unfinished"/>
+        <translation>已找到安裝程式</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="155"/>
         <source>Audacity already has detected a valid FFmpeg version. Do you want to choose another FFmpeg installation instead?</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 已檢測到有效的 FFmpeg 版本。您是否要選擇另一個 FFmpeg 安裝版本？</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="160"/>
@@ -17332,110 +17432,110 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="163"/>
         <source>Change FFmpeg</source>
-        <translation type="unfinished"/>
+        <translation>更改 FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="166"/>
         <source>FFmpeg has already been found</source>
-        <translation type="unfinished"/>
+        <translation>已找到 FFmpeg</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="189"/>
         <source>Locate %1</source>
-        <translation type="unfinished"/>
+        <translation>找到 %1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="44"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 （單聲道）錄製聲道</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="47"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 （立體聲）錄製聲道</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="55"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="39"/>
         <source>Audio settings are already being changed.</source>
-        <translation type="unfinished"/>
+        <translation>音訊設定已經被更改。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="57"/>
         <source>The selected audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>所選音訊設定無效。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="59"/>
         <source>The selected audio routing is invalid.</source>
-        <translation type="unfinished"/>
+        <translation>所選的音訊路由無效。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="61"/>
         <source>No usable audio API is available.</source>
-        <translation type="unfinished"/>
+        <translation>沒有可用的音訊 API。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="63"/>
         <source>No ASIO device is available.</source>
-        <translation type="unfinished"/>
+        <translation>沒有可用的 ASIO 裝置。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="65"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="43"/>
         <source>The active audio stream could not be stopped.</source>
-        <translation type="unfinished"/>
+        <translation>無法停止活動的音訊串流。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="67"/>
         <source>An internal error occurred while changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>更改音訊設定時發生內部錯誤。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="93"/>
         <source>System default: %1</source>
-        <translation type="unfinished"/>
+        <translation>系統預設：%1</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="161"/>
         <source>The audio stream could not be restored after changing the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>更改音訊設定後，無法恢復音訊串流。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="173"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="274"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="256"/>
         <source>The previous audio state could not be restored.</source>
-        <translation type="unfinished"/>
+        <translation>無法恢復之前的音訊狀態。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="174"/>
         <source>Unable to apply audio settings</source>
-        <translation type="unfinished"/>
+        <translation>無法套用音訊設定</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after closing the ASIO settings.</source>
-        <translation type="unfinished"/>
+        <translation>關閉 ASIO 設定後，無法恢復音訊串流。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="275"/>
         <source>Unable to open ASIO settings</source>
-        <translation type="unfinished"/>
+        <translation>無法開啟 ASIO 設定</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="522"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="535"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation>其它</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
-        <translation type="unfinished"/>
+        <translation>您的“%1”版本已是最新。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="91"/>
@@ -17451,7 +17551,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="204"/>
         <source>Temp directory update</source>
-        <translation type="unfinished"/>
+        <translation>暫存目錄更新</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="205"/>
@@ -17470,22 +17570,22 @@ It will not be loaded.</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="270"/>
         <source>Audio settings</source>
         <extracomment>Used as the title of the Audio settings preferences page and of related warning dialogs</extracomment>
-        <translation type="unfinished"/>
+        <translation>音訊設定</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="41"/>
         <source>The default audio settings are invalid.</source>
-        <translation type="unfinished"/>
+        <translation>預設音訊設定無效。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="48"/>
         <source>An internal error occurred while resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>重設音訊設定時發生內部錯誤。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="205"/>
         <source>Audio editing</source>
-        <translation type="unfinished"/>
+        <translation>音訊編輯</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="208"/>
@@ -17495,17 +17595,17 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="211"/>
         <source>Playback/Recording</source>
-        <translation type="unfinished"/>
+        <translation>回放/錄製</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="215"/>
         <source>Spectral display</source>
-        <translation type="unfinished"/>
+        <translation>頻譜顯示</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="219"/>
         <source>Music</source>
-        <translation type="unfinished"/>
+        <translation>音樂</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="223"/>
@@ -17520,57 +17620,57 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="232"/>
         <source>Plugins</source>
-        <translation type="unfinished"/>
+        <translation>外掛</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="258"/>
         <source>Unable to reset audio settings</source>
-        <translation type="unfinished"/>
+        <translation>無法重設音訊設定</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="265"/>
         <source>The audio stream could not be restored after resetting the audio settings.</source>
-        <translation type="unfinished"/>
+        <translation>重設音訊設定後，無法恢復音訊串流。</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
         <source>Recording lead-in time</source>
-        <translation type="unfinished"/>
+        <translation>錄製準備時間</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
         <source>Lead-in time before recording starts</source>
-        <translation type="unfinished"/>
+        <translation>錄製開始前的準備時間</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
         <source>Crossfade</source>
-        <translation type="unfinished"/>
+        <translation>交叉淡入淡出</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
         <source>Music imports</source>
-        <translation type="unfinished"/>
+        <translation>音樂匯入</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
         <source>Detect tempo in imported files:</source>
-        <translation type="unfinished"/>
+        <translation>檢測匯入檔案中的節奏：</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
         <source>When Audacity detects music in imported file</source>
-        <translation type="unfinished"/>
+        <translation>當 Audacity 檢測到匯入檔案中的音樂時</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
         <source>Ask me each time</source>
-        <translation type="unfinished"/>
+        <translation>每次都詢問我</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
         <source>Choose plugin location</source>
-        <translation type="unfinished"/>
+        <translation>選擇外掛位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="77"/>
@@ -17580,12 +17680,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="80"/>
         <source>Remove location</source>
-        <translation type="unfinished"/>
+        <translation>移除位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="100"/>
         <source>The directory does not exist</source>
-        <translation type="unfinished"/>
+        <translation>該目錄不存在</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="111"/>
@@ -17595,32 +17695,32 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
         <source>Custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>自訂 LV2 外掛位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="53"/>
         <source>Choose custom LV2 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>選擇自訂 LV2 外掛位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="87"/>
         <source>Custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>自訂 VST3 外掛位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="88"/>
         <source>Choose custom VST3 plugins location</source>
-        <translation type="unfinished"/>
+        <translation>選擇自訂 VST3 外掛位置</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="27"/>
         <source>Use device sample rate</source>
-        <translation type="unfinished"/>
+        <translation>使用裝置取樣率</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsioSection.qml" line="42"/>
         <source>Driver settings</source>
-        <translation type="unfinished"/>
+        <translation>驅動程式設定</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="14"/>
@@ -17630,7 +17730,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ExportBehaviorSection.qml" line="25"/>
         <source>Show ‘How would you like to export?’ dialog</source>
-        <translation type="unfinished"/>
+        <translation>顯示“您想如何匯出？”對話方塊</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="15"/>
@@ -17645,12 +17745,12 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="42"/>
         <source>Always save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>始終儲存到雲端</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SaveBehaviorSection.qml" line="55"/>
         <source>Always save to computer</source>
-        <translation type="unfinished"/>
+        <translation>始終儲存到計算機</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoundActivatedRecordingSection.qml" line="15"/>
@@ -17695,7 +17795,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="67"/>
         <source>Multi-view</source>
-        <translation type="unfinished"/>
+        <translation>多檢視</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/trackspreferencesmodel.cpp" line="75"/>
@@ -17733,7 +17833,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="22"/>
         <source>Enable spectral selection</source>
-        <translation type="unfinished"/>
+        <translation>啟用頻譜選取範圍</translation>
     </message>
 </context>
 <context>
@@ -17749,45 +17849,45 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="68"/>
         <source>Title</source>
-        <translation type="unfinished"/>
+        <translation>標題</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="70"/>
         <location filename="../../src/project/internal/audacityproject.cpp" line="16"/>
         <source>Untitled project</source>
-        <translation type="unfinished"/>
+        <translation>未命名專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="82"/>
         <source>Composer</source>
-        <translation type="unfinished"/>
+        <translation>作曲家</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="84"/>
         <source>Composer / arranger</source>
-        <translation type="unfinished"/>
+        <translation>作曲家/編曲家</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="108"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="110"/>
         <source>Subtitle</source>
-        <translation type="unfinished"/>
+        <translation>字幕</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="123"/>
         <source>Lyricist</source>
-        <translation type="unfinished"/>
+        <translation>歌詞</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="137"/>
         <source>Copyright</source>
         <extracomment>The caption of a field to specify copyright information</extracomment>
-        <translation type="unfinished"/>
+        <translation>版權所有</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="167"/>
         <source>Cloud audio files grid</source>
-        <translation type="unfinished"/>
+        <translation>雲端音訊檔案網格</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="273"/>
@@ -17800,22 +17900,22 @@ It will not be loaded.</source>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="366"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="217"/>
         <source>Project item menu</source>
-        <translation type="unfinished"/>
+        <translation>專案條目選單</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="471"/>
         <source>Unable to load online files</source>
-        <translation type="unfinished"/>
+        <translation>無法載入線上檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="491"/>
         <source>You don’t have any online files yet</source>
-        <translation type="unfinished"/>
+        <translation>您目前還沒有任何線上檔案。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="492"/>
         <source>Files will appear here when you save a file to the cloud, or publish a project</source>
-        <translation type="unfinished"/>
+        <translation>當您將檔案儲存到雲端或釋出專案時，檔案將顯示在此處。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="516"/>
@@ -17826,79 +17926,79 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="517"/>
         <source>Please sign in to view your online files</source>
-        <translation type="unfinished"/>
+        <translation>請登入檢視您的線上檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml" line="44"/>
         <source>Stop download</source>
-        <translation type="unfinished"/>
+        <translation>停止下載</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml" line="44"/>
         <source>Download project</source>
-        <translation type="unfinished"/>
+        <translation>下載專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="163"/>
         <source>Cloud projects grid</source>
-        <translation type="unfinished"/>
+        <translation>雲端專案網格</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="164"/>
         <source>Cloud projects list</source>
-        <translation type="unfinished"/>
+        <translation>雲端專案列表</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="186"/>
         <source>Unable to load online projects</source>
-        <translation type="unfinished"/>
+        <translation>無法載入線上專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="206"/>
         <source>You don’t have any online projects yet</source>
-        <translation type="unfinished"/>
+        <translation>你目前還沒有任何線上專案。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="207"/>
         <source>Projects will appear here when you publish a project</source>
-        <translation type="unfinished"/>
+        <translation>釋出專案後項目將顯示在此處</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="232"/>
         <source>Please sign in to view your online projects</source>
-        <translation type="unfinished"/>
+        <translation>請登入檢視您的線上專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="41"/>
         <source>Recent projects grid</source>
-        <translation type="unfinished"/>
+        <translation>最近專案網格</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="42"/>
         <source>Recent projects list</source>
-        <translation type="unfinished"/>
+        <translation>最近專案列表</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="34"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="149"/>
         <location filename="../../src/project/view/recentprojectsmodel.cpp" line="78"/>
         <source>New project</source>
-        <translation type="unfinished"/>
+        <translation>新增專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectPropertiesDialog.qml" line="112"/>
         <source>New property</source>
-        <translation type="unfinished"/>
+        <translation>新增屬性</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="86"/>
         <source>Projects grid</source>
-        <translation type="unfinished"/>
+        <translation>專案網格</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="81"/>
         <source>Projects list</source>
-        <translation type="unfinished"/>
+        <translation>專案列表</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="213"/>
@@ -17910,63 +18010,63 @@ It will not be loaded.</source>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="88"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="95"/>
         <source>Projects</source>
-        <translation type="unfinished"/>
+        <translation>專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="108"/>
         <source>Search recent projects</source>
-        <translation type="unfinished"/>
+        <translation>搜尋最近專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="143"/>
         <source>Projects tab bar</source>
-        <translation type="unfinished"/>
+        <translation>專案選項卡欄</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="154"/>
         <source>New &amp; recent</source>
-        <translation type="unfinished"/>
+        <translation>最新資訊</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="162"/>
         <source>Cloud projects</source>
-        <translation type="unfinished"/>
+        <translation>雲端專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="171"/>
         <source>Cloud audio files</source>
-        <translation type="unfinished"/>
+        <translation>雲端音訊檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="197"/>
         <source>View buttons</source>
-        <translation type="unfinished"/>
+        <translation>檢視按鈕</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="209"/>
         <source>Refresh</source>
-        <translation type="unfinished"/>
+        <translation>重新整理</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="223"/>
         <source>Grid view</source>
-        <translation type="unfinished"/>
+        <translation>網格檢視</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="228"/>
         <source>List view</source>
-        <translation type="unfinished"/>
+        <translation>列表檢視</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
         <source>Projects actions</source>
         <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
-        <translation type="unfinished"/>
+        <translation>專案操作</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="416"/>
         <source>Project manager (online)</source>
-        <translation type="unfinished"/>
+        <translation>專案管理器（線上）</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="435"/>
@@ -17976,32 +18076,32 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="447"/>
         <source>Open other…</source>
-        <translation type="unfinished"/>
+        <translation>開啟其他…</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="116"/>
         <source>All saved changes will now update to the cloud</source>
-        <translation type="unfinished"/>
+        <translation>所有已儲存的更改現在都會更新到雲端</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="158"/>
         <source>Publish your finished projects on Audio.com</source>
-        <translation type="unfinished"/>
+        <translation>將您完成的專案釋出到 Audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Create a portfolio to showcase your music</source>
-        <translation type="unfinished"/>
+        <translation>建立作品集來展示你的音樂</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Gain followers and receive project comments and ratings</source>
-        <translation type="unfinished"/>
+        <translation>獲得關注者，並接收專案評論和評分</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="182"/>
         <source>Share your projects and collaborate with other musicians</source>
-        <translation type="unfinished"/>
+        <translation>分享你的作品並與其他音樂家合作</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="215"/>
@@ -18011,27 +18111,27 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="243"/>
         <source>View project online</source>
-        <translation type="unfinished"/>
+        <translation>線上檢視專案</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/UploadProgressDialog.qml" line="48"/>
         <source>Saving online…</source>
-        <translation type="unfinished"/>
+        <translation>線上儲存…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="215"/>
         <source>Accent color</source>
-        <translation type="unfinished"/>
+        <translation>強調色</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="541"/>
         <source>Could not save project locally</source>
-        <translation type="unfinished"/>
+        <translation>無法將專案儲存到本地</translation>
     </message>
     <message>
         <location filename="../../src/au3wrap/internal/au3project.cpp" line="161"/>
         <source>Project loading failed</source>
-        <translation type="unfinished"/>
+        <translation>專案載入失敗</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="741"/>
@@ -18044,7 +18144,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/audacityproject.cpp" line="71"/>
         <location filename="../../src/project/internal/audacityproject.cpp" line="111"/>
         <source>Imported file “%1”?</source>
-        <translation type="unfinished"/>
+        <translation>匯入檔案“%1”？</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/audacityproject.cpp" line="77"/>
@@ -18059,7 +18159,7 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/audacityproject.cpp" line="103"/>
         <location filename="../../src/project/internal/audacityproject.cpp" line="135"/>
         <source>Imported multiple files</source>
-        <translation type="unfinished"/>
+        <translation>匯入多個檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="245"/>
@@ -18083,48 +18183,48 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="632"/>
         <source>Upload project to audio.com…</source>
-        <translation type="unfinished"/>
+        <translation>上傳專案到 audio.com…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="720"/>
         <source>Audacity project files</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 專案檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="721"/>
         <source>Audacity 3 files</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 3 檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="186"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="722"/>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="181"/>
         <source>Audacity 4 files</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 4 檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="564"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="570"/>
         <source>Cloud sync failed</source>
-        <translation type="unfinished"/>
+        <translation>雲同步失敗</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="598"/>
         <source>Project unavailable</source>
-        <translation type="unfinished"/>
+        <translation>專案不可用</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="607"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="613"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="761"/>
         <source>Access denied</source>
-        <translation type="unfinished"/>
+        <translation>拒絕存取</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="629"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="741"/>
         <source>Version conflict</source>
-        <translation type="unfinished"/>
+        <translation>版本衝突</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="642"/>
@@ -18141,24 +18241,25 @@ It will not be loaded.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
         <source>Project incomplete</source>
-        <translation type="unfinished"/>
+        <translation>專案未完成</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="778"/>
         <source>Network error</source>
-        <translation type="unfinished"/>
+        <translation>網路錯誤</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="609"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1072"/>
         <source>All saved changes will now update to the cloud.
 You can manage this file from your updated projects page on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>所有已儲存的更改現在都會更新到雲端。
+您可以在 audio.com 的“已更新專案”頁面管理此檔案。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="723"/>
         <source>Importable audio and media files</source>
-        <translation type="unfinished"/>
+        <translation>可匯入的音訊和媒體檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="737"/>
@@ -18170,52 +18271,52 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="769"/>
         <source>Audio files</source>
-        <translation type="unfinished"/>
+        <translation>音訊檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="770"/>
         <source>Video files</source>
-        <translation type="unfinished"/>
+        <translation>影片檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="771"/>
         <source>Game media files</source>
-        <translation type="unfinished"/>
+        <translation>遊戲媒體檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="772"/>
         <source>Streaming files</source>
-        <translation type="unfinished"/>
+        <translation>流媒體檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="773"/>
         <source>Animation and image files</source>
-        <translation type="unfinished"/>
+        <translation>動畫和影像檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="774"/>
         <source>Raw files</source>
-        <translation type="unfinished"/>
+        <translation>原始檔案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="803"/>
         <source>Do you want to save changes to the project before closing?</source>
-        <translation type="unfinished"/>
+        <translation>您是否要在關閉專案前儲存更改？</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="805"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
-        <translation type="unfinished"/>
+        <translation>在關閉專案“%1”之前，是否要儲存更改？</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="809"/>
         <source>Your changes will be lost if you don’t save them.</source>
-        <translation type="unfinished"/>
+        <translation>如果您不儲存，所做的更改將會丟失。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="816"/>
         <source>Unsaved changes</source>
-        <translation type="unfinished"/>
+        <translation>未儲存的更改</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="987"/>
@@ -18243,25 +18344,25 @@ Use the default location instead? It can be changed later in Preferences.</sourc
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1090"/>
         <source>Resuming sync to audio.com…</source>
-        <translation type="unfinished"/>
+        <translation>正在恢復與 audio.com 的同步…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1108"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1548"/>
         <source>Syncing project from cloud…</source>
-        <translation type="unfinished"/>
+        <translation>正在從雲端同步專案…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1270"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
-        <translation type="unfinished"/>
+        <translation>無法讀取檔案 %1</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1275"/>
         <source>An error occurred while reading this file.</source>
-        <translation type="unfinished"/>
+        <translation>讀取此檔案時發生錯誤。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="580"/>
@@ -18280,60 +18381,68 @@ Use the default location instead? It can be changed later in Preferences.</sourc
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="40"/>
         <source>Audacity exception occurred</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 發生異常</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="41"/>
         <source>An Audacity exception occurred while trying to open the project file:
 “%1”</source>
-        <translation type="unfinished"/>
+        <translation>嘗試開啟專案檔案時，Audacity 發生異常：
+“%1”</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="45"/>
         <source>Database error</source>
-        <translation type="unfinished"/>
+        <translation>資料庫錯誤</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="46"/>
         <source>An error occurred while trying to access the project database.
 Failed to load project: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>存取專案資料庫時發生錯誤。
+載入專案“%1”失敗。</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="52"/>
         <source>The file:
 “%1”
 Cannot be found or accessed at this location. If it’s stored on an external or cloud drive, please verify that the drive is connected and syncing properly.</source>
-        <translation type="unfinished"/>
+        <translation>檔案：
+“%1”
+無法在此位置找到或存取。如果該檔案儲存在外部驅動器或雲盤上，請確認驅動器已連線並正常同步。</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="57"/>
         <source>This file cannot be opened due to access restrictions</source>
-        <translation type="unfinished"/>
+        <translation>由於存取限制，無法開啟此檔案。</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="58"/>
         <source>To open this file:
 “%1”
 Please check the file’s properties and permissions, ensure it is not stored on a drive or folder with restricted access, or try running Audacity as an administrator.</source>
-        <translation type="unfinished"/>
+        <translation>要開啟此檔案：
+“%1”
+請檢查檔案的屬性和許可權，確保它沒有儲存在存取受限的驅動器或資料夾中，或者嘗試以管理員身份執行 Audacity。</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="63"/>
         <source>This file is write-protected and cannot be opened</source>
-        <translation type="unfinished"/>
+        <translation>此檔案已防寫，無法開啟。</translation>
     </message>
     <message>
         <location filename="../../src/project/projecterrors.cpp" line="65"/>
         <source>To open this file:
 “%1”
 Please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.</source>
-        <translation type="unfinished"/>
+        <translation>要開啟此檔案：
+“%1”
+請透過檢查檔案屬性、確保檔案未儲存在受防寫的驅動器或資料夾中，或者以管理員身份執行 Audacity 來移除防寫。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
         <source>Cloud project indicator</source>
-        <translation type="unfinished"/>
+        <translation>雲專案指標</translation>
     </message>
 </context>
 <context>
@@ -18454,7 +18563,7 @@ Directories Preferences.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="487"/>
         <source>Failed to open the project’s database</source>
-        <translation type="unfinished"/>
+        <translation>無法開啟專案的資料庫</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="547"/>
@@ -18513,7 +18622,9 @@ You will need to upgrade to open it.</source>
         <source>Failed to upgrade the project schema.
 
 File might be corrupted or read only.</source>
-        <translation type="unfinished"/>
+        <translation>無法升級專案架構。
+
+檔案可能已損壞或為唯讀。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="845"/>
@@ -18524,7 +18635,7 @@ File might be corrupted or read only.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="899"/>
         <source>Unable to add ‘inset’ function (can’t verify blockids)</source>
         <extracomment>An error message. Don't translate inset or blockids.</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法新增“inset”函式（無法驗證 blockid）</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="917"/>
@@ -18636,7 +18747,7 @@ The following command failed:
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1240"/>
         <source>Failed to copy the project history.</source>
-        <translation type="unfinished"/>
+        <translation>無法複製專案歷史記錄。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1273"/>
@@ -18672,7 +18783,7 @@ For tips on freeing up space, click the help button.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1749"/>
         <source>[Project %1] Audacity “%2”</source>
         <extracomment>%1 is the project number, %2 is the project name.</extracomment>
-        <translation type="unfinished"/>
+        <translation>[專案 %1] Audacity “%2”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1751"/>
@@ -18696,7 +18807,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1866"/>
         <source>Can’t open project file</source>
-        <translation type="unfinished"/>
+        <translation>無法開啟專案檔案</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1975"/>
@@ -18714,7 +18825,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2212"/>
         <source>The project file is read-only</source>
-        <translation type="unfinished"/>
+        <translation>專案檔案為唯讀。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2251"/>
@@ -18724,7 +18835,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2351"/>
         <source>The project’s database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="unfinished"/>
+        <translation>該專案的資料庫未能重新開啟，這可能是由於儲存裝置空間不足所致。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2367"/>
@@ -18816,27 +18927,27 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="117"/>
         <source>Would you also like to share your music on Audio.com?</source>
-        <translation type="unfinished"/>
+        <translation>您也想在 Audio.com 上分享您的音樂嗎？</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="126"/>
         <source>Share your project’s audio with millions of listeners on this free streaming platform</source>
-        <translation type="unfinished"/>
+        <translation>在這個免費的流媒體平臺上，與數百萬聽眾分享您專案的音訊。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="145"/>
         <source>You can change this setting in Preferences at any time.</source>
-        <translation type="unfinished"/>
+        <translation>您可隨時在“首選項設定”中更改此設定。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="165"/>
         <source>Remember my choice</source>
-        <translation type="unfinished"/>
+        <translation>記住我的選擇</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="11"/>
         <source>Syncing with audio.com</source>
-        <translation type="unfinished"/>
+        <translation>正在與 audio.com 同步</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
@@ -18849,7 +18960,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>匯出音訊</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="69"/>
@@ -18875,7 +18986,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
         <source>Export to computer</source>
-        <translation type="unfinished"/>
+        <translation>匯出到計算機</translation>
     </message>
 </context>
 <context>
@@ -18883,7 +18994,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/projectscene/view/historypanel/historypanelmodel.cpp" line="80"/>
         <source>File opened</source>
-        <translation type="unfinished"/>
+        <translation>檔案已開啟</translation>
     </message>
 </context>
 <context>
@@ -18891,12 +19002,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="48"/>
         <source>General project info</source>
-        <translation type="unfinished"/>
+        <translation>常規專案資訊</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/ProjectInfoPage.qml" line="67"/>
         <source>Additional project information</source>
-        <translation type="unfinished"/>
+        <translation>專案補充資訊</translation>
     </message>
 </context>
 <context>
@@ -18904,12 +19015,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="453"/>
         <source>Audacity 3 project</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 3 專案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="454"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
-        <translation type="unfinished"/>
+        <translation>您開啟的是一個 Audacity 3 專案。必須先將其轉換才能在 Audacity 4 中使用它。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="459"/>
@@ -18919,17 +19030,17 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="462"/>
         <source>Save as new project</source>
-        <translation type="unfinished"/>
+        <translation>另存為新專案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="465"/>
         <source>Legacy project</source>
-        <translation type="unfinished"/>
+        <translation>遺留專案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="490"/>
         <source>The project was saved as “%1”</source>
-        <translation type="unfinished"/>
+        <translation>專案已儲存為“%1”。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
@@ -18939,17 +19050,17 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="496"/>
         <source>Project saved</source>
-        <translation type="unfinished"/>
+        <translation>專案已儲存</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1134"/>
         <source>Time Track not supported</source>
-        <translation type="unfinished"/>
+        <translation>時間跟蹤功能不支援</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1135"/>
         <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
-        <translation type="unfinished"/>
+        <translation>該專案包含一個時間軌道，Audacity 4 尚不支援此功能，因此需要將其移除。這不會影響您原有的 Audacity 3 專案。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1139"/>
@@ -18962,28 +19073,28 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="51"/>
         <source>File path:</source>
-        <translation type="unfinished"/>
+        <translation>檔案路徑：</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="81"/>
         <source>Audacity version:</source>
-        <translation type="unfinished"/>
+        <translation>Audacity 版本：</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="90"/>
         <source>Revision:</source>
-        <translation type="unfinished"/>
+        <translation>修訂：</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/ProjectPropertiesFileInfoPanel.qml" line="104"/>
         <source>API-Level:</source>
-        <translation type="unfinished"/>
+        <translation>API 級別：</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="68"/>
         <source>Property</source>
         <extracomment>Placeholder text of an empty project property field</extracomment>
-        <translation type="unfinished"/>
+        <translation>屬性</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/Properties/PropertyItem.qml" line="88"/>
@@ -18993,7 +19104,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectPropertiesDialog.qml" line="34"/>
         <source>Project properties</source>
-        <translation type="unfinished"/>
+        <translation>專案屬性</translation>
     </message>
 </context>
 <context>
@@ -19011,12 +19122,12 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="89"/>
         <source>Save to cloud</source>
-        <translation type="unfinished"/>
+        <translation>儲存到雲端</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="87"/>
         <source>Save to the cloud (free)</source>
-        <translation type="unfinished"/>
+        <translation>儲存到雲端（免費）</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="104"/>
@@ -19026,7 +19137,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="105"/>
         <source>If you prefer to save your files on your computer, you can do that here.</source>
-        <translation type="unfinished"/>
+        <translation>如果您更喜歡將檔案儲存到電腦上，可以在這裡進行操作。</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="106"/>
@@ -19039,20 +19150,20 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/qml/Audacity/Project/AskLocationTypeDialog.qml" line="34"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>Save project</source>
-        <translation type="unfinished"/>
+        <translation>儲存專案</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="177"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>複製</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="180"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>選擇</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="218"/>
@@ -19070,12 +19181,12 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="508"/>
         <source>Publish changes online?</source>
-        <translation type="unfinished"/>
+        <translation>線上釋出更改？</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="509"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
-        <translation type="unfinished"/>
+        <translation>您儲存的更改將公開可見。我們還需要生成一個新的 MP3 檔案供公開播放。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="520"/>
@@ -19088,12 +19199,12 @@ Please try again and select an original name.</source>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="519"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="529"/>
         <source>Unable to connect to the cloud</source>
-        <translation type="unfinished"/>
+        <translation>無法連線到雲端</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
         <source>Unable to connect to Audio.com</source>
-        <translation type="unfinished"/>
+        <translation>無法連線到 Audio.com</translation>
     </message>
     <message>
         <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
@@ -19153,34 +19264,34 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="825"/>
         <source>Your audio could not be shared</source>
-        <translation type="unfinished"/>
+        <translation>您的音訊無法共享。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="833"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
-        <translation type="unfinished"/>
+        <translation>您的 audio.com 帳戶需要先進行驗證。請透過啟用郵件中的連結啟用您的帳戶。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="839"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
-        <translation type="unfinished"/>
+        <translation>Audio.com 返回未知錯誤程式碼：%1。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="842"/>
         <source>Audio.com returned an unknown error code.</source>
-        <translation type="unfinished"/>
+        <translation>Audio.com 返回了未知錯誤程式碼。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="844"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="851"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
-        <translation type="unfinished"/>
+        <translation>請稍後再試，或在 audio.com 上尋求此問題的幫助。</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="847"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
-        <translation type="unfinished"/>
+        <translation>無法連線到 audio.com。請檢查您的網路連線或稍後再試。</translation>
     </message>
 </context>
 <context>
@@ -19201,12 +19312,12 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="61"/>
         <source>Selection start</source>
-        <translation type="unfinished"/>
+        <translation>選擇開始</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="62"/>
         <source>Selection end</source>
-        <translation type="unfinished"/>
+        <translation>選擇結束</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="82"/>
@@ -19221,12 +19332,12 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/musehub/qml/Audacity/MuseHub/GetEffectsDialog.qml" line="15"/>
         <source>Get effects</source>
-        <translation type="unfinished"/>
+        <translation>取得效果</translation>
     </message>
     <message>
         <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="52"/>
         <source>Please wait…</source>
-        <translation type="unfinished"/>
+        <translation>請稍候...</translation>
     </message>
     <message>
         <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="68"/>
@@ -19254,17 +19365,17 @@ Please try again and select an original name.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="357"/>
         <source>Customize toolbar</source>
         <extracomment>Tooltip of the toolbar customization button</extracomment>
-        <translation type="unfinished"/>
+        <translation>自訂工具欄</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="44"/>
         <source>Playback toolbar</source>
-        <translation type="unfinished"/>
+        <translation>播放工具欄</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="164"/>
         <source>Playback position:</source>
-        <translation type="unfinished"/>
+        <translation>播放位置：</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="314"/>
@@ -19280,33 +19391,33 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="316"/>
         <source>Snap to</source>
-        <translation type="unfinished"/>
+        <translation>吸附到</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/PlaybackToolBar.qml" line="351"/>
         <source>Show/hide toolbar buttons</source>
-        <translation type="unfinished"/>
+        <translation>顯示/隱藏工具欄按鈕</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="21"/>
         <source>Workspace selection</source>
-        <translation type="unfinished"/>
+        <translation>工作區選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml" line="60"/>
         <source>Workspace</source>
-        <translation type="unfinished"/>
+        <translation>工作區</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="15"/>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="433"/>
         <source>New label track</source>
-        <translation type="unfinished"/>
+        <translation>新增標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="66"/>
         <source>Label track name</source>
-        <translation type="unfinished"/>
+        <translation>標籤軌道名稱</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="112"/>
@@ -19316,7 +19427,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml" line="15"/>
         <source>Label editor</source>
-        <translation type="unfinished"/>
+        <translation>標籤編輯器</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="58"/>
@@ -19345,7 +19456,7 @@ Please try again and select an original name.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="127"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/LabelTrackItem.qml" line="20"/>
         <source>Add label</source>
-        <translation type="unfinished"/>
+        <translation>新增標籤</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="33"/>
@@ -19355,47 +19466,47 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="41"/>
         <source>Optimize for voice</source>
-        <translation type="unfinished"/>
+        <translation>最佳化語音</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml" line="17"/>
         <source>Pitch and speed</source>
-        <translation type="unfinished"/>
+        <translation>音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="46"/>
         <source>Clip pitch</source>
-        <translation type="unfinished"/>
+        <translation>片段音高</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="61"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation>半音</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="109"/>
         <source>Cents</source>
-        <translation type="unfinished"/>
+        <translation>音分</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml" line="38"/>
         <source>Clip speed</source>
-        <translation type="unfinished"/>
+        <translation>片段速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml" line="48"/>
         <source>Speed</source>
-        <translation type="unfinished"/>
+        <translation>速度</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="45"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation>單聲道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="51"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation>立體聲</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="57"/>
@@ -19406,13 +19517,13 @@ Please try again and select an original name.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all master effects</source>
-        <translation type="unfinished"/>
+        <translation>切換所有主效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="65"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="66"/>
         <source>Toggle all effects</source>
-        <translation type="unfinished"/>
+        <translation>切換所有效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
@@ -19423,7 +19534,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="134"/>
         <source>Add master effect</source>
-        <translation type="unfinished"/>
+        <translation>新增主效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="162"/>
@@ -19433,7 +19544,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="163"/>
         <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
-        <translation type="unfinished"/>
+        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;觀看影片&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="63"/>
@@ -19444,13 +19555,13 @@ Please try again and select an original name.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="91"/>
         <source>Close real-time effects panel</source>
         <extracomment>Tooltip of the button that closes the panel</extracomment>
-        <translation type="unfinished"/>
+        <translation>關閉即時效果面板</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="121"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="149"/>
         <source>Add track</source>
-        <translation type="unfinished"/>
+        <translation>新增軌道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="129"/>
@@ -19466,7 +19577,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="80"/>
         <source>Track volume</source>
-        <translation type="unfinished"/>
+        <translation>軌道音量</translation>
     </message>
     <message>
         <location filename="../../src/musehub/qml/Audacity/MuseHub/internal/GetEffectsContent.qml" line="17"/>
@@ -19477,7 +19588,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="105"/>
         <source>Opens effects panel</source>
-        <translation type="unfinished"/>
+        <translation>開啟效果面板</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="251"/>
@@ -19494,7 +19605,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/playbacktoolbarcustomisemodel.cpp" line="227"/>
         <source>Separator line</source>
-        <translation type="unfinished"/>
+        <translation>分離線</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="50"/>
@@ -19539,7 +19650,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="59"/>
         <source>Enable triplets</source>
-        <translation type="unfinished"/>
+        <translation>啟用三元組</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="196"/>
@@ -19569,12 +19680,12 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="203"/>
         <source>Seconds &amp; samples</source>
-        <translation type="unfinished"/>
+        <translation>秒和取樣</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="209"/>
         <source>Video frames (24 fps)</source>
-        <translation type="unfinished"/>
+        <translation>影片影格（24 影格/秒）</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="210"/>
@@ -19619,74 +19730,74 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="78"/>
         <source>Start time</source>
-        <translation type="unfinished"/>
+        <translation>開始時間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="90"/>
         <source>End time</source>
-        <translation type="unfinished"/>
+        <translation>結束時間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="101"/>
         <source>Low frequency</source>
-        <translation type="unfinished"/>
+        <translation>低頻</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="113"/>
         <source>High frequency</source>
-        <translation type="unfinished"/>
+        <translation>高頻</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmenumodel.cpp" line="34"/>
         <source>Remove effect</source>
-        <translation type="unfinished"/>
+        <translation>移除效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/ProjectToolBar.qml" line="16"/>
         <source>Audio setup and sharing</source>
-        <translation type="unfinished"/>
+        <translation>音訊設定與共享</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml" line="14"/>
         <source>Undo and redo</source>
-        <translation type="unfinished"/>
+        <translation>復原與重做</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="171"/>
         <source>Clip: %1</source>
-        <translation type="unfinished"/>
+        <translation>片段：%1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="739"/>
         <source>Clip name: %1</source>
-        <translation type="unfinished"/>
+        <translation>片段名稱：%1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="881"/>
         <source>Clip menu</source>
-        <translation type="unfinished"/>
+        <translation>片段選單</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/LabelItem.qml" line="125"/>
         <source>Label: %1</source>
-        <translation type="unfinished"/>
+        <translation>標籤：%1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/EditableLabel.qml" line="30"/>
         <source>Track name: %1</source>
-        <translation type="unfinished"/>
+        <translation>軌道名稱：%1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="253"/>
         <source>Reorder effect</source>
         <extracomment>Tooltip of the drag handle used to reorder effects</extracomment>
-        <translation type="unfinished"/>
+        <translation>重排序效果</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="303"/>
         <source>Bypass %1</source>
         <extracomment>Tooltip of the effect power button; %1 is an effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>繞過 %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="323"/>
@@ -19698,38 +19809,38 @@ Please try again and select an original name.</source>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/RealtimeEffectListItem.qml" line="365"/>
         <source>Replace %1</source>
         <extracomment>Tooltip of the button that replaces the effect; %1 is an effect name</extracomment>
-        <translation type="unfinished"/>
+        <translation>替換 %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackItem.qml" line="212"/>
         <source>Track menu</source>
-        <translation type="unfinished"/>
+        <translation>軌道選單</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="198"/>
         <source>Track %1: %2, audio track, selected</source>
-        <translation type="unfinished"/>
+        <translation>軌道 %1: %2，音訊軌道，已選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="198"/>
         <source>Track %1: %2, audio track</source>
-        <translation type="unfinished"/>
+        <translation>軌道 %1：%2，音訊軌道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="199"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="266"/>
         <source>Press Enter to select or deselect</source>
-        <translation type="unfinished"/>
+        <translation>按 Enter 鍵進行選擇或取消選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="265"/>
         <source>Track %1: %2, label track, selected</source>
-        <translation type="unfinished"/>
+        <translation>軌道 %1：%2，標籤軌道，已選擇</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksPanel.qml" line="265"/>
         <source>Track %1: %2, label track</source>
-        <translation type="unfinished"/>
+        <translation>軌道 %1：%2，標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/waveview.cpp" line="640"/>
@@ -19749,12 +19860,12 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="210"/>
         <source>Violet</source>
-        <translation type="unfinished"/>
+        <translation>紫色</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="211"/>
         <source>Magenta</source>
-        <translation type="unfinished"/>
+        <translation>品紅</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="212"/>
@@ -19764,12 +19875,12 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="213"/>
         <source>Orange</source>
-        <translation type="unfinished"/>
+        <translation>橙色</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="214"/>
         <source>Yellow</source>
-        <translation type="unfinished"/>
+        <translation>黃色</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="215"/>
@@ -19779,12 +19890,12 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="216"/>
         <source>Turquoise</source>
-        <translation type="unfinished"/>
+        <translation>綠松石</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneconfiguration.cpp" line="217"/>
         <source>Cyan</source>
-        <translation type="unfinished"/>
+        <translation>青色</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/Timeline.qml" line="55"/>
@@ -19822,13 +19933,13 @@ Please try again and select an original name.</source>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="187"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 （單聲道）錄製聲道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="190"/>
         <source>%1 (Stereo) Recording channels</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 （立體聲）錄製聲道</translation>
     </message>
 </context>
 <context>
@@ -19836,27 +19947,27 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="85"/>
         <source>Microphone level</source>
-        <translation type="unfinished"/>
+        <translation>麥克風電平</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="156"/>
         <source>Recording level</source>
-        <translation type="unfinished"/>
+        <translation>錄音電平</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="185"/>
         <source>Note: this control is tied to your computer’s main mic volume</source>
-        <translation type="unfinished"/>
+        <translation>注意：此控制元件與您電腦的主麥克風音量相關聯。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="213"/>
         <source>Turn on input monitoring (hear yourself while recording)</source>
-        <translation type="unfinished"/>
+        <translation>開啟輸入監聽（錄音時可以聽到自己的聲音）</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="230"/>
         <source>Show mic metering when not recording</source>
-        <translation type="unfinished"/>
+        <translation>未錄音時顯示麥克風音頻表</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="984"/>
@@ -19867,7 +19978,7 @@ Please try again and select an original name.</source>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="982"/>
         <source>Recorded audio</source>
-        <translation type="unfinished"/>
+        <translation>錄製的音訊</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcontroller.cpp" line="114"/>
@@ -19877,12 +19988,12 @@ Please try again and select an original name.</source>
         <location filename="../../src/record/internal/recordcontroller.cpp" line="199"/>
         <source>Recording error</source>
         <extracomment>Title of an error dialog</extracomment>
-        <translation type="unfinished"/>
+        <translation>錄製錯誤</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcontroller.cpp" line="223"/>
         <source>Lead-in Recording error</source>
-        <translation type="unfinished"/>
+        <translation>匯入錄音錯誤</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="37"/>
@@ -19894,12 +20005,12 @@ Error code: %1</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>Cannot stop recording</source>
-        <translation type="unfinished"/>
+        <translation>無法停止錄製</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="39"/>
         <source>Cannot resume recording</source>
-        <translation type="unfinished"/>
+        <translation>無法恢復錄製</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="41"/>
@@ -19910,13 +20021,15 @@ Error code: %1</source>
         <location filename="../../src/record/recorderrors.h" line="44"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
-        <translation type="unfinished"/>
+        <translation>選擇的軌道數量太少，無法以該取樣率進行錄製。
+（Audacity 要求每個立體聲軌道都必須有兩個取樣率相同的聲道。）</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="48"/>
         <source>No recording device available.
 Please connect an input device and rescan.</source>
-        <translation type="unfinished"/>
+        <translation>未檢測到錄音裝置。
+請連線輸入裝置並重新掃描。</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="52"/>
@@ -19926,7 +20039,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="55"/>
         <source>Please select a track for lead-in recording.</source>
-        <translation type="unfinished"/>
+        <translation>請選擇一個軌道進行前奏錄製。</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelControl.qml" line="70"/>
@@ -19936,7 +20049,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/SoundActivationLevelDialog.qml" line="15"/>
         <source>Set sound activation level</source>
-        <translation type="unfinished"/>
+        <translation>設定聲音啟用電平</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="16"/>
@@ -19995,23 +20108,23 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="480"/>
         <source>Save project</source>
-        <translation type="unfinished"/>
+        <translation>儲存專案</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="501"/>
         <source>Export audio</source>
-        <translation type="unfinished"/>
+        <translation>匯出音訊</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="506"/>
         <source>Settings</source>
         <extracomment>Button that opens the export settings: where the audio is exported to and in what format</extracomment>
-        <translation type="unfinished"/>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="524"/>
         <source>Quit Audacity</source>
-        <translation type="unfinished"/>
+        <translation>離開 Audacity</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/TimedRecordingDialog.qml" line="563"/>
@@ -20101,7 +20214,7 @@ Please connect an input device and rescan.</source>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="328"/>
         <source>Project saved</source>
-        <translation type="unfinished"/>
+        <translation>專案已儲存</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/timedrecordingscenario.cpp" line="330"/>
@@ -20173,7 +20286,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="166"/>
         <source>Overwrite</source>
-        <translation type="unfinished"/>
+        <translation>覆蓋</translation>
     </message>
     <message>
         <location filename="../../src/record/qml/Audacity/Record/timedrecordingsetupmodel.cpp" line="182"/>
@@ -20290,72 +20403,72 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="29"/>
         <source>Cut and close gap</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合間隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="31"/>
         <source>Cut and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="33"/>
         <source>Cut and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>剪下並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="38"/>
         <source>Paste and overlap</source>
-        <translation type="unfinished"/>
+        <translation>貼上並重疊</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="40"/>
         <source>Paste and make room on this track</source>
-        <translation type="unfinished"/>
+        <translation>貼上並騰出此軌道空間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="42"/>
         <source>Paste and make room on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>貼上並騰出所有軌道空間</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="47"/>
         <source>Delete and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>刪除並保留空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="49"/>
         <source>Delete and close gap</source>
-        <translation type="unfinished"/>
+        <translation>刪除並關閉間隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="51"/>
         <source>Delete and close gap on this track</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合目前軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="53"/>
         <source>Delete and close gap on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>刪除並閉合所有軌道的空隙</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="63"/>
         <source>Cut and…</source>
-        <translation type="unfinished"/>
+        <translation>剪下並...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="64"/>
         <source>Paste and…</source>
-        <translation type="unfinished"/>
+        <translation>貼上並…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="65"/>
         <source>Delete and…</source>
-        <translation type="unfinished"/>
+        <translation>刪除並...</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="69"/>
         <source>Split at silences</source>
-        <translation type="unfinished"/>
+        <translation>在靜音處分割</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="72"/>
@@ -20566,7 +20679,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="67"/>
         <source>Workspace</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts that change the workspace (the layout of panels and toolbars)</extracomment>
-        <translation type="unfinished"/>
+        <translation>工作區</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="69"/>
@@ -20596,7 +20709,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="77"/>
         <source>Diagnostics</source>
         <extracomment>Group heading in Preferences &gt; Shortcuts for shortcuts of diagnostic tools for developers</extracomment>
-        <translation type="unfinished"/>
+        <translation>診斷</translation>
     </message>
     <message>
         <location filename="../../src/context/internal/appshortcutsscopes.cpp" line="79"/>
@@ -20776,7 +20889,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/SpectrogramRulerCustomizePopup.qml" line="157"/>
         <source>Frequency range</source>
-        <translation type="unfinished"/>
+        <translation>頻率範圍</translation>
     </message>
 </context>
 <context>
@@ -20784,7 +20897,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="36"/>
         <source>Roseus</source>
-        <translation type="unfinished"/>
+        <translation>玫瑰色</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="38"/>
@@ -20890,17 +21003,17 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="31"/>
         <source>Gaussian (a=0.25)</source>
-        <translation type="unfinished"/>
+        <translation>高斯（α=0.25）</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="32"/>
         <source>Gaussian (a=0.35)</source>
-        <translation type="unfinished"/>
+        <translation>高斯（α=0.35）</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="33"/>
         <source>Gaussian (a=0.45)</source>
-        <translation type="unfinished"/>
+        <translation>高斯（α=0.45）</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="37"/>
@@ -20920,17 +21033,17 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="109"/>
         <source>Window size</source>
-        <translation type="unfinished"/>
+        <translation>視窗大小</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="111"/>
         <source>Window type</source>
-        <translation type="unfinished"/>
+        <translation>視窗類型</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="113"/>
         <source>Zero padding factor</source>
-        <translation type="unfinished"/>
+        <translation>零填充因子</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="94"/>
@@ -20941,12 +21054,12 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="96"/>
         <source>Range</source>
-        <translation type="unfinished"/>
+        <translation>範圍</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="98"/>
         <source>High boost</source>
-        <translation type="unfinished"/>
+        <translation>高增益</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="51"/>
@@ -20956,22 +21069,22 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="77"/>
         <source>Max frequency</source>
-        <translation type="unfinished"/>
+        <translation>最大頻率</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="79"/>
         <source>Min frequency</source>
-        <translation type="unfinished"/>
+        <translation>最小頻率</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="90"/>
         <source>Max</source>
-        <translation type="unfinished"/>
+        <translation>最大</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="92"/>
         <source>Min</source>
-        <translation type="unfinished"/>
+        <translation>最小</translation>
     </message>
 </context>
 <context>
@@ -20993,7 +21106,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramColorsSection.qml" line="62"/>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramColorsSection.qml" line="72"/>
         <source>Scheme</source>
-        <translation type="unfinished"/>
+        <translation>方案</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramScaleSection.qml" line="25"/>
@@ -21281,12 +21394,12 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="34"/>
         <source>Show scripts</source>
-        <translation type="unfinished"/>
+        <translation>顯示指令碼</translation>
     </message>
     <message>
         <location filename="../../muse/framework/testflow/internal/testflowcommandsregister.cpp" line="35"/>
         <source>Show scripts…</source>
-        <translation type="unfinished"/>
+        <translation>顯示指令碼...</translation>
     </message>
 </context>
 <context>
@@ -21312,19 +21425,19 @@ Do you want to overwrite them?</source>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="69"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>剩餘 %n 小時</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="72"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>剩餘 %n 分鐘</numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastProgressBar.qml" line="75"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished"><numerusform></numerusform></translation>
+        <translation><numerusform>剩餘 %n 秒</numerusform></translation>
     </message>
     <message>
         <location filename="../../muse/framework/toast/qml/Muse/Toast/ToastItem.qml" line="98"/>
@@ -21377,26 +21490,26 @@ Do you want to overwrite them?</source>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="88"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="111"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>移動軌道</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="64"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="89"/>
         <source>Track visualization</source>
-        <translation type="unfinished"/>
+        <translation>軌道視覺化</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="65"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="90"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="112"/>
         <source>Track color</source>
-        <translation type="unfinished"/>
+        <translation>軌道顏色</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="67"/>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="92"/>
         <source>Meters &amp;&amp; monitoring</source>
-        <translation type="unfinished"/>
+        <translation>計量與監控</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="73"/>
@@ -21413,19 +21526,19 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="331"/>
         <source>Format: %1</source>
-        <translation type="unfinished"/>
+        <translation>格式：%1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="365"/>
         <source>Rate: %1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>速率：%1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="459"/>
         <source>%1 Hz</source>
         <extracomment>%1 is a sample rate in hertz, e.g. &quot;44100 Hz&quot;</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1 Hz</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/dom/track.h" line="52"/>
@@ -21443,7 +21556,7 @@ Do you want to overwrite them?</source>
         <location filename="../../src/trackedit/dom/track.h" line="56"/>
         <source>32-bit Float</source>
         <extracomment>The format of the audio samples on a track</extracomment>
-        <translation type="unfinished"/>
+        <translation>32 位浮點</translation>
     </message>
 </context>
 <context>
@@ -21451,50 +21564,50 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <source>Added enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>添加了包絡點</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Clip envelope edit</source>
-        <translation type="unfinished"/>
+        <translation>片段包絡編輯</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <source>Removed enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>移除包絡點</translation>
     </message>
     <message>
         <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Dragged enveloped point</source>
-        <translation type="unfinished"/>
+        <translation>拖曳包絡點</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="891"/>
         <source>Set looping region in/out</source>
-        <translation type="unfinished"/>
+        <translation>設定迴圈區域入/出</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="43"/>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="48"/>
         <source>Mixing down to mono…</source>
-        <translation type="unfinished"/>
+        <translation>混合為單聲道...</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="320"/>
         <source>Rendering pitch and speed…</source>
-        <translation type="unfinished"/>
+        <translation>算繪音高和速度…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1396"/>
         <source>Mix down to mono</source>
-        <translation type="unfinished"/>
+        <translation>混合為單聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="1397"/>
         <source>This action requires one or more clips to be converted to mono. Would you like to proceed?</source>
-        <translation type="unfinished"/>
+        <translation>此操作需要將一個或多個影片片段轉換為單聲道。是否繼續？</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1352"/>
@@ -21504,7 +21617,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1647"/>
         <source>Combine mono tracks to stereo</source>
-        <translation type="unfinished"/>
+        <translation>單聲道軌道合併為立體聲</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3tracksinteraction.cpp" line="1648"/>
@@ -21513,12 +21626,16 @@ Do you want to overwrite them?</source>
 This causes any realtime effects to be applied to the waveform and hidden data to be removed. Additionally, the entire track will become one large clip.
 
 Do you wish to continue?</source>
-        <translation type="unfinished"/>
+        <translation>您嘗試合併為立體聲的軌道包含位置不同的片段，或者片段不匹配。合併操作會算繪這些軌道。
+
+這將導致所有即時效果應用於波形，並移除隱藏資料。此外，整個軌道將合併為一個大的片段。
+
+是否繼續？</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="30"/>
         <source>Playback position</source>
-        <translation type="unfinished"/>
+        <translation>播放位置</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="578"/>
@@ -21528,7 +21645,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="787"/>
         <source>No audio selected</source>
         <extracomment>Title of an error dialog shown when an action requires selected audio</extracomment>
-        <translation type="unfinished"/>
+        <translation>沒有選擇音訊</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="580"/>
@@ -21538,31 +21655,31 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="788"/>
         <source>Select the audio to delete and try again.</source>
         <extracomment>Message of an error dialog shown when an action requires selected audio</extracomment>
-        <translation type="unfinished"/>
+        <translation>選擇要刪除的音訊，然後重試。</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1082"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1099"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1116"/>
         <source>Paste error</source>
-        <translation type="unfinished"/>
+        <translation>貼上錯誤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1690"/>
         <source>Set rate</source>
-        <translation type="unfinished"/>
+        <translation>設定速率</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1843"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
         <source>Resample track</source>
-        <translation type="unfinished"/>
+        <translation>重取樣軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="46"/>
         <source>Trim selected audio tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>將所選的音訊軌道從 %1 秒到 %2 秒進行裁剪</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="48"/>
@@ -21573,7 +21690,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="59"/>
         <source>Silenced selected tracks from %1 seconds to %2 seconds</source>
         <extracomment>History entry. %1 and %2 are positions in seconds</extracomment>
-        <translation type="unfinished"/>
+        <translation>將所選軌道靜音 %1 秒至 %2 秒</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="61"/>
@@ -21584,7 +21701,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="79"/>
         <source>Silenced selected clips</source>
-        <translation type="unfinished"/>
+        <translation>已靜音所選片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="92"/>
@@ -21594,17 +21711,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="92"/>
         <source>Changed Track Title</source>
-        <translation type="unfinished"/>
+        <translation>更改軌道標題</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="101"/>
         <source>Clip Title</source>
-        <translation type="unfinished"/>
+        <translation>片段標題</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="101"/>
         <source>Changed clip title</source>
-        <translation type="unfinished"/>
+        <translation>已更改片段標題</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="110"/>
@@ -21635,13 +21752,13 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="175"/>
         <source>Changed track color</source>
-        <translation type="unfinished"/>
+        <translation>更改軌道顏色</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="191"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="192"/>
         <source>Reset Clip Pitch and Speed</source>
-        <translation type="unfinished"/>
+        <translation>重設片段音高和速度</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="201"/>
@@ -21682,12 +21799,12 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="343"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1075"/>
         <source>Remove multiple items</source>
-        <translation type="unfinished"/>
+        <translation>移除多個項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="343"/>
         <source>Remove multiple clips</source>
-        <translation type="unfinished"/>
+        <translation>移除多個片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="344"/>
@@ -21707,29 +21824,29 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="354"/>
         <source>Delete and close gap</source>
-        <translation type="unfinished"/>
+        <translation>刪除並關閉間隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="418"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="453"/>
         <source>Items moved</source>
-        <translation type="unfinished"/>
+        <translation>項目已移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="421"/>
         <source>Clip moved</source>
-        <translation type="unfinished"/>
+        <translation>片段已移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="422"/>
         <source>Move clip</source>
-        <translation type="unfinished"/>
+        <translation>移動片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="419"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="453"/>
         <source>Move items</source>
-        <translation type="unfinished"/>
+        <translation>移動項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="154"/>
@@ -21763,19 +21880,19 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="551"/>
         <source>Split clips at silence</source>
-        <translation type="unfinished"/>
+        <translation>在靜音處分割片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="542"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="551"/>
         <source>Split at silence</source>
-        <translation type="unfinished"/>
+        <translation>在靜音處分割</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="560"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="569"/>
         <source>Split into new track</source>
-        <translation type="unfinished"/>
+        <translation>分割到新軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="615"/>
@@ -21787,155 +21904,155 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="615"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="638"/>
         <source>Split cut</source>
-        <translation type="unfinished"/>
+        <translation>分割剪下</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="668"/>
         <source>Trim items left</source>
-        <translation type="unfinished"/>
+        <translation>修剪項目左側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="668"/>
         <source>Trim clip left</source>
-        <translation type="unfinished"/>
+        <translation>修剪片段左側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="670"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="692"/>
         <source>Trim</source>
         <extracomment>Undo history entry name; shown after Undo and Redo in the Edit menu</extracomment>
-        <translation type="unfinished"/>
+        <translation>修剪</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Trim items right</source>
-        <translation type="unfinished"/>
+        <translation>修剪項目右側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="691"/>
         <source>Trim clip right</source>
-        <translation type="unfinished"/>
+        <translation>修剪片段右側</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="753"/>
         <source>Changed speed to: %1%</source>
-        <translation type="unfinished"/>
+        <translation>速度已更改為：%1%</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="756"/>
         <source>Stretch Left</source>
-        <translation type="unfinished"/>
+        <translation>向左拉伸</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="757"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Stretch items left</source>
-        <translation type="unfinished"/>
+        <translation>向左拉伸項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="757"/>
         <source>Stretch clips left</source>
-        <translation type="unfinished"/>
+        <translation>向左拉伸片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="759"/>
         <source>Stretch Right</source>
-        <translation type="unfinished"/>
+        <translation>向右拉伸</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="760"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1158"/>
         <source>Stretch items right</source>
-        <translation type="unfinished"/>
+        <translation>向左拉伸項目</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="760"/>
         <source>Stretch clips right</source>
-        <translation type="unfinished"/>
+        <translation>向左拉伸片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="781"/>
         <source>Created new mono track</source>
-        <translation type="unfinished"/>
+        <translation>已建立新的單聲道軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="781"/>
         <source>New mono track</source>
-        <translation type="unfinished"/>
+        <translation>新增單聲道軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="790"/>
         <source>Created new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>已建立新的立體聲軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="790"/>
         <source>New stereo track</source>
-        <translation type="unfinished"/>
+        <translation>新增立體聲軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="800"/>
         <source>Created label track</source>
-        <translation type="unfinished"/>
+        <translation>已建立標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="800"/>
         <source>New label track</source>
-        <translation type="unfinished"/>
+        <translation>新增標籤軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="808"/>
         <source>Delete track</source>
-        <translation type="unfinished"/>
+        <translation>刪除軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="817"/>
         <source>Duplicate track</source>
-        <translation type="unfinished"/>
+        <translation>重複軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="826"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="833"/>
         <source>Move track</source>
-        <translation type="unfinished"/>
+        <translation>移動軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="880"/>
         <source>Insert silence</source>
-        <translation type="unfinished"/>
+        <translation>插入靜音</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="894"/>
         <source>Changed track format</source>
-        <translation type="unfinished"/>
+        <translation>已更改軌道格式</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="903"/>
         <source>Changed track rate</source>
-        <translation type="unfinished"/>
+        <translation>已更改軌道速率</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="912"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="913"/>
         <source>Swapped stereo channels</source>
-        <translation type="unfinished"/>
+        <translation>交換立體聲聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="922"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="923"/>
         <source>Split stereo tracks to L/R mono</source>
-        <translation type="unfinished"/>
+        <translation>立體聲軌道拆分為左/右單聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="932"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="933"/>
         <source>Split stereo tracks to center mono</source>
-        <translation type="unfinished"/>
+        <translation>立體聲軌道拆分為中央單聲道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="942"/>
         <source>Make stereo track</source>
-        <translation type="unfinished"/>
+        <translation>製作立體聲軌道</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="951"/>
@@ -21966,84 +22083,84 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1001"/>
         <source>Label added</source>
-        <translation type="unfinished"/>
+        <translation>標籤已新增</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1001"/>
         <source>Add label</source>
-        <translation type="unfinished"/>
+        <translation>新增標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Label title changed</source>
-        <translation type="unfinished"/>
+        <translation>標籤標題已更改</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1009"/>
         <source>Changed label title</source>
-        <translation type="unfinished"/>
+        <translation>已更改標籤標題</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1018"/>
         <source>Label low frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>標籤低頻已更改</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1019"/>
         <source>Change label low frequency</source>
-        <translation type="unfinished"/>
+        <translation>更改標籤低頻</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1028"/>
         <source>Label high frequency changed</source>
-        <translation type="unfinished"/>
+        <translation>標籤高頻已更改</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1029"/>
         <source>Change label high frequency</source>
-        <translation type="unfinished"/>
+        <translation>更改標籤高頻</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1043"/>
         <source>Cut label</source>
-        <translation type="unfinished"/>
+        <translation>剪下標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1060"/>
         <source>Remove label</source>
-        <translation type="unfinished"/>
+        <translation>移除標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1077"/>
         <source>Remove multiple labels</source>
-        <translation type="unfinished"/>
+        <translation>移除多個標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1097"/>
         <source>Move labels</source>
-        <translation type="unfinished"/>
+        <translation>移動標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1097"/>
         <source>Labels moved</source>
-        <translation type="unfinished"/>
+        <translation>標籤已移動</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1106"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1138"/>
         <source>Label stretched</source>
-        <translation type="unfinished"/>
+        <translation>標籤已拉伸</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1106"/>
         <source>Stretch label left</source>
-        <translation type="unfinished"/>
+        <translation>向左拉伸標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1127"/>
         <source>Stretch labels left</source>
-        <translation type="unfinished"/>
+        <translation>向左拉伸標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1128"/>
@@ -22054,12 +22171,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1138"/>
         <source>Stretch label right</source>
-        <translation type="unfinished"/>
+        <translation>向右拉伸標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1158"/>
         <source>Stretch labels right</source>
-        <translation type="unfinished"/>
+        <translation>向右拉伸標籤</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1249"/>
@@ -22090,7 +22207,7 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1344"/>
         <source>Joined %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>已加入時間 %1 秒，時間為 %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1347"/>
@@ -22112,43 +22229,43 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1359"/>
         <source>Split-deleted clips</source>
-        <translation type="unfinished"/>
+        <translation>分割已刪除片段</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1359"/>
         <source>Split delete</source>
-        <translation type="unfinished"/>
+        <translation>分割刪除</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="1367"/>
         <source>Delete %1 seconds at %2</source>
         <extracomment>History entry. %1 is a duration in seconds, %2 is the position in seconds it starts at</extracomment>
-        <translation type="unfinished"/>
+        <translation>刪除 %1 秒，時間為 %2</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/trackediterrors.h" line="41"/>
         <source>Not enough space to paste clip into</source>
-        <translation type="unfinished"/>
+        <translation>空間不足，無法貼上剪輯內容</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/tracknavigationmodel.cpp" line="373"/>
         <source>Tracks: Empty</source>
-        <translation type="unfinished"/>
+        <translation>曲目：空</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="506"/>
         <source>Tempo changed</source>
-        <translation type="unfinished"/>
+        <translation>節奏已更改</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="531"/>
         <source>Upper time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>上拍號已更改</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3trackeditproject.cpp" line="536"/>
         <source>Lower time signature changed</source>
-        <translation type="unfinished"/>
+        <translation>下拍號已更改</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3interactionutils.cpp" line="320"/>
@@ -22161,22 +22278,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="19"/>
         <source>Spectrogram settings</source>
-        <translation type="unfinished"/>
+        <translation>頻譜圖設定</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="21"/>
         <source>Spectrogram settings - %1</source>
-        <translation type="unfinished"/>
+        <translation>頻譜圖設定 - %1</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="23"/>
         <source>Delete preference</source>
-        <translation type="unfinished"/>
+        <translation>刪除首選項</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="45"/>
         <source>Your delete behavior has been set</source>
-        <translation type="unfinished"/>
+        <translation>您的刪除行為已設定</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="57"/>
@@ -22186,7 +22303,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="58"/>
         <source>You can change this at any time in %1.</source>
-        <translation type="unfinished"/>
+        <translation>您可以在 %1 中隨時更改此項設定。</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="60"/>
@@ -22196,72 +22313,72 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
         <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
-        <translation type="unfinished"/>
+        <translation>此外，還有多種新的快速鍵，可讓您快速存取不同的刪除操作。前往 %2 瞭解更多資訊。</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when deleting a portion of a clip</source>
-        <translation type="unfinished"/>
+        <translation>在刪除一段片段時選擇相應的操作方式</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="82"/>
         <source>When closing the gap, do the following</source>
-        <translation type="unfinished"/>
+        <translation>關閉間隙時請執行以下操作</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="15"/>
         <source>Choose behavior when pasting audio</source>
-        <translation type="unfinished"/>
+        <translation>選擇貼上音訊時的行為</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/PasteBehaviorPanel.qml" line="82"/>
         <source>When making room for pasted audio, do the following</source>
-        <translation type="unfinished"/>
+        <translation>為貼上音訊騰出空間時，請執行以下操作</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="61"/>
         <source>The selected clip moves back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>選取的片段向後移動以填補空隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="63"/>
         <source>All clips on the same track move back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>同一軌道上的所有片段都向後移動以填補空隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="65"/>
         <source>All clips on all tracks move back to fill the gap</source>
-        <translation type="unfinished"/>
+        <translation>所有軌道上的所有片段都向後移動以填補空隙</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="76"/>
         <source>Leave gap</source>
-        <translation type="unfinished"/>
+        <translation>留空</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/deletebehaviorpanelmodel.cpp" line="79"/>
         <source>Close gap (ripple)</source>
-        <translation type="unfinished"/>
+        <translation>閉合空隙（波紋）</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="61"/>
         <source>Pasting audio pushes other clips on the same track</source>
-        <translation type="unfinished"/>
+        <translation>貼上音訊會將同一軌道上的其他片段推到一邊</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="63"/>
         <source>Pasting audio pushes all clips on all tracks</source>
-        <translation type="unfinished"/>
+        <translation>貼上音訊會將所有軌道上的所有片段推送到指定位置</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="74"/>
         <source>Paste overlaps other clips</source>
-        <translation type="unfinished"/>
+        <translation>貼上內容與其他片段重疊</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/view/pastebehaviorpanelmodel.cpp" line="77"/>
         <source>Paste pushes other clips</source>
-        <translation type="unfinished"/>
+        <translation>貼上會推送其他片段</translation>
     </message>
 </context>
 <context>
@@ -22277,7 +22394,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="39"/>
         <source>Position:</source>
-        <translation type="unfinished"/>
+        <translation>位置：</translation>
     </message>
 </context>
 <context>
@@ -22290,12 +22407,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="88"/>
         <source>Zoom in</source>
-        <translation type="unfinished"/>
+        <translation>放大</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="110"/>
         <source>Zoom out</source>
-        <translation type="unfinished"/>
+        <translation>縮小</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="129"/>
@@ -22305,12 +22422,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="147"/>
         <source>Ruler format</source>
-        <translation type="unfinished"/>
+        <translation>標尺格式</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml" line="180"/>
         <source>Half wave</source>
-        <translation type="unfinished"/>
+        <translation>半波</translation>
     </message>
 </context>
 <context>
@@ -22318,7 +22435,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="30"/>
         <source>Database error.  Sorry, but we don’t have more details.</source>
-        <translation type="unfinished"/>
+        <translation>資料庫錯誤。抱歉，我們沒有更多詳細資訊。</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-transactions/TransactionScope.cpp" line="31"/>
@@ -22451,7 +22568,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="105"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation>其它</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="197"/>
@@ -22517,12 +22634,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="47"/>
         <source>expanded</source>
-        <translation type="unfinished"/>
+        <translation>已擴充</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListSectionItem.qml" line="48"/>
         <source>collapsed</source>
-        <translation type="unfinished"/>
+        <translation>已摺疊</translation>
     </message>
 </context>
 <context>
@@ -22625,7 +22742,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="64"/>
         <source>hh:mm:ss + CDDA frames (25 fps)</source>
-        <translation type="unfinished"/>
+        <translation>hh:mm:ss + CDDA 影格（25 fps）</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/timecodemodel.cpp" line="67"/>
@@ -22645,7 +22762,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
         <source>No button</source>
-        <translation type="unfinished"/>
+        <translation>無按鈕</translation>
     </message>
     <message>
         <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
@@ -22815,7 +22932,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="147"/>
         <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
-        <translation type="unfinished"/>
+        <translation>您已擁有 %1 的最新版本。請存取 &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt;以瞭解後續動態。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="154"/>
@@ -22858,7 +22975,7 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/update/internal/updatecommandsregister.cpp" line="35"/>
         <source>Check for update</source>
-        <translation type="unfinished"/>
+        <translation>檢查更新</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="255"/>
@@ -22873,7 +22990,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="298"/>
         <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
-        <translation type="unfinished"/>
+        <translation>%1 需要關閉以完成安裝。如果您有任何未儲存的更改，系統會在 %1 關閉前提示您進行儲存。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="304"/>
@@ -22883,13 +23000,13 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
         <source>Updating %1</source>
-        <translation type="unfinished"/>
+        <translation>正在更新 %1</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
         <source>Downloading %1 %2</source>
         <extracomment>Means that the download is currently in progress. %1 will be replaced by the app name, %2 by the version number of the version that is being downloaded.</extracomment>
-        <translation type="unfinished"/>
+        <translation>正在下載 %1 %2</translation>
     </message>
     <message>
         <location filename="../../muse/framework/update/qml/Muse/Update/internal/AutoUpdateSetting.qml" line="46"/>
@@ -22940,13 +23057,13 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="50"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="51"/>
         <source>Open FX editor</source>
-        <translation type="unfinished"/>
+        <translation>開啟效果編輯器</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="64"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="65"/>
         <source>Open instrument editor</source>
-        <translation type="unfinished"/>
+        <translation>開啟樂器編輯器</translation>
     </message>
 </context>
 <context>
@@ -22965,7 +23082,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="115"/>
         <source>Searching VST3 in: %1</source>
-        <translation type="unfinished"/>
+        <translation>在以下位置搜尋 VST3：%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="162"/>
@@ -22985,7 +23102,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="274"/>
         <source>Looking in: %1</source>
-        <translation type="unfinished"/>
+        <translation>正在檢視：%1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="343"/>
@@ -23055,7 +23172,7 @@ Do you wish to continue?</source>
         <extracomment>Template for clip name generation on copy-paste
 ----------
 Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="unfinished"/>
+        <translation>%1.%2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2868"/>
@@ -23148,12 +23265,12 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
         <source>Save layout as new workspace</source>
-        <translation type="unfinished"/>
+        <translation>將佈局儲存為新工作區</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
         <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
-        <translation type="unfinished"/>
+        <translation>工作區允許您選擇 %1 的不同介面配置。您還能將您自己的個性化配置儲存為新工作區。</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
@@ -23163,7 +23280,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="34"/>
         <source>New workspace</source>
-        <translation type="unfinished"/>
+        <translation>新增工作區</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="70"/>
@@ -23174,7 +23291,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="34"/>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="45"/>
         <source>Edit workspaces</source>
-        <translation type="unfinished"/>
+        <translation>編輯工作區</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
@@ -23194,12 +23311,12 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="221"/>
         <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
-        <translation type="unfinished"/>
+        <translation>此操作會將您的工作區重設到預設版式且不能復原。您想要繼續嗎？</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="224"/>
         <source>Resetting workspaces</source>
-        <translation type="unfinished"/>
+        <translation>正在重設工作區</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
@@ -23210,7 +23327,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="259"/>
         <source>Name cannot be empty</source>
-        <translation type="unfinished"/>
+        <translation>名稱不能為空</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="270"/>
@@ -23233,7 +23350,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../src/shared/types/workspacetitles.h" line="28"/>
         <source>Music</source>
         <extracomment>The name of a built-in workspace (an interface layout); an adjective in languages where that applies</extracomment>
-        <translation type="unfinished"/>
+        <translation>音樂</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="34"/>
@@ -23244,7 +23361,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="44"/>
         <source>Edit workspaces…</source>
-        <translation type="unfinished"/>
+        <translation>編輯工作區…</translation>
     </message>
     <message>
         <location filename="../../muse/framework/workspace/internal/workspacecommandsregister.cpp" line="52"/>
@@ -23258,7 +23375,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
         <source>Could not open file: “%1”</source>
-        <translation type="unfinished"/>
+        <translation>無法開啟檔案：“%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
@@ -23271,7 +23388,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="128"/>
         <source>Could not load file: “%1”</source>
         <extracomment>%1 is the file path</extracomment>
-        <translation type="unfinished"/>
+        <translation>無法載入檔案：“%1”</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="150"/>

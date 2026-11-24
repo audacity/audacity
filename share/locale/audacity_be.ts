@@ -501,7 +501,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="632"/>
         <source>Mix and render to new track</source>
-        <translation type="unfinished"/>
+        <translation>Звесці і адрэндэрыць на новай дарожцы</translation>
     </message>
 </context>
 <context>
@@ -1325,7 +1325,7 @@ After recovery, save the projects to ensure changes are written to disk.</source
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="32"/>
         <source>Automatic update check</source>
-        <translation type="unfinished"/>
+        <translation>Аўтаматычная праверка абнаўленняў</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="44"/>
@@ -4295,7 +4295,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="331"/>
         <source>Mix and render</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation type="unfinished"/>
+        <translation>Звесці і адрэндэрыць</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="343"/>
@@ -6087,7 +6087,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="1011"/>
         <source>Open the context menu of the focused ruler</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Адкрыць кантэкстнае меню выбранай лінейкі</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="24"/>
@@ -6105,7 +6105,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="55"/>
         <source>Apply preset</source>
         <extracomment>Command description: shown as a tooltip; can be a full sentence</extracomment>
-        <translation type="unfinished"/>
+        <translation>Прымяніць прэсет</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectscommandsregister.cpp" line="68"/>
@@ -7234,17 +7234,17 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="31"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Аўтапрыглушэнне</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="85"/>
         <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level</source>
-        <translation type="unfinished"/>
+        <translation>Зніжае (прыглушае) гучнасць адной або некалькіх дарожак, калі гучнасць вызначанай «кіруючай» дарожкі дасягае пэўнага ўзроўню</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/autoduckeffect.cpp" line="212"/>
         <source>Rendering Control-Track Time-Stretched Audio</source>
-        <translation type="unfinished"/>
+        <translation>Рэндэрынг аўдыя з расцягваннем у часе кіруючай дарожкі</translation>
     </message>
 </context>
 <context>
@@ -9819,7 +9819,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="13"/>
         <source>Auto duck</source>
-        <translation type="unfinished"/>
+        <translation>Аўтапрыглушэнне</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="103"/>
@@ -9830,7 +9830,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="117"/>
         <source>No available track</source>
-        <translation type="unfinished"/>
+        <translation>Няма даступнай дарожкі</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="145"/>
@@ -9840,37 +9840,37 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="192"/>
         <source>Duck start</source>
-        <translation type="unfinished"/>
+        <translation>Пачатак прыглушэння</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
         <source>Recovery end</source>
-        <translation type="unfinished"/>
+        <translation>Канец аднаўлення</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
         <source>Duck end</source>
-        <translation type="unfinished"/>
+        <translation>Канец прыглушэння</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
         <source>Gain reduction</source>
-        <translation type="unfinished"/>
+        <translation>Паслабленне сігналу</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
         <source>Recovery start</source>
-        <translation type="unfinished"/>
+        <translation>Пачатак аднаўлення</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
         <source>Hold</source>
-        <translation type="unfinished"/>
+        <translation>Утрыманне</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
         <source>Auto duck needs a second audio track to trigger the ducking. Add one to your project to continue.</source>
-        <translation type="unfinished"/>
+        <translation>Для спрацоўвання аўтапрыглушэння патрэбна другая аўдыядарожка. Каб працягнуць, дадайце яе ў праект.</translation>
     </message>
 </context>
 <context>
@@ -15135,7 +15135,7 @@ In addition, Mastering MuseScore features a supportive community of musicians, w
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="105"/>
         <source>Search commands</source>
-        <translation type="unfinished"/>
+        <translation>Пошук каманд</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="261"/>
@@ -17015,7 +17015,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="80"/>
         <source>Restart required</source>
-        <translation type="unfinished"/>
+        <translation>Патрабуецца перазапуск</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
@@ -21301,7 +21301,7 @@ Do you want to overwrite them?</source>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="331"/>
         <source>Format: %1</source>
-        <translation type="unfinished"/>
+        <translation>Фармат: %1</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/trackspanel/trackcontextmenumodel.cpp" line="365"/>
@@ -21605,23 +21605,23 @@ Do you wish to continue?</source>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="418"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="453"/>
         <source>Items moved</source>
-        <translation type="unfinished"/>
+        <translation>Элементы перамешчаны</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="421"/>
         <source>Clip moved</source>
-        <translation type="unfinished"/>
+        <translation>Кліп перамешчаны</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="422"/>
         <source>Move clip</source>
-        <translation type="unfinished"/>
+        <translation>Перамясціць кліп</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="419"/>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="453"/>
         <source>Move items</source>
-        <translation type="unfinished"/>
+        <translation>Перамясціць элементы</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="154"/>
@@ -21842,17 +21842,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="978"/>
         <source>Mixed and rendered %1 tracks into one new stereo track</source>
-        <translation type="unfinished"/>
+        <translation>Зведзена і адрэндэрана %1 дарожак у адну новую стэрэадарожку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="979"/>
         <source>Mixed and rendered %1 tracks into one new mono track</source>
-        <translation type="unfinished"/>
+        <translation>Зведзена і адрэндэрана %1 дарожак у адну новую монадарожку</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="981"/>
         <source>Mix and render</source>
-        <translation type="unfinished"/>
+        <translation>Звесці і адрэндэрыць</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditoperationcontroller.cpp" line="991"/>
@@ -22820,13 +22820,13 @@ Do you wish to continue?</source>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="34"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="35"/>
         <source>Use old view</source>
-        <translation type="unfinished"/>
+        <translation>Выкарыстоўваць стары выгляд</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="42"/>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="43"/>
         <source>Use new view</source>
-        <translation type="unfinished"/>
+        <translation>Выкарыстоўваць новы выгляд</translation>
     </message>
     <message>
         <location filename="../../muse/framework/vst/internal/vstcommandsregister.cpp" line="50"/>
