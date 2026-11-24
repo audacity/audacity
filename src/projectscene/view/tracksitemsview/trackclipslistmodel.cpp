@@ -327,18 +327,35 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = cacheBufferPx() / m_context->zoom();
+    const double cacheStartTime = m_context->frameStartTime() - cacheTime;
+    const double cacheEndTime = m_context->frameEndTime() + cacheTime;
 
     ClipTime time;
     time.startTime = clipStartTime;
     time.endTime = clipEndTime;
-    time.itemStartTime = std::max(clipStartTime, (m_context->frameStartTime() - cacheTime));
-    time.itemEndTime = std::min(clipEndTime, (m_context->frameEndTime() + cacheTime));
+    time.itemStartTime = std::max(clipStartTime, cacheStartTime);
+    time.itemEndTime = std::min(clipEndTime, cacheEndTime);
 
     if (selectionController()->isDataSelectedOnTrack(m_trackId)) {
         time.selectionStartTime = selectionController()->dataSelectedStartTime();
         time.selectionEndTime = selectionController()->dataSelectedEndTime();
     }
     item->setMovesWithSelection(muse::contains(m_clipsMovingWithSelection, item->key().key));
+
+    //! NOTE A clip outside the view and its buffer gets values that don't follow the view, so that
+    //! scrolling, e.g. with the pinned playhead, doesn't update every clip of the track on each step
+    const bool beforeView = clipEndTime <= cacheStartTime;
+    if (beforeView || clipStartTime >= cacheEndTime) {
+        time.itemStartTime = time.itemEndTime = beforeView ? clipEndTime : clipStartTime;
+        item->setTime(time);
+
+        const double viewWidth = std::round(m_context->timeToPosition(m_context->frameEndTime()));
+        item->setX(beforeView ? -cacheBufferPx() - 1 : viewWidth + cacheBufferPx() + 1);
+        item->setWidth(0);
+        item->setLeftVisibleMargin(0);
+        item->setRightVisibleMargin(0);
+        return;
+    }
 
     item->setTime(time);
     // Integer edges keep the clip's rounded-corner layer texture aligned to the
