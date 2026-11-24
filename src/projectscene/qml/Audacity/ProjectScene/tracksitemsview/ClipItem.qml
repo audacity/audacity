@@ -686,7 +686,7 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if ((!root.multiClipsSelected || (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier))) && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
+                        if (!root.multiClipsSelected || (e.modifiers & (Qt.ShiftModifier | Qt.ControlModifier))) {
                             root.requestSelected()
                         }
 
@@ -711,10 +711,6 @@ Rectangle {
 
                 onReleased: function (e) {
                     e.accepted = false
-                }
-
-                function isWithinRange(val, x, w) {
-                    return val >= x && val <= (x + w)
                 }
             }
 
