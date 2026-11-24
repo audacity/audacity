@@ -20,7 +20,6 @@
 #include "iaudiometer.h"
 
 struct TransportSequences;
-struct AudioIOStartTransportOptions;
 class ChannelGroup;
 class RealtimeEffectState;
 namespace au::audio {
