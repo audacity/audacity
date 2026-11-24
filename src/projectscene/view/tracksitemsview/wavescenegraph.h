@@ -203,6 +203,12 @@ private:
     bool reusePreparedFrame(const trackedit::ClipKey& clipKey, const InputSignature& sig, double contentOffset);
     //! Builds the frame's vertices; returns false while some of the data is still being computed
     bool buildFrame(const Input& input, WaveMetrics waveMetrics, const Window& window, IMinMaxRMSPainter& painter);
+    //! Whether the frame can be moved to the new window, prepared from the same inputs otherwise
+    bool canExtendFrame(const InputSignature& sig, const Window& window) const;
+    //! Builds the frame from the previous one, only computing the columns new in the window;
+    //! returns whether the data is complete, or nothing when the windows don't overlap
+    std::optional<bool> extendFrame(const Frame& previous, const Input& input, const WaveMetrics& waveMetrics, const Window& window,
+                                    IMinMaxRMSPainter& painter);
     void buildSampleFrame(const Input& input, WaveMetrics waveMetrics, const Window& window, IMinMaxRMSPainter& painter);
     //! Keeps the previous frame if the new one came out empty mid-gesture; returns whether to retry
     bool acceptFrame(Frame previous, bool prevActive, const Input& input, const InputSignature& sig, const Window& window, bool complete);

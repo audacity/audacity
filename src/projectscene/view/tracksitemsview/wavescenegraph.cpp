@@ -275,13 +275,21 @@ bool WaveSceneGraph::prepare(const Input& input, IMinMaxRMSPainter& painter)
         return false;
     }
 
+    const bool canExtend = canExtendFrame(sig, window);
+
     Frame previous = std::exchange(m_frame, {});
     const bool prevActive = m_active;
     m_active = false;
 
     bool complete = true;
     if (input.plotType == IWavePainter::PlotType::MinMaxRMS) {
-        complete = buildFrame(input, metrics, window, painter);
+        const std::optional<bool> extended = canExtend ? extendFrame(previous, input, metrics, window, painter) : std::nullopt;
+        if (extended) {
+            complete = *extended;
+        } else {
+            m_frame = {};
+            complete = buildFrame(input, metrics, window, painter);
+        }
     } else {
         buildSampleFrame(input, metrics, window, painter);
     }
@@ -607,6 +615,152 @@ bool WaveSceneGraph::buildFrame(const Input& input, WaveMetrics waveMetrics, con
     }
 
     return allDataComplete;
+}
+
+bool WaveSceneGraph::canExtendFrame(const InputSignature& sig, const Window& window) const
+{
+    //! NOTE: Scrolling moves the window by whole cache tiles, which changes nothing else the columns depend on
+    if (!m_lastSignatureValid || !m_lastComplete || m_staleRetainCount != 0 || m_frame.vertices.empty()
+        || sig.plotType != IWavePainter::PlotType::MinMaxRMS || window.hasPlaceholder || m_lastSignature.placeholderToTime != 0.0) {
+        return false;
+    }
+
+    InputSignature sameWindow = sig;
+    sameWindow.fromTime = m_lastSignature.fromTime;
+    sameWindow.toTime = m_lastSignature.toTime;
+    return sameWindow == m_lastSignature;
+}
+
+std::optional<bool> WaveSceneGraph::extendFrame(const Frame& previous, const Input& input, const WaveMetrics& waveMetrics,
+                                                const Window& window, IMinMaxRMSPainter& painter)
+{
+    const IWavePainter::Params& params = input.params;
+    const double zoom = params.zoom;
+
+    // The display pixel of a time, as ZoomInfo::TimeToPosition gives it
+    const auto pixelAt = [](double position) {
+        return static_cast<int64_t>(std::floor(0.5 + position));
+    };
+    // A column's x is its pixel minus the position of its window's start
+    const auto columnPixel = [](double x, double windowFromPx) {
+        return static_cast<int64_t>(std::llround(x + windowFromPx));
+    };
+
+    const double previousFromPx = m_lastSignature.fromTime * zoom;
+    const double fromPx = waveMetrics.fromTime * zoom;
+    const int64_t previousFirst = pixelAt(previousFromPx);
+    const int64_t previousLast = pixelAt(m_lastSignature.toTime * zoom);
+    const int64_t first = pixelAt(fromPx);
+    const int64_t last = pixelAt(waveMetrics.toTime * zoom);
+
+    // The columns at the previous window's edges may only cover part of their pixel: they are kept where the edge didn't move
+    const int64_t keepFirst = std::max(first, waveMetrics.fromTime == m_lastSignature.fromTime ? previousFirst : previousFirst + 1);
+    const int64_t keepLast = std::min(last, waveMetrics.toTime == m_lastSignature.toTime ? previousLast : previousLast - 1);
+    if (keepFirst > keepLast) {
+        return std::nullopt;
+    }
+
+    m_frame.backgroundColor = previous.backgroundColor;
+    m_frame.selectedBackgroundColor = previous.selectedBackgroundColor;
+    m_frame.zeroLineColor = previous.zeroLineColor;
+    m_frame.zeroLineYs = previous.zeroLineYs;
+    m_frame.showRMS = previous.showRMS;
+    m_frame.height = previous.height;
+
+    const std::array<double, 2> channelHeight {
+        params.geometry.height * params.channelHeightRatio,
+        params.geometry.height * (1 - params.channelHeightRatio),
+    };
+    const size_t channelCount = std::min<size_t>(input.clipData.channelCount, channelHeight.size());
+    const ColumnColors colors = columnColors(params.style);
+
+    // As in buildFrame: the columns stay inside the rounded corners of the clip's real edges
+    const float viewHeight = static_cast<float>(params.geometry.height);
+    const float cornerRadius = std::min(m_cornerRadius, viewHeight * 0.5f);
+    const double clipLeftEdge = (input.clipTime.startTime - input.clipTime.itemStartTime) * zoom + window.subpixelResidual;
+    const double clipRightEdge = (input.clipTime.endTime - input.clipTime.itemStartTime) * zoom + window.subpixelResidual;
+    auto columnCornerInset = [&](float contentX) {
+        if (cornerRadius <= 0.0f) {
+            return 0.0f;
+        }
+        const double center = contentX + window.contentOffset + 0.5;
+        return std::max(cornerInset(static_cast<float>(center - clipLeftEdge), cornerRadius),
+                        cornerInset(static_cast<float>(clipRightEdge - center), cornerRadius));
+    };
+
+    //! NOTE: All views run on the GUI thread; sharing the buffer keeps its capacity
+    static std::vector<WaveColumnVertex> columnData;
+
+    bool complete = true;
+    double topOffset = 0.0;
+    m_frame.vertices.reserve(previous.vertices.size());
+
+    // Appends the new window's columns of pixels [segmentFirst, segmentLast], computed over a range
+    // one pixel wider on the side that isn't the window's edge, so that those columns cover their whole pixel
+    auto appendSegment = [&](size_t ch, int64_t segmentFirst, int64_t segmentLast, float channelTop, float channelBottom) {
+        if (segmentFirst > segmentLast) {
+            return;
+        }
+        WaveMetrics segment = waveMetrics;
+        segment.fromTime = segmentFirst == first ? waveMetrics.fromTime : (segmentFirst - 1) / zoom;
+        segment.toTime = segmentLast == last ? waveMetrics.toTime : (segmentLast + 1) / zoom;
+        segment.height = channelHeight[ch];
+        segment.top = topOffset;
+
+        complete = painter.columns(input.clipKey, ch, params, segment, columnData) && complete;
+
+        const double segmentFromPx = segment.fromTime * zoom;
+        for (WaveColumnVertex col : columnData) {
+            const int64_t pixel = columnPixel(col.x, segmentFromPx);
+            if (pixel < segmentFirst || pixel > segmentLast) {
+                continue;
+            }
+            col.x = static_cast<float>(col.x + segmentFromPx - fromPx);
+            Vertex v = toVertex(col, channelTop, channelBottom, colors);
+            clampToCorners(v, columnCornerInset(col.x), m_roundTopCorners, viewHeight);
+            m_frame.vertices.push_back(v);
+        }
+    };
+
+    for (size_t ch = 0; ch < channelCount; ++ch) {
+        const size_t begin = ch == 0 ? 0 : previous.channelSplitIndex;
+        const size_t end = ch == 0 && previous.channelSplitIndex > 0 ? previous.channelSplitIndex : previous.vertices.size();
+        if (ch > 0) {
+            m_frame.channelSplitIndex = m_frame.vertices.size();
+        }
+
+        const float channelTop = static_cast<float>(topOffset);
+        const float channelBottom = channelTop + static_cast<float>(channelHeight[ch]);
+
+        appendSegment(ch, first, keepFirst - 1, channelTop, channelBottom);
+        for (size_t i = begin; i < end; ++i) {
+            Vertex v = previous.vertices[i];
+            const int64_t pixel = columnPixel(v.x, previousFromPx);
+            if (pixel < keepFirst || pixel > keepLast) {
+                continue;
+            }
+            v.x = static_cast<float>(v.x + previousFromPx - fromPx);
+            m_frame.vertices.push_back(v);
+        }
+        appendSegment(ch, keepLast + 1, last, channelTop, channelBottom);
+
+        topOffset += channelHeight[ch];
+    }
+
+    // The selected columns, as buildFrame finds them
+    if (waveMetrics.selectionEndTime > waveMetrics.selectionStartTime) {
+        const int64_t selFirst = pixelAt(waveMetrics.selectionStartTime * zoom);
+        const int64_t selLast = std::max(pixelAt(waveMetrics.selectionEndTime * zoom), selFirst + 1);
+        const int64_t selectedFirst = std::max(selFirst, first);
+        const int64_t selectedLast = std::min(selLast - 1, last);
+        if (selectedFirst <= selectedLast) {
+            m_frame.hasSelection = true;
+            m_frame.selectionLeft = static_cast<float>(selectedFirst - fromPx);
+            m_frame.selectionRight = static_cast<float>(selectedLast + 1 - fromPx);
+        }
+    }
+
+    return complete;
 }
 
 void WaveSceneGraph::buildSampleFrame(const Input& input, WaveMetrics waveMetrics, const Window& window, IMinMaxRMSPainter& painter)
