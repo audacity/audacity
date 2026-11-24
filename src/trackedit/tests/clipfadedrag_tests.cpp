@@ -1,6 +1,6 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
@@ -15,6 +15,10 @@ namespace au::trackedit {
 namespace {
 const ClipKey CLIP_A { 1, 10 };
 const ClipKey CLIP_B { 2, 20 };
+//! On a track of its own, and not dragged
+const ClipKey CLIP_C { 3, 30 };
+
+constexpr double CLIP_START = 0.0;
 
 constexpr double CLIP_DURATION = 10.0;
 
@@ -22,6 +26,8 @@ constexpr double CLIP_A_FADE_IN = 0.1;
 constexpr double CLIP_A_FADE_OUT = 0.2;
 constexpr double CLIP_B_FADE_IN = 0.3;
 constexpr double CLIP_B_FADE_OUT = 0.4;
+constexpr double CLIP_C_FADE_IN = 0.5;
+constexpr double CLIP_C_FADE_OUT = 0.6;
 
 //! By how much the lead clip's fades are dragged, when what matters is only that they are
 constexpr double OFFSET = 0.4;
@@ -30,7 +36,7 @@ Clip makeClip(const ClipKey& key, double fadeIn, double fadeOut)
 {
     Clip clip;
     clip.key = key;
-    clip.startTime = 0.0;
+    clip.startTime = CLIP_START;
     clip.endTime = CLIP_DURATION;
     clip.fadeInDuration = fadeIn;
     clip.fadeOutDuration = fadeOut;
@@ -79,6 +85,43 @@ protected:
     bool m_interactionEnded = false;
     std::unique_ptr<ClipFadeDrag> m_drag;
 };
+
+TEST_F(ClipFadeDragTests, TheDraggedFadesArentSnappable)
+{
+    //! [GIVEN] A drag of the fade-ins of CLIP_A and CLIP_B
+    const ClipFadeDrag& drag = startDrag(CLIP_A, ClipSide::Left);
+
+    //! [WHEN] The fade-ins have grown, short of reaching the fade-outs
+    const Clip clipA = makeClip(CLIP_A, CLIP_A_FADE_IN + OFFSET, CLIP_A_FADE_OUT);
+    const Clip clipB = makeClip(CLIP_B, CLIP_B_FADE_IN + OFFSET, CLIP_B_FADE_OUT);
+
+    //! [THEN] Only the fade-outs are snappable
+    EXPECT_EQ(drag.snappableFadeEnds(clipA), (IClipFades::FadeEnds { std::nullopt, CLIP_DURATION - CLIP_A_FADE_OUT }));
+    EXPECT_EQ(drag.snappableFadeEnds(clipB), (IClipFades::FadeEnds { std::nullopt, CLIP_DURATION - CLIP_B_FADE_OUT }));
+}
+
+TEST_F(ClipFadeDragTests, TheFadesTheDraggedOnesPushedArentSnappable)
+{
+    //! [GIVEN] A drag of the fade-ins of CLIP_A and CLIP_B
+    const ClipFadeDrag& drag = startDrag(CLIP_A, ClipSide::Left);
+
+    //! [WHEN] CLIP_B's fade-in has grown over its fade-out, which shrank
+    constexpr double pushedFadeOut = CLIP_B_FADE_OUT / 2;
+    const Clip clipB = makeClip(CLIP_B, CLIP_DURATION - pushedFadeOut, pushedFadeOut);
+
+    //! [THEN] Neither of CLIP_B's fades is snappable
+    EXPECT_EQ(drag.snappableFadeEnds(clipB), (IClipFades::FadeEnds { std::nullopt, std::nullopt }));
+}
+
+TEST_F(ClipFadeDragTests, TheFadesOfOtherClipsAreSnappable)
+{
+    //! [GIVEN] A drag of the fade-ins of CLIP_A and CLIP_B
+    const ClipFadeDrag& drag = startDrag(CLIP_A, ClipSide::Left);
+
+    //! [THEN] Both fades of CLIP_C, which isn't dragged, are snappable
+    const Clip clipC = makeClip(CLIP_C, CLIP_C_FADE_IN, CLIP_C_FADE_OUT);
+    EXPECT_EQ(drag.snappableFadeEnds(clipC), (IClipFades::FadeEnds { CLIP_START + CLIP_C_FADE_IN, CLIP_DURATION - CLIP_C_FADE_OUT }));
+}
 
 TEST_F(ClipFadeDragTests, OtherClipsFadeInsChangeByAsMuch)
 {

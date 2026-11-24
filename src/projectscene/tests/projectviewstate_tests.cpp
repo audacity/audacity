@@ -11,6 +11,7 @@
 
 #include "playback/tests/mocks/playbackconfigurationmock.h"
 #include "context/tests/mocks/globalcontextmock.h"
+#include "trackedit/tests/mocks/clipfadesmock.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/projecthistorymock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
@@ -40,12 +41,16 @@ public:
         m_projectViewState->globalContext.set(m_globalContextMock);
         m_projectViewState->selectionController.set(m_selectionControllerMock);
         m_projectViewState->projectHistory.set(m_projectHistoryMock);
+        m_projectViewState->clipFades.set(m_clipFadesMock);
 
         ON_CALL(*m_globalContextMock, currentTrackeditProjectChanged())
         .WillByDefault(Return(muse::async::Notification()));
 
         ON_CALL(*m_projectHistoryMock, historyChanged())
         .WillByDefault(Return(muse::async::Channel<trackedit::HistoryEvent>()));
+
+        ON_CALL(*m_clipFadesMock, draggedFadeChanged())
+        .WillByDefault(Return(m_draggedFadeChanged));
 
         ON_CALL(*m_globalContextMock, currentProject())
         .WillByDefault(Return(m_currentProject));
@@ -151,6 +156,10 @@ protected:
 
     const std::shared_ptr<NiceMock<trackedit::ProjectHistoryMock> > m_projectHistoryMock
         = std::make_shared<NiceMock<trackedit::ProjectHistoryMock> >();
+
+    const std::shared_ptr<NiceMock<trackedit::ClipFadesMock> > m_clipFadesMock
+        = std::make_shared<NiceMock<trackedit::ClipFadesMock> >();
+    muse::async::Notification m_draggedFadeChanged;
 
     const std::shared_ptr<NiceMock<project::AudacityProjectMock> > m_currentProject
         = std::make_shared<NiceMock<project::AudacityProjectMock> >();
@@ -395,5 +404,68 @@ TEST_F(ProjectViewStateTests, TrackDefaultHeight_IsShorterForLabelTracks)
 
     EXPECT_LT(m_projectViewState->trackDefaultHeight(tracks[0]), m_projectViewState->trackDefaultHeight(tracks[1]));
     EXPECT_EQ(m_projectViewState->trackDefaultHeight(tracks[1]), m_projectViewState->trackDefaultHeight());
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesTheSnappableFadeEnds)
+{
+    using namespace trackedit;
+
+    // [GIVEN] A clip, of which only the fade-in is snappable
+    constexpr TrackId trackId = 1;
+    constexpr TrackItemId clipId = 100;
+    constexpr double clipStart = 1.0;
+    constexpr double clipEnd = 9.0;
+    constexpr double fadeInEnd = 3.0;
+    const Clip clip = makeClip(trackId, clipId, clipStart, clipEnd);
+
+    ON_CALL(*m_trackeditProjectMock, trackIdList())
+    .WillByDefault(Return(TrackIdList { trackId }));
+    ON_CALL(*m_trackeditProjectMock, clipList(trackId))
+    .WillByDefault([&](const TrackId&) { return makeClipList({ clip }); });
+    ON_CALL(*m_trackeditProjectMock, labelList(_))
+    .WillByDefault([](const TrackId&) { return makeLabelList({}); });
+    ON_CALL(*m_selectionControllerMock, selectedClips())
+    .WillByDefault(Return(ClipKeyList {}));
+    ON_CALL(*m_clipFadesMock, snappableFadeEnds(Field(&Clip::key, clip.key)))
+    .WillByDefault(Return(IClipFades::FadeEnds { fadeInEnd, std::nullopt }));
+
+    // [WHEN] Boundaries are rebuilt
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+
+    // [THEN] The fade-in's end is a snap target, as well as the clip edges
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { clipStart, fadeInEnd, clipEnd }));
+}
+
+TEST_F(ProjectViewStateTests, ItemsBoundariesAreRebuiltWhenTheDraggedFadeChanges)
+{
+    using namespace trackedit;
+
+    // [GIVEN] A clip whose fade-in is snappable
+    constexpr TrackId trackId = 1;
+    constexpr TrackItemId clipId = 100;
+    constexpr double clipStart = 1.0;
+    constexpr double clipEnd = 9.0;
+    constexpr double fadeInEnd = 3.0;
+    const Clip clip = makeClip(trackId, clipId, clipStart, clipEnd);
+
+    ON_CALL(*m_trackeditProjectMock, trackIdList())
+    .WillByDefault(Return(TrackIdList { trackId }));
+    ON_CALL(*m_trackeditProjectMock, clipList(trackId))
+    .WillByDefault([&](const TrackId&) { return makeClipList({ clip }); });
+    ON_CALL(*m_trackeditProjectMock, labelList(_))
+    .WillByDefault([](const TrackId&) { return makeLabelList({}); });
+    ON_CALL(*m_selectionControllerMock, selectedClips())
+    .WillByDefault(Return(ClipKeyList {}));
+    ON_CALL(*m_clipFadesMock, snappableFadeEnds(Field(&Clip::key, clip.key)))
+    .WillByDefault(Return(IClipFades::FadeEnds { fadeInEnd, std::nullopt }));
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+
+    // [WHEN] A drag of that fade-in starts, so that it no longer is snappable
+    ON_CALL(*m_clipFadesMock, snappableFadeEnds(Field(&Clip::key, clip.key)))
+    .WillByDefault(Return(IClipFades::FadeEnds { std::nullopt, std::nullopt }));
+    m_draggedFadeChanged.notify();
+
+    // [THEN] It is no longer a snap target, without waiting for a clip to change
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { clipStart, clipEnd }));
 }
 } // namespace au::projectscene

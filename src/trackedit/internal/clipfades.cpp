@@ -37,12 +37,27 @@ bool ClipFades::startFadeDrag(const ClipKeyList& clips, const ClipKey& leadClip,
     Clips clipsAtStart;
     std::ranges::transform(clips, std::back_inserter(clipsAtStart), [&](const ClipKey& key) { return project->clip(key); });
     m_drag = ClipFadeDrag::start(*trackeditInteraction(), *projectHistory(), project, std::move(clipsAtStart), leadClip, side);
-    return m_drag != nullptr;
+    if (!m_drag) {
+        return false;
+    }
+    m_draggedFadeChanged.notify();
+    return true;
 }
 
 bool ClipFades::changeFade(secs_t duration)
 {
-    return m_drag && m_drag->changeFade(duration);
+    if (m_drag && m_drag->changeFade(duration)) {
+        m_draggedFadeChanged.notify();
+        return true;
+    }
+    return false;
+}
+
+void ClipFades::endFadeDrag()
+{
+    // Rolls back unless committed; nulls m_drag before the rollback, see cancelFadeDrag
+    m_drag.reset();
+    m_draggedFadeChanged.notify();
 }
 
 bool ClipFades::commitFadeDrag()
@@ -51,13 +66,15 @@ bool ClipFades::commitFadeDrag()
         return false;
     }
     const bool committed = m_drag->commit();
-    cancelFadeDrag();
+    endFadeDrag();
     return committed;
 }
 
 void ClipFades::cancelFadeDrag()
 {
-    m_drag.reset();
+    if (m_drag) {
+        endFadeDrag();
+    }
 }
 
 std::optional<IClipFades::DraggedFade> ClipFades::draggedFade() const
@@ -66,5 +83,22 @@ std::optional<IClipFades::DraggedFade> ClipFades::draggedFade() const
         return std::nullopt;
     }
     return DraggedFade { m_drag->leadClip(), m_drag->side() };
+}
+
+muse::async::Notification ClipFades::draggedFadeChanged() const
+{
+    return m_draggedFadeChanged;
+}
+
+IClipFades::FadeEnds ClipFades::snappableFadeEnds(const Clip& clip) const
+{
+    if (!clip.isValid()) {
+        LOGW() << "Invalid clip";
+        return {};
+    }
+    if (m_drag) {
+        return m_drag->snappableFadeEnds(clip);
+    }
+    return { clip.startTime + clip.fadeInDuration, clip.endTime - clip.fadeOutDuration };
 }
 }

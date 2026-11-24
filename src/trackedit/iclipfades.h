@@ -4,8 +4,10 @@
 #pragma once
 
 #include <optional>
+#include <utility>
 
 #include "modularity/imoduleinterface.h"
+#include "async/notification.h"
 
 #include "trackedittypes.h"
 #include "dom/clip.h"
@@ -36,5 +38,12 @@ public:
         ClipSide side;
     };
     virtual std::optional<DraggedFade> draggedFade() const = 0;
+
+    virtual muse::async::Notification draggedFadeChanged() const = 0;
+
+    //! Where the fade-in and the fade-out of a clip end
+    using FadeEnds = std::pair<std::optional<secs_t>, std::optional<secs_t> >;
+
+    virtual FadeEnds snappableFadeEnds(const Clip& clip) const = 0;
 };
 }

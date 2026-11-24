@@ -16,5 +16,7 @@ public:
     MOCK_METHOD(bool, commitFadeDrag, (), (override));
     MOCK_METHOD(void, cancelFadeDrag, (), (override));
     MOCK_METHOD(std::optional<DraggedFade>, draggedFade, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, draggedFadeChanged, (), (const, override));
+    MOCK_METHOD(FadeEnds, snappableFadeEnds, (const Clip&), (const, override));
 };
 }

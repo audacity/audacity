@@ -33,10 +33,14 @@ public:
     bool commitFadeDrag() override;
     void cancelFadeDrag() override;
     std::optional<DraggedFade> draggedFade() const override;
+    muse::async::Notification draggedFadeChanged() const override;
+    FadeEnds snappableFadeEnds(const Clip& clipKey) const override;
 
 private:
+    void endFadeDrag();
     friend class ClipFadesTests;
 
     std::unique_ptr<ClipFadeDrag> m_drag;
+    muse::async::Notification m_draggedFadeChanged;
 };
 }

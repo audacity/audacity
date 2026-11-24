@@ -91,6 +91,42 @@ TEST_F(ClipFadesTests, AbandonedDragIsNotTheStartingPointOfTheNextOne)
     EXPECT_DOUBLE_EQ(m_fadeIn, FADE_IN);
 }
 
+TEST_F(ClipFadesTests, WithoutADragAllFadeEndsAreSnappable)
+{
+    EXPECT_EQ(m_clipFades->snappableFadeEnds(m_project->clip(CLIP)), (IClipFades::FadeEnds { CLIP_START + FADE_IN, CLIP_END - FADE_OUT }));
+}
+
+TEST_F(ClipFadesTests, TheDraggedFadeIsntSnappable)
+{
+    //! [WHEN] The fade-in is dragged
+    m_clipFades->startFadeDrag({ CLIP }, CLIP, ClipSide::Left);
+
+    //! [THEN] Only the fade-out is snappable
+    EXPECT_EQ(m_clipFades->snappableFadeEnds(m_project->clip(CLIP)), (IClipFades::FadeEnds { std::nullopt, CLIP_END - FADE_OUT }));
+}
+
+TEST_F(ClipFadesTests, WhileTheDragRollsBackNoFadeIsDragged)
+{
+    //! [GIVEN] A drag of the fade-in, which changed it
+    m_clipFades->startFadeDrag({ CLIP }, CLIP, ClipSide::Left);
+    m_clipFades->changeFade(2 * FADE_IN);
+
+    //! [THEN] As the drag rolls back, e.g. when the snap points are rebuilt, no fade is dragged, and all are snappable
+    std::optional<IClipFades::DraggedFade> draggedFadeDuringRollback;
+    IClipFades::FadeEnds fadeEndsDuringRollback;
+    EXPECT_CALL(*m_history, rollbackState()).WillOnce([&]() {
+        m_fadeIn = m_fadeInAtInteractionStart;
+        draggedFadeDuringRollback = m_clipFades->draggedFade();
+        fadeEndsDuringRollback = m_clipFades->snappableFadeEnds(m_project->clip(CLIP));
+    });
+
+    //! [WHEN] The drag is canceled
+    m_clipFades->cancelFadeDrag();
+
+    EXPECT_FALSE(draggedFadeDuringRollback.has_value());
+    EXPECT_EQ(fadeEndsDuringRollback, (IClipFades::FadeEnds { CLIP_START + FADE_IN, CLIP_END - FADE_OUT }));
+}
+
 TEST_F(ClipFadesTests, CancelingDragEditsCancelsTheDrag)
 {
     //! [GIVEN] A drag of the fade-in, which changed it
@@ -103,5 +139,37 @@ TEST_F(ClipFadesTests, CancelingDragEditsCancelsTheDrag)
     //! [THEN] The drag is over, and the fade-in is as it was before it
     EXPECT_FALSE(m_clipFades->draggedFade().has_value());
     EXPECT_DOUBLE_EQ(m_fadeIn, FADE_IN);
+}
+
+TEST_F(ClipFadesTests, ObserversAreToldWhenADragStartsAndEnds)
+{
+    int notifications = 0;
+    muse::async::Asyncable observer;
+    m_clipFades->draggedFadeChanged().onNotify(&observer, [&]() { ++notifications; });
+
+    //! [WHEN] A drag starts
+    m_clipFades->startFadeDrag({ CLIP }, CLIP, ClipSide::Left);
+    //! [THEN] Observers are told
+    EXPECT_EQ(notifications, 1);
+
+    //! [WHEN] It ends
+    m_clipFades->cancelFadeDrag();
+    //! [THEN] Observers are told again
+    EXPECT_EQ(notifications, 2);
+}
+
+TEST_F(ClipFadesTests, ObserversAreToldWhenTheDragChangesFades)
+{
+    //! [GIVEN] A drag of the fade-in
+    m_clipFades->startFadeDrag({ CLIP }, CLIP, ClipSide::Left);
+    int notifications = 0;
+    muse::async::Asyncable observer;
+    m_clipFades->draggedFadeChanged().onNotify(&observer, [&]() { ++notifications; });
+
+    //! [WHEN] It lengthens the fade-in over the fade-out, which it pushes
+    m_clipFades->changeFade(CLIP_END - CLIP_START);
+
+    //! [THEN] Observers are told
+    EXPECT_EQ(notifications, 1);
 }
 }

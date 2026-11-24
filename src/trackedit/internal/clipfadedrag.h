@@ -7,6 +7,7 @@
 #include <optional>
 
 #include "trackedit/dom/clip.h"
+#include "trackedit/iclipfades.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/itrackeditproject.h"
@@ -26,6 +27,9 @@ public:
 
     const ClipKey& leadClip() const;
     ClipSide side() const;
+    //! Where the fades of `clip`, as it is now, end, but for the dragged fades, which mustn't snap to themselves, and
+    //! for the fades they pushed, which have left where they were
+    IClipFades::FadeEnds snappableFadeEnds(const Clip& clip) const;
     bool changeFade(double duration);
 
     // Drag gets canceled if destroyed without commit()
