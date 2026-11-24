@@ -30,6 +30,8 @@ TrackItemsContainer {
     required property var selectionController
     required property bool splitToolActive
 
+    property bool isInitialized: false
+
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
     signal trackMousePositionChanged(real x, real y)
@@ -49,6 +51,13 @@ TrackItemsContainer {
 
     onInitRequired: function () {
         clipsModel.init()
+
+        if (contentItem && contentItem.clipsContainer) {
+            contentItem.clipsContainer.targetHeightRatio = root.trackViewState.channelHeightRatio
+            contentItem.clipsContainer.isInitialized = true
+        }
+
+        root.isInitialized = true
     }
 
     function changeClipTitle(index, newTitle) {
@@ -98,7 +107,8 @@ TrackItemsContainer {
                 anchors.bottomMargin: root.bottomSeparatorHeight
                 z: 1
 
-                property double targetHeightRatio: 0.5
+                property bool isInitialized: root.isInitialized
+                property double targetHeightRatio: root.trackViewState.channelHeightRatio
                 readonly property int minChannelHeight: 20
                 readonly property int viewHeight: prv.isMultiView ? (root.height / 2) : root.height
                 readonly property int yMinValue: Math.min(viewHeight / 2, minChannelHeight)
@@ -150,6 +160,10 @@ TrackItemsContainer {
                 }
 
                 onHeightChanged: {
+                    if (!isInitialized) {
+                        return
+                    }
+
                     updateChannelHeightRatio(clipsContainer.targetHeightRatio * viewHeight)
                 }
 
