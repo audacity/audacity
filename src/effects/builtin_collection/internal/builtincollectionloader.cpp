@@ -45,6 +45,7 @@
 #include "reverb/reverbviewmodel.h"
 #include "basstreble/basstrebleeffect.h"
 #include "basstreble/basstrebleviewmodel.h"
+#include "echo/echoeffect.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
@@ -102,6 +103,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
     static BuiltinEffectsModule::Registration< BassTrebleEffect > regBassTreble;
+    static BuiltinEffectsModule::Registration< EchoEffect > regEcho;
     static BuiltinEffectsModule::Registration< PaulstretchEffect > regPaulstretch;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< SlidingStretchEffect > regSlidingStretch;
