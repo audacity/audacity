@@ -52,26 +52,47 @@ BaseSection {
             text: qsTrc("preferences", "Language")
         }
 
-        StyledDropdown {
-            id: dropdown
+        Row {
+            spacing: 12
 
-            width: root.columnWidth
+            StyledDropdown {
+                id: dropdown
 
-            textRole: "name"
-            valueRole: "code"
+                width: root.columnWidth
+                anchors.verticalCenter: parent.verticalCenter
 
-            popupItemsCount: 11
-            currentIndex: dropdown.indexOfValue(root.currentLanguageCode)
+                textRole: "name"
+                valueRole: "code"
 
-            navigation.name: "LanguagesBox"
-            navigation.accessible.name: qsTrc("preferences", "Language %1").arg(currentText)
-            navigation.panel: root.navigation
-            navigation.column: 1
+                popupItemsCount: 11
+                currentIndex: dropdown.indexOfValue(root.currentLanguageCode)
 
-            indeterminateText: ""
+                navigation.name: "LanguagesBox"
+                navigation.accessible.name: qsTrc("preferences", "Language %1").arg(currentText)
+                navigation.panel: root.navigation
+                navigation.column: 1
 
-            onActivated: function (index, value) {
-                root.languageSelected(value)
+                indeterminateText: ""
+
+                onActivated: function (index, value) {
+                    root.languageSelected(value)
+                }
+            }
+
+            ProgressButton {
+                id: progressBtn
+
+                anchors.verticalCenter: parent.verticalCenter
+
+                text: qsTrc("preferences", "Check for language updates")
+
+                navigationName: "CheckForUpdate"
+                navigationPanel: root.navigation
+                navigationColumn: 2
+
+                onClicked: {
+                    root.checkForUpdateRequested()
+                }
             }
         }
     }
