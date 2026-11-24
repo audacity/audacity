@@ -14,6 +14,7 @@
 
 #include "AudacityException.h"
 #include "ConfigInterface.h"
+#include "EffectAutomationParameters.h"
 #include "FileException.h"
 #include "memorystream.h"
 #include "MemoryX.h"
@@ -103,7 +104,8 @@ wxString ParametersToString(const std::map<Steinberg::Vst::ParamID, Steinberg::V
    wxString result;
    for(auto& p : params)
       result.Append(wxString::Format(
-         "%lu=%f;", static_cast<unsigned long>(p.first), p.second));
+         "%lu=%s;", static_cast<unsigned long>(p.first),
+         CommandParameters::FormatValue(p.second)));
    return result;
 }
 
