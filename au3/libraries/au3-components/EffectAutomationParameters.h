@@ -48,7 +48,6 @@
 #include <wx/cmdline.h> // for wxCmdLineParser::ConvertStringToArgs
 #include <wx/fileconf.h> // to inherit
 #include <algorithm>
-#include <limits>
 
 #include "ComponentInterface.h"
 #include "ComponentInterfaceSymbol.h"
@@ -141,22 +140,10 @@ public:
         return DoWriteString(key, FormatValue(value));
     }
 
-    //! Formats with 8 significant digits, or as many more as are needed to
-    //! read back the same value
-    template<typename Float> static wxString FormatValue(Float value)
-    {
-        wxString result;
-        for (int digits = 8;
-             digits <= std::numeric_limits<Float>::max_digits10; ++digits) {
-            result = wxString::Format(wxT("%.*g"), digits, static_cast<double>(value));
-            double readBack;
-            if (result.ToDouble(&readBack)
-                && static_cast<Float>(readBack) == value) {
-                break;
-            }
-        }
-        return result;
-    }
+    //! Formats with only as many digits as are needed to read back the same
+    //! value
+    static wxString FormatValue(double value);
+    static wxString FormatValue(float value);
 
     bool ReadFloat(const wxString& key, float* pf) const
     {
