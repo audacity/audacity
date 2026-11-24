@@ -185,6 +185,7 @@ void BuiltinCollectionLoader::init()
     regView(PhaserEffect::Symbol, u"qrc:/phaser/PhaserView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(WahWahViewModelFactory);
+    regView(WahWahEffect::Symbol, u"qrc:/wahwah/WahWahView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
