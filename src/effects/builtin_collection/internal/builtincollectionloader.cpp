@@ -173,6 +173,7 @@ void BuiltinCollectionLoader::init()
     regView(BassTrebleEffect::Symbol, u"qrc:/basstreble/BassTrebleView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(EchoViewModelFactory);
+    regView(EchoEffect::Symbol, u"qrc:/echo/EchoView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
