@@ -116,6 +116,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/echo/echoviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/echo/echoviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phasereffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phasereffect.h
+
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.h
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretchviewmodel.cpp
