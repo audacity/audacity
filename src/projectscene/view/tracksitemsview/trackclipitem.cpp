@@ -88,3 +88,13 @@ FadeTypes::Type TrackClipItem::fadeOutType() const
 {
     return m_fadeOutType;
 }
+
+void TrackClipItem::setSelectionPixels(double start, double width)
+{
+    if (muse::RealIsEqual(m_selectionStart, start) && muse::RealIsEqual(m_selectionWidth, width)) {
+        return;
+    }
+    m_selectionStart = start;
+    m_selectionWidth = width;
+    emit selectionPixelsChanged();
+}

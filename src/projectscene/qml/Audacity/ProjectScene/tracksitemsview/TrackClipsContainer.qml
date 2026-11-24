@@ -438,9 +438,8 @@ TrackItemsContainer {
                                 verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
                                 asymmetricStereoHeightsPossible: clipsModel.asymmetricStereoHeightsPossible
 
-                                //! NOTE: use the same integer rounding as in WaveBitmapCache
-                                selectionStart: root.context.selectionStartPosition < itemData.x ? 0 : Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
-                                selectionWidth: root.context.selectionStartPosition < itemData.x ? Math.round(root.context.selectionEndPosition - itemData.x) : Math.floor(root.context.selectionEndPosition - itemData.x + 0.5) - Math.floor(root.context.selectionStartPosition - itemData.x + 0.5)
+                                selectionStart: itemData.selectionStart
+                                selectionWidth: itemData.selectionWidth
 
                                 selectionStartFrequency: root.selectionStartFrequency
                                 selectionEndFrequency: root.selectionEndFrequency

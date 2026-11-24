@@ -27,6 +27,26 @@ static const muse::Uri EDIT_CLIP_FADES_URI("audacity://projectscene/editclipfade
 TrackClipsListModel::TrackClipsListModel(QObject* parent)
     : TrackItemsListModel(parent)
 {
+    connect(this, &TrackItemsListModel::timelineContextChanged, this, [this]() {
+        if (!m_context) {
+            return;
+        }
+        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &TrackClipsListModel::onSelectionTimeChanged);
+        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &TrackClipsListModel::onSelectionTimeChanged);
+        onSelectionTimeChanged();
+    });
+}
+
+void TrackClipsListModel::onSelectionTimeChanged()
+{
+    //! NOTE The context also notifies these on every scroll step, which updates the items anyway
+    if (muse::RealIsEqual(m_selectionStartTime, m_context->selectionStartTime())
+        && muse::RealIsEqual(m_selectionEndTime, m_context->selectionEndTime())) {
+        return;
+    }
+    m_selectionStartTime = m_context->selectionStartTime();
+    m_selectionEndTime = m_context->selectionEndTime();
+    updateItemsMetrics();
 }
 
 void TrackClipsListModel::onInit()
@@ -354,6 +374,7 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         item->setWidth(0);
         item->setLeftVisibleMargin(0);
         item->setRightVisibleMargin(0);
+        item->setSelectionPixels(0.0, 0.0);
         return;
     }
 
@@ -367,6 +388,16 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     const double right = std::floor(0.5 + m_context->timeToPosition(time.itemEndTime));
     item->setX(left);
     item->setWidth(right - left);
+
+    //! NOTE Uses the same integer rounding as WaveBitmapCache. Computed here rather than in QML,
+    //! where it depended on the selection's position in the view and so changed on every scroll step.
+    const double selectionStart = m_context->timeToPosition(m_context->selectionStartTime()) - left;
+    const double selectionEnd = m_context->timeToPosition(m_context->selectionEndTime()) - left;
+    //! NOTE Kept within the clip: nothing cuts off what a clip draws beside itself
+    const double itemWidth = right - left;
+    const double start = std::clamp(std::floor(selectionStart + 0.5), 0.0, itemWidth);
+    const double end = std::clamp(std::floor(selectionEnd + 0.5), start, itemWidth);
+    item->setSelectionPixels(start, end - start);
     item->setLeftVisibleMargin(std::max(m_context->frameStartTime() - time.itemStartTime, 0.0) * m_context->zoom());
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
 }

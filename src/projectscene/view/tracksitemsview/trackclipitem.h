@@ -26,6 +26,9 @@ class TrackClipItem : public ViewTrackItem
     Q_PROPERTY(double fadeOutDuration READ fadeOutDuration NOTIFY fadesChanged FINAL)
     Q_PROPERTY(FadeTypes::Type fadeInType READ fadeInType NOTIFY fadesChanged FINAL)
     Q_PROPERTY(FadeTypes::Type fadeOutType READ fadeOutType NOTIFY fadesChanged FINAL)
+    //! The time selection within the clip item, in pixels from its left edge
+    Q_PROPERTY(double selectionStart READ selectionStart NOTIFY selectionPixelsChanged FINAL)
+    Q_PROPERTY(double selectionWidth READ selectionWidth NOTIFY selectionPixelsChanged FINAL)
     // Q_PROPERTY(QObject * envelopeModel READ envelopeModel NOTIFY envelopeModelChanged)
 
 public:
@@ -48,12 +51,17 @@ public:
     double clipStartTime() const { return m_clipStartTime; }
     double clipEndTime() const { return m_clipEndTime; }
 
+    double selectionStart() const { return m_selectionStart; }
+    double selectionWidth() const { return m_selectionWidth; }
+    void setSelectionPixels(double start, double width);
+
 signals:
     void groupIdChanged();
     void pitchChanged();
     void speedPercentageChanged();
     void contentChanged();
     void fadesChanged();
+    void selectionPixelsChanged();
 
 private:
     int m_groupId = -1;
@@ -65,5 +73,7 @@ private:
     FadeTypes::Type m_fadeOutType = toFadeTypesType(trackedit::defaultFadeType);
     double m_clipStartTime = 0.0;
     double m_clipEndTime = 0.0;
+    double m_selectionStart = 0.0;
+    double m_selectionWidth = 0.0;
 };
 }

@@ -97,6 +97,7 @@ private:
 
     void update();
     void updatePendingTitleEdit();
+    void onSelectionTimeChanged();
     void onMoveActiveChanged() override;
     void updateItemMetrics(ViewTrackItem* item) override;
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
@@ -119,5 +120,7 @@ private:
     bool m_isStereo = false;
     std::unique_ptr<trackedit::ClipFadeDrag> m_fadeDrag;
     trackedit::ClipKeyList m_clipsMovingWithSelection;
+    double m_selectionStartTime = 0.0;
+    double m_selectionEndTime = 0.0;
 };
 }
