@@ -179,6 +179,7 @@ void BuiltinCollectionLoader::init()
     regView(EchoEffect::Symbol, u"qrc:/echo/EchoView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PhaserViewModelFactory);
+    regView(PhaserEffect::Symbol, u"qrc:/phaser/PhaserView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
