@@ -13,6 +13,7 @@
 #include "effectstypes.h"
 
 #include <functional>
+#include <optional>
 
 struct EffectSettings;
 namespace au::effects {
@@ -29,6 +30,7 @@ public:
 
     virtual EffectMetaList effectMetaList() const = 0;
     virtual EffectMeta meta(const EffectId& effectId) const = 0;
+    virtual std::optional<EffectDisplayInfo> effectDisplayInfo(const EffectId& effectId) const = 0;
     virtual std::string effectName(const std::string& effectId) const = 0;
     virtual std::string effectName(const effects::RealtimeEffectState& state) const = 0;
     virtual std::string effectPath(const std::string& effectId) const = 0;

@@ -29,6 +29,7 @@
 #include "framework/global/api/iapiregister.h"
 #include "framework/rcommand/icommandsregister.h"
 #include "framework/rcommand/icommandsstate.h"
+#include "macromanager/imacrostephandlersregister.h"
 
 #include "api/projectapi.h"
 
@@ -39,6 +40,7 @@
 #include "internal/trackeditconfiguration.h"
 #include "internal/trackeditoperationcontroller.h"
 #include "internal/clipboarddata.h"
+#include "internal/selectstephandler.h"
 #include "internal/tracknavigationcontroller.h"
 #include "internal/tracksviewrequestsservice.h"
 #include "internal/trackspectrogramsettingsupdater.h"
@@ -47,6 +49,7 @@
 #include "view/deletebehaviorpanelmodel.h"
 #include "view/pastebehaviorpanelmodel.h"
 #include "view/tracknavigationmodel.h"
+#include "view/selectstepparamsmodel.h"
 
 #include "internal/au3/au3trackeditproject.h"
 #include "internal/au3/au3selectioncontroller.h"
@@ -92,6 +95,7 @@ void TrackeditModule::registerUiTypes()
     qmlRegisterType<DeleteBehaviorPanelModel>("Audacity.TrackEdit", 1, 0, "DeleteBehaviorPanelModel");
     qmlRegisterType<PasteBehaviorPanelModel>("Audacity.TrackEdit", 1, 0, "PasteBehaviorPanelModel");
     qmlRegisterType<TrackNavigationModel>("Audacity.TrackEdit", 1, 0, "TrackNavigationModel");
+    qmlRegisterType<SelectStepParamsModel>("Audacity.TrackEdit", 1, 0, "SelectStepParamsModel");
 }
 
 void TrackeditModule::resolveImports()
@@ -114,6 +118,7 @@ void TrackeditModule::resolveImports()
         ir->registerQmlUri(muse::Uri(
                                "audacity://trackedit/delete_behavior_followup"),
                            "Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml");
+        ir->registerQmlUri(SELECT_STEP_DIALOG_URI, "Audacity/TrackEdit/SelectStepDialog.qml");
     }
 }
 
@@ -165,6 +170,11 @@ void TrackeditContext::resolveImports()
     auto cs = ioc()->resolve<muse::rcommand::ICommandsState>(mname);
     if (cs) {
         cs->reg(std::make_shared<TrackeditCommandsState>(iocContext()));
+    }
+
+    auto sr = ioc()->resolve<macromanager::IMacroStepHandlersRegister>(mname);
+    if (sr) {
+        sr->reg(std::make_shared<SelectEnhancedStepHandler>(iocContext()));
     }
 }
 

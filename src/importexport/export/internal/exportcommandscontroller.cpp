@@ -9,57 +9,139 @@
 #include "framework/global/progress.h"
 #include "framework/global/log.h"
 
+#include "trackedit/trackeditutils.h"
+
 #include "../exportcommands.h"
 #include "../types/exporttypes.h"
+#include "exportcommandoptions.h"
 
 using namespace au::importexport;
 using namespace muse;
 
 namespace {
-const std::string MACRO_OUTPUT_DIR("macro-output");
-const std::string MP3_EXTENSION("mp3");
+ExportChannelsPref::ExportChannels toExportChannels(ExportChannelLayout layout, bool hasStereoTrack)
+{
+    switch (layout) {
+    case ExportChannelLayout::Mono: return ExportChannelsPref::ExportChannels::MONO;
+    case ExportChannelLayout::Stereo: return ExportChannelsPref::ExportChannels::STEREO;
+    case ExportChannelLayout::Auto: break;
+    }
+    return hasStereoTrack ? ExportChannelsPref::ExportChannels::STEREO : ExportChannelsPref::ExportChannels::MONO;
+}
+
+Val toParametersVal(const ExportParameters& parameters)
+{
+    ValList list;
+    for (const auto& [id, value] : parameters) {
+        list.push_back(Val(ValMap {
+                { "id", Val(id) },
+                { "value", std::visit([](const auto& v) { return Val(v); }, value) },
+            }));
+    }
+    return Val(list);
+}
+
+template<typename Rate>
+std::optional<int> sampleRateHz(Rate rate)
+{
+    return rate == Rate::ProjectRate ? std::nullopt : std::optional<int>(static_cast<int>(rate));
+}
 }
 
 void ExportCommandsController::init()
 {
-    commandDispatcher()->onRequest(this, EXPORT_MP3_COMMAND, [this](const muse::rcommand::Params& params) {
-        return exportToMacroOutput(MP3_EXTENSION, params);
+    const auto cd = commandDispatcher();
+
+    cd->onRequest<ExportAsWavCommand>(this, [this](const ExportAsWavCommand& c) {
+        return exportWithSavedOptions(WavSettings {}, c.folder, c.fileName);
+    });
+    cd->onRequest<ExportAsMp3Command>(this, [this](const ExportAsMp3Command& c) {
+        return exportWithSavedOptions(Mp3PresetSettings {}, c.folder, c.fileName);
+    });
+    cd->onRequest<ExportAsFlacCommand>(this, [this](const ExportAsFlacCommand& c) {
+        return exportWithSavedOptions(FlacSettings {}, c.folder, c.fileName);
+    });
+    cd->onRequest<ExportAsOggCommand>(this, [this](const ExportAsOggCommand& c) {
+        return exportWithSavedOptions(OggSettings {}, c.folder, c.fileName);
+    });
+    cd->onRequest<ExportWavCommand>(this, [this](const ExportWavCommand& c) {
+        return exportAudio(WavSettings { c.encoding }, c.folder, sampleRateHz(c.sampleRate), c.channels, c.fileName);
+    });
+    cd->onRequest<ExportMp3Command>(this, [this](const ExportMp3Command& c) {
+        return exportAudio(mp3Settings(c.quality), c.folder, sampleRateHz(c.sampleRate), c.channels, c.fileName);
+    });
+    cd->onRequest<ExportFlacCommand>(this, [this](const ExportFlacCommand& c) {
+        return exportAudio(FlacSettings { c.bitDepth, c.level }, c.folder, sampleRateHz(c.sampleRate), c.channels, c.fileName);
+    });
+    cd->onRequest<ExportOggCommand>(this, [this](const ExportOggCommand& c) {
+        return exportAudio(OggSettings { c.quality }, c.folder, sampleRateHz(c.sampleRate), c.channels, c.fileName);
     });
 }
 
-Ret ExportCommandsController::exportToMacroOutput(const std::string& extension, const muse::rcommand::Params& params)
+Ret ExportCommandsController::exportAudio(const ExportFormatSettings& settings, const std::string& folder,
+                                          std::optional<int> sampleRate, ExportChannelLayout channels,
+                                          const std::string& fileName)
 {
-    if (!globalContext()->currentProject()) {
+    const int exportSampleRate = sampleRate ? *sampleRate : exporter()->defaultSampleRate(settings);
+
+    const RetVal<ExportParameters> parameters = exporter()->exportParameters(settings, exportSampleRate);
+    if (!parameters.ret) {
+        return parameters.ret;
+    }
+
+    return runExport(std::string(extensionOf(settings)), exportSampleRate, channels, folder, fileName, toParametersVal(parameters.val));
+}
+
+Ret ExportCommandsController::exportWithSavedOptions(const ExportFormatSettings& format, const std::string& folder,
+                                                     const std::string& fileName)
+{
+    return runExport(std::string(extensionOf(format)), exporter()->defaultSampleRate(format), ExportChannelLayout::Auto, folder,
+                     fileName, std::nullopt);
+}
+
+Ret ExportCommandsController::runExport(const std::string& extension, int sampleRate, ExportChannelLayout channels,
+                                        const std::string& folder, const std::string& fileName, const std::optional<Val>& parameters)
+{
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
         return make_ret(Ret::Code::NotSupported, "no project is open");
     }
 
-    const std::optional<std::string> format = formatForExtension(extension);
-    if (!format) {
+    const std::optional<std::string> formatName = formatForExtension(extension);
+    if (!formatName) {
         return make_ret(Ret::Code::NotSupported, "export format not available: " + extension);
     }
 
-    const io::path_t outputDir = exportConfiguration()->directoryPath() + "/" + MACRO_OUTPUT_DIR;
-    const Ret dirRet = fileSystem()->makePath(outputDir);
+    OutputPathContext pathContext = macroOutputPathContext(exportConfiguration()->directoryPath(), project->path(),
+                                                           project->displayName().toStdString());
+    pathContext.macroFileName = macroRunner()->currentFileName();
+
+    const RetVal<io::path_t> outputPath = exportOutputPath(folder, fileName, pathContext, extension);
+    if (!outputPath.ret) {
+        return outputPath.ret;
+    }
+
+    const Ret dirRet = fileSystem()->makePath(io::dirpath(outputPath.val));
     if (!dirRet) {
         return dirRet;
     }
 
-    std::string baseName = params.contains(EXPORT_NAME_PARAM) ? params.at(EXPORT_NAME_PARAM).toString() : outputBaseName();
-    baseName = io::escapeFileName(baseName).toStdString();
-    if (baseName.empty() || baseName == "." || baseName == "..") {
-        return make_ret(Ret::Code::BadArgs, "invalid export name");
+    const ExportChannelsPref::ExportChannels channelsType
+        = toExportChannels(channels, trackedit::utils::hasStereoTrack(globalContext()->currentTrackeditProject()->trackList()));
+
+    IExporter::Options options {
+        { IExporter::OptionKey::Format, Val(*formatName) },
+        { IExporter::OptionKey::ProcessType, Val(static_cast<int>(ExportProcessType::FULL_PROJECT_AUDIO)) },
+        { IExporter::OptionKey::ExportSampleRate, Val(sampleRate) },
+        { IExporter::OptionKey::ExportChannelsType, Val(static_cast<int>(channelsType)) },
+    };
+    if (parameters) {
+        options[IExporter::OptionKey::Parameters] = *parameters;
     }
 
-    const io::path_t outputPath = outputDir + "/" + baseName + "." + extension;
+    LOGI() << "exporting to " << outputPath.val;
 
-    const IExporter::Options options {
-        { IExporter::OptionKey::Format, Val(*format) },
-        { IExporter::OptionKey::ProcessType, Val(static_cast<int>(ExportProcessType::FULL_PROJECT_AUDIO)) },
-    };
-
-    LOGI() << "exporting to " << outputPath;
-
-    return exporter()->exportData(outputPath, options, std::make_shared<Progress>());
+    return exporter()->exportData(outputPath.val, options, std::make_shared<Progress>());
 }
 
 std::optional<std::string> ExportCommandsController::formatForExtension(const std::string& extension) const
@@ -72,16 +154,4 @@ std::optional<std::string> ExportCommandsController::formatForExtension(const st
     }
 
     return std::nullopt;
-}
-
-std::string ExportCommandsController::outputBaseName() const
-{
-    const project::IAudacityProjectPtr project = globalContext()->currentProject();
-
-    const io::path_t path = project->path();
-    if (!path.empty()) {
-        return io::completeBasename(path).toStdString();
-    }
-
-    return project->displayName().toStdString();
 }

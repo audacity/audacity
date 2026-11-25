@@ -163,10 +163,14 @@ bool MacroManagerModel::isRowValid(int row) const
 std::vector<std::string> MacroManagerModel::unknownCommands(const Macro& macro) const
 {
     std::vector<std::string> unknown;
-    for (const MacroItem& item : macro.steps) {
-        if (const MacroStep* step = std::get_if<MacroStep>(&item)) {
+    for (const MacroStep& item : macro.steps) {
+        if (const CommandStep* step = std::get_if<CommandStep>(&item)) {
             if (!commandsRegister()->commandInfo(step->command).isValid()) {
                 unknown.push_back(step->command.toString());
+            }
+        } else if (const CustomStep* custom = std::get_if<CustomStep>(&item)) {
+            if (!stepHandlersRegister()->handler(custom->handlerId)) {
+                unknown.push_back(custom->handlerId);
             }
         } else if (const std::string& name = std::get<MacroReference>(item).name; !repository()->macro(name)) {
             unknown.push_back(name);

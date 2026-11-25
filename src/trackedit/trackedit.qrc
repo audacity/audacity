@@ -9,6 +9,7 @@
         <file>qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml</file>
         <file>qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml</file>
         <file>qml/Audacity/TrackEdit/PasteBehaviorPanel.qml</file>
+        <file>qml/Audacity/TrackEdit/SelectStepDialog.qml</file>
         <file>qml/Audacity/TrackEdit/StyledTextLabelWithCustomLinkActivatedSignal.qml</file>
         <file>resources/LightMode_RippleDelete.gif</file>
         <file>resources/LightMode_DeleteAndLeaveGap.gif</file>

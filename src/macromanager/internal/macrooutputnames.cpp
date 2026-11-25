@@ -6,13 +6,13 @@
 #include <algorithm>
 #include <iterator>
 
-#include "importexport/export/exportutils.h"
+#include "shared/io/uniquefilenames.h"
 
 using namespace muse;
 
 std::vector<std::string> au::macromanager::uniqueOutputNames(const io::paths_t& files)
 {
-    importexport::utils::UniqueFileNames usedNames;
+    shared::UniqueFileNames usedNames;
     std::vector<std::string> names;
     names.reserve(files.size());
 
