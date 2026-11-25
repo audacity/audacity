@@ -13,6 +13,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au4audioengine.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/blockcontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/blockcontext.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/busgraph.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/busgraph.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/captureinput.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/captureinput.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectscratch.cpp
@@ -45,6 +47,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/playheadmapper.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/recordingcapture.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/recordingcapture.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/sendnode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/sendnode.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/sharedoutputnode.cpp

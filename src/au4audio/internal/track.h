@@ -35,6 +35,8 @@ struct Track {
     int64_t queueLead = 0;
     //! Its meter's, if it has one
     std::optional<int64_t> meterId;
+    //! Before its volume and pan, if it sends from there: in its sequence's channels
+    std::shared_ptr<ISequenceProcessingNode> preFader;
 };
 
 //! How a track reads its sequence ahead, on a worker, behind a LockFreeQueueNode
@@ -68,6 +70,9 @@ struct TrackSettings {
     int masterLatency = 0;
     //! The solos of the busses it goes to: soloing them plays it too
     std::vector<std::function<bool()> > soloedWith;
+    //! If it sends before its volume and pan, the most kept there for the sends, which read it apart from the rest of the
+    //! chain. Not where its worker renders the chain.
+    std::optional<size_t> preFaderCapacity;
 };
 
 //! The chain of `sequence`, read as it processes its clips: where the playhead reads, ahead if it reads ahead,

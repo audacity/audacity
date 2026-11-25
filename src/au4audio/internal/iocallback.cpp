@@ -15,6 +15,7 @@
 #include "au3-project/Project.h"
 
 #include "blockcontext.h"
+#include "busgraph.h"
 #include "effectsnode.h"
 #include "gainpannode.h"
 #include "metersender.h"
@@ -22,7 +23,9 @@
 #include "monitoredinput.h"
 #include "mutesolonode.h"
 #include "recordingcapture.h"
+#include "sendnode.h"
 #include "sequentialmixnode.h"
+#include "sharedoutputnode.h"
 
 using namespace au::au4audio;
 
@@ -37,44 +40,37 @@ size_t readAheadNumChunks(const au::audio::IDevice& device, size_t settingNumChu
 }
 
 using Busses = std::vector<std::shared_ptr<const BusTrack> >;
-//! By the indices of busses: none for the master
-using BusOutputs = std::vector<std::optional<size_t> >;
 
-std::optional<size_t> busIndex(const Busses& busses, const BusTrack* bus)
+std::optional<size_t> busIndex(const Busses& busses, std::optional<TrackId> id)
 {
-    const auto it = std::find_if(busses.begin(), busses.end(), [bus](const auto& other) { return other.get() == bus; });
+    const auto it = std::find_if(busses.begin(), busses.end(), [id](const auto& bus) { return id && bus->GetId() == *id; });
     return it == busses.end() ? std::nullopt : std::make_optional(static_cast<size_t>(it - busses.begin()));
 }
 
-//! Where the busses go. A loop, which the UI doesn't allow, goes to the master.
-BusOutputs busOutputs(const Busses& busses)
+//! Where a track or a bus goes, and what it sends, by the indices of busses
+struct Routing {
+    au::au4audio::BusDestinations destinations;
+    std::vector<std::pair<size_t, std::shared_ptr<const TrackSends::Send> > > sends;
+    bool sendsPreFader = false;
+};
+
+//! To the master, for a null track
+Routing routingOf(const ::Track* track, const Busses& busses)
 {
-    BusOutputs outputs;
-    for (const auto& bus : busses) {
-        outputs.push_back(busIndex(busses, TrackOutput::Get(*bus).FindBus()));
+    Routing routing;
+    if (!track) {
+        return routing;
     }
-    for (size_t b = 0; b < busses.size(); ++b) {
-        std::vector<bool> visited(busses.size(), false);
-        visited[b] = true;
-        for (auto next = outputs[b]; next; next = outputs[*next]) {
-            if (visited[*next]) {
-                outputs[b].reset();
-                break;
-            }
-            visited[*next] = true;
+    const auto output = TrackOutput::Get(*track).FindBus();
+    routing.destinations.output = busIndex(busses, output ? std::make_optional(output->GetId()) : std::nullopt);
+    for (const auto& send : TrackSends::Get(*track).FindSends()) {
+        if (const auto b = busIndex(busses, send->bus)) {
+            routing.destinations.sends.push_back(*b);
+            routing.sends.push_back({ *b, send });
+            routing.sendsPreFader = routing.sendsPreFader || send->preFader;
         }
     }
-    return outputs;
-}
-
-//! `bus` and the busses after it, until the master
-std::vector<size_t> pathFrom(std::optional<size_t> bus, const BusOutputs& outputs)
-{
-    std::vector<size_t> path;
-    for (auto next = bus; next; next = outputs[*next]) {
-        path.push_back(*next);
-    }
-    return path;
+    return routing;
 }
 
 using Segments = std::vector<std::pair<int64_t, int64_t> >;
@@ -126,18 +122,19 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
             m_effectsInitialization->AddGroup(*group, numChannels, m_sampleRate, m_blockSize);
         }
     }
-    // The busses, which mix the tracks and the busses that go to them, instead of the master: in the device callback
+    // The busses, which mix what goes and is sent to them, instead of the master: in the device callback
     Busses busses;
     for (const auto bus : ::TrackList::Get(project).Any<const BusTrack>()) {
         busses.push_back(bus->SharedPointer<const BusTrack>());
         m_effectsInitialization->AddGroup(*bus, numChannels, m_sampleRate, m_blockSize);
     }
-    const auto outputsOfBusses = busOutputs(busses);
-    // The bus a sequence goes to
-    const auto busOf = [&](const PlayableSequence* sequence) -> std::optional<size_t> {
-        const auto track = sequence ? dynamic_cast<const ::Track*>(sequence->FindChannelGroup()) : nullptr;
-        return track ? busIndex(busses, TrackOutput::Get(*track).FindBus()) : std::nullopt;
+    const auto trackOf = [](const PlayableSequence* sequence) {
+        return sequence ? dynamic_cast<const ::Track*>(sequence->FindChannelGroup()) : nullptr;
     };
+    std::vector<Routing> trackRoutings;
+    for (const auto& sequence : playbackSequences) {
+        trackRoutings.push_back(routingOf(trackOf(sequence.get()), busses));
+    }
     // The monitored track, if any, whether it plays or not
     const auto& monitoredTrack = m_monitorSettings ? m_monitorSettings->track : nullptr;
     const auto monitoredGroup = monitoredTrack ? monitoredTrack->FindChannelGroup() : nullptr;
@@ -152,14 +149,21 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
         m_monitoredInput = std::make_shared<MonitoredInput>(m_monitorSettings->numInputChannels, maxFrames,
                                                             *m_monitorSettings->inputVolume);
     }
-    // The device callback processes the effects of the master, and of the track the input is monitored through; the
-    // workers those of the other tracks, each in a scope of its own
+    // The device callback processes the effects of the master, of the busses, of the track the input is monitored through,
+    // and of the tracks that send before their volume and pan, as their sends read them there; the workers those of the
+    // other tracks, each in a scope of its own
     std::vector<const ChannelGroup*> callbackGroups { RealtimeEffectManager::MasterGroup };
     if (monitoredGroup) {
         callbackGroups.push_back(monitoredGroup);
     }
     for (const auto& bus : busses) {
         callbackGroups.push_back(bus.get());
+    }
+    for (size_t i = 0; i < playbackSequences.size(); ++i) {
+        const auto group = playbackSequences[i]->FindChannelGroup();
+        if (trackRoutings[i].sendsPreFader && group && group != monitoredGroup) {
+            callbackGroups.push_back(group);
+        }
     }
     const auto makeBlockContext = [&](std::vector<const ChannelGroup*> groups) {
         return std::make_unique<BlockContext>(m_wProject, *m_effectsInitialization, playbackSequences, *m_mapper, m_endPosition,
@@ -179,61 +183,90 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
     // The master reads the tracks ahead by its effects' latency, and as long again where reading jumps
     settings.meterCapacity = maxFrames + 2 * static_cast<size_t>(std::max(0, masterLatency));
     settings.masterLatency = std::max(0, masterLatency);
+
     std::vector<int> busLatencies;
+    std::vector<BusDestinations> busDestinations;
+    std::vector<Routing> busRoutings;
     for (const auto& bus : busses) {
         busLatencies.push_back(std::max(0, m_blockContext->latency(bus.get())));
+        busRoutings.push_back(routingOf(bus.get(), busses));
+        busDestinations.push_back(busRoutings.back().destinations);
     }
-    // How far ahead what goes to `bus` is read: by the latency of the effects of the busses from it on, and of the master's
-    const auto leadTo = [&](std::optional<size_t> bus) {
-        int lead = settings.masterLatency;
-        for (const auto b : pathFrom(bus, outputsOfBusses)) {
-            lead += busLatencies[b];
-        }
-        return lead;
-    };
-    // The solos of the busses from `bus` on: soloing them plays what goes to `bus` too
-    const auto solosFrom = [&](std::optional<size_t> bus) {
+    const BusGraph graph { std::move(busDestinations), std::move(busLatencies), settings.masterLatency };
+    for (size_t b = 0; b < busses.size(); ++b) {
+        // As the graph keeps them
+        auto& routing = busRoutings[b];
+        routing.destinations = graph.destinations(b);
+        const auto& kept = routing.destinations.sends;
+        routing.sends.erase(std::remove_if(routing.sends.begin(), routing.sends.end(), [&](const auto& send) {
+            return std::find(kept.begin(), kept.end(), send.first) == kept.end();
+        }), routing.sends.end());
+        routing.sendsPreFader = std::any_of(routing.sends.begin(), routing.sends.end(), [](const auto& send) {
+            return send.second->preFader;
+        });
+    }
+    // The solos of the busses that what goes to `to` goes through: soloing them plays it too
+    const auto solosThrough = [&](const BusDestinations& to) {
         std::vector<std::function<bool()> > solos;
-        for (const auto b : pathFrom(bus, outputsOfBusses)) {
+        for (const auto b : graph.reachable(to)) {
             solos.push_back([bus = busses[b]] { return bus->GetSolo(); });
         }
         return solos;
     };
-    // The settings of a chain that goes to `bus`
-    const auto routedSettings = [&](std::optional<size_t> bus) {
-        auto routed = settings;
-        routed.masterLatency = leadTo(bus);
-        routed.meterCapacity = maxFrames + 2 * static_cast<size_t>(routed.masterLatency);
-        routed.soloedWith = solosFrom(bus);
-        return routed;
-    };
-    // What goes to the master, and to each bus, of the tracks; and the solos of the tracks before each bus
+    // What goes to the master, and to each bus; and the solos of what goes through each bus
     std::vector<std::shared_ptr<ISequenceProcessingNode> > outputs;
     std::vector<std::vector<std::shared_ptr<ISequenceProcessingNode> > > busInputs(busses.size());
     std::vector<std::vector<std::function<bool()> > > solosBefore(busses.size());
-    const auto route = [&](std::shared_ptr<ISequenceProcessingNode> output, std::optional<size_t> bus,
-                           const std::shared_ptr<const PlayableSequence>& sequence) {
-        if (!bus) {
-            outputs.push_back(std::move(output));
-            return;
+    for (size_t b = 0; b < busses.size(); ++b) {
+        for (const auto after : graph.reachable(graph.destinations(b))) {
+            solosBefore[after].push_back([bus = busses[b]] { return bus->GetSolo(); });
         }
-        busInputs[*bus].push_back(std::move(output));
-        for (const auto b : pathFrom(bus, outputsOfBusses)) {
-            if (sequence) {
-                solosBefore[b].push_back([sequence] { return sequence->GetSolo(); });
+    }
+    // Where `routing` says: `output`, and the sends, after it or from `preFader`, before its volume and pan, if they are
+    // from there. `output` is read ahead by `lead`, and its readers read it apart by as much.
+    const auto distribute = [&](std::shared_ptr<ISequenceProcessingNode> output, std::shared_ptr<ISequenceProcessingNode> preFader,
+                                size_t numPreFaderChannels, const Routing& routing, int lead) {
+        const auto numReaders = 1 + std::count_if(routing.sends.begin(), routing.sends.end(), [&](const auto& send) {
+            return !(send.second->preFader && preFader);
+        });
+        if (numReaders > 1) {
+            output = std::make_shared<SharedOutputNode>(std::move(output), maxFrames + 2 * static_cast<size_t>(lead), maxFrames);
+        }
+        for (const auto& [b, send] : routing.sends) {
+            auto level = [send = send] { return send->level.load(std::memory_order_relaxed); };
+            if (send->preFader && preFader) {
+                busInputs[b].push_back(std::make_shared<SendNode>(preFader, numPreFaderChannels, std::move(level)));
+            } else {
+                busInputs[b].push_back(std::make_shared<SendNode>(output, numChannels, std::move(level)));
             }
         }
+        if (routing.destinations.output) {
+            busInputs[*routing.destinations.output].push_back(std::move(output));
+        } else {
+            outputs.push_back(std::move(output));
+        }
+    };
+    // The settings of a chain that goes where `routing` says
+    const auto routedSettings = [&](const Routing& routing) {
+        auto routed = settings;
+        routed.masterLatency = graph.lead(routing.destinations);
+        routed.meterCapacity = maxFrames + 2 * static_cast<size_t>(routed.masterLatency);
+        routed.soloedWith = solosThrough(routing.destinations);
+        return routed;
     };
     int64_t maxLatency = settings.masterLatency;
     std::vector<int64_t> meterLeads;
     for (size_t i = 0; i < playbackSequences.size(); ++i) {
         const auto& sequence = playbackSequences[i];
-        const auto bus = busOf(sequence.get());
-        const auto routed = routedSettings(bus);
+        const auto& routing = trackRoutings[i];
+        const auto routed = routedSettings(routing);
         meterLeads.push_back(routed.masterLatency);
         maxLatency = std::max<int64_t>(maxLatency, routed.masterLatency);
         if (const auto group = sequence->FindChannelGroup()) {
             maxLatency = std::max<int64_t>(maxLatency, routed.masterLatency + std::max(0, m_blockContext->latency(group)));
+        }
+        for (const auto b : graph.reachable(routing.destinations)) {
+            solosBefore[b].push_back([sequence] { return sequence->GetSolo(); });
         }
         std::optional<int64_t> stop;
         if (recording) {
@@ -245,9 +278,11 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
         auto trackSettings = routed;
         const auto group = sequence->FindChannelGroup();
         const bool monitored = monitoredTrackPlays && group == monitoredGroup;
-        // That the input is monitored through reads only its sequence ahead: its effects render in the device callback
-        trackSettings.readAhead = TrackReadAhead { m_readAheadChunkSize, m_readAheadNumChunks, !monitored };
-        if (!monitored) {
+        // That the input is monitored through, and one sending before its volume and pan, read only their sequences ahead:
+        // their effects render in the device callback
+        const bool rendersHere = monitored || routing.sendsPreFader;
+        trackSettings.readAhead = TrackReadAhead { m_readAheadChunkSize, m_readAheadNumChunks, !rendersHere };
+        if (!rendersHere) {
             // Its worker processes its effects, in a scope of their own
             m_trackContexts.push_back(makeBlockContext(group ? std::vector<const ChannelGroup*> { group }
                                                        : std::vector<const ChannelGroup*> {}));
@@ -256,57 +291,56 @@ void IoCallback::build(const TransportSequences& sequences, const audio::IAudioM
             trackSettings.muteSolo = trackSettings.chainContext;
             trackSettings.endOfTrack = trackSettings.chainContext;
         }
+        if (routing.sendsPreFader) {
+            trackSettings.preFaderCapacity = maxFrames + 2 * static_cast<size_t>(routed.masterLatency);
+        }
         if (monitored) {
             trackSettings.monitoredInput = m_monitoredInput;
         }
         m_tracks.push_back(buildTrack(sequence, trackSettings, stop));
-        route(m_tracks.back().output, bus, sequence);
+        const auto& track = m_tracks.back();
+        distribute(track.output, track.preFader, sequence->NChannels(), routing, routed.masterLatency);
     }
     if (m_monitoredInput && !monitoredTrackPlays) {
-        // Not metered: the input meters show it
-        const auto bus = busOf(monitoredTrack.get());
-        auto monitorSettings = routedSettings(bus);
+        // Not metered: the input meters show it. Its sends are from after its volume and pan.
+        const auto routing = routingOf(trackOf(monitoredTrack.get()), busses);
+        auto monitorSettings = routedSettings(routing);
         monitorSettings.monitoredInput = m_monitoredInput;
-        route(buildMonitoredInput(monitoredTrack, monitorSettings), bus, monitoredTrack);
-    }
-    // The solos of the busses before each bus
-    for (size_t b = 0; b < busses.size(); ++b) {
-        for (const auto after : pathFrom(outputsOfBusses[b], outputsOfBusses)) {
-            solosBefore[after].push_back([bus = busses[b]] { return bus->GetSolo(); });
+        if (monitoredTrack) {
+            for (const auto b : graph.reachable(routing.destinations)) {
+                solosBefore[b].push_back([monitoredTrack] { return monitoredTrack->GetSolo(); });
+            }
         }
+        distribute(buildMonitoredInput(monitoredTrack, monitorSettings), nullptr, numChannels, routing,
+                   monitorSettings.masterLatency);
     }
     m_maxLatency = maxLatency;
 
-    // The busses, as tracks: their mixes, effects, mute/solo, volume/pan and meters; those before a bus first
+    // The busses, as tracks: their mixes, effects, mute/solo, volume/pan and meters; those that go to a bus before it
     std::vector<MeterSender::Tap> busTaps;
-    const std::function<std::shared_ptr<ISequenceProcessingNode>(size_t)> buildBus = [&](size_t b) {
+    for (const auto b : graph.order()) {
         const auto& bus = busses[b];
-        auto inputs = std::move(busInputs[b]);
-        for (size_t before = 0; before < busses.size(); ++before) {
-            if (outputsOfBusses[before] == b) {
-                inputs.push_back(buildBus(before));
-            }
-        }
-        std::shared_ptr<ISequenceProcessingNode> node = std::make_shared<SequentialMixNode>(std::move(inputs), maxFrames);
+        const auto& routing = busRoutings[b];
+        const auto lead = graph.lead(routing.destinations);
+        std::shared_ptr<ISequenceProcessingNode> node = std::make_shared<SequentialMixNode>(std::move(busInputs[b]), maxFrames);
         node = std::make_shared<EffectsNode>(std::move(node), numChannels, bus.get(), *m_blockContext, maxFrames);
-        // Soloing what goes to it, or what it goes to, plays it too
+        // Soloing what goes through it plays it too
         auto soloedWith = std::move(solosBefore[b]);
-        for (auto& solo : solosFrom(outputsOfBusses[b])) {
+        for (auto& solo : solosThrough(routing.destinations)) {
             soloedWith.push_back(std::move(solo));
         }
         node = std::make_shared<MuteSoloNode>(std::move(node),
                                               MuteSoloSwitches { [bus] { return bus->GetMute(); }, [bus] { return bus->GetSolo(); } },
                                               *m_blockContext, std::move(soloedWith));
+        std::shared_ptr<ISequenceProcessingNode> preFader;
+        if (routing.sendsPreFader) {
+            preFader = std::make_shared<SharedOutputNode>(std::move(node), maxFrames + 2 * static_cast<size_t>(lead), maxFrames);
+            node = preFader;
+        }
         node = std::make_shared<GainPanNode>(std::move(node), numChannels, [bus](int channel) { return bus->GetChannelVolume(channel); });
-        const auto lead = leadTo(outputsOfBusses[b]);
         auto tap = std::make_shared<MeterTapNode>(std::move(node), numChannels, maxFrames + 2 * static_cast<size_t>(lead));
         busTaps.push_back({ tap, audio::IAudioMeter::TrackId { static_cast<int64_t>(bus->GetId()) }, lead });
-        return tap;
-    };
-    for (size_t b = 0; b < busses.size(); ++b) {
-        if (!outputsOfBusses[b]) {
-            outputs.push_back(buildBus(b));
-        }
+        distribute(std::move(tap), std::move(preFader), numChannels, routing, lead);
     }
 
     std::shared_ptr<ISequenceProcessingNode> master = std::make_shared<SequentialMixNode>(std::move(outputs), maxFrames);

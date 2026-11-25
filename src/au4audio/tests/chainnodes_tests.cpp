@@ -22,6 +22,7 @@
 #include "../internal/metertapnode.h"
 #include "../internal/monitoredinput.h"
 #include "../internal/mutesolonode.h"
+#include "../internal/sendnode.h"
 #include "../internal/sequentialmixnode.h"
 #include "../internal/sharedoutputnode.h"
 #include "../internal/stereo.h"
@@ -510,4 +511,30 @@ TEST(SharedOutputNodeTests, RendersAgainWhereReadingJumps)
 
     EXPECT_EQ(output.left, ramp(TEST_JUMP_INDEX, TEST_READ_LEN));
     EXPECT_EQ(input->rendered, static_cast<int64_t>(TEST_MAX_FRAMES + TEST_READ_LEN));
+}
+
+TEST(SendNodeTests, SendsAStereoInputAtItsLevel)
+{
+    constexpr float level = TEST_LEFT_VOLUME;
+    SendNode node { std::make_shared<ConstantNode>(TEST_LEVEL), au::au4audio::numChannels, [] { return level; } };
+
+    const auto output = read(node, 0, TEST_MAX_FRAMES);
+
+    EXPECT_EQ(output.left, std::vector<float>(TEST_MAX_FRAMES, TEST_LEVEL * level));
+    EXPECT_EQ(output.right, std::vector<float>(TEST_MAX_FRAMES, TEST_LEVEL * level));
+}
+
+TEST(SendNodeTests, SendsAMonoInputInBothChannels)
+{
+    constexpr float level = TEST_LEFT_VOLUME;
+    SendNode node { std::make_shared<RampNode>(1), 1, [] { return level; } };
+
+    const auto output = read(node, 0, TEST_MAX_FRAMES);
+
+    auto expected = ramp(0, TEST_MAX_FRAMES);
+    for (auto& sample : expected) {
+        sample *= level;
+    }
+    EXPECT_EQ(output.left, expected);
+    EXPECT_EQ(output.right, expected);
 }

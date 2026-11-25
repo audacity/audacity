@@ -18,6 +18,7 @@
 #include "monitoredinput.h"
 #include "mutesolonode.h"
 #include "sequentialmixnode.h"
+#include "sharedoutputnode.h"
 #include "stereo.h"
 
 using namespace au::au4audio;
@@ -73,6 +74,11 @@ au::au4audio::Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSeque
         node = std::make_shared<EffectsNode>(std::move(node), numSequenceChannels, group, *settings.effects, settings.maxFrames);
     }
     node = std::make_shared<MuteSoloNode>(std::move(node), sequence, *settings.muteSolo, settings.soloedWith);
+    std::shared_ptr<ISequenceProcessingNode> preFader;
+    if (settings.preFaderCapacity) {
+        preFader = std::make_shared<SharedOutputNode>(std::move(node), *settings.preFaderCapacity, settings.maxFrames);
+        node = preFader;
+    }
     node = std::make_shared<GainPanNode>(std::move(node), sequence);
     if (readAhead && readAhead->wholeChain) {
         // The tap is read where the device is: after the queue, which is stereo, as volume/pan outputs
@@ -91,7 +97,7 @@ au::au4audio::Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSeque
     if (queue) {
         queueLead = settings.masterLatency + (readAhead->wholeChain || !group ? 0 : settings.effects->latency(group));
     }
-    return { tap, tap, std::move(queue), queueLead, meterId };
+    return { tap, tap, std::move(queue), queueLead, meterId, std::move(preFader) };
 }
 
 std::shared_ptr<ISequenceProcessingNode> au::au4audio::buildMonitoredInput(std::shared_ptr<const PlayableSequence> track,
