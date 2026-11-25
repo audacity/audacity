@@ -22,7 +22,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Minutes && seconds"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_BEATS_MEASURES_RULER_COMMAND,
@@ -31,7 +32,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Beats && measures"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND,
@@ -40,7 +42,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show vertical rulers"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_RMS_IN_WAVEFORM_COMMAND,
@@ -49,7 +52,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show RMS in waveform"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_CLIPPING_IN_WAVEFORM_COMMAND,
@@ -58,7 +62,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show clipping in waveform"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_COMMAND,
@@ -67,7 +72,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Update display while playing"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_PINNED_PLAY_HEAD_COMMAND,
@@ -76,7 +82,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Pinned playhead"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_PLAYBACK_ON_RULER_CLICK_COMMAND,
@@ -85,7 +92,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Click ruler to start playback"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_TRACK_HALF_WAVE_COMMAND,
@@ -106,7 +114,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Clip gain"),
         InputSchema(),
-        Decoration(IconCode::Code::AUTOMATION)
+        Decoration(IconCode::Code::AUTOMATION),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_CLIP_PITCH_AND_SPEED_COMMAND,
@@ -138,7 +147,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Zoom in"),
         InputSchema(),
-        Decoration(IconCode::Code::ZOOM_IN)
+        Decoration(IconCode::Code::ZOOM_IN),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_ZOOM_OUT_COMMAND,
@@ -147,7 +157,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Zoom out"),
         InputSchema(),
-        Decoration(IconCode::Code::ZOOM_OUT)
+        Decoration(IconCode::Code::ZOOM_OUT),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_ZOOM_DEFAULT_COMMAND,
@@ -156,7 +167,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Zoom default"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_ZOOM_TO_SELECTION_COMMAND,
@@ -165,7 +177,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Zoom to selection"),
         InputSchema(),
-        Decoration(IconCode::Code::FIT_SELECTION)
+        Decoration(IconCode::Code::FIT_SELECTION),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_ZOOM_TO_FIT_PROJECT_COMMAND,
@@ -174,7 +187,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Zoom to fit project"),
         InputSchema(),
-        Decoration(IconCode::Code::FIT_PROJECT)
+        Decoration(IconCode::Code::FIT_PROJECT),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_ZOOM_TOGGLE_COMMAND,
@@ -183,7 +197,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Zoom toggle"),
         InputSchema(),
-        Decoration(IconCode::Code::ZOOM_TOGGLE)
+        Decoration(IconCode::Code::ZOOM_TOGGLE),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND,
@@ -192,7 +207,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Scroll the timeline left by one screen width"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TIMELINE_PAGE_RIGHT_COMMAND,
@@ -201,7 +217,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Scroll the timeline right by one screen width"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_CENTER_VIEW_ON_PLAYHEAD_COMMAND,
@@ -233,7 +250,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move playhead left"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_PLAY_POSITION_INCREASE_COMMAND,
@@ -242,7 +260,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move playhead right"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_SELECTION_EXTEND_LEFT_COMMAND,
@@ -251,7 +270,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Extend selection left"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_SELECTION_EXTEND_RIGHT_COMMAND,
@@ -260,7 +280,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Extend selection right"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_SELECTION_CONTRACT_LEFT_COMMAND,
@@ -269,7 +290,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Contract selection from left"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_SELECTION_CONTRACT_RIGHT_COMMAND,
@@ -278,7 +300,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Contract selection from right"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_CURSOR_TO_SELECTION_START_COMMAND,
@@ -287,7 +310,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move playhead to selection start"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_CURSOR_TO_SELECTION_END_COMMAND,
@@ -296,7 +320,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move playhead to selection end"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECTSCENE_TOGGLE_EFFECTS_PANEL_COMMAND,
@@ -325,7 +350,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Split tool"),
         InputSchema(),
-        Decoration(IconCode::Code::SPLIT_TOOL)
+        Decoration(IconCode::Code::SPLIT_TOOL),
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_REALTIME_EFFECT_MOVE_UP_COMMAND,
@@ -334,7 +360,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move realtime effect up"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_REALTIME_EFFECT_MOVE_DOWN_COMMAND,
@@ -343,7 +370,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move realtime effect down"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECTSCENE_SNAP_COMMAND,
