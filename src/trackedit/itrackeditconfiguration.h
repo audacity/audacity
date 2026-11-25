@@ -44,5 +44,10 @@ public:
     virtual std::string defaultAudioTrackName() const = 0;
     virtual void setDefaultAudioTrackName(const std::string& name) = 0;
     virtual muse::async::Notification defaultAudioTrackNameChanged() const = 0;
+
+    //! How new clips are sped up or slowed down. Clips keep the method they were made with.
+    virtual ClipStretchMethod defaultStretchMethod() const = 0;
+    virtual void setDefaultStretchMethod(ClipStretchMethod value) = 0;
+    virtual muse::async::Notification defaultStretchMethodChanged() const = 0;
 };
 }

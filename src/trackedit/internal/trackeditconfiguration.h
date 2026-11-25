@@ -41,6 +41,10 @@ public:
     void setDefaultAudioTrackName(const std::string& name) override;
     muse::async::Notification defaultAudioTrackNameChanged() const override;
 
+    ClipStretchMethod defaultStretchMethod() const override;
+    void setDefaultStretchMethod(ClipStretchMethod value) override;
+    muse::async::Notification defaultStretchMethodChanged() const override;
+
 private:
     muse::async::Notification m_pasteAsNewClipChanged;
     muse::async::Notification m_askBeforeConvertingToMonoOrStereoChanged;
@@ -49,5 +53,6 @@ private:
     muse::async::Notification m_pasteInsertBehaviorChanged;
     muse::async::Notification m_closeGapBehaviorChanged;
     muse::async::Notification m_defaultAudioTrackNameChanged;
+    muse::async::Notification m_defaultStretchMethodChanged;
 };
 }

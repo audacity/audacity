@@ -57,6 +57,9 @@
 #include "internal/au3/au3clipsinteraction.h"
 #include "internal/au3/au3labelsinteraction.h"
 
+#include "au3-wave-track/WaveClip.h"
+#include "au3wrap/internal/domconverter.h"
+
 using namespace au::trackedit;
 using namespace muse;
 using namespace muse::modularity;
@@ -125,6 +128,13 @@ void TrackeditModule::registerResources()
 void TrackeditModule::onInit(const muse::IApplication::RunMode&)
 {
     m_configuration->init();
+
+    // New clips, however they come about, take the preferred stretch method
+    const auto applyDefaultStretchMethod = [configuration = m_configuration] {
+        WaveClip::SetDefaultStretchMethod(au::au3::DomConverter::stretchMethod(configuration->defaultStretchMethod()));
+    };
+    applyDefaultStretchMethod();
+    m_configuration->defaultStretchMethodChanged().onNotify(nullptr, applyDefaultStretchMethod);
 
     TimeSignatureRestorer::reg();
 }
