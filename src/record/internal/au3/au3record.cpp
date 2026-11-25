@@ -533,6 +533,11 @@ const std::vector<au::trackedit::ClipKey>& Au3Record::recordingClipKeys() const
     return m_recordingClipKeys;
 }
 
+std::vector<au::trackedit::TrackId> Au3Record::recordingTrackIds() const
+{
+    return m_recordingTrackIds;
+}
+
 void Au3Record::rebuildRecordingClipKeys()
 {
     m_recordingClipKeys.clear();
@@ -566,6 +571,7 @@ Ret Au3Record::doRecord(Au3Project& project,
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
     m_recordPosition.set(t0);
+    m_recordingTrackIds.clear();
 
     if (audioEngine()->isBusy()) {
         LOGE() << "Audio IO is busy";
@@ -631,6 +637,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 assert(false);
                 continue;
             }
+            m_recordingTrackIds.push_back(wt->GetId());
 
             // If the track was chosen for recording and playback both,
             // its playback stops when recording starts.
@@ -809,6 +816,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
             insertEmptyInterval(*pending, t0, false, newTrack.get());
             transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
+            m_recordingTrackIds.push_back(newTrack->GetId());
 
             m_recordData.push_back(RecordData { trackedit::ClipKey(newTrack->GetId(), newClip->GetId()), newClip->GetId(), false, false });
             rebuildRecordingClipKeys();

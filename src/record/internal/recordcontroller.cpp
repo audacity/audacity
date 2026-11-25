@@ -223,18 +223,17 @@ Ret RecordController::leadInRecording()
 
     stopPlaybackIfPaused();
 
-    // Store the recording start position and selected tracks before starting;
+    // Store the recording start position before starting;
     // recording always starts from the current playhead position
     m_leadInRecordingStartTime = globalContext()->playbackState()->playbackPosition();
-    m_leadInRecordingTrackIds = selectionController()->selectedTracks();
 
     Ret ret = record()->leadInRecording();
     if (!ret) {
-        m_leadInRecordingTrackIds.clear();
         interactive()->error(muse::trc("record", "Lead-in Recording error"), ret.text());
         return ret;
     }
 
+    m_leadInRecordingTrackIds = record()->recordingTrackIds();
     setCurrentRecordStatus(RecordStatus::LeadIn);
     return make_ok();
 }
