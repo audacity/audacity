@@ -33,6 +33,7 @@ public:
     MOCK_METHOD(bool, changeClipFadeOut, (const ClipKey&, secs_t, bool), (override));
     MOCK_METHOD(bool, changeTracksColor, (const TrackIdList&, ClipColorIndex), (override));
     MOCK_METHOD(bool, changeClipOptimizeForVoice, (const ClipKey&, bool), (override));
+    MOCK_METHOD(bool, changeClipStretchMethod, (const ClipKey&, ClipStretchMethod), (override));
     MOCK_METHOD(bool, renderClipPitchAndSpeed, (const ClipKey&), (override));
     MOCK_METHOD(bool, resetClipPitchAndSpeed, (const ClipKey&), (override));
     MOCK_METHOD(void, clearClipboard, (), (override));

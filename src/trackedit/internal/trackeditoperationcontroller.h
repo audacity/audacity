@@ -61,6 +61,7 @@ public:
     bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration, bool completed) override;
     bool changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
+    bool changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
     bool resetClipPitchAndSpeed(const ClipKey& clipKey) override;
     void clearClipboard() override;

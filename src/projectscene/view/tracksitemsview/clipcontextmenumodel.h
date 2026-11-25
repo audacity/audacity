@@ -38,6 +38,8 @@ private:
 
     muse::rcommand::Params clipParams() const;
     muse::uicomponents::MenuItemList makeClipColourItems();
+    muse::uicomponents::MenuItemList makeStretchMethodItems();
+    void updateStretchMethodCheckedState();
     void updateColorCheckedState();
     void updateColorMenu();
 

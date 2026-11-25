@@ -28,6 +28,7 @@ public:
     MOCK_METHOD(bool, changeClipFadeIn, (const ClipKey&, secs_t), (override));
     MOCK_METHOD(bool, changeClipFadeOut, (const ClipKey&, secs_t), (override));
     MOCK_METHOD(bool, changeClipOptimizeForVoice, (const ClipKey&, bool), (override));
+    MOCK_METHOD(bool, changeClipStretchMethod, (const ClipKey&, ClipStretchMethod), (override));
     MOCK_METHOD(bool, renderClipPitchAndSpeed, (const ClipKey&), (override));
 
     MOCK_METHOD(ITrackDataPtr, cutClip, (const ClipKey&), (override));

@@ -25,6 +25,8 @@ inline static const muse::rcommand::Command TRACKEDIT_CLIP_RENDER_PITCH_SPEED_CO
 inline static const muse::rcommand::Command TRACKEDIT_CLIP_RESET_PITCH_SPEED_COMMAND("command://trackedit/clip-reset-pitch-speed");
 inline static const muse::rcommand::Command TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND(
     "command://trackedit/stretch-clip-to-match-tempo");
+inline static const muse::rcommand::Command TRACKEDIT_CLIP_CHANGE_STRETCH_METHOD_COMMAND(
+    "command://trackedit/clip-change-stretch-method");
 
 inline static const muse::rcommand::Command TRACKEDIT_TRACK_SPLIT_AT_COMMAND("command://trackedit/track-split-at");
 
@@ -134,6 +136,8 @@ inline static const std::string TRACKEDIT_TRACK_INDEX_PARAM("trackIndex");
 inline static const std::string TRACKEDIT_COLOR_INDEX_PARAM("colorindex");
 inline static const std::string TRACKEDIT_FORMAT_PARAM("format");
 inline static const std::string TRACKEDIT_RATE_PARAM("rate");
+//! A `ClipStretchMethod`, as its number
+inline static const std::string TRACKEDIT_STRETCH_METHOD_PARAM("stretchMethod");
 
 // Track navigation: keyboard focus and selection within the track view, handled by TrackNavigationController
 inline static const muse::rcommand::Command TRACK_NAVIGATION_NEXT_PANEL_COMMAND("command://track-navigation/next-panel");

@@ -185,6 +185,21 @@ const std::vector<CommandInfo> commandInfos = {
         Availability::Internal | Availability::API
     },
     CommandInfo{
+        TRACKEDIT_CLIP_CHANGE_STRETCH_METHOD_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Change stretching method"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Change how the clip is sped up or slowed down"),
+        InputSchema({
+                { TRACKEDIT_TRACK_ID_PARAM, Arg(DataType::Int, u"Track id") },
+                { TRACKEDIT_CLIP_ID_PARAM, Arg(DataType::Int, u"Clip id") },
+                { TRACKEDIT_STRETCH_METHOD_PARAM, Arg(DataType::Int,
+                                                      u"0: StaffPad, 1: SoundTouch, 2: SBSMS, 3: Paulstretch, 4: Change speed") },
+            }),
+        Decoration(Checkable::Yes),
+        Availability::Internal | Availability::API
+    },
+    CommandInfo{
         TRACKEDIT_TRACK_SPLIT_AT_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Split tracks at"),

@@ -54,6 +54,7 @@ public:
     bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration) override;
     bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration) override;
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
+    bool changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
 
     ITrackDataPtr cutClip(const ClipKey& clipKey) override;

@@ -157,6 +157,17 @@ enum class PasteInsertBehavior {
     PasteInsertRipple,
 };
 
+//! How a clip is sped up or slowed down.
+//! Saved in settings as its number: only ever append, never reorder.
+enum class ClipStretchMethod {
+    StaffPad,
+    SoundTouch,
+    Sbsms,
+    Paulstretch,
+    //! Plays the samples faster or slower: the pitch follows the speed
+    ChangeSpeed,
+};
+
 enum class HistoryEvent {
     RestoredState,
     NewState,

@@ -46,6 +46,7 @@ public:
     virtual bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration, bool completed) = 0;
     virtual bool changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
+    virtual bool changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual bool resetClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;

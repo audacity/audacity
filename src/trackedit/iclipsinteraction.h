@@ -40,6 +40,7 @@ public:
     virtual bool changeClipFadeIn(const ClipKey& clipKey, secs_t duration) = 0;
     virtual bool changeClipFadeOut(const ClipKey& clipKey, secs_t duration) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
+    virtual bool changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
 
     virtual ITrackDataPtr cutClip(const ClipKey& clipKey) = 0;
