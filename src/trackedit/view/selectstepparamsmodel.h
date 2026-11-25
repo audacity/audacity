@@ -73,7 +73,7 @@ signals:
     void stepChanged();
 
 private:
-    SelectEnhancedStep step() const;
+    SelectStep step() const;
 
     SelectTimeKind m_timeKind = SelectTimeKindContract::def;
     SelectTimeRange m_timeRange;

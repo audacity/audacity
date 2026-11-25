@@ -174,7 +174,7 @@ void TrackeditContext::resolveImports()
 
     auto sr = ioc()->resolve<macromanager::IMacroStepHandlersRegister>(mname);
     if (sr) {
-        sr->reg(std::make_shared<SelectEnhancedStepHandler>(iocContext()));
+        sr->reg(std::make_shared<SelectStepHandler>(iocContext()));
     }
 }
 

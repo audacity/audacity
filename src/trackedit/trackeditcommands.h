@@ -273,7 +273,7 @@ struct SelectCommand {
     cprop_decl title = muse::MnemonicString(muse::TranslatableString("command", "Select"));
     //: Command description: shown as a tooltip; can be a full sentence
     cprop_decl description = muse::TranslatableString("command_description", "Select a time range and tracks in one step");
-    cprop_decl availabilities = muse::rcommand::Availability::Internal | muse::rcommand::Availability::API;
+    cprop_decl availabilities = muse::rcommand::Availability::Internal | muse::rcommand::Availability::MCP;
 
     double start = 0.0;
     double end = 0.0;
