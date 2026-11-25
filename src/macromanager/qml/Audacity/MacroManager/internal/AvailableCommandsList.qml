@@ -20,8 +20,7 @@ StyledListView {
     QtObject {
         id: prv
 
-        readonly property int rowHeight: 32
-        readonly property int rowWithSubtitleHeight: 44
+        readonly property int rowHeight: 44
         readonly property real subtitleOpacity: 0.7
         readonly property int sideMargin: 8
         readonly property int addIconSize: 24
@@ -71,7 +70,7 @@ StyledListView {
         property bool addedOnClick: false
 
         width: ListView.view.width
-        height: item.subtitle.length > 0 ? prv.rowWithSubtitleHeight : prv.rowHeight
+        height: prv.rowHeight
 
         isSelected: item.index === prv.selectedIndex
 
