@@ -22,6 +22,7 @@ set( SOURCES
    SettingsVisitor.h
 )
 set( LIBRARIES
+   lib-string-utils-interface
    lib-strings-interface
    lib-utility
 )
