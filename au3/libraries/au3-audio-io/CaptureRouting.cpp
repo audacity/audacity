@@ -33,10 +33,9 @@ CaptureRouting MakeCaptureRouting(size_t inputChannels, size_t trackChannels)
         return routing;
     }
 
-    routing.trackChannelSources.resize(trackChannels);
+    routing.trackChannels.reserve(trackChannels);
     for (size_t channel = 0; channel < trackChannels; ++channel) {
-        const CaptureChannelSources sources = GetCaptureChannelSources(inputChannels, trackChannels, channel);
-        routing.trackChannelSources[channel].assign(sources.span().begin(), sources.span().end());
+        routing.trackChannels.push_back(GetCaptureChannelSources(inputChannels, trackChannels, channel));
     }
     routing.needsMixdown = inputChannels == 2 && trackChannels == 1;
 

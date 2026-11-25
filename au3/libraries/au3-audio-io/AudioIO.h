@@ -17,6 +17,7 @@
 #include "au3-mixer/AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 #include "RingBuffer.h"
+#include "CaptureRouting.h" // member variable
 #include "au3-utility/LockFreeQueue.h"
 
 #include <functional>
@@ -245,7 +246,7 @@ public:
         size_t channelIndex{};
     };
     std::vector<TrackChannelInfo> mCaptureChannelLayout;
-    std::vector<std::vector<size_t> > mTrackChannelSourceMap;
+    std::vector<CaptureChannelSources> mTrackChannelSourceMap;
     bool mCaptureNeedsMixdown{ false };
     struct MonitoredTrack {
         int64_t trackId{};

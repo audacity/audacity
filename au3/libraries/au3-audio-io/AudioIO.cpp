@@ -62,7 +62,6 @@ time warp info and AudioIOListener and whether the playback is looped.
 
 #include "AudioIOExt.h"
 #include "AudioIOListener.h"
-#include "CaptureRouting.h"
 
 #include "au3-math/float_cast.h"
 #include "au3-math/Resample.h"
@@ -852,7 +851,7 @@ void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
     }
 
     CaptureRouting routing = MakeCaptureRouting(inputChannelsCount, mCaptureChannelLayout.size());
-    mTrackChannelSourceMap = std::move(routing.trackChannelSources);
+    mTrackChannelSourceMap = std::move(routing.trackChannels);
     mCaptureNeedsMixdown = routing.needsMixdown;
 }
 
@@ -2527,7 +2526,7 @@ void AudioIO::DrainRecordBuffers()
                     break;
                 }
 
-                const auto& sources = mTrackChannelSourceMap[trackChannelIndex];
+                const auto sources = mTrackChannelSourceMap[trackChannelIndex].inputChannels();
                 if (sources.empty()) {
                     ++trackChannelIndex;
                     continue;
@@ -3209,7 +3208,7 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
             const MonitoredTrack& track = monitored.tracks[i];
             for (size_t channel = 0; channel < track.channels; ++channel, ++trackChannel) {
                 const CaptureChannelSources sources = GetCaptureChannelSources(mNumCaptureChannels, trackChannels, trackChannel);
-                PushRoutedInputValues(sender, values, frames, dacTime, channel, sources.span(), track.trackId);
+                PushRoutedInputValues(sender, values, frames, dacTime, channel, sources.inputChannels(), track.trackId);
             }
         }
     }
@@ -3221,7 +3220,7 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
         if (info.sequenceIndex >= mCaptureSequences.size()) {
             continue;
         }
-        PushRoutedInputValues(sender, values, frames, dacTime, info.channelIndex, mTrackChannelSourceMap[i],
+        PushRoutedInputValues(sender, values, frames, dacTime, info.channelIndex, mTrackChannelSourceMap[i].inputChannels(),
                               mCaptureSequences[info.sequenceIndex]->GetRecordableSequenceId());
     }
 
