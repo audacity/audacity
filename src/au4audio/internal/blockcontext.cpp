@@ -5,6 +5,7 @@
 
 #include <algorithm>
 
+#include "au3-bus-track/BusTrack.h"
 #include "au3-project/Project.h"
 
 #include "effectscratch.h"
@@ -16,9 +17,10 @@ using namespace au::au4audio;
 
 BlockContext::BlockContext(std::weak_ptr<AudacityProject> project, RealtimeEffects::InitializationScope& effects,
                            ConstPlayableSequences sequences, const PlayheadMapper& mapper, const std::atomic<int64_t>& playEnd,
-                           double sampleRate, std::optional<std::vector<const ChannelGroup*> > groups)
+                           double sampleRate, std::optional<std::vector<const ChannelGroup*> > groups,
+                           std::vector<std::shared_ptr<const BusTrack> > busses)
     : m_project{std::move(project)}, m_effects{effects}, m_sequences{std::move(sequences)}, m_mapper{mapper},
-    m_playEndPosition{playEnd}, m_sampleRate{sampleRate}, m_groups{std::move(groups)}
+    m_playEndPosition{playEnd}, m_sampleRate{sampleRate}, m_groups{std::move(groups)}, m_busses{std::move(busses)}
 {
 }
 
@@ -29,7 +31,8 @@ void BlockContext::begin()
     } else {
         m_scope.emplace(m_effects, m_project);
     }
-    m_anySoloing = std::any_of(m_sequences.begin(), m_sequences.end(), [](const auto& sequence) { return sequence->GetSolo(); });
+    m_anySoloing = std::any_of(m_sequences.begin(), m_sequences.end(), [](const auto& sequence) { return sequence->GetSolo(); })
+                   || std::any_of(m_busses.begin(), m_busses.end(), [](const auto& bus) { return bus->GetSolo(); });
     // Unless looping, the tracks go silent at the end
     if (m_mapper.loop()) {
         m_playEnd.reset();

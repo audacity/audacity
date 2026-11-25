@@ -23,6 +23,7 @@
 #include "../internal/monitoredinput.h"
 #include "../internal/mutesolonode.h"
 #include "../internal/sequentialmixnode.h"
+#include "../internal/sharedoutputnode.h"
 #include "../internal/stereo.h"
 
 using namespace au::au4audio;
@@ -254,6 +255,29 @@ TEST(MuteSoloNodeTests, PlaysASoloingTrackEvenIfMuted)
     EXPECT_EQ(read(node, 0, TEST_MAX_FRAMES).left, std::vector<float>(TEST_MAX_FRAMES, TEST_LEVEL));
 }
 
+TEST(MuteSoloNodeTests, PlaysATrackWhileWhatItIsRoutedWithSolos)
+{
+    const auto track = std::make_shared<TestTrack>(au::au4audio::numChannels);
+    TestMuteSoloContext context;
+    bool busSolos = true;
+    MuteSoloNode node { std::make_shared<ConstantNode>(TEST_LEVEL), track, context, { [&busSolos] { return busSolos; } } };
+    context.soloing = true;
+
+    EXPECT_EQ(read(node, 0, TEST_MAX_FRAMES).left, std::vector<float>(TEST_MAX_FRAMES, TEST_LEVEL));
+}
+
+TEST(MuteSoloNodeTests, SilencesAMutedTrackEvenWhileWhatItIsRoutedWithSolos)
+{
+    const auto track = std::make_shared<TestTrack>(au::au4audio::numChannels);
+    TestMuteSoloContext context;
+    bool busSolos = true;
+    MuteSoloNode node { std::make_shared<ConstantNode>(TEST_LEVEL), track, context, { [&busSolos] { return busSolos; } } };
+    track->mute = true;
+    context.soloing = true;
+
+    EXPECT_EQ(read(node, 0, TEST_MAX_FRAMES).left, std::vector<float>(TEST_MAX_FRAMES, 0.f));
+}
+
 TEST(GainPanNodeTests, PansAMonoTrackToStereo)
 {
     const auto track = std::make_shared<TestTrack>(1);
@@ -423,4 +447,67 @@ TEST(MonitoredInputNodeTests, IsSilentWhereItIsNotReadLive)
     const auto output = read(node, TEST_BLOCK_INDEX, TEST_MAX_FRAMES);
 
     EXPECT_EQ(output.left, std::vector<float>(TEST_MAX_FRAMES, 0.f));
+}
+
+namespace {
+//! As much as the readers of a SharedOutputNode read apart in the tests
+constexpr int64_t TEST_READERS_APART = TEST_LATENCY;
+constexpr size_t TEST_SHARED_CAPACITY = TEST_MAX_FRAMES + 2 * static_cast<size_t>(TEST_READERS_APART);
+constexpr int TEST_NUM_BLOCKS = 4;
+
+//! A RampNode that counts what it renders
+class CountingRampNode final : public ISequenceProcessingNode
+{
+public:
+    void GetSamples(float* const* buffers, sampleCount start, size_t len) override
+    {
+        m_ramp.GetSamples(buffers, start, len);
+        rendered += static_cast<int64_t>(len);
+    }
+
+    int64_t rendered = 0;
+
+private:
+    RampNode m_ramp;
+};
+}
+
+TEST(SharedOutputNodeTests, RendersItsInputOnceForAllWhoReadABlock)
+{
+    const auto input = std::make_shared<CountingRampNode>();
+    SharedOutputNode node { input, TEST_SHARED_CAPACITY, TEST_MAX_FRAMES };
+
+    const auto first = read(node, 0, TEST_MAX_FRAMES);
+    const auto second = read(node, 0, TEST_MAX_FRAMES);
+
+    EXPECT_EQ(first.left, ramp(0, TEST_MAX_FRAMES));
+    EXPECT_EQ(second.right, ramp(0, TEST_MAX_FRAMES));
+    EXPECT_EQ(input->rendered, static_cast<int64_t>(TEST_MAX_FRAMES));
+}
+
+TEST(SharedOutputNodeTests, GivesReadersWhatTheyReadWhereTheyReadApart)
+{
+    const auto input = std::make_shared<CountingRampNode>();
+    SharedOutputNode node { input, TEST_SHARED_CAPACITY, TEST_MAX_FRAMES };
+
+    for (int block = 0; block < TEST_NUM_BLOCKS; ++block) {
+        const auto index = static_cast<int64_t>(block) * static_cast<int64_t>(TEST_MAX_FRAMES);
+        // The one ahead first, then the one behind, as busses of different latencies
+        EXPECT_EQ(read(node, index + TEST_READERS_APART, TEST_MAX_FRAMES).left, ramp(index + TEST_READERS_APART, TEST_MAX_FRAMES));
+        EXPECT_EQ(read(node, index, TEST_MAX_FRAMES).left, ramp(index, TEST_MAX_FRAMES));
+    }
+    // Once from the reader behind to the reader ahead
+    EXPECT_EQ(input->rendered, TEST_READERS_APART + TEST_NUM_BLOCKS * static_cast<int64_t>(TEST_MAX_FRAMES));
+}
+
+TEST(SharedOutputNodeTests, RendersAgainWhereReadingJumps)
+{
+    const auto input = std::make_shared<CountingRampNode>();
+    SharedOutputNode node { input, TEST_SHARED_CAPACITY, TEST_MAX_FRAMES };
+    read(node, 0, TEST_MAX_FRAMES);
+
+    const auto output = read(node, TEST_JUMP_INDEX, TEST_READ_LEN);
+
+    EXPECT_EQ(output.left, ramp(TEST_JUMP_INDEX, TEST_READ_LEN));
+    EXPECT_EQ(input->rendered, static_cast<int64_t>(TEST_MAX_FRAMES + TEST_READ_LEN));
 }

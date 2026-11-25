@@ -18,6 +18,7 @@
 #include "imutesolocontext.h"
 
 class AudacityProject;
+class BusTrack;
 
 namespace au::au4audio {
 class PlayheadMapper;
@@ -30,9 +31,11 @@ public:
     //! @param playEnd where the play range ends, in samples; must outlive this
     //! @param groups if given, the only groups whose effects it processes, the master's for a null group: those of the
     //! others may be processed in other threads meanwhile
+    //! @param busses those that mix some of the sequences, which may solo too
     BlockContext(std::weak_ptr<AudacityProject> project, RealtimeEffects::InitializationScope& effects,
                  ConstPlayableSequences sequences, const PlayheadMapper& mapper, const std::atomic<int64_t>& playEnd,
-                 double sampleRate, std::optional<std::vector<const ChannelGroup*> > groups = std::nullopt);
+                 double sampleRate, std::optional<std::vector<const ChannelGroup*> > groups = std::nullopt,
+                 std::vector<std::shared_ptr<const BusTrack> > busses = {});
 
     //! The rendering thread, before and after a block
     void begin();
@@ -56,6 +59,7 @@ private:
     const std::atomic<int64_t>& m_playEndPosition;
     const double m_sampleRate;
     const std::optional<std::vector<const ChannelGroup*> > m_groups;
+    const std::vector<std::shared_ptr<const BusTrack> > m_busses;
 
     // Set by begin(), for the block
     std::optional<RealtimeEffects::ProcessingScope> m_scope;

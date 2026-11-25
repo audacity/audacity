@@ -47,6 +47,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/recordingcapture.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/sequentialmixnode.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/sharedoutputnode.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/sharedoutputnode.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/stereo.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/track.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/track.h
@@ -55,6 +57,7 @@ set(MODULE_SRC
 set_source_files_properties(${MODULE_SRC} PROPERTIES SKIP_UNITY_BUILD_INCLUSION ON)
 
 set(MODULE_LINK
+    au3-bus-track
     au3-clip-processing
     au3-mixer
     audio

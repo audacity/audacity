@@ -5,8 +5,10 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <optional>
+#include <vector>
 
 class IPlayheadMapper;
 class ISequenceProcessingNode;
@@ -60,10 +62,12 @@ struct TrackSettings {
     //! If it reads its whole chain ahead: what sets the state of its blocks, which must then be its effects, mute/solo
     //! and end of track contexts
     BlockContext* chainContext = nullptr;
-    //! If the input is monitored through the chain's effects; then the master effects' latency, by which the master reads
-    //! the chains ahead
+    //! If the input is monitored through the chain's effects; then the latency of the effects after the chain, the master's
+    //! and its busses', by which they read the chain ahead
     std::shared_ptr<const MonitoredInput> monitoredInput;
     int masterLatency = 0;
+    //! The solos of the busses it goes to: soloing them plays it too
+    std::vector<std::function<bool()> > soloedWith;
 };
 
 //! The chain of `sequence`, read as it processes its clips: where the playhead reads, ahead if it reads ahead,

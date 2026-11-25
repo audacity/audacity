@@ -72,7 +72,7 @@ au::au4audio::Track au::au4audio::buildTrack(std::shared_ptr<const PlayableSeque
     if (group) {
         node = std::make_shared<EffectsNode>(std::move(node), numSequenceChannels, group, *settings.effects, settings.maxFrames);
     }
-    node = std::make_shared<MuteSoloNode>(std::move(node), sequence, *settings.muteSolo);
+    node = std::make_shared<MuteSoloNode>(std::move(node), sequence, *settings.muteSolo, settings.soloedWith);
     node = std::make_shared<GainPanNode>(std::move(node), sequence);
     if (readAhead && readAhead->wholeChain) {
         // The tap is read where the device is: after the queue, which is stereo, as volume/pan outputs
@@ -105,6 +105,6 @@ std::shared_ptr<ISequenceProcessingNode> au::au4audio::buildMonitoredInput(std::
     std::shared_ptr<ISequenceProcessingNode> node = std::make_shared<MonitoredInputNode>(
         settings.monitoredInput, numTrackChannels, settings.masterLatency + settings.effects->latency(group));
     node = std::make_shared<EffectsNode>(std::move(node), numTrackChannels, group, *settings.effects, settings.maxFrames);
-    node = std::make_shared<MuteSoloNode>(std::move(node), track, *settings.muteSolo);
+    node = std::make_shared<MuteSoloNode>(std::move(node), track, *settings.muteSolo, settings.soloedWith);
     return std::make_shared<GainPanNode>(std::move(node), track);
 }
