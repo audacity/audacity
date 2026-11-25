@@ -16,6 +16,7 @@
 #include "ConfigInterface.h"
 #include "EffectAutomationParameters.h"
 #include "FileException.h"
+#include "Internat.h"
 #include "memorystream.h"
 #include "MemoryX.h"
 #include "VST3Utils.h"
@@ -90,8 +91,11 @@ std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> ParametersFromStri
 
       unsigned long id;
       double value;
+      // Accepts the dot written now and the locale's separator written by
+      // earlier versions
       if(!token.Left(split).ToULong(&id) ||
-         !token.Right(token.Length() - split - 1).ToDouble(&value))
+         !Internat::CompatibleToDouble(
+            token.Right(token.Length() - split - 1), &value))
          continue;
 
       result[id] = value;
