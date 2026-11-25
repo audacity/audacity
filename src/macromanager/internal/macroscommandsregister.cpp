@@ -34,7 +34,7 @@ CommandInfo macroCommandInfo(const Macro& macro)
 
 void MacrosCommandsRegister::init()
 {
-    repository()->macrosChanged().onNotify(this, [this]() {
+    repository()->macroListChanged().onNotify(this, [this]() {
         reload();
     });
 

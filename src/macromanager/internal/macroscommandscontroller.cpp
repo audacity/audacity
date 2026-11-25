@@ -11,7 +11,7 @@ using namespace muse::rcommand;
 
 void MacrosCommandsController::init()
 {
-    repository()->macrosChanged().onNotify(this, [this]() {
+    repository()->macroListChanged().onNotify(this, [this]() {
         registerHandlers();
     });
 

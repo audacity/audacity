@@ -156,7 +156,8 @@ Ret MacrosRepository::save(const Macro& macro)
         return valid;
     }
 
-    const io::path_t path = userMacroFilePath(macro.name).value_or(newUserMacroFilePath(macro.name));
+    const std::optional<io::path_t> existingPath = userMacroFilePath(macro.name);
+    const io::path_t path = existingPath.value_or(newUserMacroFilePath(macro.name));
     const Ret ret = writeMacroFile(edited(macro), path);
     if (!ret) {
         LOGE() << "failed to save macro " << macro.name << ": " << ret.toString();
@@ -164,6 +165,9 @@ Ret MacrosRepository::save(const Macro& macro)
     }
 
     reload();
+    if (!existingPath) {
+        m_macroListChanged.notify();
+    }
     m_macrosChanged.notify();
 
     return make_ok();
@@ -195,6 +199,7 @@ Ret MacrosRepository::remove(const std::string& name)
     }
 
     reload();
+    m_macroListChanged.notify();
     m_macrosChanged.notify();
 
     return ret;
@@ -241,6 +246,7 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
     }
 
     reload();
+    m_macroListChanged.notify();
     m_macrosChanged.notify();
 
     return ret;
@@ -249,6 +255,11 @@ Ret MacrosRepository::rename(const std::string& oldName, const std::string& newN
 async::Notification MacrosRepository::macrosChanged() const
 {
     return m_macrosChanged;
+}
+
+async::Notification MacrosRepository::macroListChanged() const
+{
+    return m_macroListChanged;
 }
 
 Macro MacrosRepository::edited(Macro macro) const

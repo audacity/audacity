@@ -40,6 +40,7 @@ public:
     muse::Ret writeMacroFile(const Macro& macro, const muse::io::path_t& path) const override;
 
     muse::async::Notification macrosChanged() const override;
+    muse::async::Notification macroListChanged() const override;
 
 private:
     Macro edited(Macro macro) const;
@@ -54,5 +55,6 @@ private:
     MacroList m_macros;
     std::map<std::string, muse::io::path_t> m_userMacroFiles;
     muse::async::Notification m_macrosChanged;
+    muse::async::Notification m_macroListChanged;
 };
 }
