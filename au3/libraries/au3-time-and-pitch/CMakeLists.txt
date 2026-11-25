@@ -31,20 +31,39 @@ set( SOURCES
    FormantShifterLoggerInterface.h
    StaffPadTimeAndPitch.cpp
    StaffPadTimeAndPitch.h
+   StretchMethod.h
    TimeAndPitchExperimentalSettings.cpp
    TimeAndPitchExperimentalSettings.h
+   TimeAndPitchFactory.cpp
+   TimeAndPitchFactory.h
    TimeAndPitchInterface.cpp
    TimeAndPitchInterface.h
+
+   # Speed-only stretchers, for the other stretch methods
+   TimeStretchers.h
+   PaulStretcher.cpp
+   SbsmsStretcher.cpp
+   SoundTouchStretcher.cpp
+   VarispeedStretcher.cpp
 )
 set( LIBRARIES
 PRIVATE
+   au3-fft
    au3-files
+   au3-math
    au3-preferences
    au3-strings
    au3-utility
    pffft
    wxBase
+   $<$<BOOL:${AU_USE_SBSMS}>:libsbsms>
+   $<$<BOOL:${AU_USE_SOUNDTOUCH}>:soundtouch>
+)
+set( DEFINES
+PRIVATE
+   $<$<BOOL:${AU_USE_SOUNDTOUCH}>:USE_SOUNDTOUCH=1>
+   $<$<BOOL:${AU_USE_SBSMS}>:USE_SBSMS=1>
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
-   "" ""
+   "${DEFINES}" ""
 )

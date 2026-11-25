@@ -4,7 +4,7 @@
 #include "ClipStretchingNode.h"
 #include "ClipInterface.h"
 #include "ClipTimeAndPitchSource.h"
-#include "au3-time-and-pitch/StaffPadTimeAndPitch.h"
+#include "au3-time-and-pitch/TimeAndPitchFactory.h"
 #include <cmath>
 
 namespace {
@@ -32,13 +32,14 @@ struct ClipStretchingNode::TimeStretchingStream {
         :// Simply initialize `source` with `PlaybackDirection::forward`: we don't use backward
          // reading these days.
         source{clip, start.as_double() / clip.GetRate(), PlaybackDirection::forward},
-        stretcher{clip.GetRate(), clip.NChannels(), source, GetStretchingParameters(clip)}
+        stretcher{CreateTimeAndPitchStretcher(clip.GetStretchMethod(), clip.GetRate(), clip.NChannels(), source,
+                                              GetStretchingParameters(clip), source.NumRemainingSamples().as_long_long())}
     {
     }
 
     ClipTimeAndPitchSource source;
     // Refers to `source`, constructed before it
-    StaffPadTimeAndPitch stretcher;
+    const std::unique_ptr<TimeAndPitchInterface> stretcher;
 };
 
 ClipStretchingNode::ClipStretchingNode(const ClipInterface& clip)
@@ -57,13 +58,19 @@ ClipStretchingNode::ClipStretchingNode(const ClipInterface& clip)
         mPreserveFormants = preset == PitchAndSpeedPreset::OptimizeForVoice;
         mUpdateFormantPreservation = true;
     });
+
+    mOnStretchMethodChangeSubscription = clip.SubscribeToStretchMethodChange(
+        [this](StretchMethod) {
+        mRestartStream = true;
+    });
 }
 
 ClipStretchingNode::~ClipStretchingNode() = default;
 
 void ClipStretchingNode::GetSamples(float* const* buffers, sampleCount start, size_t len)
 {
-    if (!mStream || mExpectedStart != start) {
+    // A new stretch method needs a new stretcher: restart where we are
+    if (mRestartStream.exchange(false) || !mStream || mExpectedStart != start) {
         mStream = std::make_unique<TimeStretchingStream>(mClip, start);
     }
     mExpectedStart = start + static_cast<sampleCount::type>(len);
@@ -76,12 +83,12 @@ void ClipStretchingNode::GetSamples(float* const* buffers, sampleCount start, si
     // destruction of this object, so better not do anything too sophisticated
     // there.
     if (mUpdateFormantPreservation.exchange(false)) {
-        mStream->stretcher.OnFormantPreservationChange(mPreserveFormants);
+        mStream->stretcher->OnFormantPreservationChange(mPreserveFormants);
     }
     if (mUpdateCentShift.exchange(false)) {
-        mStream->stretcher.OnCentShiftChange(mCentShift);
+        mStream->stretcher->OnCentShiftChange(mCentShift);
     }
-    mStream->stretcher.GetSamples(buffers, len);
+    mStream->stretcher->GetSamples(buffers, len);
 }
 
 sampleCount ClipStretchingNode::NumSamples() const

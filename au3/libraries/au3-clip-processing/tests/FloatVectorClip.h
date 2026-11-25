@@ -70,6 +70,17 @@ public:
         return {};
     }
 
+    StretchMethod GetStretchMethod() const override
+    {
+        return StretchMethod::StaffPad;
+    }
+
+    Observer::Subscription SubscribeToStretchMethodChange(
+        std::function<void(StretchMethod)> cb) const override
+    {
+        return {};
+    }
+
     Observer::Subscription SubscribeToStretchRatioChange(
         std::function<void(double, double)> cb) const override
     {

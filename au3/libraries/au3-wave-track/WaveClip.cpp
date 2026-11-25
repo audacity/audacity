@@ -15,6 +15,7 @@
 *//*******************************************************************/
 #include "WaveClip.h"
 
+#include <atomic>
 #include <math.h>
 #include <numeric>
 #include <optional>
@@ -223,6 +224,9 @@ double WaveClipChannel::GetStretchRatio() const
 }
 
 static int64_t s_lastClipId = 0;
+//! StaffPad until the application says otherwise: what clips did before
+static std::atomic<StretchMethod> s_defaultStretchMethod { StretchMethod::StaffPad };
+
 int64_t WaveClip::NewID()
 {
     return ++s_lastClipId;
@@ -231,6 +235,7 @@ int64_t WaveClip::NewID()
 WaveClip::WaveClip(size_t width,
                    const SampleBlockFactoryPtr& factory,
                    sampleFormat format, int rate)
+    : mStretchMethod{s_defaultStretchMethod.load()}
 {
     mId = ++s_lastClipId;
     assert(width > 0);
@@ -250,6 +255,7 @@ WaveClip::WaveClip(
     bool copyGroupId, CreateToken token)
     : mCentShift{orig.mCentShift}
     , mPitchAndSpeedPreset{orig.mPitchAndSpeedPreset}
+    , mStretchMethod{orig.mStretchMethod}
     , mClipStretchRatio{orig.mClipStretchRatio}
     , mVersion{orig.mVersion + 1}
 {
@@ -302,6 +308,7 @@ WaveClip::WaveClip(
     const WaveClip& orig, const SampleBlockFactoryPtr& factory,
     bool copyGroupId, double t0, double t1)
     : mCentShift{orig.mCentShift}
+    , mStretchMethod{orig.mStretchMethod}
     , mClipStretchRatio{orig.mClipStretchRatio}
     , mVersion{orig.mVersion + 1}
 {
@@ -742,7 +749,9 @@ Observer::Subscription WaveClip::SubscribeToPitchAndSpeedPresetChange(
 bool WaveClip::HasEqualPitchAndSpeed(const WaveClip& other) const
 {
     return StretchRatioEquals(other.GetStretchRatio())
-           && GetCentShift() == other.GetCentShift();
+           && GetCentShift() == other.GetCentShift()
+           // Unstretched, every method sounds the same
+           && (StretchRatioEquals(1.0) || GetStretchMethod() == other.GetStretchMethod());
 }
 
 bool WaveClip::HasPitchOrSpeed() const
@@ -1050,6 +1059,7 @@ static constexpr auto TrimLeft_attr = "trimLeft";
 static constexpr auto TrimRight_attr = "trimRight";
 static constexpr auto CentShiftAttr = "centShift";
 static constexpr auto PitchAndSpeedPreset_attr = "pitchAndSpeedPreset";
+static constexpr auto StretchMethod_attr = "stretchMethod";
 static constexpr auto RawAudioTempo_attr = "rawAudioTempo";
 static constexpr auto ClipStretchRatio_attr = "clipStretchRatio";
 static constexpr auto ClipStretchToMatchTempo_attr = "clipStretchToMatchTempo";
@@ -1072,6 +1082,8 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
         double dblValue;
         long longValue;
         bool boolValue;
+        // Clips saved before there was a choice were all stretched by StaffPad
+        mStretchMethod = StretchMethod::StaffPad;
         for (auto pair : attrs) {
             auto attr = pair.first;
             auto value = pair.second;
@@ -1101,6 +1113,14 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                     return false;
                 }
                 mPitchAndSpeedPreset = static_cast<PitchAndSpeedPreset>(longValue);
+            } else if (attr == StretchMethod_attr) {
+                if (!value.TryGet(longValue)) {
+                    return false;
+                }
+                // A method from a newer version falls back to StaffPad
+                mStretchMethod = IsValidStretchMethod(longValue)
+                                 ? static_cast<StretchMethod>(longValue)
+                                 : StretchMethod::StaffPad;
             } else if (attr == RawAudioTempo_attr) {
                 if (!value.TryGet(dblValue)) {
                     return false;
@@ -1226,6 +1246,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(CentShiftAttr, mCentShift);
     xmlFile.WriteAttr(PitchAndSpeedPreset_attr,
                       static_cast<long>(mPitchAndSpeedPreset));
+    xmlFile.WriteAttr(StretchMethod_attr, static_cast<long>(mStretchMethod));
     xmlFile.WriteAttr(ClipStretchRatio_attr, mClipStretchRatio, 8);
     xmlFile.WriteAttr(ClipStretchToMatchTempo_attr, mStretchToMatchProjectTempo);
     xmlFile.WriteAttr(Name_attr, mName);
@@ -1274,6 +1295,7 @@ bool WaveClip::Paste(double t0, const WaveClip& o)
     if (GetSequenceSamplesCount() == 0) {
         // Empty clip: we're flexible and adopt the other's pitch and stretch.
         mPitchAndSpeedPreset = other.mPitchAndSpeedPreset;
+        mStretchMethod = other.mStretchMethod;
         mCentShift = other.mCentShift;
         mClipStretchRatio = other.mClipStretchRatio;
     } else if (!HasEqualPitchAndSpeed(other)) {
@@ -1561,6 +1583,40 @@ void WaveClip::SetPitchAndSpeedPreset(PitchAndSpeedPreset preset)
 PitchAndSpeedPreset WaveClip::GetPitchAndSpeedPreset() const
 {
     return mPitchAndSpeedPreset;
+}
+
+StretchMethod WaveClip::GetStretchMethod() const
+{
+    return mStretchMethod;
+}
+
+void WaveClip::SetStretchMethod(StretchMethod method)
+{
+    if (mStretchMethod == method) {
+        return;
+    }
+    mStretchMethod = method;
+    Observer::Publisher<StretchMethodChange>::Publish(StretchMethodChange { method });
+}
+
+Observer::Subscription WaveClip::SubscribeToStretchMethodChange(
+    std::function<void(StretchMethod)> cb) const
+{
+    // Consider the list of subcribers as a mutable member that doesn't change
+    // real state
+    return const_cast<WaveClip*>(this)->
+           Observer::Publisher<StretchMethodChange>::Subscribe(
+        [cb](const StretchMethodChange& change) { cb(change.newValue); });
+}
+
+StretchMethod WaveClip::GetDefaultStretchMethod()
+{
+    return s_defaultStretchMethod.load();
+}
+
+void WaveClip::SetDefaultStretchMethod(StretchMethod method)
+{
+    s_defaultStretchMethod.store(method);
 }
 
 /*! @excsafety{Strong} */
