@@ -204,6 +204,7 @@ void MacroRunner::finish(const Macro& macro, const Ret& ret)
         showError(ret, macro.name);
     }
 
+    m_outputNames.clear();
     m_running = false;
     m_isRunningChanged.notify();
 }
