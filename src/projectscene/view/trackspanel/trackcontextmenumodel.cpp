@@ -117,6 +117,16 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
     };
 }
 
+MenuItemList TrackContextMenuModel::makeBusTrackItems()
+{
+    return {
+        makeRenameItem(),
+        makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
+    };
+}
+
 void TrackContextMenuModel::load()
 {
     AbstractMenuModel::load();
@@ -161,6 +171,9 @@ void TrackContextMenuModel::load()
         break;
     case trackedit::TrackType::Label:
         setItems(makeLabelTrackItems());
+        break;
+    case trackedit::TrackType::Bus:
+        setItems(makeBusTrackItems());
         break;
     default:
         return;

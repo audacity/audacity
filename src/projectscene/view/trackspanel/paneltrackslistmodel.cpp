@@ -140,6 +140,8 @@ void PanelTracksListModel::addTrack(TrackTypes::Type type)
         commandDispatcher()->dispatch(TRACKEDIT_NEW_STEREO_TRACK_COMMAND);
     } else if (type == TrackTypes::Type::LABEL) {
         commandDispatcher()->dispatch(TRACKEDIT_NEW_LABEL_TRACK_COMMAND);
+    } else if (type == TrackTypes::Type::BUS) {
+        commandDispatcher()->dispatch(TRACKEDIT_NEW_BUS_TRACK_COMMAND);
     }
 }
 
@@ -573,6 +575,8 @@ TrackItem* PanelTracksListModel::buildTrackItem(const Track& track)
     switch (track.type) {
     case trackedit::TrackType::Mono:
     case trackedit::TrackType::Stereo:
+    // As an audio track, without clips
+    case trackedit::TrackType::Bus:
         item = new WaveTrackItem(this);
         break;
     case trackedit::TrackType::Label:

@@ -13,7 +13,7 @@ std::optional<au::effects::TrackId> au::effects::utils::trackId(const au::projec
     }
     const auto au3Project = reinterpret_cast<au3::Au3Project*>(project->au3ProjectPtr());
     auto& trackList = TrackList::Get(*au3Project);
-    for (WaveTrack* track : trackList.Any<WaveTrack>()) {
+    for (PlayableTrack* track : trackList.Any<PlayableTrack>()) {
         if (RealtimeEffectList::Get(*track).FindState(state)) {
             return track->GetId();
         }
@@ -33,7 +33,7 @@ std::optional<au::effects::EffectChainLinkIndex> au::effects::utils::effectIndex
     }
     const auto au3Project = reinterpret_cast<au3::Au3Project*>(project->au3ProjectPtr());
     auto& trackList = TrackList::Get(*au3Project);
-    for (WaveTrack* track : trackList.Any<WaveTrack>()) {
+    for (PlayableTrack* track : trackList.Any<PlayableTrack>()) {
         if (const std::optional<size_t> index = RealtimeEffectList::Get(*track).FindState(state)) {
             return static_cast<EffectChainLinkIndex>(*index);
         }

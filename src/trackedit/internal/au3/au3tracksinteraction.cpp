@@ -13,6 +13,7 @@
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
+#include "au3-bus-track/BusTrack.h"
 #include "au3-label-track/LabelTrack.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
@@ -810,6 +811,53 @@ muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::newLabelTrack(const m
     trackNavigationController()->setFocus(TrackFocus::track(track->GetId()));
 
     return muse::RetVal<TrackId>::make_ok(track->GetId());
+}
+
+bool Au3TracksInteraction::newBusTrack()
+{
+    BusTrack* bus = BusTrack::New(projectRef());
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackAdded(DomConverter::track(bus));
+
+    selectionController()->setSelectedTracks({ bus->GetId() });
+    trackNavigationController()->setFocus(TrackFocus::track(bus->GetId()));
+
+    return true;
+}
+
+au::trackedit::TrackId Au3TracksInteraction::trackOutput(TrackId trackId) const
+{
+    const Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    const BusTrack* bus = track ? TrackOutput::Get(*track).FindBus() : nullptr;
+    return bus ? bus->GetId().raw() : INVALID_TRACK;
+}
+
+bool Au3TracksInteraction::canOutputTo(TrackId trackId, TrackId busId) const
+{
+    auto& project = projectRef();
+    // Audio tracks and busses go somewhere
+    const auto track = dynamic_cast<const PlayableTrack*>(DomAccessor::findTrack(project, Au3TrackId(trackId)));
+    if (!track) {
+        return false;
+    }
+    if (busId == INVALID_TRACK) {
+        return true;
+    }
+    const auto bus = dynamic_cast<const BusTrack*>(DomAccessor::findTrack(project, Au3TrackId(busId)));
+    return bus && !TrackOutput::WouldFeedBack(*track, *bus);
+}
+
+bool Au3TracksInteraction::setTrackOutput(TrackId trackId, TrackId busId)
+{
+    if (!canOutputTo(trackId, busId) || trackOutput(trackId) == busId) {
+        return false;
+    }
+    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    TrackOutput::Get(*track).SetBus(busId == INVALID_TRACK ? std::nullopt : std::make_optional(Au3TrackId(busId)));
+    const auto prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutTrackChanged(DomConverter::track(track));
+    return true;
 }
 
 bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)

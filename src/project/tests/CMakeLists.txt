@@ -20,11 +20,13 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/clipfadespersistence_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/playbackfades_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/waveformfades_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/buspersistence_tests.cpp
 )
 
 set(MODULE_TEST_LINK
     project
     au3wrap
+    au3-bus-track
     au3-project
     au3-project-file-io
     au3-tags

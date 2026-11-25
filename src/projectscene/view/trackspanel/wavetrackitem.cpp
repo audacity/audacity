@@ -5,14 +5,23 @@
 #include "wavetrackitem.h"
 
 #include <QMetaType>
+#include <QVariantMap>
+
+#include <algorithm>
 #include <QString>
 
 #include "playback/playbacktypes.h"
 #include "playback/iaudiooutput.h"
+#include "framework/global/translation.h"
 
 using namespace au::projectscene;
 using namespace au::trackedit;
 using namespace au::audio;
+
+namespace {
+//! What `outputMenu` calls the master
+const QString MASTER_OUTPUT_ID = QStringLiteral("master");
+}
 
 static constexpr float PAN_SCALING_FACTOR = 100.f;
 static constexpr float MIN_ALLOWED_PRESSURE = -145.f;
@@ -85,6 +94,71 @@ void WaveTrackItem::init(const trackedit::Track& track)
                                   || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
 
     checkMainAudioInput();
+
+    // Busses come and go and are renamed, and it changes output
+    if (const auto project = globalContext()->currentTrackeditProject()) {
+        const auto onTracks = [this](const auto&...) { emit outputChanged(); };
+        project->trackAdded().onReceive(this, onTracks, muse::async::Asyncable::Mode::SetReplace);
+        project->trackChanged().onReceive(this, onTracks, muse::async::Asyncable::Mode::SetReplace);
+        project->trackRemoved().onReceive(this, onTracks, muse::async::Asyncable::Mode::SetReplace);
+        project->tracksChanged().onReceive(this, onTracks, muse::async::Asyncable::Mode::SetReplace);
+    }
+    emit outputChanged();
+}
+
+bool WaveTrackItem::hasOutputChoice() const
+{
+    const auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return false;
+    }
+    const auto tracks = project->trackList();
+    return std::any_of(tracks.begin(), tracks.end(), [this](const Track& track) {
+        return track.type == TrackType::Bus && track.id != trackId();
+    });
+}
+
+QString WaveTrackItem::outputTitle() const
+{
+    const auto project = globalContext()->currentTrackeditProject();
+    const TrackId bus = trackeditInteraction()->trackOutput(trackId());
+    const auto track = project && bus != INVALID_TRACK ? project->track(bus) : std::nullopt;
+    //: Where a track goes when it goes to no bus
+    return track ? track->title.toQString() : muse::qtrc("projectscene", "Master");
+}
+
+QVariantList WaveTrackItem::outputMenu() const
+{
+    QVariantList result;
+    const auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return result;
+    }
+    const TrackId output = trackeditInteraction()->trackOutput(trackId());
+    const auto item = [](const QString& id, const QString& title, bool checked, bool enabled) {
+        QVariantMap map;
+        map["id"] = id;
+        map["title"] = title;
+        map["checkable"] = true;
+        map["checked"] = checked;
+        map["enabled"] = enabled;
+        return map;
+    };
+    result << item(MASTER_OUTPUT_ID, muse::qtrc("projectscene", "Master"), output == INVALID_TRACK, true);
+    for (const Track& track : project->trackList()) {
+        if (track.type != TrackType::Bus || track.id == trackId()) {
+            continue;
+        }
+        result << item(QString::number(track.id), track.title.toQString(), track.id == output,
+                       trackeditInteraction()->canOutputTo(trackId(), track.id));
+    }
+    return result;
+}
+
+void WaveTrackItem::setOutput(const QString& id)
+{
+    const TrackId bus = id == MASTER_OUTPUT_ID ? INVALID_TRACK : id.toLongLong();
+    trackeditInteraction()->setTrackOutput(trackId(), bus);
 }
 
 void WaveTrackItem::muteOrSoloChanged()
@@ -116,6 +190,8 @@ int WaveTrackItem::channelCount() const
     case trackedit::TrackType::Mono:
         return 1;
     case trackedit::TrackType::Stereo:
+    // A bus mixes in stereo
+    case trackedit::TrackType::Bus:
         return 2;
     default:
         return 0;

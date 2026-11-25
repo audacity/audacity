@@ -311,6 +311,27 @@ muse::RetVal<TrackId> TrackeditInteraction::newLabelTrack(const muse::String& ti
     return withPlaybackStopRetVal(&ITrackeditInteraction::newLabelTrack, title);
 }
 
+bool TrackeditInteraction::newBusTrack()
+{
+    return withPlaybackStop(&ITrackeditInteraction::newBusTrack);
+}
+
+TrackId TrackeditInteraction::trackOutput(TrackId trackId) const
+{
+    return m_interaction->trackOutput(trackId);
+}
+
+bool TrackeditInteraction::setTrackOutput(TrackId trackId, TrackId busId)
+{
+    // The engine routes the tracks as playback starts
+    return withPlaybackStop(&ITrackeditInteraction::setTrackOutput, trackId, busId);
+}
+
+bool TrackeditInteraction::canOutputTo(TrackId trackId, TrackId busId) const
+{
+    return m_interaction->canOutputTo(trackId, busId);
+}
+
 bool TrackeditInteraction::deleteTracks(const TrackIdList& trackIds)
 {
     return withPlaybackStop(&ITrackeditInteraction::deleteTracks, trackIds);

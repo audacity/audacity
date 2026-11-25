@@ -110,6 +110,7 @@ set(MODULE_LINK_PUBLIC
         # these transitively and only declare the au3 libraries they include directly
         au3-audio-devices
         au3-basic-ui
+        au3-bus-track
         au3-label-track
         au3-project
         au3-recording # au3audioiolistener.h

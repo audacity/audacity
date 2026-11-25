@@ -86,6 +86,7 @@ set(MODULE_SRC
 set(MODULE_LINK
         au3wrap
         au3-project-rate
+        au3-bus-track
         au3-clip-processing
         au3-time-frequency-selection
         au3-track

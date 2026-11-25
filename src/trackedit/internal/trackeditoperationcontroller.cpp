@@ -802,6 +802,34 @@ muse::RetVal<TrackId> TrackeditOperationController::newLabelTrack(const muse::St
     return track;
 }
 
+bool TrackeditOperationController::newBusTrack()
+{
+    if (tracksInteraction()->newBusTrack()) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Created new bus"), muse::trc("trackedit", "New bus"));
+        return true;
+    }
+    return false;
+}
+
+TrackId TrackeditOperationController::trackOutput(TrackId trackId) const
+{
+    return tracksInteraction()->trackOutput(trackId);
+}
+
+bool TrackeditOperationController::setTrackOutput(TrackId trackId, TrackId busId)
+{
+    if (tracksInteraction()->setTrackOutput(trackId, busId)) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed the output of a track"), muse::trc("trackedit", "Track output"));
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::canOutputTo(TrackId trackId, TrackId busId) const
+{
+    return tracksInteraction()->canOutputTo(trackId, busId);
+}
+
 bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)
 {
     if (tracksInteraction()->deleteTracks(trackIds)) {

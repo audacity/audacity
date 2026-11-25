@@ -375,6 +375,7 @@ MenuItem* AppMenuModel::makeTracksMenu()
         makeMenuItem(trackedit::TRACKEDIT_NEW_MONO_TRACK_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_NEW_STEREO_TRACK_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_NEW_LABEL_TRACK_COMMAND),
+        makeMenuItem(trackedit::TRACKEDIT_NEW_BUS_TRACK_COMMAND),
         makeSeparator(),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         // makeMenuItem("remove-tracks"),

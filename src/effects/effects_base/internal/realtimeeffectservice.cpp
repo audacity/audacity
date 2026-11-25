@@ -28,7 +28,7 @@ namespace au::effects {
  * - Track added/removed, because user added/removed a track, undo or redo was called, or e.g. a destructive effect was applied
  * - A realtime effect was added/moved/replaced/removed
  *
- * Track realtime effects are attached to WaveTrack objects, so whenever there is an undo/redo,
+ * Track realtime effects are attached to audio tracks and busses, so whenever there is an undo/redo,
  * the track realtime effect lists are updated and we just need to notify that there was a change.
  * For the master effects, undo and redo are specially handled by the `RealtimeEffectRestorer`.
  *
@@ -65,7 +65,7 @@ void RealtimeEffectService::onProjectChanged(const au::project::IAudacityProject
 
     auto& trackList = TrackList::Get(*au3Project);
 
-    for (WaveTrack* track : trackList.Any<WaveTrack>()) {
+    for (PlayableTrack* track : trackList.Any<PlayableTrack>()) {
         registerRealtimeEffectList(track->GetId(), RealtimeEffectList::Get(*track));
     }
     registerRealtimeEffectList(masterTrackId, RealtimeEffectList::Get(*au3Project));
@@ -137,12 +137,13 @@ void RealtimeEffectService::onTrackListEvent(const TrackListEvent& e)
 {
     switch (e.mType) {
     case TrackListEvent::ADDITION: {
-        const auto waveTrack = std::dynamic_pointer_cast<WaveTrack>(e.mpTrack.lock());
-        if (!waveTrack) {
+        // Audio tracks and busses
+        const auto playableTrack = std::dynamic_pointer_cast<PlayableTrack>(e.mpTrack.lock());
+        if (!playableTrack) {
             // TODO @saintmatthieu I've seen these transitory events but haven't looked for the cause.
             return;
         }
-        registerRealtimeEffectList(waveTrack->GetId(), RealtimeEffectList::Get(*waveTrack));
+        registerRealtimeEffectList(playableTrack->GetId(), RealtimeEffectList::Get(*playableTrack));
     }
     break;
     case TrackListEvent::DELETION:

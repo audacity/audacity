@@ -89,6 +89,7 @@ set( LIBRARIES
 #   au3-audacity-application-logic # not yet used in AU4
    au3-builtin-effects
    au3-label-track
+   au3-bus-track
    au3-wave-track-fft
 )
 

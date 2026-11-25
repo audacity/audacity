@@ -233,6 +233,15 @@ const std::vector<CommandInfo> commandInfos = {
         Availability::All
     },
     CommandInfo{
+        TRACKEDIT_NEW_BUS_TRACK_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "New bus"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "New bus, which tracks can output to instead of the master"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
         TRACKEDIT_TRACK_DUPLICATE_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Duplicate"),
