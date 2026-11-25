@@ -9946,7 +9946,7 @@ Zaznacz obszar do naprawy z dźwiękiem przynajmniej po jednej stronie (im więc
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="233"/>
         <source>Recovery end</source>
-        <translation type="unfinished"/>
+        <translation>Koniec przywracania</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="259"/>
@@ -9956,17 +9956,17 @@ Zaznacz obszar do naprawy z dźwiękiem przynajmniej po jednej stronie (im więc
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="285"/>
         <source>Gain reduction</source>
-        <translation type="unfinished"/>
+        <translation>Redukcja wzmocnienia</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="311"/>
         <source>Recovery start</source>
-        <translation type="unfinished"/>
+        <translation>Początek przywracania</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="340"/>
         <source>Hold</source>
-        <translation type="unfinished"/>
+        <translation>Przytrzymanie</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/autoduck/AutoDuckView.qml" line="371"/>
@@ -11263,7 +11263,7 @@ Niektóre kodeki akceptują tylko niektóre wartości (128k, 192k, 256k itp.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="424"/>
         <source>There is no audio to export</source>
-        <translation type="unfinished"/>
+        <translation>Brak dźwięku do wyeksportowania</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="471"/>
@@ -14606,7 +14606,7 @@ Pobierz najnowszą wersję „LAME for Audacity”.</translation>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="99"/>
         <source>Quality %1 (~%2 kbit/s)</source>
-        <translation type="unfinished"/>
+        <translation>Jakość %1 (~%2 kbit/s)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="204"/>
@@ -15293,12 +15293,12 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="21"/>
         <source>Edit macro</source>
-        <translation type="unfinished"/>
+        <translation>Edytuj makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="105"/>
         <source>Search commands</source>
-        <translation type="unfinished"/>
+        <translation>Szukaj poleceń</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="261"/>
@@ -15310,7 +15310,7 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="275"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="150"/>
         <source>Run on files…</source>
-        <translation type="unfinished"/>
+        <translation>Uruchom na plikach…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/EditMacroDialog.qml" line="293"/>
@@ -15320,42 +15320,42 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/AvailableCommandsList.qml" line="33"/>
         <source>Available commands</source>
-        <translation type="unfinished"/>
+        <translation>Dostępne polecenia</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Moving %1. Use the up and down arrows to move it. Press Escape to stop.</source>
-        <translation type="unfinished"/>
+        <translation>Przenoszenie: %1. Użyj strzałek w górę i w dół, aby przenieść element. Naciśnij Esc, aby zakończyć.</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="164"/>
         <source>Move %1</source>
-        <translation type="unfinished"/>
+        <translation>Przenieś: %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="246"/>
         <source>Step %1</source>
-        <translation type="unfinished"/>
+        <translation>Krok %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="336"/>
         <source>Actions for %1</source>
-        <translation type="unfinished"/>
+        <translation>Czynności dla: %1</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="378"/>
         <source>Edit command</source>
-        <translation type="unfinished"/>
+        <translation>Edytuj polecenie</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="394"/>
         <source>Move up</source>
-        <translation type="unfinished"/>
+        <translation>Przenieś w górę</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="399"/>
         <source>Move down</source>
-        <translation type="unfinished"/>
+        <translation>Przenieś w dół</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="405"/>
@@ -15366,17 +15366,17 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandItem.qml" line="412"/>
         <source>Command menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu polecenia</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="27"/>
         <source>Macro commands</source>
-        <translation type="unfinished"/>
+        <translation>Polecenia makra</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="96"/>
         <source>Step</source>
-        <translation type="unfinished"/>
+        <translation>Krok</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="128"/>
@@ -15386,17 +15386,17 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="160"/>
         <source>Actions</source>
-        <translation type="unfinished"/>
+        <translation>Czynności</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroCommandsTable.qml" line="258"/>
         <source>Double-click a command, or drag it, to add it to your macro</source>
-        <translation type="unfinished"/>
+        <translation>Kliknij dwukrotnie polecenie lub przeciągnij je, aby dodać je do makra</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="107"/>
         <source>Run macro “%1”</source>
-        <translation type="unfinished"/>
+        <translation>Uruchom makro „%1”</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="142"/>
@@ -15411,67 +15411,67 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="154"/>
         <source>Export…</source>
-        <translation type="unfinished"/>
+        <translation>Eksportuj…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroItem.qml" line="167"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="89"/>
         <source>Macro menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu makra</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="48"/>
         <source>Macros</source>
-        <translation type="unfinished"/>
+        <translation>Makra</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="66"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroNameDialog.qml" line="18"/>
         <source>New macro</source>
-        <translation type="unfinished"/>
+        <translation>Nowe makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroManagerHeader.qml" line="110"/>
         <source>Macro manager menu</source>
-        <translation type="unfinished"/>
+        <translation>Menu menedżera makr</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="69"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="26"/>
         <source>Rename macro</source>
-        <translation type="unfinished"/>
+        <translation>Zmień nazwę makra</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="73"/>
         <source>Export macro…</source>
-        <translation type="unfinished"/>
+        <translation>Eksportuj makro…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="78"/>
         <source>Remove all steps</source>
-        <translation type="unfinished"/>
+        <translation>Usuń wszystkie kroki</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/MacroTitleBar.qml" line="82"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="50"/>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/macroactions.cpp" line="56"/>
         <source>Delete macro</source>
-        <translation type="unfinished"/>
+        <translation>Usuń makro</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="26"/>
         <source>Queued</source>
-        <translation type="unfinished"/>
+        <translation>W kolejce</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="28"/>
         <source>Processing</source>
-        <translation type="unfinished"/>
+        <translation>Przetwarzanie</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="30"/>
         <source>Complete</source>
-        <translation type="unfinished"/>
+        <translation>Ukończono</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesItem.qml" line="32"/>
@@ -15486,7 +15486,7 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="43"/>
         <source>File path</source>
-        <translation type="unfinished"/>
+        <translation>Ścieżka pliku</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/internal/RunOnFilesTable.qml" line="55"/>
@@ -15496,7 +15496,7 @@ Ponadto Mastering MuseScore oferuje wsparcie społeczności muzyków, z przestrz
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="71"/>
         <source>Import macro…</source>
-        <translation type="unfinished"/>
+        <translation>Importuj makro…</translation>
     </message>
     <message>
         <location filename="../../src/macromanager/qml/Audacity/MacroManager/MacroManagerPanel.qml" line="98"/>
