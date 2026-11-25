@@ -92,8 +92,11 @@ WaveView::WaveView(QQuickItem* parent)
         }
     });
 
+    // isNearSample() only changes with the visibility while near a sample
     connect(this, &WaveView::visibleChanged, [this]() {
-        emit isNearSampleChanged();
+        if (m_isNearSample) {
+            emit isNearSampleChanged();
+        }
     });
 
     connect(this, &WaveView::multiSampleEditChanged, [this]() {
