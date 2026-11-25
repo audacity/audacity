@@ -3,7 +3,28 @@
 */
 #include "CaptureRouting.h"
 
-#include <algorithm>
+CaptureChannelSources GetCaptureChannelSources(size_t inputChannels, size_t trackChannels, size_t trackChannel)
+{
+    CaptureChannelSources result;
+    if (inputChannels == 0 || trackChannel >= trackChannels) {
+        return result;
+    }
+
+    const bool canMix = inputChannels <= 2 && trackChannels <= 2;
+
+    if (canMix && inputChannels == 2 && trackChannels == 1) {
+        result.sources = { 0, 1 };
+        result.count = 2;
+    } else if (canMix && inputChannels == 1 && trackChannels == 2) {
+        result.sources[0] = 0;
+        result.count = 1;
+    } else if (trackChannel < inputChannels) {
+        result.sources[0] = trackChannel;
+        result.count = 1;
+    }
+
+    return result;
+}
 
 CaptureRouting MakeCaptureRouting(size_t inputChannels, size_t trackChannels)
 {
@@ -13,20 +34,11 @@ CaptureRouting MakeCaptureRouting(size_t inputChannels, size_t trackChannels)
     }
 
     routing.trackChannelSources.resize(trackChannels);
-
-    const bool canMix = inputChannels <= 2 && trackChannels <= 2;
-
-    if (canMix && inputChannels == 2 && trackChannels == 1) {
-        routing.needsMixdown = true;
-        routing.trackChannelSources[0] = { 0, 1 };
-    } else if (canMix && inputChannels == 1 && trackChannels == 2) {
-        routing.trackChannelSources[0] = { 0 };
-        routing.trackChannelSources[1] = { 0 };
-    } else {
-        for (size_t channel = 0; channel < std::min(trackChannels, inputChannels); ++channel) {
-            routing.trackChannelSources[channel] = { channel };
-        }
+    for (size_t channel = 0; channel < trackChannels; ++channel) {
+        const auto sources = GetCaptureChannelSources(inputChannels, trackChannels, channel).span();
+        routing.trackChannelSources[channel].assign(sources.begin(), sources.end());
     }
+    routing.needsMixdown = inputChannels == 2 && trackChannels == 1;
 
     return routing;
 }

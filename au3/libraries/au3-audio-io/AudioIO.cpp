@@ -856,45 +856,12 @@ void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
     mCaptureNeedsMixdown = routing.needsMixdown;
 }
 
-void AudioIO::SetMonitoredTracks(std::vector<MonitoredTrack> tracks)
+void AudioIO::SetMonitoredTracks(const std::vector<MonitoredTrack>& tracks)
 {
-    mMonitoredTracks = std::move(tracks);
-    RouteMonitoredTracks();
-}
-
-void AudioIO::RouteMonitoredTracks()
-{
-    std::vector<MonitoredChannel> channels;
-    for (const auto& track : mMonitoredTracks) {
-        for (size_t channel = 0; channel < track.channels; ++channel) {
-            channels.push_back({ track.trackId, channel, {} });
-        }
-    }
-
-    CaptureRouting routing = MakeCaptureRouting(mNumCaptureChannels, channels.size());
-    for (size_t i = 0; i < routing.trackChannelSources.size(); ++i) {
-        channels[i].sources = std::move(routing.trackChannelSources[i]);
-    }
-    std::erase_if(channels, [](const MonitoredChannel& channel) { return channel.sources.empty(); });
-
-    DeleteRetiredMonitoredRoutings();
-
-    auto newRouting = std::make_unique<MonitoredRouting>();
-    newRouting->inputChannels = mNumCaptureChannels;
-    newRouting->channels = std::move(channels);
-
-    // One the audio callback hasn't taken yet is replaced, and is still the main thread's to delete
-    delete mPendingMonitoredRouting.exchange(newRouting.release(), std::memory_order_acq_rel);
-}
-
-void AudioIoCallback::DeleteRetiredMonitoredRoutings()
-{
-    MonitoredRouting* routing = mRetiredMonitoredRoutings.exchange(nullptr, std::memory_order_acquire);
-    while (routing) {
-        MonitoredRouting* next = routing->nextRetired;
-        delete routing;
-        routing = next;
-    }
+    MonitoredTracks monitored;
+    monitored.count = std::min(tracks.size(), MaxMonitoredTracks);
+    std::copy_n(tracks.begin(), monitored.count, monitored.tracks.begin());
+    mMonitoredTracks.Write(monitored);
 }
 
 void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
@@ -938,7 +905,6 @@ void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
     }
 
     SetOwningProject(options.pProject);
-    RouteMonitoredTracks();
 
     // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
     // Now start the PortAudio stream!
@@ -3233,10 +3199,17 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
 
     if (mCaptureSequences.empty()) {
         // Monitoring: the tracks that would be recorded into show the input as it would be recorded
-        const MonitoredRouting* routing = TakePendingMonitoredRouting();
-        if (routing && routing->inputChannels == mNumCaptureChannels) {
-            for (const auto& channel : routing->channels) {
-                PushRoutedInputValues(sender, values, frames, dacTime, channel.channelIndex, channel.sources, channel.trackId);
+        const MonitoredTracks monitored = mMonitoredTracks.Read();
+        size_t trackChannels = 0;
+        for (size_t i = 0; i < monitored.count; ++i) {
+            trackChannels += monitored.tracks[i].channels;
+        }
+        size_t trackChannel = 0;
+        for (size_t i = 0; i < monitored.count; ++i) {
+            const MonitoredTrack& track = monitored.tracks[i];
+            for (size_t channel = 0; channel < track.channels; ++channel, ++trackChannel) {
+                const CaptureChannelSources sources = GetCaptureChannelSources(mNumCaptureChannels, trackChannels, trackChannel);
+                PushRoutedInputValues(sender, values, frames, dacTime, channel, sources.span(), track.trackId);
             }
         }
     }
@@ -3277,7 +3250,7 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
 }
 
 void AudioIoCallback::PushRoutedInputValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames,
-                                            const TimePoint& dacTime, size_t channelIndex, const std::vector<size_t>& sources,
+                                            const TimePoint& dacTime, size_t channelIndex, std::span<const size_t> sources,
                                             int64_t trackId)
 {
     if (sources.empty()) {
@@ -3379,27 +3352,6 @@ AudioIoCallback::AudioIoCallback()
 
 AudioIoCallback::~AudioIoCallback()
 {
-    // No callback runs anymore: whatever routing is left is ours to delete
-    delete mPendingMonitoredRouting.exchange(nullptr);
-    delete mMonitoredRouting;
-    DeleteRetiredMonitoredRoutings();
-}
-
-const AudioIoCallback::MonitoredRouting* AudioIoCallback::TakePendingMonitoredRouting()
-{
-    MonitoredRouting* pending = mPendingMonitoredRouting.exchange(nullptr, std::memory_order_acq_rel);
-    if (!pending) {
-        return mMonitoredRouting;
-    }
-
-    // The replaced routing goes back to the main thread, which deletes it
-    if (MonitoredRouting* replaced = std::exchange(mMonitoredRouting, pending)) {
-        replaced->nextRetired = mRetiredMonitoredRoutings.load(std::memory_order_relaxed);
-        while (!mRetiredMonitoredRoutings.compare_exchange_weak(replaced->nextRetired, replaced, std::memory_order_release,
-                                                                std::memory_order_relaxed)) {
-        }
-    }
-    return mMonitoredRouting;
 }
 
 int AudioIoCallback::AudioCallback(
