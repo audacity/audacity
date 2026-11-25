@@ -401,26 +401,6 @@ struct OggQualityContract {
         { "10", OggQuality::Q10, "10 (~500 kbps)" },
     } };
 };
-
-enum class ExportPreset {
-    Lossless,
-    HighQuality,
-    Standard,
-    SmallFile,
-    Speech
-};
-
-struct ExportPresetContract {
-    static constexpr std::string_view key = "preset";
-    static constexpr ExportPreset def = ExportPreset::Standard;
-    static constexpr muse::rcommand::EnumTable<ExportPreset, 5> table = { {
-        { "lossless", ExportPreset::Lossless, QT_TRANSLATE_NOOP("export", "Lossless (FLAC)") },
-        { "high", ExportPreset::HighQuality, QT_TRANSLATE_NOOP("export", "High quality") },
-        { "standard", ExportPreset::Standard, QT_TRANSLATE_NOOP("export", "Standard") },
-        { "small", ExportPreset::SmallFile, QT_TRANSLATE_NOOP("export", "Small file") },
-        { "speech", ExportPreset::Speech, QT_TRANSLATE_NOOP("export", "Speech") },
-    } };
-};
 }
 
 namespace muse::rcommand {
@@ -435,7 +415,6 @@ DECLARE_ENUM_CONTRACT(au::importexport::Mp3QualityContract)
 DECLARE_ENUM_CONTRACT(au::importexport::FlacBitDepthContract)
 DECLARE_ENUM_CONTRACT(au::importexport::FlacLevelContract)
 DECLARE_ENUM_CONTRACT(au::importexport::OggQualityContract)
-DECLARE_ENUM_CONTRACT(au::importexport::ExportPresetContract)
 }
 
 namespace au::importexport {

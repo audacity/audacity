@@ -70,18 +70,6 @@ RetVal<ExportFormatCommand> parsedCommand(const muse::rcommand::Params& params)
 }
 }
 
-ExportPresetSettings au::importexport::presetSettings(ExportPreset preset)
-{
-    switch (preset) {
-    case ExportPreset::Lossless: return { FlacSettings { FlacBitDepth::Bits16, FlacLevel::L5 }, ExportChannelLayout::Auto };
-    case ExportPreset::HighQuality: return { Mp3VbrSettings { Mp3VbrQuality::V0 }, ExportChannelLayout::Auto };
-    case ExportPreset::Standard: return { Mp3PresetSettings { Mp3Preset::Standard }, ExportChannelLayout::Auto };
-    case ExportPreset::SmallFile: return { Mp3VbrSettings { Mp3VbrQuality::V5 }, ExportChannelLayout::Auto };
-    case ExportPreset::Speech: return { Mp3CbrSettings { Mp3BitRate::Kbps64 }, ExportChannelLayout::Mono };
-    }
-    return {};
-}
-
 ExportFormatSettings au::importexport::mp3Settings(Mp3Quality quality)
 {
     const int value = static_cast<int>(quality);
@@ -190,33 +178,6 @@ RetVal<ExportFormatCommand> au::importexport::formatCommandFromVal(const Val& va
     return RetVal<ExportFormatCommand>::make_ret(make_ret(Ret::Code::BadArgs,
                                                           qtrc("export", "Unknown export format: %1")
                                                           .arg(QString::fromStdString(format)).toStdString()));
-}
-
-Val au::importexport::toVal(const ExportSimpleStep& step)
-{
-    return Val(ValMap {
-        { std::string(ExportPresetContract::key), Val(muse::rcommand::EnumContract<ExportPreset>::str_val(step.preset)) },
-        { EXPORT_FOLDER_PARAM, Val(step.folder) },
-        { EXPORT_FILE_NAME_PARAM, Val(step.fileName) },
-    });
-}
-
-RetVal<ExportSimpleStep> au::importexport::simpleStepFromVal(const Val& val)
-{
-    const muse::rcommand::Params params(val.toMap());
-    const std::string presetKey = params.at(ExportPresetContract::key).toString();
-    const std::optional<ExportPreset> preset = muse::rcommand::EnumContract<ExportPreset>::enum_val(presetKey);
-    if (!preset) {
-        return RetVal<ExportSimpleStep>::make_ret(make_ret(Ret::Code::BadArgs,
-                                                           qtrc("export", "Unknown export preset: %1")
-                                                           .arg(QString::fromStdString(presetKey)).toStdString()));
-    }
-
-    return RetVal<ExportSimpleStep>::make_ok(ExportSimpleStep {
-        *preset,
-        params.at(EXPORT_FOLDER_PARAM).toString(),
-        params.at(EXPORT_FILE_NAME_PARAM).toString(),
-    });
 }
 
 std::string au::importexport::formatSummary(const ExportFormatCommand& command, const IExporter& exporter)

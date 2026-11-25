@@ -50,8 +50,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/channelmappingtableviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/exportaudiostepmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/exportaudiostepmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/exportsimplestepmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/exportsimplestepmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/exportstepoutput.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/exportstepoutput.h
 

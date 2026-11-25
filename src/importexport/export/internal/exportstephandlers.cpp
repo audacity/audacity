@@ -3,10 +3,6 @@
 */
 #include "exportstephandlers.h"
 
-#include <algorithm>
-
-#include "framework/global/translation.h"
-
 using namespace au::importexport;
 using namespace muse;
 using namespace muse::rcommand;
@@ -66,49 +62,4 @@ async::Promise<Ret> ExportAudioStepHandler::execute(const Val& data) const
     }
 
     return runExport(command.val);
-}
-
-std::string ExportSimpleStepHandler::id() const
-{
-    return EXPORT_SIMPLE_STEP_HANDLER_ID;
-}
-
-TranslatableString ExportSimpleStepHandler::title() const
-{
-    return EXPORT_SIMPLE_STEP_TITLE;
-}
-
-String ExportSimpleStepHandler::summary(const Val& data) const
-{
-    const RetVal<ExportSimpleStep> step = simpleStepFromVal(data);
-    if (!step.ret) {
-        return String::fromStdString(step.ret.text());
-    }
-
-    const auto& presets = ExportPresetContract::table;
-    const auto it = std::ranges::find(presets, step.val.preset, [](const auto& entry) { return entry.eval; });
-    return mtrc("export", std::string(it->description).c_str());
-}
-
-Val ExportSimpleStepHandler::defaultData() const
-{
-    return toVal(ExportSimpleStep {});
-}
-
-std::optional<UriQuery> ExportSimpleStepHandler::editUri() const
-{
-    return UriQuery(EXPORT_SIMPLE_STEP_DIALOG_URI);
-}
-
-async::Promise<Ret> ExportSimpleStepHandler::execute(const Val& data) const
-{
-    const RetVal<ExportSimpleStep> step = simpleStepFromVal(data);
-    if (!step.ret) {
-        return resolved(step.ret);
-    }
-
-    const ExportPresetSettings preset = presetSettings(step.val.preset);
-    const std::string projectRate = EnumContract<ExportSampleRate>::str_val(ExportSampleRate::ProjectRate);
-
-    return runExport(formatCommand(preset.settings, projectRate, preset.channels, step.val.folder, step.val.fileName));
 }
