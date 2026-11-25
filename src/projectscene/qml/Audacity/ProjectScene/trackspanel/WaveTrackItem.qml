@@ -160,6 +160,38 @@ TrackItem {
                         }
                     }
                 }
+
+                FlatButton {
+                    id: sendsButton
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+
+                    // Only once there are busses to send to
+                    visible: outputButton.visible
+
+                    //: What a track sends to busses besides its output
+                    text: qsTrc("projectscene", "Sends")
+                    toolTipDescription: qsTrc("projectscene", "Sends this track to busses besides its output")
+
+                    navigation.panel: root.headerNavigationPanel
+                    navigation.order: root.headerTrailingControlsNavigationEnd + 3
+                    navigation.enabled: bottomRow.visible && visible
+
+                    onClicked: {
+                        if (sendsPopup.isOpened) {
+                            sendsPopup.close()
+                        } else {
+                            sendsPopup.open()
+                        }
+                    }
+
+                    SendsPopup {
+                        id: sendsPopup
+
+                        trackId: Boolean(root.item) ? root.item.trackId : null
+                    }
+                }
             }
         }
     }

@@ -34,6 +34,15 @@ constexpr int64_t NO_GROUP_ID = -1;
 
 using TrackIdList = std::vector<TrackId>;
 
+//! What a track sends to a bus besides its output
+struct TrackSend {
+    TrackId bus = INVALID_TRACK;
+    volume_dbfs_t level = 0.f;
+    //! Before the track's volume and pan, rather than after
+    bool preFader = false;
+};
+using TrackSendList = std::vector<TrackSend>;
+
 struct TrackItemKey
 {
     TrackId trackId = INVALID_TRACK;

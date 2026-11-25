@@ -4,7 +4,9 @@
 #pragma once
 
 #include <atomic>
+#include <memory>
 #include <optional>
+#include <vector>
 
 #include "au3-playable-track/PlayableTrack.h"
 #include "au3-track/TrackAttachment.h"
@@ -88,7 +90,7 @@ public:
     //! Once all the tracks of its project are loaded: the bus it saved
     void ResolveSaved();
 
-    //! Whether `track` going to `bus` would feed `bus` back into itself
+    //! Whether `track` going to `bus`, as its output or by a send, would feed `bus` back into itself
     static bool WouldFeedBack(const Track& track, const BusTrack& bus);
 
     // TrackAttachment
@@ -102,4 +104,56 @@ private:
     std::optional<TrackId> mBus;
     //! Read from a project, until resolved
     std::optional<size_t> mSavedBus;
+};
+
+//! What a track sends to busses besides its output, as a DAW's sends: at most one send to each bus
+/*!
+ As TrackOutput, it saves the busses by their positions in the project's tracks, resolved by ResolveSaved().
+ */
+class TrackSends final : public TrackAttachment
+{
+public:
+    struct Send {
+        TrackId bus;
+        //! Read by the audio thread in playback
+        std::atomic<float> level { 1.f };
+        //! Before the track's volume and pan, rather than after
+        bool preFader = false;
+    };
+
+    static TrackSends& Get(Track& track);
+    static const TrackSends& Get(const Track& track);
+
+    explicit TrackSends(Track& track);
+    ~TrackSends() override = default;
+
+    //! Shared, so that playback keeps reading their levels while they change
+    const std::vector<std::shared_ptr<Send> >& GetSends() const { return mSends; }
+    //! Those to busses its tracks still have
+    std::vector<std::shared_ptr<const Send> > FindSends() const;
+    std::shared_ptr<Send> FindSend(TrackId bus) const;
+    //! If it doesn't send to `bus` yet
+    void AddSend(TrackId bus);
+    void RemoveSend(TrackId bus);
+
+    //! Once all the tracks of its project are loaded: the busses it saved
+    void ResolveSaved();
+
+    // TrackAttachment
+    void CopyTo(Track& track) const override;
+    void Reparent(const std::shared_ptr<Track>& parent) override;
+    void WriteXMLAttributes(XMLWriter& writer) const override;
+    bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& value) override;
+
+private:
+    struct SavedSend {
+        size_t bus = 0;
+        float level = 1.f;
+        bool preFader = false;
+    };
+
+    std::weak_ptr<Track> mTrack;
+    std::vector<std::shared_ptr<Send> > mSends;
+    //! Read from a project, until resolved
+    std::vector<SavedSend> mSavedSends;
 };

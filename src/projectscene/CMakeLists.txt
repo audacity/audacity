@@ -79,6 +79,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/tracksendsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/tracksendsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectrowactionscontroller.cpp

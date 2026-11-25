@@ -43,6 +43,11 @@
 #include "translation.h"
 
 using namespace au::trackedit;
+
+namespace {
+//! As the volume sliders: what they show for silence
+constexpr au::trackedit::volume_dbfs_t SEND_LEVEL_MIN = -60.f;
+}
 using namespace au::au3;
 
 namespace {
@@ -846,6 +851,70 @@ bool Au3TracksInteraction::canOutputTo(TrackId trackId, TrackId busId) const
     }
     const auto bus = dynamic_cast<const BusTrack*>(DomAccessor::findTrack(project, Au3TrackId(busId)));
     return bus && !TrackOutput::WouldFeedBack(*track, *bus);
+}
+
+au::trackedit::TrackSendList Au3TracksInteraction::trackSends(TrackId trackId) const
+{
+    const Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    TrackSendList result;
+    if (!track) {
+        return result;
+    }
+    for (const auto& send : TrackSends::Get(*track).FindSends()) {
+        const float level = send->level.load();
+        // As the volume sliders: their lowest is silence
+        result.push_back({ send->bus.raw(), level > 0.f ? 20.f * std::log10(level) : SEND_LEVEL_MIN, send->preFader });
+    }
+    return result;
+}
+
+bool Au3TracksInteraction::addTrackSend(TrackId trackId, TrackId busId)
+{
+    if (busId == INVALID_TRACK || !canOutputTo(trackId, busId)) {
+        return false;
+    }
+    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    auto& sends = TrackSends::Get(*track);
+    if (sends.FindSend(Au3TrackId(busId))) {
+        return false;
+    }
+    sends.AddSend(Au3TrackId(busId));
+    globalContext()->currentTrackeditProject()->notifyAboutTrackChanged(DomConverter::track(track));
+    return true;
+}
+
+bool Au3TracksInteraction::removeTrackSend(TrackId trackId, TrackId busId)
+{
+    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    if (!track || !TrackSends::Get(*track).FindSend(Au3TrackId(busId))) {
+        return false;
+    }
+    TrackSends::Get(*track).RemoveSend(Au3TrackId(busId));
+    globalContext()->currentTrackeditProject()->notifyAboutTrackChanged(DomConverter::track(track));
+    return true;
+}
+
+bool Au3TracksInteraction::setTrackSendLevel(TrackId trackId, TrackId busId, volume_dbfs_t level, bool)
+{
+    const Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    const auto send = track ? TrackSends::Get(*track).FindSend(Au3TrackId(busId)) : nullptr;
+    if (!send) {
+        return false;
+    }
+    send->level = level > SEND_LEVEL_MIN ? std::pow(10.f, level / 20.f) : 0.f;
+    return true;
+}
+
+bool Au3TracksInteraction::setTrackSendPreFader(TrackId trackId, TrackId busId, bool preFader)
+{
+    Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
+    const auto send = track ? TrackSends::Get(*track).FindSend(Au3TrackId(busId)) : nullptr;
+    if (!send || send->preFader == preFader) {
+        return false;
+    }
+    send->preFader = preFader;
+    globalContext()->currentTrackeditProject()->notifyAboutTrackChanged(DomConverter::track(track));
+    return true;
 }
 
 bool Au3TracksInteraction::setTrackOutput(TrackId trackId, TrackId busId)

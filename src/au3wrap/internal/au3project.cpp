@@ -182,9 +182,10 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
     for (auto pTrack : tracks) {
         pTrack->LinkConsistencyFix();
     }
-    // Once all the tracks are loaded: the busses they go to
+    // Once all the tracks are loaded: the busses they go and send to
     for (auto pTrack : tracks) {
         TrackOutput::Get(*pTrack).ResolveSaved();
+        TrackSends::Get(*pTrack).ResolveSaved();
     }
 
     // Update saved state BEFORE sanitizing

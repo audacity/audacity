@@ -57,6 +57,14 @@ public:
     //! Whether a track may go to a bus: not if it would feed the bus back into itself
     virtual bool canOutputTo(TrackId trackId, TrackId busId) const = 0;
 
+    virtual TrackSendList trackSends(TrackId trackId) const = 0;
+    //! As canOutputTo allows, if it doesn't send to the bus yet
+    virtual bool addTrackSend(TrackId trackId, TrackId busId) = 0;
+    virtual bool removeTrackSend(TrackId trackId, TrackId busId) = 0;
+    //! Also while playing
+    virtual bool setTrackSendLevel(TrackId trackId, TrackId busId, volume_dbfs_t level, bool completed) = 0;
+    virtual bool setTrackSendPreFader(TrackId trackId, TrackId busId, bool preFader) = 0;
+
     virtual bool deleteTracks(const TrackIdList& trackIds) = 0;
     virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;
     virtual bool moveTracks(const TrackIdList& trackIds, TrackMoveDirection direction) = 0;

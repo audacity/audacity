@@ -21,6 +21,7 @@ const wxString TEST_SUBMIX = "Submix";
 const wxString TEST_TRACK_AFTER = "After its bus";
 constexpr float TEST_BUS_VOLUME = 0.5f;
 constexpr float TEST_BUS_PAN = -0.25f;
+constexpr float TEST_SEND_LEVEL = 0.75f;
 }
 
 namespace au::project {
@@ -126,6 +127,52 @@ TEST_F(BusPersistenceTests, ABusCannotGoWhereItWouldFeedBackIntoItself)
     auto& track = addWaveTrack(project(accessor), TEST_TRACK_BEFORE);
     EXPECT_FALSE(TrackOutput::WouldFeedBack(track, group));
     EXPECT_FALSE(TrackOutput::WouldFeedBack(track, submix));
+    accessor.close();
+}
+
+TEST_F(BusPersistenceTests, SendsAreKeptWhenSavedAndReloaded)
+{
+    {
+        //! [GIVEN] a track sending to a bus listed after it, before its volume and pan
+        au3::Au3ProjectAccessor accessor { au::testutils::makeTestContext() };
+        ASSERT_TRUE(accessor.load(projectPath().toStdString(), false));
+        auto& track = addWaveTrack(project(accessor), TEST_TRACK_BEFORE);
+        auto& bus = addBus(project(accessor), TEST_GROUP);
+        auto& sends = TrackSends::Get(track);
+        sends.AddSend(bus.GetId());
+        sends.FindSend(bus.GetId())->level = TEST_SEND_LEVEL;
+        sends.FindSend(bus.GetId())->preFader = true;
+
+        //! [WHEN] the project is saved
+        ASSERT_TRUE(accessor.save(projectPath().toStdString()));
+        accessor.close();
+    }
+
+    //! [THEN] reloaded, the track sends the same to the same bus
+    au3::Au3ProjectAccessor accessor { au::testutils::makeTestContext() };
+    ASSERT_TRUE(accessor.load(projectPath().toStdString(), false));
+    const auto& tracks = TrackList::Get(project(accessor));
+    const auto track = *tracks.Any<const WaveTrack>().begin();
+    const auto sends = TrackSends::Get(*track).FindSends();
+    ASSERT_EQ(sends.size(), 1u);
+    EXPECT_EQ(tracks.FindById(sends.front()->bus)->GetName(), TEST_GROUP);
+    EXPECT_FLOAT_EQ(sends.front()->level.load(), TEST_SEND_LEVEL);
+    EXPECT_TRUE(sends.front()->preFader);
+    accessor.close();
+}
+
+TEST_F(BusPersistenceTests, ABusCannotGoWhereItsSendsWouldFeedBackIntoIt)
+{
+    //! [GIVEN] a bus sending to another
+    au3::Au3ProjectAccessor accessor { au::testutils::makeTestContext() };
+    ASSERT_TRUE(accessor.load(projectPath().toStdString(), false));
+    auto& group = addBus(project(accessor), TEST_GROUP);
+    auto& submix = addBus(project(accessor), TEST_SUBMIX);
+    TrackSends::Get(group).AddSend(submix.GetId());
+
+    //! [THEN] the other can't go to it
+    EXPECT_TRUE(TrackOutput::WouldFeedBack(submix, group));
+    EXPECT_FALSE(TrackOutput::WouldFeedBack(group, submix));
     accessor.close();
 }
 }

@@ -66,6 +66,11 @@ public:
     TrackId trackOutput(TrackId trackId) const override;
     bool setTrackOutput(TrackId trackId, TrackId busId) override;
     bool canOutputTo(TrackId trackId, TrackId busId) const override;
+    TrackSendList trackSends(TrackId trackId) const override;
+    bool addTrackSend(TrackId trackId, TrackId busId) override;
+    bool removeTrackSend(TrackId trackId, TrackId busId) override;
+    bool setTrackSendLevel(TrackId trackId, TrackId busId, volume_dbfs_t level, bool completed) override;
+    bool setTrackSendPreFader(TrackId trackId, TrackId busId, bool preFader) override;
 
     bool deleteTracks(const TrackIdList& trackIds) override;
     bool duplicateTracks(const TrackIdList& trackIds) override;
