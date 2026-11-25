@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <functional>
 #include <optional>
 
 #include "framework/global/async/asyncable.h"
@@ -44,5 +45,6 @@ public:
 
 private:
     IProjectViewStatePtr viewState() const;
+    void forEachTrack(const trackedit::TrackIdList& tracks, const std::function<void(IProjectViewState&, trackedit::TrackId)>& func) const;
 };
 }

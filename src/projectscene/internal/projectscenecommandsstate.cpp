@@ -4,6 +4,7 @@
 #include "projectscenecommandsstate.h"
 
 #include <algorithm>
+#include <functional>
 
 #include "framework/global/containers.h"
 #include "framework/global/log.h"
@@ -31,6 +32,22 @@ const std::vector<Command> TRACK_HEIGHT_COMMANDS {
     PROJECTSCENE_RESET_TRACK_HEIGHT_COMMAND,
     PROJECTSCENE_RESET_ALL_TRACK_HEIGHTS_COMMAND,
 };
+
+bool anyTrack(const au::context::IGlobalContext& globalContext,
+              const std::function<bool(const IProjectViewState&, au::trackedit::TrackId)>& predicate)
+{
+    const au::project::IAudacityProjectPtr project = globalContext.currentProject();
+    const IProjectViewStatePtr viewState = project ? project->viewState() : nullptr;
+    const au::trackedit::ITrackeditProjectPtr trackeditProject = globalContext.currentTrackeditProject();
+    if (!viewState || !trackeditProject) {
+        return false;
+    }
+
+    const au::trackedit::TrackIdList tracks = trackeditProject->trackIdList();
+    return std::any_of(tracks.begin(), tracks.end(), [&viewState, &predicate](const au::trackedit::TrackId trackId) {
+        return predicate(*viewState, trackId);
+    });
+}
 }
 
 std::string ProjectSceneCommandsState::moduleName() const
@@ -113,18 +130,17 @@ void ProjectSceneCommandsState::subscribeToTrackHeights()
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
-bool ProjectSceneCommandsState::anyTrackInCollapsedState(bool collapsed) const
+bool ProjectSceneCommandsState::anyTrackCollapsed() const
 {
-    const project::IAudacityProjectPtr project = globalContext()->currentProject();
-    const IProjectViewStatePtr viewState = project ? project->viewState() : nullptr;
-    const trackedit::ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject();
-    if (!viewState || !trackeditProject) {
-        return false;
-    }
+    return anyTrack(*globalContext(), [](const IProjectViewState& viewState, trackedit::TrackId trackId) {
+        return viewState.isTrackCollapsed(trackId).val;
+    });
+}
 
-    const trackedit::TrackIdList tracks = trackeditProject->trackIdList();
-    return std::any_of(tracks.begin(), tracks.end(), [&viewState, collapsed](const trackedit::TrackId trackId) {
-        return viewState->isTrackCollapsed(trackId).val == collapsed;
+bool ProjectSceneCommandsState::anyTrackExpanded() const
+{
+    return anyTrack(*globalContext(), [](const IProjectViewState& viewState, trackedit::TrackId trackId) {
+        return !viewState.isTrackCollapsed(trackId).val;
     });
 }
 
@@ -188,11 +204,11 @@ CommandState ProjectSceneCommandsState::commandState(const Command& command) con
     }
 
     if (command == PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND) {
-        return CommandState(anyTrackInCollapsedState(false), false);
+        return CommandState(anyTrackExpanded(), false);
     }
 
     if (command == PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND) {
-        return CommandState(anyTrackInCollapsedState(true), false);
+        return CommandState(anyTrackCollapsed(), false);
     }
 
     if (muse::contains(TRACK_HEIGHT_COMMANDS, command)) {

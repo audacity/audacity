@@ -32,12 +32,12 @@ constexpr int TRACK_LABEL_DEFAULT_HEIGHT = 86;
 constexpr int TRACK_MIN_HEIGHT = 44;
 constexpr int TRACK_COLLAPSE_HEIGHT = 72;
 
-static bool isCollapsedHeight(int height)
+namespace {
+bool isCollapsedHeight(int height)
 {
     return height < TRACK_COLLAPSE_HEIGHT;
 }
 
-namespace {
 constexpr int numDecimals(float value)
 {
     constexpr int MAX_DECIMAL_PLACES = 4;
@@ -496,9 +496,8 @@ void ProjectViewState::collapseTrack(const trackedit::TrackId& trackId)
         return;
     }
 
-    const int height = d.height.val;
+    d.heightBeforeCollapse = d.height.val;
     doSetTrackHeight(trackId, TRACK_MIN_HEIGHT);
-    d.heightBeforeCollapse = height;
 }
 
 void ProjectViewState::expandTrack(const trackedit::TrackId& trackId)

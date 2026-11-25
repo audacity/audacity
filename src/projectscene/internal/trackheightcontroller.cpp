@@ -105,50 +105,24 @@ au::trackedit::TrackIdList TrackHeightController::allTracks() const
 
 void TrackHeightController::changeHeight(const trackedit::TrackIdList& tracks, int delta)
 {
-    const IProjectViewStatePtr state = viewState();
-    if (!state) {
-        return;
-    }
-
-    for (const trackedit::TrackId trackId : tracks) {
-        state->changeTrackHeight(trackId, delta);
-    }
+    forEachTrack(tracks, [delta](IProjectViewState& state, trackedit::TrackId trackId) { state.changeTrackHeight(trackId, delta); });
 }
 
 void TrackHeightController::collapse(const trackedit::TrackIdList& tracks)
 {
-    const IProjectViewStatePtr state = viewState();
-    if (!state) {
-        return;
-    }
-
-    for (const trackedit::TrackId trackId : tracks) {
-        state->collapseTrack(trackId);
-    }
+    forEachTrack(tracks, [](IProjectViewState& state, trackedit::TrackId trackId) { state.collapseTrack(trackId); });
 }
 
 void TrackHeightController::expand(const trackedit::TrackIdList& tracks)
 {
-    const IProjectViewStatePtr state = viewState();
-    if (!state) {
-        return;
-    }
-
-    for (const trackedit::TrackId trackId : tracks) {
-        state->expandTrack(trackId);
-    }
+    forEachTrack(tracks, [](IProjectViewState& state, trackedit::TrackId trackId) { state.expandTrack(trackId); });
 }
 
 void TrackHeightController::reset(const trackedit::TrackIdList& tracks)
 {
-    const IProjectViewStatePtr state = viewState();
-    if (!state) {
-        return;
-    }
-
-    for (const trackedit::TrackId trackId : tracks) {
-        state->setTrackHeight(trackId, state->trackDefaultHeight(trackId));
-    }
+    forEachTrack(tracks, [](IProjectViewState& state, trackedit::TrackId trackId) {
+        state.setTrackHeight(trackId, state.trackDefaultHeight(trackId));
+    });
 }
 
 void TrackHeightController::fitToHeight(const trackedit::TrackIdList& tracks)
@@ -193,4 +167,17 @@ IProjectViewStatePtr TrackHeightController::viewState() const
 {
     const project::IAudacityProjectPtr project = globalContext()->currentProject();
     return project ? project->viewState() : nullptr;
+}
+
+void TrackHeightController::forEachTrack(const trackedit::TrackIdList& tracks,
+                                         const std::function<void(IProjectViewState&, trackedit::TrackId)>& func) const
+{
+    const IProjectViewStatePtr state = viewState();
+    if (!state) {
+        return;
+    }
+
+    for (const trackedit::TrackId trackId : tracks) {
+        func(*state, trackId);
+    }
 }
