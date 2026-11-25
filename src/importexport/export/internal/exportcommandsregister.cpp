@@ -13,10 +13,6 @@ using namespace muse::rcommand;
 
 namespace {
 const std::vector<CommandInfo> s_commandInfos = {
-    makeCommandInfo<ExportAsWavCommand>(),
-    makeCommandInfo<ExportAsMp3Command>(),
-    makeCommandInfo<ExportAsFlacCommand>(),
-    makeCommandInfo<ExportAsOggCommand>(),
     makeCommandInfo<ExportWavCommand>(),
     makeCommandInfo<ExportMp3Command>(),
     makeCommandInfo<ExportFlacCommand>(),

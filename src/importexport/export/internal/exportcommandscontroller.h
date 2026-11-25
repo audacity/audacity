@@ -37,9 +37,8 @@ public:
 private:
     muse::Ret exportAudio(const ExportFormatSettings& settings, const std::string& folder, std::optional<int> sampleRate,
                           ExportChannelLayout channels, const std::string& fileName);
-    muse::Ret exportWithSavedOptions(const ExportFormatSettings& format, const std::string& folder, const std::string& fileName);
     muse::Ret runExport(const std::string& extension, int sampleRate, ExportChannelLayout channels, const std::string& folder,
-                        const std::string& fileName, const std::optional<muse::Val>& parameters);
+                        const std::string& fileName, const muse::Val& parameters);
 
     std::optional<std::string> formatForExtension(const std::string& extension) const;
 };

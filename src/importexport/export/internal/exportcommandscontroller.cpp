@@ -52,18 +52,6 @@ void ExportCommandsController::init()
 {
     const auto cd = commandDispatcher();
 
-    cd->onRequest<ExportAsWavCommand>(this, [this](const ExportAsWavCommand& c) {
-        return exportWithSavedOptions(WavSettings {}, c.folder, c.fileName);
-    });
-    cd->onRequest<ExportAsMp3Command>(this, [this](const ExportAsMp3Command& c) {
-        return exportWithSavedOptions(Mp3PresetSettings {}, c.folder, c.fileName);
-    });
-    cd->onRequest<ExportAsFlacCommand>(this, [this](const ExportAsFlacCommand& c) {
-        return exportWithSavedOptions(FlacSettings {}, c.folder, c.fileName);
-    });
-    cd->onRequest<ExportAsOggCommand>(this, [this](const ExportAsOggCommand& c) {
-        return exportWithSavedOptions(OggSettings {}, c.folder, c.fileName);
-    });
     cd->onRequest<ExportWavCommand>(this, [this](const ExportWavCommand& c) {
         return exportAudio(WavSettings { c.encoding }, c.folder, sampleRateHz(c.sampleRate), c.channels, c.fileName);
     });
@@ -92,15 +80,8 @@ Ret ExportCommandsController::exportAudio(const ExportFormatSettings& settings, 
     return runExport(std::string(extensionOf(settings)), exportSampleRate, channels, folder, fileName, toParametersVal(parameters.val));
 }
 
-Ret ExportCommandsController::exportWithSavedOptions(const ExportFormatSettings& format, const std::string& folder,
-                                                     const std::string& fileName)
-{
-    return runExport(std::string(extensionOf(format)), exporter()->defaultSampleRate(format), ExportChannelLayout::Auto, folder,
-                     fileName, std::nullopt);
-}
-
 Ret ExportCommandsController::runExport(const std::string& extension, int sampleRate, ExportChannelLayout channels,
-                                        const std::string& folder, const std::string& fileName, const std::optional<Val>& parameters)
+                                        const std::string& folder, const std::string& fileName, const Val& parameters)
 {
     const project::IAudacityProjectPtr project = globalContext()->currentProject();
     if (!project) {
@@ -134,10 +115,8 @@ Ret ExportCommandsController::runExport(const std::string& extension, int sample
         { IExporter::OptionKey::ProcessType, Val(static_cast<int>(ExportProcessType::FULL_PROJECT_AUDIO)) },
         { IExporter::OptionKey::ExportSampleRate, Val(sampleRate) },
         { IExporter::OptionKey::ExportChannelsType, Val(static_cast<int>(channelsType)) },
+        { IExporter::OptionKey::Parameters, parameters },
     };
-    if (parameters) {
-        options[IExporter::OptionKey::Parameters] = *parameters;
-    }
 
     LOGI() << "exporting to " << outputPath.val;
 
