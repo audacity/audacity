@@ -1,14 +1,22 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#pragma once
 
-#include "qquickpainteditem.h"
+#include <vector>
+
+#include <QColor>
+#include <QQuickItem>
+#include <QRectF>
+
+#include "async/asyncable.h"
+
 #include "view/timeline/timelineruler.h"
 
-class QPainter;
+class QSGGeometryNode;
 
 namespace au::projectscene {
-class GridLines : public QQuickPaintedItem, public muse::Contextable
+class GridLines : public QQuickItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
@@ -21,8 +29,6 @@ public:
     explicit GridLines(QQuickItem* parent = nullptr);
     ~GridLines() = default;
 
-    void paint(QPainter* painter) override;
-
     TimelineRuler* timelineRuler() const;
     void setTimelineRuler(TimelineRuler* newTimelineRuler);
 
@@ -30,12 +36,15 @@ signals:
     void timelineRulerChanged();
 
 private:
-    void drawGridLines(QPainter* painter);
-    void drawZebraHighlighting(QPainter* painter);
-    void highlightHalfSection(QPainter* painter, qreal h, qreal w, const QColor& color, bool firstHalf, double nextTick,
-                              const IntervalInfo& intervalInfo);
+    using Rects = std::vector<QRectF>;
+
+    QSGNode* updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*) override;
+    void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
+
+    void collectGridLines(const Ticks& ticks, Rects& minorLines, Rects& majorLines) const;
+    void collectZebraHighlighting(const Ticks& ticks, Rects& highlights) const;
+    static void fillNode(QSGGeometryNode* node, const Rects& rects, const QColor& color);
 
     TimelineRuler* m_timelineRuler = nullptr;
-    Ticks m_ticks = {};
 };
 }

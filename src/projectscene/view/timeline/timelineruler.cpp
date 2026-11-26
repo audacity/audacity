@@ -21,7 +21,7 @@ using namespace au::projectscene;
 TimelineRuler::TimelineRuler(QQuickItem* parent)
     : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
-    uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { update(); });
+    uiconfiguration()->currentThemeChanged().onNotify(this, [this]() { updateView(); });
 }
 
 void TimelineRuler::componentComplete()
@@ -32,7 +32,7 @@ void TimelineRuler::componentComplete()
 
     projectSceneUiState()->timelineRulerModeChanged().onNotify(this, [this](){
         setFormatter(projectSceneUiState()->timelineRulerMode());
-        update();
+        updateView();
     });
 }
 
@@ -60,9 +60,7 @@ void TimelineRuler::paint(QPainter* painter)
     const qreal w = width();
     const qreal h = height();
 
-    // determine current time interval and prepare ticks
-    IntervalInfo interval = m_formatter->intervalInfo(m_context);
-    Ticks ticks = prepareTickData(interval, w, h);
+    const Ticks ticks = this->ticks();
 
     // begin painting
     QPen pen = painter->pen();
@@ -82,8 +80,21 @@ void TimelineRuler::paint(QPainter* painter)
 
     drawTicks(painter, ticks);
     drawLabels(painter, ticks, w, h);
+}
 
-    emit ticksChanged(ticks);
+Ticks TimelineRuler::ticks()
+{
+    if (!m_context || !m_formatter) {
+        return {};
+    }
+
+    return prepareTickData(m_formatter->intervalInfo(m_context), width(), height());
+}
+
+void TimelineRuler::updateView()
+{
+    update();
+    emit ticksChanged();
 }
 
 Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w, double h)
@@ -93,12 +104,10 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
     // start calculating 100px over left edge of the ruler
     double leftBuffer = 100;
     double value = m_context->frameStartTime() - leftBuffer / m_context->zoom();
-    double x = -leftBuffer;
 
-    // find value and position of the first tick
+    // find the value of the first tick
     double remainder = std::remainder(value, timeInterval.minorMinor);
     if (remainder != 0) {
-        x += (timeInterval.minorMinor - remainder) * m_context->zoom();
         value += (timeInterval.minorMinor - remainder);
     }
 
@@ -111,8 +120,8 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
         return 0.0;
     };
 
-    while (x < w)
-    {
+    //! NOTE: The ticks are on the same grid of device pixels as the clips, so that they scroll together with them
+    for (double x = m_context->timeToSnappedPosition(value); x < w; x = m_context->timeToSnappedPosition(value)) {
         // determine tick type
         TickType tickType = determineTickType(value, timeInterval);
         QString tickLabel = m_formatter->label(value, timeInterval, tickType, m_context);
@@ -127,7 +136,6 @@ Ticks TimelineRuler::prepareTickData(const IntervalInfo& timeInterval, double w,
             ticks.append(TickInfo { -1.0, QString(), tickType, tick, value });
         }
 
-        x += m_context->zoom() * timeInterval.minorMinor;
         value += timeInterval.minorMinor;
     }
 
@@ -200,14 +208,13 @@ void TimelineRuler::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        auto updateView = [this] () { update(); };
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &TimelineRuler::updateView);
 
-        connect(m_context, &TimelineContext::frameTimeChanged, this, updateView);
-
-        connect(m_context, &TimelineContext::BPMChanged, this, updateView);
-        connect(m_context, &TimelineContext::timeSigUpperChanged, this, updateView);
-        connect(m_context, &TimelineContext::timeSigLowerChanged, this, updateView);
+        connect(m_context, &TimelineContext::BPMChanged, this, &TimelineRuler::updateView);
+        connect(m_context, &TimelineContext::timeSigUpperChanged, this, &TimelineRuler::updateView);
+        connect(m_context, &TimelineContext::timeSigLowerChanged, this, &TimelineRuler::updateView);
     }
 
     emit timelineContextChanged();
+    updateView();
 }
