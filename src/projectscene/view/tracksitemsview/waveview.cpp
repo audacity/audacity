@@ -20,6 +20,7 @@
 #include "view/timeline/timelinecontext.h"
 #include "view/common/selectioncolor.h"
 #include "waverenderertoggle.h"
+#include "waveviewnotifier.h"
 
 using namespace au::projectscene;
 
@@ -104,19 +105,6 @@ WaveView::WaveView(QQuickItem* parent)
             pushProjectHistorySampleEdit();
         }
     });
-
-    configuration()->isRMSInWaveformVisibleChanged().onReceive(this, [this](bool) {
-        scheduleRepaint();
-    });
-
-    configuration()->isClippingInWaveformVisibleChanged().onReceive(this, [this](bool) {
-        scheduleRepaint();
-    });
-
-    configuration()->clipStyleChanged().onReceive(this, [this](projectscene::ClipStyles::Style) {
-        emit backgroundColorChanged();
-        update();
-    });
 }
 
 WaveView::~WaveView()
@@ -128,8 +116,13 @@ void WaveView::componentComplete()
 {
     QQuickItem::componentComplete();
 
-    globalContext()->isRecordingChanged().onNotify(this, [this]() {
-        scheduleRepaint();
+    //! NOTE Not subscribed to the channels themselves, see WaveViewNotifier
+    const WaveViewNotifier* notifier = WaveViewNotifier::forContext(iocContext());
+    connect(notifier, &WaveViewNotifier::waveformSettingsChanged, this, &WaveView::scheduleRepaint);
+    connect(notifier, &WaveViewNotifier::isRecordingChanged, this, &WaveView::scheduleRepaint);
+    connect(notifier, &WaveViewNotifier::clipStyleChanged, this, [this]() {
+        emit backgroundColorChanged();
+        update();
     });
 }
 

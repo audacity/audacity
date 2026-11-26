@@ -169,6 +169,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavepainterproxy.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveview.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveviewnotifier.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waveviewnotifier.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavescenegraph.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/wavescenegraph.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/waverenderertoggle.cpp
