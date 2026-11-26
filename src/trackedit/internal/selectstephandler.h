@@ -10,17 +10,17 @@
 #include "macromanager/imacrostephandler.h"
 
 namespace au::trackedit {
-inline static const std::string SELECT_ENHANCED_STEP_HANDLER_ID("trackedit/select/enhanced");
+inline static const std::string SELECT_STEP_HANDLER_ID("trackedit/select");
 inline static const muse::Uri SELECT_STEP_DIALOG_URI("audacity://trackedit/select/step");
-inline static const muse::TranslatableString SELECT_ENHANCED_STEP_TITLE("trackedit", "Select (enhanced)");
+inline static const muse::TranslatableString SELECT_STEP_TITLE("trackedit", "Select");
 
-class SelectEnhancedStepHandler : public macromanager::IMacroStepHandler, public muse::Contextable, public muse::async::Asyncable
+class SelectStepHandler : public macromanager::IMacroStepHandler, public muse::Contextable, public muse::async::Asyncable
 {
     muse::ContextInject<muse::rcommand::ICommandDispatcher> commandDispatcher{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:
-    explicit SelectEnhancedStepHandler(const muse::modularity::ContextPtr& ctx)
+    explicit SelectStepHandler(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
     std::string id() const override;

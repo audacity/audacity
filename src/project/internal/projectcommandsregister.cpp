@@ -22,7 +22,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "New…"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECT_OPEN_COMMAND,
@@ -34,7 +35,8 @@ const std::vector<CommandInfo> commandInfos = {
                 { PROJECT_URL_PARAM, Arg(DataType::String, u"URL of the project or media file to open; asks for a file when omitted") },
                 { PROJECT_DISPLAY_NAME_PARAM, Arg(DataType::String, u"Display name override for the opened project") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECT_OPEN_CLOUD_COMMAND,
@@ -56,7 +58,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Clear recent files"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_IMPORT_COMMAND,
@@ -67,7 +70,8 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema({
                 { PROJECT_FILES_PARAM, Arg(DataType::List, u"Paths of the media files to import; asks for files when omitted") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECT_IMPORT_STARTUP_MEDIA_COMMAND,
@@ -89,7 +93,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Save"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECT_SAVE_AS_COMMAND,
@@ -98,7 +103,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Save as…"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_SAVE_TO_CLOUD_COMMAND,
@@ -117,7 +123,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Close project"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PROJECT_SHARE_AUDIO_COMMAND,
@@ -148,7 +155,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Update cloud audio preview"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_UPDATE_CLOUD_AUDIO_PREVIEW_FOR_PROJECT_COMMAND,
@@ -181,7 +189,8 @@ const std::vector<CommandInfo> commandInfos = {
         InputSchema({
                 { PROJECT_TRACK_ID_PARAM, Arg(DataType::Int, u"Label track id; exports all label tracks when omitted") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_EXPORT_MIDI_COMMAND,
@@ -190,7 +199,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Export MIDI"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         PROJECT_OPEN_METADATA_DIALOG_COMMAND,

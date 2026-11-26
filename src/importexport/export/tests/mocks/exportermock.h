@@ -26,6 +26,7 @@ public:
     MOCK_METHOD(ExportParameters, cloudExportParameters, (const std::string&), (const, override));
     MOCK_METHOD(muse::RetVal<ExportParameters>, exportParameters, (const ExportFormatSettings&, int), (const, override));
     MOCK_METHOD(int, defaultSampleRate, (const ExportFormatSettings&), (const, override));
+    MOCK_METHOD(std::optional<std::vector<int> >, supportedSampleRates, (const ExportFormatSettings&), (const, override));
     MOCK_METHOD(std::optional<std::string>, optionLabel, (const ExportOptionValue&), (const, override));
     MOCK_METHOD(bool, isCustomFFmpegExportFormat, (), (const, override));
     MOCK_METHOD(bool, hasMetadata, (), (const, override));

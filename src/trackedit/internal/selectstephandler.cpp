@@ -18,19 +18,19 @@ async::Promise<Ret> resolved(const Ret& ret)
 }
 }
 
-std::string SelectEnhancedStepHandler::id() const
+std::string SelectStepHandler::id() const
 {
-    return SELECT_ENHANCED_STEP_HANDLER_ID;
+    return SELECT_STEP_HANDLER_ID;
 }
 
-TranslatableString SelectEnhancedStepHandler::title() const
+TranslatableString SelectStepHandler::title() const
 {
-    return SELECT_ENHANCED_STEP_TITLE;
+    return SELECT_STEP_TITLE;
 }
 
-String SelectEnhancedStepHandler::summary(const Val& data) const
+String SelectStepHandler::summary(const Val& data) const
 {
-    const RetVal<SelectEnhancedStep> step = selectStepFromVal(data);
+    const RetVal<SelectStep> step = selectStepFromVal(data);
     if (!step.ret) {
         return String::fromStdString(step.ret.text());
     }
@@ -38,19 +38,19 @@ String SelectEnhancedStepHandler::summary(const Val& data) const
     return selectStepSummary(step.val);
 }
 
-Val SelectEnhancedStepHandler::defaultData() const
+Val SelectStepHandler::defaultData() const
 {
-    return toVal(SelectEnhancedStep {});
+    return toVal(SelectStep {});
 }
 
-std::optional<UriQuery> SelectEnhancedStepHandler::editUri() const
+std::optional<UriQuery> SelectStepHandler::editUri() const
 {
     return UriQuery(SELECT_STEP_DIALOG_URI);
 }
 
-async::Promise<Ret> SelectEnhancedStepHandler::execute(const Val& data) const
+async::Promise<Ret> SelectStepHandler::execute(const Val& data) const
 {
-    const RetVal<SelectEnhancedStep> step = selectStepFromVal(data);
+    const RetVal<SelectStep> step = selectStepFromVal(data);
     if (!step.ret) {
         return resolved(step.ret);
     }

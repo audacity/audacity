@@ -7,6 +7,8 @@ muse_create_module(macromanager)
 target_sources(macromanager PRIVATE
     macromanagermodule.cpp
     macromanagermodule.h
+    macromanagercommands.cpp
+    macromanagercommands.h
     macromanagertypes.h
     imacrosrepository.h
     imacrorunner.h
@@ -16,6 +18,12 @@ target_sources(macromanager PRIVATE
 
     internal/macrooutputnames.cpp
     internal/macrooutputnames.h
+    internal/macroscommandscontroller.cpp
+    internal/macroscommandscontroller.h
+    internal/macroscommandsregister.cpp
+    internal/macroscommandsregister.h
+    internal/macroscommandsstate.cpp
+    internal/macroscommandsstate.h
     internal/macrorunner.cpp
     internal/macrorunner.h
     internal/macroserialization.cpp

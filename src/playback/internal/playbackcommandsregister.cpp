@@ -22,7 +22,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Play/Pause"),
         InputSchema(),
-        Decoration(IconCode::Code::PLAY_FILL)
+        Decoration(IconCode::Code::PLAY_FILL),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_TOGGLE_PLAY_STOP_COMMAND,
@@ -31,7 +32,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Play/Stop"),
         InputSchema(),
-        Decoration(IconCode::Code::PLAY_FILL)
+        Decoration(IconCode::Code::PLAY_FILL),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_TOGGLE_PLAY_STOP_AND_SET_CURSOR_COMMAND,
@@ -40,7 +42,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Play/Stop and set cursor"),
         InputSchema(),
-        Decoration(IconCode::Code::PLAY_FILL)
+        Decoration(IconCode::Code::PLAY_FILL),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_PLAY_SELECTION_COMMAND,
@@ -49,7 +52,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Play selection"),
         InputSchema(),
-        Decoration(IconCode::Code::PLAY_FILL)
+        Decoration(IconCode::Code::PLAY_FILL),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_PLAY_TRACKS_COMMAND,
@@ -58,7 +62,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Play the given tracks"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_PAUSE_COMMAND,
@@ -67,7 +72,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Pause"),
         InputSchema(),
-        Decoration(IconCode::Code::PAUSE_FILL)
+        Decoration(IconCode::Code::PAUSE_FILL),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_STOP_COMMAND,
@@ -76,7 +82,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Stop playback"),
         InputSchema(),
-        Decoration(IconCode::Code::STOP_FILL)
+        Decoration(IconCode::Code::STOP_FILL),
+        Availability::All
     },
     makeCommandInfo<PlayFromStartCommand>(),
     CommandInfo{
@@ -86,7 +93,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Rewind to start"),
         InputSchema(),
-        Decoration(IconCode::Code::REWIND_START_FILL)
+        Decoration(IconCode::Code::REWIND_START_FILL),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_REWIND_END_COMMAND,
@@ -95,7 +103,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Rewind to end"),
         InputSchema(),
-        Decoration(IconCode::Code::REWIND_END_FILL)
+        Decoration(IconCode::Code::REWIND_END_FILL),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_SEEK_COMMAND,
@@ -180,7 +189,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Rescan audio devices"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_TOGGLE_PLAY_REPEATS_COMMAND,
@@ -189,7 +199,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Play repeats"),
         InputSchema(),
-        Decoration(IconCode::Code::PLAY_REPEATS, rcommand::Checkable::Yes)
+        Decoration(IconCode::Code::PLAY_REPEATS, rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         PLAYBACK_TOGGLE_AUTOMATIC_PAN_COMMAND,
@@ -198,7 +209,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Pan automatically during playback"),
         InputSchema(),
-        Decoration(IconCode::Code::PAN_SCORE, rcommand::Checkable::Yes)
+        Decoration(IconCode::Code::PAN_SCORE, rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         PLAYBACK_TOGGLE_LOOP_REGION_COMMAND,
@@ -207,7 +219,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Toggle ‘Loop playback’"),
         InputSchema(),
-        Decoration(IconCode::Code::LOOP, rcommand::Checkable::Yes)
+        Decoration(IconCode::Code::LOOP, rcommand::Checkable::Yes),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_CLEAR_LOOP_REGION_COMMAND,
@@ -216,7 +229,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Clear loop region"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_SET_LOOP_REGION_TO_SELECTION_COMMAND,
@@ -225,7 +239,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set loop region to selection"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_SET_SELECTION_TO_LOOP_COMMAND,
@@ -234,7 +249,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set selection to loop"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_SET_LOOP_REGION_IN_OUT_COMMAND,
@@ -243,7 +259,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Set loop region in out"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_TOGGLE_SELECTION_FOLLOWS_LOOP_REGION_COMMAND,
@@ -252,7 +269,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Creating a loop also selects audio"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         PLAYBACK_TOGGLE_MUTE_FOCUSED_TRACK_COMMAND,
@@ -281,7 +299,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Mute all tracks"),
         InputSchema(),
-        Decoration(IconCode::Code::MUTE)
+        Decoration(IconCode::Code::MUTE),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_UNMUTE_ALL_TRACKS_COMMAND,
@@ -290,7 +309,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Unmute all tracks"),
         InputSchema(),
-        Decoration(IconCode::Code::MUTE)
+        Decoration(IconCode::Code::MUTE),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_MUTE_SELECTED_TRACKS_COMMAND,
@@ -299,7 +319,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Mute selected tracks"),
         InputSchema(),
-        Decoration(IconCode::Code::MUTE)
+        Decoration(IconCode::Code::MUTE),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_UNMUTE_SELECTED_TRACKS_COMMAND,
@@ -308,7 +329,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Unmute selected tracks"),
         InputSchema(),
-        Decoration(IconCode::Code::MUTE)
+        Decoration(IconCode::Code::MUTE),
+        Availability::All
     },
     CommandInfo{
         PLAYBACK_LEVEL_COMMAND,

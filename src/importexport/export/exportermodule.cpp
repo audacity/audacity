@@ -21,7 +21,6 @@
 #include "view/custommappingmodel.h"
 #include "view/channelmappingtableviewmodel.h"
 #include "view/exportaudiostepmodel.h"
-#include "view/exportsimplestepmodel.h"
 
 #include "exportermodule.h"
 
@@ -62,7 +61,6 @@ void ExporterModule::resolveImports()
         ir->registerQmlUri(Uri("audacity://project/export/metadata"), "Export/MetadataDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/mapping"), "Export/CustomMappingDialog.qml");
         ir->registerQmlUri(EXPORT_AUDIO_STEP_DIALOG_URI, "Export/ExportAudioStepDialog.qml");
-        ir->registerQmlUri(EXPORT_SIMPLE_STEP_DIALOG_URI, "Export/ExportSimpleStepDialog.qml");
     }
 
     auto cr = globalIoc()->resolve<muse::rcommand::ICommandsRegister>(mname);
@@ -85,7 +83,6 @@ void ExporterModule::registerUiTypes()
     qmlRegisterType<CustomMappingModel>("Audacity.Export", 1, 0, "CustomMappingModel");
     qmlRegisterType<ChannelMappingTableViewModel>("Audacity.Export", 1, 0, "ChannelMappingTableViewModel");
     qmlRegisterType<ExportAudioStepModel>("Audacity.Export", 1, 0, "ExportAudioStepModel");
-    qmlRegisterType<ExportSimpleStepModel>("Audacity.Export", 1, 0, "ExportSimpleStepModel");
     qmlRegisterUncreatableMetaObject(ChannelMappingTableViewCellType::staticMetaObject,
                                      "Audacity.Export", 1, 0, "ChannelMappingTableViewCellType", "");
 
@@ -121,7 +118,6 @@ void ExporterContext::resolveImports()
     auto sr = ioc()->resolve<macromanager::IMacroStepHandlersRegister>(mname);
     if (sr) {
         sr->reg(std::make_shared<ExportAudioStepHandler>(iocContext()));
-        sr->reg(std::make_shared<ExportSimpleStepHandler>(iocContext()));
     }
 }
 

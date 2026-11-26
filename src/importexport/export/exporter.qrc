@@ -8,7 +8,6 @@
         <file>qml/Export/CustomFFmpegDialog.qml</file>
         <file>qml/Export/MetadataDialog.qml</file>
         <file>qml/Export/ExportAudioStepDialog.qml</file>
-        <file>qml/Export/ExportSimpleStepDialog.qml</file>
         <file>qml/Export/internal/ExportStepFileSection.qml</file>
         <file>qml/Export/internal/MetadataControlPanel.qml</file>
         <file>qml/Export/CustomMappingDialog.qml</file>

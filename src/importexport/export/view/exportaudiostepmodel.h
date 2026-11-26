@@ -98,6 +98,7 @@ private:
     std::vector<Row> formatRows() const;
     Row sampleRateRow() const;
     void apply(Field field, const std::string& value);
+    void resetUnsupportedMp3SampleRate();
     void rebuild();
 
     ExportFormatSettings m_settings = WavSettings {};

@@ -73,7 +73,7 @@ SelectStepParamsModel::SelectStepParamsModel(QObject* parent)
 
 QString SelectStepParamsModel::title() const
 {
-    return SELECT_ENHANCED_STEP_TITLE.qTranslated();
+    return SELECT_STEP_TITLE.qTranslated();
 }
 
 QVariantList SelectStepParamsModel::timeKindOptions() const
@@ -266,8 +266,8 @@ QString SelectStepParamsModel::summary() const
 
 void SelectStepParamsModel::load(const QVariantMap& data)
 {
-    const RetVal<SelectEnhancedStep> loaded = selectStepFromVal(valOf(data));
-    const SelectEnhancedStep stored = loaded.ret ? loaded.val : SelectEnhancedStep {};
+    const RetVal<SelectStep> loaded = selectStepFromVal(valOf(data));
+    const SelectStep stored = loaded.ret ? loaded.val : SelectStep {};
 
     m_timeKind = kindOf(stored.time);
     m_tracksKind = kindOf(stored.tracks);
@@ -288,10 +288,10 @@ QVariantMap SelectStepParamsModel::stepData() const
     return toQVariantMap(toVal(step()));
 }
 
-SelectEnhancedStep SelectStepParamsModel::step() const
+SelectStep SelectStepParamsModel::step() const
 {
     const SelectTimeSpec time = m_timeKind == SelectTimeKind::Range ? SelectTimeSpec(m_timeRange) : WholeProjectTime {};
     const SelectTrackSpec tracks = m_tracksKind == SelectTracksKind::Range ? SelectTrackSpec(m_trackRange) : AllTracks {};
 
-    return SelectEnhancedStep { time, tracks };
+    return SelectStep { time, tracks };
 }

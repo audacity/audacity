@@ -32,7 +32,8 @@ const std::vector<CommandInfo>& MuseHubCommandsRegister::commandInfoList() const
             //: Command description: shown as a tooltip; can be a full sentence
             TranslatableString("command_description", "Open Get effects dialog"),
             InputSchema(),
-            Decoration(IconCode::Code::PLUGIN)
+            Decoration(IconCode::Code::PLUGIN),
+            Availability::UI
         },
     };
     return infos;

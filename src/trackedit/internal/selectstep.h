@@ -87,7 +87,7 @@ struct SelectTrackRange {
 using SelectTimeSpec = std::variant<WholeProjectTime, SelectTimeRange>;
 using SelectTrackSpec = std::variant<AllTracks, SelectTrackRange>;
 
-struct SelectEnhancedStep {
+struct SelectStep {
     SelectTimeSpec time = WholeProjectTime {};
     SelectTrackSpec tracks = AllTracks {};
 };
@@ -99,9 +99,9 @@ std::optional<SelectTimeRelativeTo> relativeToOf(SelectAnchor start, SelectAncho
 SelectTimeKind kindOf(const SelectTimeSpec& spec);
 SelectTracksKind kindOf(const SelectTrackSpec& spec);
 
-muse::Val toVal(const SelectEnhancedStep& step);
-muse::RetVal<SelectEnhancedStep> selectStepFromVal(const muse::Val& val);
+muse::Val toVal(const SelectStep& step);
+muse::RetVal<SelectStep> selectStepFromVal(const muse::Val& val);
 
-SelectCommand selectStepCommand(const SelectEnhancedStep& step, int projectTrackCount);
-muse::String selectStepSummary(const SelectEnhancedStep& step);
+SelectCommand selectStepCommand(const SelectStep& step, int projectTrackCount);
+muse::String selectStepSummary(const SelectStep& step);
 }

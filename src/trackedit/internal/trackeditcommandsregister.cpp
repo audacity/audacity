@@ -22,7 +22,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Undo"),
         InputSchema(),
-        Decoration(IconCode::Code::UNDO)
+        Decoration(IconCode::Code::UNDO),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_REDO_COMMAND,
@@ -31,7 +32,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Redo"),
         InputSchema(),
-        Decoration(IconCode::Code::REDO)
+        Decoration(IconCode::Code::REDO),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CANCEL_COMMAND,
@@ -50,7 +52,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Paste (pushes clips on selected track)"),
         InputSchema(),
-        Decoration(IconCode::Code::PASTE)
+        Decoration(IconCode::Code::PASTE),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_PASTE_OVERLAP_COMMAND,
@@ -59,7 +62,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Paste (overlaps other clips)"),
         InputSchema(),
-        Decoration(IconCode::Code::PASTE)
+        Decoration(IconCode::Code::PASTE),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_PASTE_INSERT_ALL_TRACKS_RIPPLE_COMMAND,
@@ -68,7 +72,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Paste (preserves synchronization on all tracks)"),
         InputSchema(),
-        Decoration(IconCode::Code::PASTE)
+        Decoration(IconCode::Code::PASTE),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CLIP_CUT_COMMAND,
@@ -204,7 +209,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "New mono track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_NEW_STEREO_TRACK_COMMAND,
@@ -213,7 +219,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "New stereo track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_NEW_LABEL_TRACK_COMMAND,
@@ -222,7 +229,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "New label track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_DUPLICATE_COMMAND,
@@ -231,7 +239,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Duplicate track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_MOVE_UP_COMMAND,
@@ -240,7 +249,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move track up"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_MOVE_DOWN_COMMAND,
@@ -249,7 +259,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move track down"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_MOVE_TOP_COMMAND,
@@ -258,7 +269,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move track to top"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_MOVE_BOTTOM_COMMAND,
@@ -267,7 +279,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move track to bottom"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_SWAP_CHANNELS_COMMAND,
@@ -276,7 +289,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Swap stereo channels"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_SPLIT_STEREO_TO_LR_COMMAND,
@@ -285,7 +299,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Split stereo to L/R mono"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_SPLIT_STEREO_TO_CENTER_COMMAND,
@@ -294,7 +309,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Split stereo to center mono"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND,
@@ -313,7 +329,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Make stereo track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_RESAMPLE_COMMAND,
@@ -335,7 +352,8 @@ const std::vector<CommandInfo> commandInfos = {
                 { TRACKEDIT_MIX_AND_RENDER_TO_NEW_TRACK_PARAM,
                   Arg(DataType::Bool, u"Keep the original tracks and add the mix as a new track") },
             }),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRIM_AUDIO_OUTSIDE_SELECTION_COMMAND,
@@ -344,7 +362,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Trim audio outside selection"),
         InputSchema(),
-        Decoration(IconCode::Code::TRIM_AUDIO_OUTSIDE_SELECTION)
+        Decoration(IconCode::Code::TRIM_AUDIO_OUTSIDE_SELECTION),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SILENCE_AUDIO_SELECTION_COMMAND,
@@ -353,7 +372,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Silence audio selection"),
         InputSchema(),
-        Decoration(IconCode::Code::SILENCE_AUDIO_SELECTION)
+        Decoration(IconCode::Code::SILENCE_AUDIO_SELECTION),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_GROUP_ITEMS_COMMAND,
@@ -362,7 +382,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Group the selected clips and labels"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_UNGROUP_ITEMS_COMMAND,
@@ -371,7 +392,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Ungroup the selected clips and labels"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SELECT_ALL_COMMAND,
@@ -380,7 +402,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select all"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CLEAR_SELECTION_COMMAND,
@@ -389,7 +412,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Clear selection"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SELECT_ALL_TRACKS_COMMAND,
@@ -398,7 +422,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select all tracks"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SELECT_LEFT_OF_PLAYBACK_POSITION_COMMAND,
@@ -407,7 +432,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select from a chosen time to the playback position"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SELECT_RIGHT_OF_PLAYBACK_POSITION_COMMAND,
@@ -416,7 +442,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select from the playback position to a chosen time"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SELECT_TRACK_START_TO_CURSOR_COMMAND,
@@ -425,7 +452,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select from the track start to the cursor"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SELECT_CURSOR_TO_TRACK_END_COMMAND,
@@ -434,7 +462,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select from the cursor to the track end"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SELECT_TRACK_START_TO_END_COMMAND,
@@ -443,7 +472,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Select from the track start to the track end"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SET_SELECTION_COMMAND,
@@ -482,7 +512,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move the cursor to the nearest zero crossing"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CLIP_CHANGE_COLOR_AUTO_COMMAND,
@@ -491,7 +522,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Use the track color for the selected clips"),
         InputSchema(),
-        Decoration(Checkable::Yes)
+        Decoration(Checkable::Yes),
+        Availability::Internal | Availability::API
     },
     CommandInfo{
         TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND,
@@ -548,7 +580,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Toggle spectral view"),
         InputSchema(),
-        Decoration(IconCode::Code::SPECTROGRAM)
+        Decoration(IconCode::Code::SPECTROGRAM),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_VIEW_WAVEFORM_COMMAND,
@@ -593,7 +626,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Add label"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_RENAME_ITEM_COMMAND,
@@ -720,7 +754,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_COPY_COMMAND,
@@ -729,7 +764,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Copy"),
         InputSchema(),
-        Decoration(IconCode::Code::COPY)
+        Decoration(IconCode::Code::COPY),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CUT_COMMAND,
@@ -738,7 +774,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Cut"),
         InputSchema(),
-        Decoration(IconCode::Code::CUT)
+        Decoration(IconCode::Code::CUT),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_DELETE_COMMAND,
@@ -747,7 +784,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete"),
         InputSchema(),
-        Decoration(IconCode::Code::DELETE_TANK)
+        Decoration(IconCode::Code::DELETE_TANK),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_PASTE_DEFAULT_COMMAND,
@@ -756,7 +794,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Paste"),
         InputSchema(),
-        Decoration(IconCode::Code::PASTE)
+        Decoration(IconCode::Code::PASTE),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SPLIT_COMMAND,
@@ -765,7 +804,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Split"),
         InputSchema(),
-        Decoration(IconCode::Code::SPLIT_TOOL)
+        Decoration(IconCode::Code::SPLIT_TOOL),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_SPLIT_INTO_NEW_TRACK_COMMAND,
@@ -774,7 +814,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Move the selection into a new track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_JOIN_COMMAND,
@@ -783,7 +824,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Join selected clips"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_DISJOIN_COMMAND,
@@ -792,7 +834,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Split clips at silences"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_DUPLICATE_COMMAND,
@@ -801,7 +844,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Duplicate"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_TRACK_SPLIT_COMMAND,
@@ -822,7 +866,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Cut and leave gap"),
         InputSchema(),
-        Decoration(IconCode::Code::CUT)
+        Decoration(IconCode::Code::CUT),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CUT_PER_CLIP_RIPPLE_COMMAND,
@@ -831,7 +876,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Cut and close gap (per clip)"),
         InputSchema(),
-        Decoration(IconCode::Code::CUT)
+        Decoration(IconCode::Code::CUT),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CUT_PER_TRACK_RIPPLE_COMMAND,
@@ -840,7 +886,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Cut and close gap (per track)"),
         InputSchema(),
-        Decoration(IconCode::Code::CUT)
+        Decoration(IconCode::Code::CUT),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_CUT_ALL_TRACKS_RIPPLE_COMMAND,
@@ -849,7 +896,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Cut and close gap (all tracks)"),
         InputSchema(),
-        Decoration(IconCode::Code::CUT)
+        Decoration(IconCode::Code::CUT),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_DELETE_LEAVE_GAP_COMMAND,
@@ -858,7 +906,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete and leave gap"),
         InputSchema(),
-        Decoration(IconCode::Code::DELETE_TANK)
+        Decoration(IconCode::Code::DELETE_TANK),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_DELETE_PER_CLIP_RIPPLE_COMMAND,
@@ -867,7 +916,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete and close gap (per clip)"),
         InputSchema(),
-        Decoration(IconCode::Code::DELETE_TANK)
+        Decoration(IconCode::Code::DELETE_TANK),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_DELETE_PER_TRACK_RIPPLE_COMMAND,
@@ -876,7 +926,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete and close gap (per track)"),
         InputSchema(),
-        Decoration(IconCode::Code::DELETE_TANK)
+        Decoration(IconCode::Code::DELETE_TANK),
+        Availability::All
     },
     CommandInfo{
         TRACKEDIT_DELETE_ALL_TRACKS_RIPPLE_COMMAND,
@@ -885,7 +936,8 @@ const std::vector<CommandInfo> commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Delete and close gap (all tracks)"),
         InputSchema(),
-        Decoration(IconCode::Code::DELETE_TANK)
+        Decoration(IconCode::Code::DELETE_TANK),
+        Availability::All
     },
     // Track navigation: keyboard focus and selection within the track view, handled by TrackNavigationController
     CommandInfo{

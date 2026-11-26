@@ -76,11 +76,21 @@ QVariantList contractOptions()
     return list;
 }
 
+template<typename E>
+bool isSupportedRate(E rate, const std::optional<std::vector<int> >& supported)
+{
+    return rate == E::ProjectRate || !supported || std::ranges::find(*supported, static_cast<int>(rate)) != supported->end();
+}
+
 template<typename C>
-QVariantList sampleRateOptions()
+QVariantList sampleRateOptions(const std::optional<std::vector<int> >& supported = std::nullopt)
 {
     QVariantList list;
     for (const auto& entry : C::table) {
+        if (!isSupportedRate(entry.eval, supported)) {
+            continue;
+        }
+
         const QString text = entry.eval == decltype(entry.eval)::ProjectRate
                              ? qtrc("export", "Project rate")
                              : qtrc("export", "%1 Hz").arg(static_cast<int>(entry.eval));
@@ -363,7 +373,8 @@ std::vector<ExportAudioStepModel::Row> ExportAudioStepModel::formatRows() const
 
 ExportAudioStepModel::Row ExportAudioStepModel::sampleRateRow() const
 {
-    const QVariantList options = isMp3(m_settings) ? sampleRateOptions<Mp3SampleRateContract>()
+    const QVariantList options = isMp3(m_settings)
+                                 ? sampleRateOptions<Mp3SampleRateContract>(exporter()->supportedSampleRates(m_settings))
                                  : sampleRateOptions<ExportSampleRateContract>();
 
     return { Field::SampleRate, Section::Audio, qtrc("export", "Sample rate"), options, QString::fromStdString(m_sampleRate) };
@@ -376,9 +387,11 @@ void ExportAudioStepModel::apply(Field field, const std::string& value)
         m_settings = formatDefaults(value);
         m_sampleRate = isMp3(m_settings) ? supportedOrDefault<Mp3SampleRateContract>(m_sampleRate)
                        : supportedOrDefault<ExportSampleRateContract>(m_sampleRate);
+        resetUnsupportedMp3SampleRate();
         break;
     case Field::Mp3Mode:
         m_settings = mp3ModeDefaults(value);
+        resetUnsupportedMp3SampleRate();
         break;
     case Field::WavEncoding:
         applyEnum<WavEncoding>(value, [this](WavEncoding e) { m_settings = WavSettings { e }; });
@@ -391,6 +404,7 @@ void ExportAudioStepModel::apply(Field field, const std::string& value)
             [&value](Mp3CbrSettings& s) { applyEnum<Mp3BitRate>(value, [&s](Mp3BitRate e) { s.bitRate = e; }); },
             [](auto&) {},
         }, m_settings);
+        resetUnsupportedMp3SampleRate();
         break;
     case Field::FlacBitDepth:
         if (auto* flac = std::get_if<FlacSettings>(&m_settings)) {
@@ -412,6 +426,16 @@ void ExportAudioStepModel::apply(Field field, const std::string& value)
         applyEnum<ExportChannelLayout>(value, [this](ExportChannelLayout e) { m_channels = e; });
         break;
     }
+}
+
+void ExportAudioStepModel::resetUnsupportedMp3SampleRate()
+{
+    const std::optional<Mp3SampleRate> rate = EnumContract<Mp3SampleRate>::enum_val(m_sampleRate);
+    if (!isMp3(m_settings) || !rate || isSupportedRate(*rate, exporter()->supportedSampleRates(m_settings))) {
+        return;
+    }
+
+    m_sampleRate = EnumContract<Mp3SampleRate>::str_val(Mp3SampleRate::ProjectRate);
 }
 
 void ExportAudioStepModel::rebuild()

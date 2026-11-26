@@ -190,6 +190,17 @@ int au::importexport::au3DefaultSampleRate(const ExportFormatSettings& settings,
     return nearest == rates.end() ? rates.back() : *nearest;
 }
 
+std::optional<std::vector<int> > au::importexport::au3SupportedSampleRates(const ExportFormatSettings& settings)
+{
+    const FormatOptions options = formatOptionsOf(settings);
+    const Mp3Option* option = std::get_if<Mp3Option>(&options);
+    if (!option) {
+        return std::nullopt;
+    }
+
+    return mp3SampleRates(*option);
+}
+
 std::optional<std::string> au::importexport::au3OptionLabel(const ExportOptionValue& value)
 {
     const OptionRef ref = optionRefOf(value);

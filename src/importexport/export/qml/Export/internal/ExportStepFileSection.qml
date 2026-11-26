@@ -30,6 +30,10 @@ BaseSection {
 
         title: qsTrc("export", "Choose the output folder")
         dir: root.stepModel.folder !== "" ? root.stepModel.folder : root.stepModel.defaultFolder
+
+        onPathSelected: function (path) {
+            root.stepModel.folder = path
+        }
     }
 
     component RowLabel: Item {
@@ -115,10 +119,7 @@ BaseSection {
             navigation.order: 3
 
             onClicked: {
-                const selectedFolder = filePickerModel.selectDirectory()
-                if (Boolean(selectedFolder)) {
-                    root.stepModel.folder = selectedFolder
-                }
+                filePickerModel.selectDirectory()
             }
         }
     }

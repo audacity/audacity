@@ -236,7 +236,7 @@ SelectTracksKind au::trackedit::kindOf(const SelectTrackSpec& spec)
     }, spec);
 }
 
-Val au::trackedit::toVal(const SelectEnhancedStep& step)
+Val au::trackedit::toVal(const SelectStep& step)
 {
     Params params;
     setEnumParam(params, SelectTimeKindContract::key, kindOf(step.time));
@@ -257,24 +257,24 @@ Val au::trackedit::toVal(const SelectEnhancedStep& step)
     return Val(ValMap(params));
 }
 
-RetVal<SelectEnhancedStep> au::trackedit::selectStepFromVal(const Val& val)
+RetVal<SelectStep> au::trackedit::selectStepFromVal(const Val& val)
 {
     const Params params(val.toMap());
 
     const RetVal<SelectTimeSpec> time = timeSpecFromParams(params);
     if (!time.ret) {
-        return RetVal<SelectEnhancedStep>::make_ret(time.ret);
+        return RetVal<SelectStep>::make_ret(time.ret);
     }
 
     const RetVal<SelectTrackSpec> tracks = trackSpecFromParams(params);
     if (!tracks.ret) {
-        return RetVal<SelectEnhancedStep>::make_ret(tracks.ret);
+        return RetVal<SelectStep>::make_ret(tracks.ret);
     }
 
-    return RetVal<SelectEnhancedStep>::make_ok(SelectEnhancedStep { time.val, tracks.val });
+    return RetVal<SelectStep>::make_ok(SelectStep { time.val, tracks.val });
 }
 
-SelectCommand au::trackedit::selectStepCommand(const SelectEnhancedStep& step, int projectTrackCount)
+SelectCommand au::trackedit::selectStepCommand(const SelectStep& step, int projectTrackCount)
 {
     const TimeArgs time = timeArgs(step.time);
     const TrackArgs tracks = trackArgs(step.tracks, projectTrackCount);
@@ -289,7 +289,7 @@ SelectCommand au::trackedit::selectStepCommand(const SelectEnhancedStep& step, i
     return command;
 }
 
-String au::trackedit::selectStepSummary(const SelectEnhancedStep& step)
+String au::trackedit::selectStepSummary(const SelectStep& step)
 {
     //: Summary of a "Select" macro step, shown in the macro step list. %1 is the time range, for example "Project start to Project end". %2 is the tracks, for example "all tracks" or "add track 2"
     return mtrc("trackedit", "%1, %2").arg(timeText(step.time), trackText(step.tracks));

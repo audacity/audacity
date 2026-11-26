@@ -22,7 +22,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Record"),
         InputSchema(),
-        Decoration(IconCode::Code::RECORD_FILL)
+        Decoration(IconCode::Code::RECORD_FILL),
+        Availability::All
     },
     CommandInfo{
         RECORD_ON_NEW_TRACK_COMMAND,
@@ -31,7 +32,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Record on new track"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::All
     },
     CommandInfo{
         RECORD_SECOND_CHOICE_COMMAND,
@@ -42,7 +44,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         TranslatableString("command_description",
                            "Record on a new track, or on the current track when “Record on a new track” is turned on in Preferences"),
         InputSchema(),
-        Decoration()
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         RECORD_PAUSE_COMMAND,
@@ -51,7 +54,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Pause"),
         InputSchema(),
-        Decoration(IconCode::Code::PAUSE_FILL)
+        Decoration(IconCode::Code::PAUSE_FILL),
+        Availability::All
     },
     CommandInfo{
         RECORD_STOP_COMMAND,
@@ -60,7 +64,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Stop record"),
         InputSchema(),
-        Decoration(IconCode::Code::STOP_FILL)
+        Decoration(IconCode::Code::STOP_FILL),
+        Availability::All
     },
     CommandInfo{
         RECORD_LEVEL_COMMAND,
@@ -79,7 +84,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Show mic metering"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         RECORD_TOGGLE_INPUT_MONITORING_COMMAND,
@@ -88,7 +94,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Turn on input monitoring"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         RECORD_LEAD_IN_RECORDING_COMMAND,
@@ -97,7 +104,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Start lead-in recording"),
         InputSchema(),
-        Decoration(IconCode::Code::RECORD_FILL)
+        Decoration(IconCode::Code::RECORD_FILL),
+        Availability::UI
     },
     CommandInfo{
         RECORD_TIMED_RECORDING_COMMAND,
@@ -116,7 +124,8 @@ const std::vector<CommandInfo> s_commandInfos = {
         //: Command description: shown as a tooltip; can be a full sentence
         TranslatableString("command_description", "Turn on sound activated recording"),
         InputSchema(),
-        Decoration(rcommand::Checkable::Yes)
+        Decoration(rcommand::Checkable::Yes),
+        Availability::UI
     },
     CommandInfo{
         RECORD_SET_SOUND_ACTIVATION_LEVEL_COMMAND,

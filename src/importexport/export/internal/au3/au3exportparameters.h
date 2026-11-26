@@ -5,6 +5,7 @@
 
 #include <optional>
 #include <string>
+#include <vector>
 
 #include "framework/global/types/retval.h"
 
@@ -14,5 +15,6 @@
 namespace au::importexport {
 muse::RetVal<ExportParameters> au3ExportParameters(const ExportFormatSettings& settings, int sampleRate);
 int au3DefaultSampleRate(const ExportFormatSettings& settings, int projectRate);
+std::optional<std::vector<int> > au3SupportedSampleRates(const ExportFormatSettings& settings);
 std::optional<std::string> au3OptionLabel(const ExportOptionValue& value);
 }

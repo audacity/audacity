@@ -1789,6 +1789,7 @@ muse::Ret TrackeditActionsController::selectAdjacentClip(ClipStep step)
     selectionController()->resetDataSelection();
     selectionController()->resetSelectedLabels();
     selectionController()->setSelectedClips({ *target }, true);
+    trackNavigationController()->setFocus(TrackFocus::item(*target), false /*highlight*/);
     return make_ok();
 }
 

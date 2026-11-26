@@ -39,5 +39,6 @@ public:
     virtual muse::Ret writeMacroFile(const Macro& macro, const muse::io::path_t& path) const = 0;
 
     virtual muse::async::Notification macrosChanged() const = 0;
+    virtual muse::async::Notification macroListChanged() const = 0;
 };
 }
