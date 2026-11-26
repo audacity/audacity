@@ -4273,7 +4273,7 @@ Tente redefinir todos os clipes esticados ou mixar e renderizar as faixas antes 
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="248"/>
         <source>Move track down</source>
         <extracomment>Command title: shown as a menu item or a button label; keep it short</extracomment>
-        <translation>Mover faixa para cima</translation>
+        <translation>Mover faixa para baixo</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackeditcommandsregister.cpp" line="257"/>
