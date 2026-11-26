@@ -24,6 +24,7 @@
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <type_traits>
 #include <utility>
 #include <array>
 #include <span>
@@ -258,6 +259,7 @@ public:
         std::array<MonitoredTrack, MaxMonitoredTracks> tracks{};
         size_t count{ 0 };
     };
+    static_assert(std::is_trivially_copyable_v<MonitoredTracks>, "MessageBuffer::Read moves from its slot");
     //! Written by the main thread, read by the audio callback, which routes the input to these tracks itself
     MessageBuffer<MonitoredTracks> mMonitoredTracks;
     //!Buffers that hold outcome of transformations applied to each individual sample source.
