@@ -21,17 +21,17 @@ IWavePainter::PlotType getPlotType(std::shared_ptr<au::project::IAudacityProject
         return IWavePainter::PlotType::MinMaxRMS;
     }
 
-    const double sampleRate = waveClip->GetRate();
-    const double stretchRatio = waveClip->GetStretchRatio();
+    return getPlotType(waveClip->GetRate() / waveClip->GetStretchRatio(), zoom);
+}
 
-    const double rate = sampleRate / stretchRatio;
-
-    const double threshold1 = PIXELS_PER_SAMPLE_WHEN_CONNECTING_POINTS * rate;
+IWavePainter::PlotType getPlotType(double samplesPerSecond, double zoom)
+{
+    const double threshold1 = PIXELS_PER_SAMPLE_WHEN_CONNECTING_POINTS * samplesPerSecond;
     if (zoom < threshold1) {
         return IWavePainter::PlotType::MinMaxRMS;
     }
 
-    const double threshold2 = PIXELS_PER_SAMPLE_WHEN_INDIVIDUAL_POINTS * rate;
+    const double threshold2 = PIXELS_PER_SAMPLE_WHEN_INDIVIDUAL_POINTS * samplesPerSecond;
     if (zoom < threshold2) {
         return IWavePainter::PlotType::ConnectingDots;
     }
@@ -42,18 +42,25 @@ IWavePainter::PlotType getPlotType(std::shared_ptr<au::project::IAudacityProject
 WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> project, const trackedit::ClipKey& clipKey,
                            const IWavePainter::Params& params, bool snapToSamples)
 {
-    WaveMetrics wm;
-
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     WaveTrack* track = au::au3::DomAccessor::findWaveTrack(*au3Project, TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(track) {
-        return wm;
+        return {};
     }
 
     std::shared_ptr<WaveClip> waveClip = au::au3::DomAccessor::findWaveClip(track, clipKey.itemId);
     IF_ASSERT_FAILED(waveClip) {
-        return wm;
+        return {};
     }
+
+    return getWaveMetrics(waveClip->Start(), waveClip->GetTrimLeft(), waveClip->GetRate() / waveClip->GetStretchRatio(), params,
+                          snapToSamples);
+}
+
+WaveMetrics getWaveMetrics(double playStartTime, double trimLeft, double samplesPerSecond, const IWavePainter::Params& params,
+                           bool snapToSamples)
+{
+    WaveMetrics wm;
 
     wm.zoom = params.zoom;
     wm.fromTime = params.fromTime;
@@ -65,16 +72,15 @@ WaveMetrics getWaveMetrics(std::shared_ptr<au::project::IAudacityProject> projec
 
     // calculate selection area relative to the clip itself
     if (!muse::RealIsEqual(params.selectionStartTime, params.selectionEndTime)) {
-        const double relativeStartTime = params.selectionStartTime - waveClip->Start();
-        const double relativeEndTime = params.selectionEndTime - waveClip->Start();
+        const double relativeStartTime = params.selectionStartTime - playStartTime;
+        const double relativeEndTime = params.selectionEndTime - playStartTime;
 
         const auto snapToSampleTimeConv = [&](double time) {
-            const double multiplier = waveClip->GetRate() / waveClip->GetStretchRatio();
-            return std::round(time * multiplier) / multiplier;
+            return std::round(time * samplesPerSecond) / samplesPerSecond;
         };
 
-        wm.selectionStartTime = (snapToSamples ? snapToSampleTimeConv(relativeStartTime) : relativeStartTime) + waveClip->GetTrimLeft();
-        wm.selectionEndTime = (snapToSamples ? snapToSampleTimeConv(relativeEndTime) : relativeEndTime) + waveClip->GetTrimLeft();
+        wm.selectionStartTime = (snapToSamples ? snapToSampleTimeConv(relativeStartTime) : relativeStartTime) + trimLeft;
+        wm.selectionEndTime = (snapToSamples ? snapToSampleTimeConv(relativeEndTime) : relativeEndTime) + trimLeft;
     }
 
     return wm;

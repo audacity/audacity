@@ -253,11 +253,19 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.dbRange = m_dbRange;
     params.displayBounds = m_displayBounds;
 
-    projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
-    if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
-        applyColorfulStyle(params, m_clipColor, m_clipSelectedColor, m_clipSelected);
+    //! NOTE The style is a dozen of color blends, and only changes with these
+    const projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
+    const StyleKey styleKey { clipStyle, m_clipColor.rgba(), m_clipSelectedColor.rgba(), m_clipSelected };
+    if (!m_style || !(m_styleKey == styleKey)) {
+        if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
+            applyColorfulStyle(params, m_clipColor, m_clipSelectedColor, m_clipSelected);
+        } else {
+            applyClassicStyle(params, m_clipSelected);
+        }
+        m_style = params.style;
+        m_styleKey = styleKey;
     } else {
-        applyClassicStyle(params, m_clipSelected);
+        params.style = *m_style;
     }
 
     return params;
@@ -401,22 +409,24 @@ void WaveView::prepareSceneGraphData()
         return;
     }
 
-    WaveSceneGraph::Input input;
-    input.params = getWavePainterParams();
-    input.plotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, input.params.zoom);
-    setIsStemPlot(input.plotType == IWavePainter::PlotType::Stem);
-
+    //! NOTE The plot type and the metrics come from the clip data, so that the clip is looked up once
     const std::optional<IMinMaxRMSPainter::ClipData> clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
     if (!clipData) {
+        setPlotType(IWavePainter::PlotType::MinMaxRMS);
         m_sceneGraph.reset();
         return;
     }
+
+    WaveSceneGraph::Input input;
+    input.params = getWavePainterParams();
+    input.plotType = wavepainterutils::getPlotType(clipData->samplesPerSecond, input.params.zoom);
+    setPlotType(input.plotType);
     input.clipData = *clipData;
 
     input.clipKey = m_clipKey.key;
     input.clipTime = m_clipTime;
-    input.metrics = wavepainterutils::getWaveMetrics(globalContext()->currentProject(), m_clipKey.key, input.params,
-                                                     input.plotType == IWavePainter::PlotType::Stem);
+    input.metrics = wavepainterutils::getWaveMetrics(clipData->playStartTime, clipData->trimLeft, clipData->samplesPerSecond,
+                                                     input.params, input.plotType == IWavePainter::PlotType::Stem);
     input.containerExactX = m_context->timeToPosition(m_clipTime.itemStartTime);
     input.dragGhost = m_dragGhost;
     input.recording = globalContext()->isRecording();
@@ -466,9 +476,10 @@ void WaveView::setTimelineContext(TimelineContext* newContext)
         connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::scheduleRepaint);
         connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::scheduleRepaint);
         connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::scheduleRepaint);
-        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
+        //! NOTE The plot type follows the zoom when the repaint prepares the waveform
+        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::scheduleRepaint);
 
-        onWaveZoomChanged();
+        scheduleRepaint();
     }
 
     emit timelineContextChanged();
@@ -751,8 +762,7 @@ void WaveView::updateDrawnSelection()
 
     const bool hasView = m_context && m_clipKey.key.itemId != -1;
     const IWavePainter::Params params = hasView ? getWavePainterParams() : IWavePainter::Params {};
-    if (hasView && params.selectionEndTime > params.selectionStartTime
-        && wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, params.zoom) == IWavePainter::PlotType::Stem) {
+    if (hasView && params.selectionEndTime > params.selectionStartTime && m_plotType == IWavePainter::PlotType::Stem) {
         const std::optional<IMinMaxRMSPainter::ClipData> clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
         if (clipData && clipData->samplesPerSecond > 0.0) {
             // The same snapping and rounding as the samples painter applies to the selected background
@@ -922,12 +932,12 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
         m_clipKey.key, globalContext()->currentProject(), m_lastClickedPoint.value(), currentPosition, params);
 }
 
-void WaveView::onWaveZoomChanged()
+void WaveView::setPlotType(IWavePainter::PlotType plotType)
 {
-    const IWavePainter::PlotType currentPlotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
-                                                                                 m_context->zoom());
+    m_plotType = plotType;
+
     const bool wasStemPlot = m_isStemPlot;
-    const bool isStemPlot = currentPlotType == IWavePainter::PlotType::Stem;
+    const bool isStemPlot = plotType == IWavePainter::PlotType::Stem;
 
     if (wasStemPlot != isStemPlot) {
         setIsStemPlot(isStemPlot);
@@ -938,8 +948,6 @@ void WaveView::onWaveZoomChanged()
         // Note: When transitioning TO stem plot mode, ClipItem.qml onIsStemPlotChanged
         // will trigger mouse position update to force isNearSample to be set correctly
     }
-
-    scheduleRepaint();
 }
 
 void WaveView::pushProjectHistorySampleEdit()

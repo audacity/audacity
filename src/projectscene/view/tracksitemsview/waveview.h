@@ -150,7 +150,7 @@ private:
     bool releaseIfOffscreen();
     void prepareSceneGraphData();
     void storePreparedData();
-    void onWaveZoomChanged();
+    void setPlotType(IWavePainter::PlotType plotType);
     void paintRecordingPlaceholder(QPainter& painter, const IWavePainter::Params& params);
     void geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry) override;
     void itemChange(ItemChange change, const ItemChangeData& value) override;
@@ -197,5 +197,17 @@ private:
 
     WaveSceneGraph m_sceneGraph;
     bool m_retryPending = false;
+    IWavePainter::PlotType m_plotType = IWavePainter::PlotType::MinMaxRMS;
+
+    struct StyleKey {
+        projectscene::ClipStyles::Style clipStyle = projectscene::ClipStyles::Style::COLORFUL;
+        QRgb clipColor = 0;
+        QRgb clipSelectedColor = 0;
+        bool selected = false;
+
+        bool operator==(const StyleKey&) const = default;
+    };
+    mutable std::optional<IWavePainter::Style> m_style;
+    mutable StyleKey m_styleKey;
 };
 }
