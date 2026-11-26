@@ -5,10 +5,10 @@
 
 #include "au3-audio-io/AudioIO.h"
 #include "au3-audio-io/ProjectAudioIO.h"
-#include "au3-track/Track.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
 #include "defaultplaybackpolicy.h"
@@ -18,32 +18,36 @@ using namespace au::au3audio;
 
 std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
 
-static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
-    [](au::au3::Au3Project& project, const bool newDefault) -> AudioIOStartTransportOptions {
-        auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
-        options.listener = s_audioIOListener;
+static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope { &Au3AudioEngine::defaultTransportOptions };
 
-        const auto& playRegion = ViewInfo::Get(project).playRegion;
-        const bool loopEnabled = playRegion.Active();
-        options.loopEnabled = loopEnabled;
+AudioIOStartTransportOptions Au3AudioEngine::defaultTransportOptions(AudacityProject& project, const bool newDefault)
+{
+    auto options = ProjectAudioIO::DefaultOptionsFactory(project, newDefault);
+    options.listener = s_audioIOListener;
 
-        if (newDefault) {
-            const double trackEndTime = TrackList::Get(project).GetEndTime();
-            const double loopEndTime = playRegion.GetEnd();
-            options.policyFactory = [&project, trackEndTime, loopEndTime](
-                const AudioIOStartTransportOptions& options) -> std::unique_ptr<PlaybackPolicy>
-            {
-                return std::make_unique<DefaultPlaybackPolicy>(project,
-                                                               trackEndTime, loopEndTime, options.pStartTime,
-                                                               options.loopEnabled, options.variableSpeed);
-            };
+    const auto& playRegion = ViewInfo::Get(project).playRegion;
+    const bool loopEnabled = playRegion.Active();
+    options.loopEnabled = loopEnabled;
 
-            double startTime = playRegion.GetStart();
-            options.pStartTime.emplace(muse::RealIsEqualOrMore(startTime, 0.0) ? startTime : 0.0);
-        }
+    if (newDefault) {
+        //! NOTE: the policy runs to the playable end, not the clip end: a loop region past the
+        //! last clip extends the play range whether looping is on or off (issue #11477), so
+        //! turning looping off, or seeking, mid-stream must not cut playback at the clip end
+        const double playableEndTime = au::au3::DomAccessor::playableEndTime(project);
+        const double loopEndTime = playRegion.GetEnd();
+        options.policyFactory = [&project, playableEndTime, loopEndTime](
+            const AudioIOStartTransportOptions& options) -> std::unique_ptr<PlaybackPolicy>
+        {
+            return std::make_unique<DefaultPlaybackPolicy>(project, playableEndTime, loopEndTime,
+                                                           options.loopEnabled, options.variableSpeed);
+        };
 
-        return options;
-    } };
+        double startTime = playRegion.GetStart();
+        options.pStartTime.emplace(muse::RealIsEqualOrMore(startTime, 0.0) ? startTime : 0.0);
+    }
+
+    return options;
+}
 
 void Au3AudioEngine::init()
 {

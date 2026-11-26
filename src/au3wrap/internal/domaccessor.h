@@ -55,5 +55,10 @@ public:
     static trackedit::LabelKeyList findSelectedLabels(const Au3Project& prj);
     static void setLabelSelected(Au3Project& prj, const trackedit::LabelKey& labelKey, bool selected);
     static void clearAllLabelSelection(Au3Project& prj);
+
+    //! The furthest time playback can run to: the end of the last clip, or the end of the loop
+    //! region when it lies past it. The loop region counts whether it is active or not: an
+    //! inactive one still marks the play range (issue #11477)
+    static double playableEndTime(const Au3Project& prj);
 };
 }

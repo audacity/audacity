@@ -98,6 +98,9 @@ public:
     //! Reposition processing to absolute time next time Process() is called.
     void Reposition(double t, bool bSkipping = false);
 
+    //! Reassign the bounds, keeping the speed, and reposition to t0.
+    void SetTimes(double t0, double t1, bool bSkipping = false);
+
     //! Used in scrubbing and other nonuniform playback policies.
     void SetTimesAndSpeed(
         double t0, double t1, double speed, bool bSkipping = false);

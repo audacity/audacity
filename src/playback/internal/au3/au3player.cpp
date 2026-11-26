@@ -16,6 +16,7 @@
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-project-rate/ProjectRate.h"
 
+#include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 
@@ -145,10 +146,7 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
         hasaudio = !tracks.Any<Au3WaveTrack>().empty();
     }
 
-    double latestEnd = tracks.GetEndTime();
-    if (playRegion.Active()) {
-        latestEnd = std::max(tracks.GetEndTime(), playRegion.GetEnd());
-    }
+    const double latestEnd = playableEndTime();
 
     if (!hasaudio) {
         return /*-1*/;  // No need to continue without audio tracks
@@ -156,8 +154,8 @@ void Au3Player::play(std::optional<muse::secs_t> startTime)
 
     if (t1 == t0) {
         // move t0 to valid range
-        t0 = std::clamp(t0, tracks.GetStartTime(), tracks.GetEndTime());
-        t1 = tracks.GetEndTime();
+        t0 = std::clamp(t0, tracks.GetStartTime(), latestEnd);
+        t1 = latestEnd;
     } else {
         // maybe t1 < t0, with backwards scrubbing for instance
         if (backwards) {
@@ -395,11 +393,15 @@ void Au3Player::setPlaybackRegion(const PlaybackRegion& region)
 
     double end = region.end;
     if (region.start == region.end) {
-        const auto& tracks = Au3TrackList::Get(project);
-        end = tracks.GetEndTime();
+        end = playableEndTime();
     }
     playRegion.SetStart(region.start);
     playRegion.SetEnd(end);
+}
+
+double Au3Player::playableEndTime() const
+{
+    return DomAccessor::playableEndTime(projectRef());
 }
 
 PlaybackRegion Au3Player::loopRegion() const
