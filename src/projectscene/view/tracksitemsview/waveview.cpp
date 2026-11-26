@@ -428,6 +428,8 @@ void WaveView::prepareSceneGraphData()
     input.metrics = wavepainterutils::getWaveMetrics(clipData->playStartTime, clipData->trimLeft, clipData->samplesPerSecond,
                                                      input.params, input.plotType == IWavePainter::PlotType::Stem);
     input.containerExactX = m_context->timeToPosition(m_clipTime.itemStartTime);
+    input.containerX = m_context->timeToSnappedPosition(m_clipTime.itemStartTime);
+    input.devicePixelRatio = m_context->devicePixelRatio();
     input.dragGhost = m_dragGhost;
     input.recording = globalContext()->isRecording();
     input.cornerRadius = static_cast<float>(m_cornerRadius);

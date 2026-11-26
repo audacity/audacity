@@ -32,6 +32,9 @@ public:
         IMinMaxRMSPainter::ClipData clipData;
         IWavePainter::PlotType plotType = IWavePainter::PlotType::MinMaxRMS;
         double containerExactX = 0.0;
+        //! Where the container is; at the whole pixel nearest to containerExactX if not told
+        std::optional<double> containerX;
+        double devicePixelRatio = 1.0;
         bool dragGhost = false;
         bool recording = false;
         float cornerRadius = 0.0f;
@@ -145,6 +148,8 @@ public:
     {
         double fromPixelExact = 0.0;
         double fromPixelSnapped = 0.0;
+        //! The time the vertex data starts at
+        double originTime = 0.0;
         double toPixelExact = 0.0;
         double toPixelSnapped = 0.0;
         bool hasPlaceholder = false;

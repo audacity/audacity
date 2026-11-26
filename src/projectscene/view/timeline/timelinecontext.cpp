@@ -792,6 +792,27 @@ double TimelineContext::timeToPosition(double time) const
     return m_zoom * (time - m_frameStartTime);
 }
 
+double TimelineContext::timeToSnappedPosition(double time) const
+{
+    const double scale = m_zoom * m_devicePixelRatio;
+    return (std::round(time * scale) - std::round(m_frameStartTime * scale)) / m_devicePixelRatio;
+}
+
+double TimelineContext::devicePixelRatio() const
+{
+    return m_devicePixelRatio;
+}
+
+void TimelineContext::setDevicePixelRatio(double devicePixelRatio)
+{
+    if (devicePixelRatio <= 0.0 || muse::RealIsEqual(m_devicePixelRatio, devicePixelRatio)) {
+        return;
+    }
+    m_devicePixelRatio = devicePixelRatio;
+    emit devicePixelRatioChanged();
+    emit frameTimeChanged();
+}
+
 double TimelineContext::positionToTime(double position, bool withSnap) const
 {
     double result = m_frameStartTime + position / m_zoom;
@@ -1304,5 +1325,5 @@ bool TimelineContext::pinnedPlayHeadEnabled() const
 
 double TimelineContext::lastPlaybackSeekPosition() const
 {
-    return timeToPosition(playbackController()->lastPlaybackSeekTime());
+    return timeToSnappedPosition(playbackController()->lastPlaybackSeekTime());
 }

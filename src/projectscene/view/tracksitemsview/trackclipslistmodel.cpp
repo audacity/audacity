@@ -465,13 +465,11 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 
     item->setInView(true);
     item->setTime(time);
-    // Integer edges keep the clip's rounded-corner layer texture aligned to the
-    // screen pixel grid: at fractional positions the texture is resampled with
-    // a changing sub-pixel phase and its content shimmers while the clip moves
-    // (e.g. left trim). WaveView compensates for the sub-pixel residual. Both
-    // edges are rounded, so that trimming one does not move the other.
-    const double left = std::floor(0.5 + m_context->timeToPosition(time.itemStartTime));
-    const double right = std::floor(0.5 + m_context->timeToPosition(time.itemEndTime));
+    // The edges lie on device pixels, so that they stay sharp. WaveView compensates for what is left
+    // to the exact position. Both edges are snapped, so that trimming one does not move the other, and
+    // on a grid that scrolls as a whole, so that the clip keeps its width while scrolling.
+    const double left = m_context->timeToSnappedPosition(time.itemStartTime);
+    const double right = m_context->timeToSnappedPosition(time.itemEndTime);
     item->setX(left);
     item->setWidth(right - left);
 

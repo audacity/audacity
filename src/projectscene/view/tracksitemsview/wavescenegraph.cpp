@@ -258,8 +258,30 @@ void WaveSceneGraph::invalidateNode()
 bool WaveSceneGraph::prepare(const Input& input, IMinMaxRMSPainter& painter)
 {
     const IWavePainter::Params& params = input.params;
-    const Window window = computeWindow(input.clipTime, input.clipData, params.zoom, input.containerExactX, input.dragGhost,
-                                        input.recording);
+    Window window = computeWindow(input.clipTime, input.clipData, params.zoom, input.containerExactX, input.dragGhost,
+                                  input.recording);
+
+    if (input.containerX && !input.dragGhost) {
+        window.subpixelResidual = input.containerExactX - *input.containerX;
+        window.contentOffset = window.subpixelResidual - (window.fromPixelExact - window.fromPixelSnapped);
+    }
+
+    //! NOTE: The columns are a pixel wide, and drawn between pixels they blend with their neighbors. The blend
+    //! changes with every sub-pixel step of a slow scroll, e.g. with the pinned playhead, and the waveform wobbles.
+    //! So the columns sit on the device pixel grid of the timeline, the one the clip edges are snapped to: they
+    //! blend the same wherever the view is scrolled to, and move together with the clip. The samples of the sample
+    //! plots stay where they are in time.
+    if (input.plotType == IWavePainter::PlotType::MinMaxRMS) {
+        const double ratio = std::max(input.devicePixelRatio, 1.0);
+        if (input.dragGhost) {
+            window.contentOffset = std::floor(0.5 + window.contentOffset * ratio) / ratio;
+        } else if (window.fromPixelSnapped == window.fromPixelExact) {
+            window.contentOffset = 0.0;
+        } else {
+            const double scale = params.zoom * ratio;
+            window.contentOffset = (std::round(window.originTime * scale) - std::round(input.clipTime.itemStartTime * scale)) / ratio;
+        }
+    }
 
     WaveMetrics metrics = input.metrics;
     metrics.fromTime = window.fromPixelSnapped / params.zoom;
@@ -351,6 +373,7 @@ WaveSceneGraph::Window WaveSceneGraph::computeWindow(const ClipTime& clipTime, c
     // container, and scrolling moves existing vertices instead of building
     // new ones. A drag ghost moves as a whole, so its waveform follows the
     // rounded container instead.
+    window.originTime = sequenceStartTime + window.fromPixelSnapped / zoom;
     window.subpixelResidual = dragGhost ? 0.0 : containerExactX - std::floor(0.5 + containerExactX);
     window.contentOffset = window.subpixelResidual - (window.fromPixelExact - window.fromPixelSnapped);
 
