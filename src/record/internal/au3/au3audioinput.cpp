@@ -27,6 +27,9 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
     : muse::Contextable(ctx), m_inputMeter{au::au3::createAudioMeter()}
 {
     globalContext()->currentProjectChanged().onNotify(this, [this](){
+        m_monitoredTracks.clear();
+        audioEngine()->setMonitoredTracks(m_monitoredTracks);
+
         auto currentProject = globalContext()->currentProject();
         if (!currentProject) {
             return;
@@ -36,8 +39,6 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
 
         initMeter();
 
-        m_monitoredTracks.clear();
-        audioEngine()->setMonitoredTracks(m_monitoredTracks);
         updateMonitoredTracks();
         updateAudioEngineMonitoring();
         subscribeToTrackChanges();

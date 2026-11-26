@@ -266,6 +266,21 @@ TEST_F(Au3AudioInputTests, NoTrackIsMonitoredWhilePlaying)
     EXPECT_EQ(m_monitoredTracks, (MonitoredTracks { monitored(track) }));
 }
 
+TEST_F(Au3AudioInputTests, NoTrackIsMonitoredAfterTheProjectIsClosed)
+{
+    //! [GIVEN] A selected track being monitored
+    addTrack(1, true);
+    openProject();
+    ASSERT_FALSE(m_monitoredTracks.empty());
+
+    //! [WHEN] The project is closed
+    ON_CALL(*m_globalContext, currentProject()).WillByDefault(Return(nullptr));
+    m_projectChanged.notify();
+
+    //! [THEN] No track is monitored
+    EXPECT_TRUE(m_monitoredTracks.empty());
+}
+
 TEST_F(Au3AudioInputTests, NoTrackIsMonitoredWhileRecording)
 {
     //! [GIVEN] A selected track being monitored
