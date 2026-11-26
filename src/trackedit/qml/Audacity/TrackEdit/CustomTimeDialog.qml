@@ -19,6 +19,16 @@ StyledDialogView {
 
     margins: 16
 
+    NavigationPanel {
+        id: timeNavPanel
+        name: "PositionInput"
+        section: root.navigationSection
+        order: 0
+        direction: NavigationPanel.Horizontal
+        enabled: timecode.enabled && timecode.visible
+        accessible.name: label.text
+    }
+
     Row {
         id: timeRow
 
@@ -49,6 +59,10 @@ StyledDialogView {
                 value: 0.0
                 mode: TimecodeModeSelector.TimePoint
 
+                navigation.panel: timeNavPanel
+                navigation.order: 0
+                accessibleName: label.text + " "
+
                 onValueChanged: {
                     root.time = timecode.value
                 }
@@ -58,6 +72,10 @@ StyledDialogView {
 
     ButtonBox {
         id: bbox
+
+        navigationPanel.section: root.navigationSection
+        navigationPanel.order: 1
+
         width: parent.width
         anchors.bottom: parent.bottom
 
