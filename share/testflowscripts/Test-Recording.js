@@ -18,6 +18,8 @@ function performShortRecording(trial) {
             " ms recording",
     );
 
+    const recordedTrackIndex = Project.trackCount();
+
     // This creates and selects a new track before starting recording.
     u.run("command://record/on-new-track");
 
@@ -29,7 +31,7 @@ function performShortRecording(trial) {
     // Allow recording finalization and project notifications to complete.
     u.sleep(750);
 
-    const clip = Project.clipsOnTrack(Project.trackCount() - 1)[0];
+    const clip = Project.clipsOnTrack(recordedTrackIndex)[0];
     const duration = clip ? clip.end - clip.start : 0;
     results.push(duration);
 
