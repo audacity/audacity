@@ -141,8 +141,12 @@ Rectangle {
     //! releases them once it stayed not interactive for a while.
     property bool interactive: true
     readonly property bool interactivePartsCreated: prv.interactivePartsCreated
+    //! One playback state is shared by the clips of a track
+    property bool isPlaying: false
     //! Hovered, or being edited or navigated to
     readonly property bool inUse: prv.isInUse()
+
+    onIsAutomationEnabledChanged: prv.initGainModelIfNeeded()
 
     onInteractiveChanged: {
         if (interactive) {
@@ -204,10 +208,6 @@ Rectangle {
     property bool enableFocusBorder: (root.navigation ? root.navigation.highlight : false) || root.clipSelected
     property bool enableDefaultBorder: !isContrastFocusBorderEnabled && enableFocusBorder
     property bool enableContrastBorder: isContrastFocusBorderEnabled && enableFocusBorder
-
-    PlaybackStateModel {
-        id: playbackState
-    }
 
     ClipGainModel {
         id: clipGainModel
@@ -287,6 +287,15 @@ Rectangle {
         property bool multiMenuLoaded: false
 
         property bool interactivePartsCreated: false
+        property bool gainModelInitialized: false
+
+        function initGainModelIfNeeded() {
+            if (gainModelInitialized || !root.isAutomationEnabled) {
+                return
+            }
+            gainModelInitialized = true
+            clipGainModel.init()
+        }
         property NavigationControl navigation: null
 
         readonly property int handlesY: !root.collapsed ? header.height + 1 : 0
@@ -514,8 +523,7 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        playbackState.init()
-        clipGainModel.init()
+        prv.initGainModelIfNeeded()
         prv.createInteractivePartsIfNeeded()
     }
 
@@ -536,7 +544,7 @@ Rectangle {
 
         hoverEnabled: true
 
-        readonly property bool forbidden: (root.isNearSample || root.isIsolationMode) && playbackState.isPlaying
+        readonly property bool forbidden: (root.isNearSample || root.isIsolationMode) && root.isPlaying
         cursorShape: forbidden ? Qt.ForbiddenCursor : Qt.BlankCursor
 
         function updateCustomCursor() {

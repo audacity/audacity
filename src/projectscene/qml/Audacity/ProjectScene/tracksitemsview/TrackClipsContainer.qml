@@ -4,6 +4,7 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.ProjectScene
+import Audacity.Playback
 import Audacity.Spectrogram
 
 TrackItemsContainer {
@@ -57,6 +58,12 @@ TrackItemsContainer {
         color: ui.theme.extra["black_color"]
         opacity: 0.1
     }
+
+    PlaybackStateModel {
+        id: playbackState
+    }
+
+    Component.onCompleted: playbackState.init()
 
     TrackClipsListModel {
         id: clipsModel
@@ -525,6 +532,7 @@ TrackItemsContainer {
                                 isLinear: root.trackViewState.isLinear
                                 displayBounds: root.trackViewState.displayBounds
                                 isAutomationEnabled: root.isAutomationEnabled
+                                isPlaying: playbackState.isPlaying
                                 isWaveformViewVisible: root.isWaveformViewVisible
                                 isSpectrogramViewVisible: root.isSpectrogramViewVisible
                                 multiSampleEdit: clipsContainer.multiSampleEdit
