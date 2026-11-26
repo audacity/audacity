@@ -35,6 +35,10 @@ TrackClipsListModel::TrackClipsListModel(QObject* parent)
         connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &TrackClipsListModel::onSelectionTimeChanged);
         onSelectionTimeChanged();
     });
+
+    m_delegateReleaseTimer.setSingleShot(true);
+    m_delegateReleaseTimer.setInterval(500);
+    connect(&m_delegateReleaseTimer, &QTimer::timeout, this, &TrackClipsListModel::releaseUnusedDelegates);
 }
 
 void TrackClipsListModel::onSelectionTimeChanged()
@@ -58,6 +62,10 @@ void TrackClipsListModel::onInit()
             }
         });
     }
+
+    navigationController()->highlightChanged().onNotify(this, [this] {
+        emit keyboardNavigationChanged();
+    });
 
     // Escape
     trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this] {
@@ -190,6 +198,72 @@ void TrackClipsListModel::onReload()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     update();
+}
+
+bool TrackClipsListModel::keyboardNavigation() const
+{
+    return navigationController()->isHighlight();
+}
+
+void TrackClipsListModel::requestDelegateAt(double x)
+{
+    //! NOTE The trim and fade handles reach a little beyond the clip
+    constexpr double edgeMargin = 8.0;
+
+    const trackedit::ClipId previousHoveredClip = m_hoveredClip;
+    m_hoveredClip = -1;
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        if (item->width() > 0.0 && x >= item->x() - edgeMargin && x <= item->x() + item->width() + edgeMargin) {
+            auto* clipItem = static_cast<TrackClipItem*>(item);
+            m_hoveredClip = clipItem->key().key.itemId;
+            clipItem->setDelegateRequested(true);
+            break;
+        }
+    }
+    startDelegateRelease(m_hoveredClip != previousHoveredClip);
+}
+
+void TrackClipsListModel::startDelegateRelease(bool restart)
+{
+    //! NOTE Restarted when the clip under the mouse or a clip in use changed, not on every move
+    //! of the mouse, which would put the release off for as long as the mouse moves
+    if (restart || !m_delegateReleaseTimer.isActive()) {
+        m_delegateReleaseTimer.start();
+    }
+}
+
+void TrackClipsListModel::releaseHoverDelegates()
+{
+    m_hoveredClip = -1;
+    startDelegateRelease(true);
+}
+
+void TrackClipsListModel::holdDelegate(const ClipKey& key)
+{
+    m_heldDelegates.insert(key.key.itemId);
+    if (TrackClipItem* item = clipItemByKey(key.key)) {
+        item->setDelegateRequested(true);
+    }
+}
+
+void TrackClipsListModel::releaseDelegate(const ClipKey& key)
+{
+    m_heldDelegates.erase(key.key.itemId);
+    if (m_hoveredClip == key.key.itemId) {
+        m_hoveredClip = -1;
+    }
+    startDelegateRelease(true);
+}
+
+void TrackClipsListModel::releaseUnusedDelegates()
+{
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        auto* clipItem = static_cast<TrackClipItem*>(item);
+        const ClipId id = clipItem->key().key.itemId;
+        if (clipItem->delegateRequested() && id != m_hoveredClip && !muse::contains(m_heldDelegates, id)) {
+            clipItem->setDelegateRequested(false);
+        }
+    }
 }
 
 TrackClipItem* TrackClipsListModel::clipItemByKey(const trackedit::ClipKey& k) const
@@ -335,15 +409,20 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     // Pin the recording clip's visual boundary to the smooth playhead: data is
     // committed in chunks, so following the committed end would make the edge
     // jump. Data ahead of the playhead is revealed as the playhead reaches it.
+    bool recording = false;
     if (globalContext()->isRecording()) {
         for (const auto& rk : recordController()->recordingClipKeys()) {
             if (rk == item->key().key) {
                 double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
                 clipEndTime = std::max(clipStartTime, projectedEnd);
+                recording = true;
                 break;
             }
         }
     }
+
+    //! NOTE The light clip view shows neither the fades nor the recording clip
+    item->setNeedsFullView(recording || item->fadeInDuration() > 0.0 || item->fadeOutDuration() > 0.0);
 
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = cacheBufferPx() / m_context->zoom();

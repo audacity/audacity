@@ -29,6 +29,10 @@ class TrackClipItem : public ViewTrackItem
     //! The time selection within the clip item, in pixels from its left edge
     Q_PROPERTY(double selectionStart READ selectionStart NOTIFY selectionPixelsChanged FINAL)
     Q_PROPERTY(double selectionWidth READ selectionWidth NOTIFY selectionPixelsChanged FINAL)
+    //! The mouse is over the clip, or the clip is in use, so it needs a full ClipItem
+    Q_PROPERTY(bool delegateRequested READ delegateRequested NOTIFY delegateRequestedChanged FINAL)
+    //! The light clip view can't show the clip as it looks, so it needs a full ClipItem
+    Q_PROPERTY(bool needsFullView READ needsFullView NOTIFY needsFullViewChanged FINAL)
     // Q_PROPERTY(QObject * envelopeModel READ envelopeModel NOTIFY envelopeModelChanged)
 
 public:
@@ -55,6 +59,11 @@ public:
     double selectionWidth() const { return m_selectionWidth; }
     void setSelectionPixels(double start, double width);
 
+    bool delegateRequested() const { return m_delegateRequested; }
+    void setDelegateRequested(bool requested);
+    bool needsFullView() const { return m_needsFullView; }
+    void setNeedsFullView(bool needsFullView);
+
 signals:
     void groupIdChanged();
     void pitchChanged();
@@ -62,6 +71,8 @@ signals:
     void contentChanged();
     void fadesChanged();
     void selectionPixelsChanged();
+    void delegateRequestedChanged();
+    void needsFullViewChanged();
 
 private:
     int m_groupId = -1;
@@ -75,5 +86,7 @@ private:
     double m_clipEndTime = 0.0;
     double m_selectionStart = 0.0;
     double m_selectionWidth = 0.0;
+    bool m_delegateRequested = false;
+    bool m_needsFullView = false;
 };
 }

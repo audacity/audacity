@@ -63,6 +63,8 @@ public:
 
     static int cacheBufferPx();
 
+    const QList<ViewTrackItem*>& items() const { return m_items; }
+
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
 

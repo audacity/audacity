@@ -98,3 +98,21 @@ void TrackClipItem::setSelectionPixels(double start, double width)
     m_selectionWidth = width;
     emit selectionPixelsChanged();
 }
+
+void TrackClipItem::setDelegateRequested(bool requested)
+{
+    if (m_delegateRequested == requested) {
+        return;
+    }
+    m_delegateRequested = requested;
+    emit delegateRequestedChanged();
+}
+
+void TrackClipItem::setNeedsFullView(bool needsFullView)
+{
+    if (m_needsFullView == needsFullView) {
+        return;
+    }
+    m_needsFullView = needsFullView;
+    emit needsFullViewChanged();
+}

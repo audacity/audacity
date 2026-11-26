@@ -6,10 +6,14 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <set>
+
+#include <QTimer>
 
 #include "framework/global/modularity/ioc.h"
 
 #include "ui/iuiconfiguration.h"
+#include "ui/inavigationcontroller.h"
 #include "workspace/iworkspacemanager.h"
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"
@@ -30,6 +34,8 @@ class TrackClipsListModel : public TrackItemsListModel
     Q_PROPERTY(
         bool asymmetricStereoHeightsPossible READ asymmetricStereoHeightsPossible NOTIFY asymmetricStereoHeightsPossibleChanged)
     Q_PROPERTY(bool isContrastFocusBorderEnabled READ isContrastFocusBorderEnabled NOTIFY isContrastFocusBorderEnabledChanged FINAL)
+    //! While navigating with the keyboard, the clips in view need their full ClipItems to be reachable
+    Q_PROPERTY(bool keyboardNavigation READ keyboardNavigation NOTIFY keyboardNavigationChanged FINAL)
 
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
@@ -38,6 +44,7 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::ContextInject<au::record::IRecordController> recordController { this };
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
     muse::ContextInject<trackedit::ITracksViewRequestsService> tracksViewRequestsService { this };
+    muse::ContextInject<muse::ui::INavigationController> navigationController { this };
 
     friend class TrackClipsFadeEditTests;
 
@@ -78,6 +85,14 @@ public:
 
     bool asymmetricStereoHeightsPossible() const;
     bool isContrastFocusBorderEnabled() const;
+    bool keyboardNavigation() const;
+
+    //! The clip under the mouse gets a full ClipItem; the others the mouse left lose theirs after a moment
+    Q_INVOKABLE void requestDelegateAt(double x);
+    Q_INVOKABLE void releaseHoverDelegates();
+    //! A full ClipItem in use, e.g. hovered or editing its title, is kept until released
+    Q_INVOKABLE void holdDelegate(const ClipKey& key);
+    Q_INVOKABLE void releaseDelegate(const ClipKey& key);
 
 signals:
     void selectedClipIdxChanged();
@@ -85,6 +100,7 @@ signals:
     void clipStyleChanged();
     void asymmetricStereoHeightsPossibleChanged();
     void isContrastFocusBorderEnabledChanged();
+    void keyboardNavigationChanged();
 
     void requestClipTitleEdit(int index);
 
@@ -122,5 +138,11 @@ private:
     trackedit::ClipKeyList m_clipsMovingWithSelection;
     double m_selectionStartTime = 0.0;
     double m_selectionEndTime = 0.0;
+
+    void startDelegateRelease(bool restart);
+    void releaseUnusedDelegates();
+    std::set<trackedit::ClipId> m_heldDelegates;
+    trackedit::ClipId m_hoveredClip = -1;
+    QTimer m_delegateReleaseTimer;
 };
 }
