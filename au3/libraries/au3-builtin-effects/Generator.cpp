@@ -32,12 +32,15 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
 
     // Iterate over the tracks
     bool bGoodResult = true;
-    int ntrack = 0;
 
     Generator* self = this;
+    const EffectSettings* pSettings = &settings;
+    // Capture by copy everything but bGoodResult, and no implicit `this`:
+    // MSVC 14.52 (windows-11-arm) fails to compile member access through `this` here
     outputs.Get().Any().VisitWhile(bGoodResult,
-                                   [&, mT0 = mT0, mT1 = mT1, preserve = mPreserveUnderlyingClipBoundaries, self](auto&& fallthrough){
-        return [&, self](WaveTrack& track) {
+                                   [&bGoodResult, mT0 = mT0, mT1 = mT1, preserve = mPreserveUnderlyingClipBoundaries,
+                                    duration, pSettings, self](auto&& fallthrough){
+        return [&bGoodResult, mT0, mT1, preserve, duration, pSettings, self, fallthrough](WaveTrack& track) {
             if (!track.GetSelected()) {
                 return fallthrough();
             }
@@ -59,7 +62,7 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
                 // Create a temporary track
                 auto copy = WaveTrackUtilities::EmptyCopy(track, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
                 // Fill with data
-                if (!self->GenerateTrack(settings, *copy)) {
+                if (!self->GenerateTrack(*pSettings, *copy)) {
                     bGoodResult = false;
                 }
                 if (bGoodResult) {
@@ -76,8 +79,6 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
                 bool moveClips = false;
                 track.Clear(mT0, mT1, moveClips);
             }
-
-            ntrack++;
         };
     });
 
