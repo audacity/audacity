@@ -194,7 +194,8 @@ bool MacroManagerModel::confirmUnknownCommands(const std::vector<std::string>& c
     const IInteractive::Result result = interactive()->warningSync(
         trc("macromanager", "Some commands of this macro are not available"),
         trc("macromanager", "The macro can be imported, but it will fail at these steps:") + list,
-        { IInteractive::Button::Cancel, IInteractive::Button::Continue }, IInteractive::Button::Continue);
+        interactive()->buttonDataList({ IInteractive::Button::Cancel, IInteractive::Button::Continue }),
+        int(IInteractive::Button::Continue));
 
     return result.standardButton() == IInteractive::Button::Continue;
 }
@@ -205,7 +206,8 @@ bool MacroManagerModel::confirmReplace(const std::string& name) const
         trc("macromanager", "Replace macro?"),
         qtrc("macromanager", "A macro named “%1” already exists. Do you want to replace it?").arg(QString::fromStdString(
                                                                                                       name)).toStdString(),
-        { IInteractive::Button::No, IInteractive::Button::Yes }, IInteractive::Button::Yes);
+        interactive()->buttonDataList({ IInteractive::Button::No, IInteractive::Button::Yes }),
+        int(IInteractive::Button::Yes));
 
     return result.standardButton() == IInteractive::Button::Yes;
 }

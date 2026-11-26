@@ -1654,10 +1654,10 @@ bool Au3TracksInteraction::userIsOkCombineMonoToStereo() const
                                        "become one large clip.\n\n"
                                        "Do you wish to continue?");
 
-    const muse::IInteractive::Result result = interactive()->warningSync(title, body, {
+    const muse::IInteractive::Result result = interactive()->warningSync(title, body, interactive()->buttonDataList({
         muse::IInteractive::Button::Cancel,
         muse::IInteractive::Button::Yes
-    }, muse::IInteractive::Button::Cancel);
+    }), int(muse::IInteractive::Button::Cancel));
 
     return result.standardButton() == muse::IInteractive::Button::Yes;
 }

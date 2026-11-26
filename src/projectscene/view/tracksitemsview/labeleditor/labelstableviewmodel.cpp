@@ -565,7 +565,7 @@ muse::RetVal<QString> LabelsTableViewModel::createNewLabelTrack(int currentRow)
 {
     muse::RetVal<QString> result;
 
-    RetVal<muse::Val> rv = interactive()->openSync("audacity://projectscene/addnewlabeltrack");
+    RetVal<muse::Val> rv = interactive()->openSync(UriQuery("audacity://projectscene/addnewlabeltrack"));
     if (!rv.ret) {
         result.ret = rv.ret;
         return result;

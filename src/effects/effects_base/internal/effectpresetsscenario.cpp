@@ -30,7 +30,7 @@ void EffectPresetsScenario::loadPreset(const EffectInstanceId& effectInstanceId,
 
 void EffectPresetsScenario::savePresetAs(const EffectInstanceId& effectInstanceId)
 {
-    RetVal<Val> rv = interactive()->openSync("audacity://effects/presets/input_name");
+    RetVal<Val> rv = interactive()->openSync(UriQuery("audacity://effects/presets/input_name"));
     std::string name = rv.val.toString();
     if (rv.ret.code() == (int)Ret::Code::Cancel || name.empty()) {
         LOGD() << "input preset name is canceled";
@@ -48,7 +48,7 @@ void EffectPresetsScenario::savePresetAs(const EffectInstanceId& effectInstanceI
             muse::trc("effects", "Save preset"),
             muse::mtrc("effects", "Preset “%1” already exists, replace?")
             .arg(String::fromStdString(name)).toStdString(),
-            { IInteractive::Button::Cancel, IInteractive::Button::Yes });
+            interactive()->buttonDataList({ IInteractive::Button::Cancel, IInteractive::Button::Yes }));
 
         if (res.button() == (int)muse::IInteractive::Button::Cancel) {
             LOGD() << "cancel, not replace existing preset";
@@ -90,7 +90,7 @@ void EffectPresetsScenario::deletePreset(const EffectId& effectId, const PresetI
         //: %1 is the name of the preset to delete
         muse::mtrc("effects", "Are you sure you want to delete “%1”?")
         .arg(au3::wxToString(presetId)).toStdString(),
-        { IInteractive::Button::No, IInteractive::Button::Yes });
+        interactive()->buttonDataList({ IInteractive::Button::No, IInteractive::Button::Yes }));
 
     if (res.button() == (int)muse::IInteractive::Button::No) {
         LOGD() << "delete preset is canceled";
