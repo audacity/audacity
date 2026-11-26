@@ -619,6 +619,39 @@ TEST_F(Au3RecordTests, LeadInRecordingWithoutSelectedTracksGoesIntoTheFocusedTra
     EXPECT_EQ(sequences.captureSequences.front()->GetRecordableSequenceId(), idOf(focused));
 }
 
+TEST_F(Au3RecordTests, LeadInRecordingReportsTheFocusedTrackAsRecordedInto)
+{
+    //! [GIVEN] Two tracks, none selected, the second one focused, and the playhead at 8s
+    addTrack(1, false);
+    Au3WaveTrack* focused = addTrack(1, false);
+    focusTrack(focused);
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(muse::secs_t(8.0)));
+
+    //! [WHEN] Lead-in recording is initiated
+    muse::Ret ret = m_record->leadInRecording();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The focused track is reported as recorded into
+    EXPECT_EQ(m_record->recordingTrackIds(), std::vector<trackedit::TrackId> { idOf(focused) });
+}
+
+TEST_F(Au3RecordTests, RecordingIntoANewTrackReportsItAsRecordedInto)
+{
+    //! [GIVEN] A track that is neither selected nor focused
+    Au3WaveTrack* existing = addTrack(1, false);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The new track is reported as recorded into
+    const auto reported = m_record->recordingTrackIds();
+    ASSERT_EQ(reported.size(), 1u);
+    EXPECT_NE(reported.front(), idOf(existing));
+    EXPECT_EQ(reported, recordedTrackIds());
+}
+
 TEST_F(Au3RecordTests, RecordingWithMoreInputChannelsThanTheSelectedTracksGoesIntoThem)
 {
     //! [GIVEN] Four input channels and three selected mono tracks
