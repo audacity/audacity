@@ -205,7 +205,7 @@ module.exports = {
     {
         api.keyboard.key("X")
     },
-    PlayOnce: function()
+    PlaySelection: function()
     {
         api.keyboard.key("Shift+Space")
     },
