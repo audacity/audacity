@@ -131,9 +131,10 @@ public:
     double mT0{ 0. };
     double mT1{ 0. };
     bool mIsPreview{ false };
-    //! Au4: if not empty, only these clips (by ID) are selected within [mT0, mT1]
+    //! Au4: if not empty, only these clips and labels (by ID) are selected within [mT0, mT1]
     //! (see Effect::processClipSelectionAsTimeRange())
     std::vector<int64_t> mSelectedClipIds;
+    std::vector<int64_t> mSelectedLabelIds;
 
     // Some public members that only change "context" fields
 
