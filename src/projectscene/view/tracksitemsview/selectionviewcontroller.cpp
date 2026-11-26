@@ -72,17 +72,17 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     m_autoScrollLastX = m_context->timeToPosition(time);
     m_autoScrollLastY = y;
 
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+    muse::KeyboardModifiers modifiers = keyboardModifiers();
 
     resetMarquee();
     m_ctrlClickTracks.reset();
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ControlModifier)) {
         armMarquee(time, y);
     }
 
     m_selectionStarted = true;
     {
-        const bool modifierHeld = modifiers.testFlag(Qt::ShiftModifier) || modifiers.testFlag(Qt::ControlModifier);
+        const bool modifierHeld = modifiers.testFlag(muse::KeyboardModifier::ShiftModifier) || modifiers.testFlag(muse::KeyboardModifier::ControlModifier);
         m_selectionThresholdCrossed = modifierHeld;
         //! NOTE: do not update start point when user holds Shift or Ctrl
         if (!modifierHeld) {
@@ -97,7 +97,7 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
     emit selectionInProgressChanged();
     resetDataSelection();
 
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ControlModifier)) {
         TrackIdList tracks = selectionController()->selectedTracks();
         TrackIdList newTracks = vs->tracksInRange(y, y);
         if (!newTracks.empty()) {
@@ -119,7 +119,7 @@ void SelectionViewController::onPressed(double time, double y, spectrogram::Spec
         selectionController()->setSelectedTracks(tracks, true);
     }
 
-    if (modifiers.testFlag(Qt::ShiftModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ShiftModifier)) {
         double time1 = m_selectionStartTime;
         double time2 = time;
         if (time1 > time2) {
@@ -175,7 +175,7 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
         return false;
     }
 
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+    muse::KeyboardModifiers modifiers = keyboardModifiers();
 
     time = std::max(time, 0.0);
     m_autoScrollLastX = m_context->timeToPosition(time);
@@ -198,7 +198,7 @@ bool SelectionViewController::doOnPositionChanged(double time, double y)
 
     // tracks
     TrackIdList tracks;
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ControlModifier)) {
         //! TODO Ctrl+drag to expand the selection is being replaced by the marquee selection:
         //! a Ctrl press arms the marquee, so this branch is not reached any more. TBD what to do with it
         tracks = selectionController()->selectedTracks();
@@ -616,13 +616,13 @@ TrackIdList SelectionViewController::tracksCoveredBySelection(const IProjectView
     return vs->tracksInRange(m_startY, y);
 }
 
-Qt::KeyboardModifiers SelectionViewController::keyboardModifiers() const
+muse::KeyboardModifiers SelectionViewController::keyboardModifiers() const
 {
-    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
+    muse::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
     //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
-    if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
-        modifiers = Qt::ControlModifier;
+    if (modifiers.testFlag(muse::KeyboardModifier::ShiftModifier) && modifiers.testFlag(muse::KeyboardModifier::ControlModifier)) {
+        modifiers = muse::KeyboardModifier::ControlModifier;
     }
 
     return modifiers;

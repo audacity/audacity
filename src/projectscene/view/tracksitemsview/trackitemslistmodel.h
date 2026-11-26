@@ -135,7 +135,7 @@ protected:
     void handleItemRelease(const trackedit::TrackItemKey& key);
     trackedit::ItemKeys m_pendingToggleDeselect;
 
-    Qt::KeyboardModifiers keyboardModifiers() const;
+    muse::KeyboardModifiers keyboardModifiers() const;
 
     friend class TrackClipsSelectionTests;
     friend class TrackLabelsSelectionTests;

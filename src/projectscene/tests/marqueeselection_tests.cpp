@@ -57,7 +57,7 @@ protected:
         ON_CALL(*m_playback, audioOutput())
         .WillByDefault(Return(m_audioOutput));
         ON_CALL(*m_application, keyboardModifiers())
-        .WillByDefault(Return(Qt::ControlModifier));
+        .WillByDefault(Return(muse::KeyboardModifier::ControlModifier));
 
         m_context = new TimelineContext();
         SnapTestAccess::wireContext(m_context, m_globalContext, m_playback);
@@ -276,7 +276,7 @@ TEST_F(MarqueeSelectionTests, CancellingWithoutAMarqueeLeavesTheGestureAlone)
 {
     //! [GIVEN] A plain selection gesture without Ctrl
     ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::NoModifier));
+    .WillByDefault(Return(muse::KeyboardModifier::NoModifier));
     m_controller->onPressed(1.0, 10.0);
     ASSERT_TRUE(m_controller->selectionInProgress());
 
@@ -291,7 +291,7 @@ TEST_F(MarqueeSelectionTests, RightDragStartsAMarqueeWithoutASelectionGesture)
 {
     //! [GIVEN] A right press on empty track area with no modifier held
     ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::NoModifier));
+    .WillByDefault(Return(muse::KeyboardModifier::NoModifier));
     ON_CALL(*m_viewState, tracksInRange(10.0, 40.0))
     .WillByDefault(Return(trackedit::TrackIdList { 1, 2 }));
     ON_CALL(*m_selectionController,
@@ -339,7 +339,7 @@ TEST_F(MarqueeSelectionTests, ARightPressDuringASelectionGestureIsIgnored)
 {
     //! [GIVEN] A plain selection gesture in progress
     ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::NoModifier));
+    .WillByDefault(Return(muse::KeyboardModifier::NoModifier));
     m_controller->onPressed(1.0, 10.0);
     ASSERT_TRUE(m_controller->selectionInProgress());
 
@@ -360,7 +360,7 @@ TEST_F(MarqueeSelectionTests, FinishingAMarqueeDuringASelectionGestureLeavesTheG
 {
     //! [GIVEN] A plain left-button selection gesture is being dragged
     ON_CALL(*m_application, keyboardModifiers())
-    .WillByDefault(Return(Qt::NoModifier));
+    .WillByDefault(Return(muse::KeyboardModifier::NoModifier));
     m_controller->onPressed(1.0, 10.0);
     m_controller->onPositionChanged(20.0, 40.0);
     ASSERT_TRUE(m_controller->selectionInProgress());

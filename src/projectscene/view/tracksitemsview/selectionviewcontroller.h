@@ -119,7 +119,7 @@ private:
     double snapTime(double time) const;
     void setFrequencySelectionEdge(double y, bool complete = true, uintptr_t handle = 0); // If handle is 0, sets both
 
-    Qt::KeyboardModifiers keyboardModifiers() const;
+    muse::KeyboardModifiers keyboardModifiers() const;
 
     bool isProjectOpened() const;
 
