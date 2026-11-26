@@ -34,9 +34,10 @@ struct DBProjectData final
 
     enum SyncStatusType
     {
-        SyncStatusSynced      = 0,
-        SyncStatusUploading   = 1,
-        SyncStatusDownloading = 2,
+        SyncStatusSynced          = 0,
+        SyncStatusUploading       = 1,
+        SyncStatusDownloading     = 2,
+        SyncStatusPendingSnapshot = 3,
     } SyncStatus = {};
 };
 
@@ -116,6 +117,10 @@ public:
 
     std::string GetProjectUserSlug(std::string_view projectId);
     void SetProjectUserSlug(std::string_view projectId, std::string_view slug);
+
+    void AddPendingCloudProject(std::string_view localPath, std::string_view name);
+    std::optional<std::string> GetPendingCloudProjectName(std::string_view localPath) const;
+    void RemovePendingCloudProject(std::string_view localPath);
 
     bool IsProjectBlockLocked(std::string_view projectId, int64_t blockId) const;
 

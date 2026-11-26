@@ -47,8 +47,8 @@ ProjectsView {
                 root.openProjectRequested(projectPath, displayName)
             }
 
-            onOpenCloudProjectRequested: function (projectId) {
-                root.openCloudProjectRequested(projectId)
+            onOpenCloudProjectRequested: function (projectId, projectPath) {
+                root.openCloudProjectRequested(projectId, projectPath)
             }
         }
     }

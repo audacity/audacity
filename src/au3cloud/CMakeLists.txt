@@ -69,3 +69,7 @@ set(MODULE_LINK
 )
 
 setup_module()
+
+if (AU_BUILD_AU3CLOUD_TESTS)
+    add_subdirectory(tests)
+endif()

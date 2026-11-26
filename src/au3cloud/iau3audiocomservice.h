@@ -3,7 +3,6 @@
 */
 #pragma once
 
-#include <functional>
 #include <optional>
 #include <chrono>
 #include <string>
@@ -30,6 +29,11 @@ enum class UploadMode {
     ForceOverwrite,
 };
 
+enum class LocalState {
+    Unchanged,
+    AheadOfCloud,
+};
+
 struct FetchOptions {
     CachePolicy cachePolicy = CachePolicy::CacheFirst;
     std::optional<std::chrono::seconds> maxCacheAge = std::nullopt;
@@ -54,8 +58,7 @@ public:
     virtual muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const = 0;
 
     virtual muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                          std::function<bool()> projectSaveCallback = nullptr,
-                                                          UploadMode uploadMode = UploadMode::NormalUpdate) = 0;
+                                                          LocalState localState, UploadMode uploadMode = UploadMode::NormalUpdate) = 0;
 
     virtual muse::RetVal<muse::ProgressPtr> updateAudioPreview(au::project::IAudacityProjectPtr project) = 0;
 

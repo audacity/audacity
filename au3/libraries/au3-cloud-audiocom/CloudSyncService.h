@@ -29,7 +29,6 @@ class AudacityProject;
 
 namespace audacity::cloud::audiocom {
 namespace sync {
-class LocalProjectSnapshot;
 struct PaginatedProjectsResponse;
 struct PaginatedAudioResponse;
 struct CloudAudioInfo;
@@ -172,7 +171,6 @@ private:
     void
     ReportUploadStats(std::string_view projectId, const TransferStats& stats);
 
-    std::vector<std::shared_ptr<sync::LocalProjectSnapshot> > mLocalSnapshots;
     std::shared_ptr<sync::RemoteProjectSnapshot> mRemoteSnapshot;
 
     SyncPromise mSyncPromise;

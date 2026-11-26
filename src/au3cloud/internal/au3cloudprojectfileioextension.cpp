@@ -31,14 +31,8 @@ OnCloseAction CloudProjectFileIOExtension::OnClose(AudacityProject&)
     return OnCloseAction::Continue;
 }
 
-void CloudProjectFileIOExtension::OnUpdateSaved(AudacityProject& project, const ProjectSerializer& serializer)
+void CloudProjectFileIOExtension::OnUpdateSaved(AudacityProject&, const ProjectSerializer&)
 {
-    auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(project);
-    if (!projectCloudExtension.IsCloudProject()) {
-        return;
-    }
-
-    projectCloudExtension.OnUpdateSaved(serializer);
 }
 
 bool CloudProjectFileIOExtension::IsBlockLocked(const AudacityProject& project, int64_t blockId) const

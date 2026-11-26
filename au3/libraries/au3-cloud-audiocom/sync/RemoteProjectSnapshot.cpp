@@ -191,7 +191,9 @@ void RemoteProjectSnapshot::StartSync()
 
 void RemoteProjectSnapshot::Cancel()
 {
-    DoCancel();
+    if (!DoCancel()) {
+        return;
+    }
 
     mCallback({ { SyncResultCode::Cancelled, {} },
                   mDownloadedBlocks.load() + mCopiedBlocks.load(),
@@ -350,19 +352,19 @@ std::unordered_set<std::string> RemoteProjectSnapshot::CalculateKnownBlocks(
     return knownBlocks;
 }
 
-void RemoteProjectSnapshot::DoCancel()
+bool RemoteProjectSnapshot::DoCancel()
 {
-    if (mState.load(std::memory_order_acquire) != State::Downloading) {
-        return;
+    if (!SetState(State::Cancelled)) {
+        return false;
     }
-
-    SetState(State::Cancelled);
 
     mRequestsCV.notify_one();
 
     while (!mResponses.empty()) {
         RemoveResponse(mResponses.front().get());
     }
+
+    return true;
 }
 
 void RemoteProjectSnapshot::DownloadBlob(
@@ -622,7 +624,10 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
 
 void RemoteProjectSnapshot::OnFailure(ResponseResult result)
 {
-    SetState(State::Failed);
+    if (!SetState(State::Failed)) {
+        return;
+    }
+
     mCallback({ result,
                 mDownloadedBlocks.load(std::memory_order_acquire)
                 + mCopiedBlocks.load(std::memory_order_acquire),
@@ -700,8 +705,11 @@ void RemoteProjectSnapshot::ReportProgress()
         =processedBlocks == mMissingBlocks && projectDownloaded;
 
     if (completed) {
+        if (!SetState(State::Succeeded)) {
+            return;
+        }
+
         CleanupOrphanBlocks();
-        SetState(State::Succeeded);
         MarkProjectInDB(true);
     }
 
@@ -754,13 +762,16 @@ void RemoteProjectSnapshot::RequestsThread()
     }
 }
 
-void RemoteProjectSnapshot::SetState(State state)
+bool RemoteProjectSnapshot::SetState(State state)
 {
-    if (state != State::Downloading) {
-        mEndTime = Clock::now();
+    auto expected = State::Downloading;
+
+    if (!mState.compare_exchange_strong(expected, state)) {
+        return false;
     }
 
-    mState.exchange(state);
+    mEndTime = Clock::now();
+    return true;
 }
 
 void cloud::audiocom::sync::RemoteProjectSnapshot::CleanupOrphanBlocks()

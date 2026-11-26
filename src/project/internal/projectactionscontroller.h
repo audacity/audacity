@@ -76,7 +76,6 @@ public:
     bool isProjectOpened(const muse::io::path_t& projectPath) const;
 
 private:
-    bool doCloseOpenedProject(bool quitApp, bool discardUnsavedChanges);
     project::IAudacityProjectPtr currentProject() const;
 
     muse::Ret newProject();
@@ -93,11 +92,12 @@ private:
                           const muse::String& displayNameOverride = muse::String(), const muse::String& projectId = muse::String());
     muse::Ret loadWithFallback(const IAudacityProjectPtr& project, const muse::io::path_t& loadPath, const std::string& format);
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
+    void resumeCloudSyncOfCurrentProject();
     IAudacityProjectPtr createProjectInCurrentWindow();
     muse::RetVal<muse::io::path_t> askFallbackTemporaryDir() const;
     void showTemporaryDirError() const;
-    muse::Ret openCloudProject(const muse::io::path_t& localPath, const muse::String& projectId,
-                               const muse::String& snapshotId = muse::String(), bool forceOverwrite = false);
+    muse::Ret openCloudProject(const muse::io::path_t& localPath, const std::optional<std::string>& projectId,
+                               const std::optional<std::string>& snapshotId = std::nullopt, bool forceOverwrite = false);
     //! TODO AU4
     // muse::Ret openAudacityUrl(const QUrl& url);
     muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);
@@ -108,6 +108,8 @@ private:
     void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath) const;
 
     muse::IInteractive::Button askAboutSavingProject(IAudacityProjectPtr project);
+    bool confirmCloseWithUnsavedChanges(const IAudacityProjectPtr& project);
+    bool doCloseOpenedProject(bool quitApp);
 
     muse::Ret canSaveProject() const;
     bool saveProject(SaveMode saveMode, SaveLocationType saveLocationType = SaveLocationType::Undefined, bool force = false);

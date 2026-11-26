@@ -33,19 +33,18 @@ set( SOURCES
    sync/CloudSyncHousekeeper.cpp
    sync/DataUploader.cpp
    sync/DataUploader.h
-   sync/LocalProjectSnapshot.cpp
-   sync/LocalProjectSnapshot.h
    sync/MissingBlocksUploader.cpp
    sync/MissingBlocksUploader.h
    sync/MixdownUploader.cpp
    sync/MixdownUploader.h
    sync/ProjectCloudExtension.cpp
    sync/ProjectCloudExtension.h
-   sync/ProjectUploadOperation.h
    sync/RemoteProjectSnapshot.cpp
    sync/RemoteProjectSnapshot.h
-   sync/ResumedSnaphotUploadOperation.cpp
-   sync/ResumedSnaphotUploadOperation.h
+   sync/SnapshotReconcile.cpp
+   sync/SnapshotReconcile.h
+   sync/SnapshotUploadQueue.cpp
+   sync/SnapshotUploadQueue.h
    sync/WavPackCompressor.cpp
    sync/WavPackCompressor.h
 )

@@ -543,7 +543,7 @@ NetworkError Response::mapNetworkError(int qtError) const
         return NetworkError::Timeout;
 
     case QNetworkReply::OperationCanceledError:
-        return NetworkError::OperationCancelled;
+        return mAbortRequested ? NetworkError::OperationCancelled : NetworkError::Timeout;
 
     case QNetworkReply::SslHandshakeFailedError:
         return NetworkError::SSLHandshakeFailed;

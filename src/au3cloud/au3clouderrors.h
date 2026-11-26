@@ -39,6 +39,9 @@ enum class Err {
     SyncAborted,
     ClientFailure,
     SnapshotFailed,
+    ProjectNotSaved,
+    ProjectUpToDate,
+    SyncAlreadyInProgress,
 
     // ProjectSyncResult::StatusCode
     SyncResultSuccess,

@@ -93,7 +93,7 @@ private:
     std::unordered_set<std::string>
     CalculateKnownBlocks(const std::string& attachedDbName) const;
 
-    void DoCancel();
+    bool DoCancel();
 
     void
     DownloadBlob(std::string url, SuccessHandler onSuccess, int retries);
@@ -114,7 +114,7 @@ private:
     bool InProgress() const;
     void RequestsThread();
 
-    void SetState(State state);
+    bool SetState(State state);
 
     void CleanupOrphanBlocks();
 
