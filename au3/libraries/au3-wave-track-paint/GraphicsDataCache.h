@@ -46,6 +46,8 @@ struct WAVE_TRACK_PAINT_API GraphicsDataCacheElementBase /* not final */
     uint64_t LastUpdate { 0 };
     //! Cache implementation is responsible to set this flag when all the data of the item is filled
     bool IsComplete { false };
+    //! Set when what the item was made from has changed, so the item is to be made again
+    bool Stale { false };
     //! This flag is used to simplify the eviction algorithm
     bool AwaitsEviction { false };
 };

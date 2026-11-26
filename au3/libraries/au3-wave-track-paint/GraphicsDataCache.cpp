@@ -103,6 +103,7 @@ void GraphicsDataCacheBase::InvalidatePixelRange(
 
         if (elementFirstPixel < lastPixel && elementLastPixel > firstPixel) {
             item.Data->IsComplete = false;
+            item.Data->Stale = true;
         }
     }
 }
@@ -112,6 +113,7 @@ void GraphicsDataCacheBase::InvalidateOtherZoomLevels(double pixelsPerSecond)
     for (auto& item : mLookup) {
         if (!IsSamePPS(mScaledSampleRate, item.Key.PixelsPerSecond, pixelsPerSecond)) {
             item.Data->IsComplete = false;
+            item.Data->Stale = true;
         }
     }
 }

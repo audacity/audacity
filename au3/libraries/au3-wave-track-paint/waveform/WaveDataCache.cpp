@@ -308,6 +308,7 @@ WaveDataCache::WaveDataCache(const WaveClip& waveClip, int channelIndex)
         [] { return std::make_unique<WaveCacheElement>(); }),
     mProvider { MakeDefaultDataProvider(waveClip, channelIndex) },
 mWaveClip { waveClip },
+mChannelIndex { channelIndex },
 mStretchChangedSubscription {
     const_cast<WaveClip&>(waveClip)
     .Observer::Publisher<StretchRatioChange>::Subscribe(
@@ -327,13 +328,18 @@ bool WaveDataCache::InitializeElement(
 
     element.AvailableColumns = 0;
 
+    //! NOTE: Taken before reading, so that samples appended meanwhile are noticed on the next lookup
+    const int64_t sourceSamplesCount = SourceSamplesCount();
+
     int64_t firstSample = key.FirstSample;
 
     const auto samplesPerColumn
         =std::max(0.0, GetScaledSampleRate() / key.PixelsPerSecond);
 
-    const size_t elementSamplesCount
-        =samplesPerColumn * WaveDataCache::CacheElementWidth;
+    //! NOTE: Rounded as the columns are below, so that a filled element counts as complete.
+    //! Truncated, it was a sample short at about half of the zoom levels, and no element was ever complete.
+    const auto elementSamplesCount
+        =static_cast<size_t>(std::round(samplesPerColumn * WaveDataCache::CacheElementWidth));
     size_t processedSamples = 0;
 
     const WaveCacheSampleBlock::Type blockType
@@ -410,8 +416,36 @@ bool WaveDataCache::InitializeElement(
 
     element.AvailableColumns = columnIndex;
     element.IsComplete       = processedSamples == elementSamplesCount;
+    element.Stale            = false;
+    element.SourceSamplesCount = sourceSamplesCount;
+    element.ProcessedSamples   = processedSamples;
 
     return processedSamples != 0;
+}
+
+bool WaveDataCache::UpdateElement(
+    const GraphicsDataCacheKey& key, GraphicsDataCacheElementBase& element)
+{
+    auto& waveElement = static_cast<WaveCacheElement&>(element);
+
+    //! NOTE: The last element of a clip reaches beyond the clip's end, so it is never complete. It only
+    //! has more to take once the clip has got more samples, i.e. while recording: until then it is left as it is,
+    //! instead of being summarized again on every lookup.
+    if (!waveElement.Stale && waveElement.SourceSamplesCount == SourceSamplesCount()) {
+        return waveElement.ProcessedSamples != 0;
+    }
+
+    return InitializeElement(key, waveElement);
+}
+
+int64_t WaveDataCache::SourceSamplesCount() const
+{
+    if (mChannelIndex < 0 || static_cast<size_t>(mChannelIndex) >= mWaveClip.NChannels()) {
+        return -1;
+    }
+
+    return mWaveClip.GetSequence(mChannelIndex)->GetNumSamples().as_long_long()
+           + static_cast<int64_t>(mWaveClip.GetAppendBufferLen(mChannelIndex));
 }
 
 bool WaveCacheSampleBlock::ContainsSample(int64_t sampleIndex) const noexcept
