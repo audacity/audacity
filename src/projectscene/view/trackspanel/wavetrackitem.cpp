@@ -252,13 +252,13 @@ void WaveTrackItem::setPan(int pan, bool completed)
 
 void WaveTrackItem::setSolo(bool solo)
 {
-    const bool exclusive = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
+    const bool exclusive = application()->keyboardModifiers().testFlag(muse::KeyboardModifier::ShiftModifier);
     trackPlaybackControl()->setSolo(trackId(), solo, exclusive);
 }
 
 void WaveTrackItem::setMuted(bool mute)
 {
-    const bool exclusive = application()->keyboardModifiers().testFlag(Qt::ShiftModifier);
+    const bool exclusive = application()->keyboardModifiers().testFlag(muse::KeyboardModifier::ShiftModifier);
     trackPlaybackControl()->setMuted(trackId(), mute, exclusive);
 }
 

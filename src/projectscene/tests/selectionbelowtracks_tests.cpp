@@ -58,7 +58,7 @@ protected:
         ON_CALL(*m_playback, audioOutput())
         .WillByDefault(Return(m_audioOutput));
         ON_CALL(*m_application, keyboardModifiers())
-        .WillByDefault(Return(Qt::NoModifier));
+        .WillByDefault(Return(muse::KeyboardModifier::NoModifier));
 
         ON_CALL(*m_trackeditProject, trackIdList())
         .WillByDefault(Return(trackedit::TrackIdList { 1, 2 }));

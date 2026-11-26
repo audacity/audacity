@@ -57,7 +57,7 @@ protected:
         ON_CALL(*m_playback, audioOutput())
         .WillByDefault(Return(m_audioOutput));
         ON_CALL(*m_application, keyboardModifiers())
-        .WillByDefault(Return(Qt::NoModifier));
+        .WillByDefault(Return(muse::KeyboardModifier::NoModifier));
 
         trackedit::Track labelTrack;
         labelTrack.id = LABEL_TRACK;

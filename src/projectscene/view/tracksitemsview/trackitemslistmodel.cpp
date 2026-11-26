@@ -161,10 +161,10 @@ void TrackItemsListModel::onSelectedItem(const trackedit::TrackItemKey& k)
         }
     }
 
-    Qt::KeyboardModifiers modifiers = keyboardModifiers();
+    muse::KeyboardModifiers modifiers = keyboardModifiers();
 
     auto item = itemByKey(k);
-    if (modifiers.testFlag(Qt::ShiftModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ShiftModifier)) {
         if (m_trackId != k.trackId) {
             return;
         } else {
@@ -336,13 +336,13 @@ void TrackItemsListModel::disconnectAutoScroll()
     }
 }
 
-Qt::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
+muse::KeyboardModifiers TrackItemsListModel::keyboardModifiers() const
 {
-    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
+    muse::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
     //! NOTE: always treat simultaneously pressed Ctrl and Shift as Ctrl
-    if (modifiers.testFlag(Qt::ShiftModifier) && modifiers.testFlag(Qt::ControlModifier)) {
-        modifiers = Qt::ControlModifier;
+    if (modifiers.testFlag(muse::KeyboardModifier::ShiftModifier) && modifiers.testFlag(muse::KeyboardModifier::ControlModifier)) {
+        modifiers = muse::KeyboardModifier::ControlModifier;
     }
 
     return modifiers;
@@ -401,13 +401,13 @@ void TrackItemsListModel::handleItemRelease(const trackedit::TrackItemKey& key)
 
 au::trackedit::SelectionMode TrackItemsListModel::selectionMode() const
 {
-    const Qt::KeyboardModifiers modifiers = keyboardModifiers();
+    const muse::KeyboardModifiers modifiers = keyboardModifiers();
 
-    if (modifiers.testFlag(Qt::ShiftModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ShiftModifier)) {
         return SelectionMode::Range;
     }
 
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ControlModifier)) {
         return SelectionMode::Toggle;
     }
 

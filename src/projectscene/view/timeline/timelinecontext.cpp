@@ -228,9 +228,9 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
         stepsY = static_cast<qreal>(stepsScrolled.y()) / static_cast<qreal>(QWheelEvent::DefaultDeltasPerStep);
     }
 
-    Qt::KeyboardModifiers modifiers = application()->keyboardModifiers();
+    muse::KeyboardModifiers modifiers = application()->keyboardModifiers();
 
-    if (modifiers.testFlag(Qt::ControlModifier)) {
+    if (modifiers.testFlag(muse::KeyboardModifier::ControlModifier)) {
         double zoomSpeed = qPow(2.0, 1.0 / configuration()->mouseZoomPrecision());
         qreal absSteps = sqrt(stepsX * stepsX + stepsY * stepsY) * (stepsY > -stepsX ? 1 : -1);
         double newZoom = clampedZoom(zoom() * qPow(zoomSpeed, absSteps));
@@ -239,7 +239,7 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
     } else {
         qreal correction = 1.0 / zoom();
 
-        if (modifiers.testFlag(Qt::ShiftModifier)) {
+        if (modifiers.testFlag(muse::KeyboardModifier::ShiftModifier)) {
             int abs = sqrt(dx * dx + dy * dy) * (dy > -dx ? -1 : 1);
             shiftFrameTime(abs * correction);
             emit userHorizontalScrolled();
