@@ -303,18 +303,11 @@ muse::Ret Au3Record::start()
 
     double projectRate = ProjectRate::Get(project).GetRate();
 
-    WritableSampleTrackArray existingTracks;
-
-    // Checking the selected tracks: counting them and
-    // making sure they all have the same rate
-    const auto selectedTracks{ GetPropertiesOfSelected(project) };
-    if (!selectedTracks.allSameRate) {
-        return make_ret(Err::MismatchedSamplingRatesError);
+    const RetVal<WritableSampleTrackArray> chosenTracks = chooseRecordingTracks(project);
+    if (!chosenTracks.ret) {
+        return chosenTracks.ret;
     }
-
-    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
-
-    existingTracks = ChooseRecordingTracks(project, selectedTracks, trackNavigationController()->focusedTrack(), recordingChannels);
+    const WritableSampleTrackArray& existingTracks = chosenTracks.val;
     if (!existingTracks.empty()) {
         projectRate = existingTracks.front()->GetRate();
     }
@@ -322,6 +315,27 @@ muse::Ret Au3Record::start()
     const TransportSequences transportTracks
         = MakeRecordingTransportTracks(Au3TrackList::Get(project), existingTracks, recordConfiguration()->isOverdubOn(), false);
 
+    if (const Ret ret = stopTransportAndMonitoring(); !ret) {
+        return ret;
+    }
+
+    return doRecord(project, transportTracks, t0, t1, false, projectRate);
+}
+
+RetVal<WritableSampleTrackArray> Au3Record::chooseRecordingTracks(Au3Project& project) const
+{
+    const auto selectedTracks{ GetPropertiesOfSelected(project) };
+    if (!selectedTracks.allSameRate) {
+        return make_ret(Err::MismatchedSamplingRatesError);
+    }
+
+    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    return RetVal<WritableSampleTrackArray>::make_ok(
+        ChooseRecordingTracks(project, selectedTracks, trackNavigationController()->focusedTrack(), recordingChannels));
+}
+
+Ret Au3Record::stopTransportAndMonitoring()
+{
     if (audioEngine()->isBusy()) {
         if (audioEngine()->isCapturing()) {
             return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
@@ -330,8 +344,7 @@ muse::Ret Au3Record::start()
     }
 
     audioEngine()->stopMonitoring();
-
-    return doRecord(project, transportTracks, t0, t1, false, projectRate);
+    return make_ok();
 }
 
 muse::Ret Au3Record::pause()
@@ -397,15 +410,12 @@ muse::Ret Au3Record::leadInRecording()
         return make_ret(Err::LeadInRecordingNoValidClipAtCursor);
     }
 
-    // Checking the selected tracks: making sure they all have the same rate
-    const auto selectedTracks{ GetPropertiesOfSelected(project) };
-    if (!selectedTracks.allSameRate) {
-        return make_ret(Err::MismatchedSamplingRatesError);
-    }
-
     // Find tracks to record into: the selected tracks, or the focused one
-    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
-    auto tracks = ChooseRecordingTracks(project, selectedTracks, trackNavigationController()->focusedTrack(), recordingChannels);
+    const RetVal<WritableSampleTrackArray> chosenTracks = chooseRecordingTracks(project);
+    if (!chosenTracks.ret) {
+        return chosenTracks.ret;
+    }
+    const WritableSampleTrackArray& tracks = chosenTracks.val;
     if (tracks.empty()) {
         return make_ret(Err::LeadInRecordingNoTracksSelected);
     }
@@ -487,14 +497,9 @@ muse::Ret Au3Record::leadInRecording()
 
     selectionController()->resetSelectedClips();
 
-    if (audioEngine()->isBusy()) {
-        if (audioEngine()->isCapturing()) {
-            return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
-        }
-        audioEngine()->stopTransport();
+    if (const Ret ret = stopTransportAndMonitoring(); !ret) {
+        return ret;
     }
-
-    audioEngine()->stopMonitoring();
 
     double leadInTime = std::max(0.0, std::min(t1, recordConfiguration()->leadInTimeDuration()));
 

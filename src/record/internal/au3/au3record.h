@@ -10,6 +10,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/types/retval.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
 
@@ -26,6 +27,7 @@
 
 #include "../../irecord.h"
 #include "../../irecordconfiguration.h"
+#include "au3recordingtracks.h"
 
 struct TransportSequences;
 struct AudioIOStartTransportOptions;
@@ -84,6 +86,9 @@ private:
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
                        const double audioStreamSampleRate, double leadInTime = 0.0,
                        std::vector<std::vector<float> >* crossfadeData = nullptr);
+    //! The tracks to record into, or an error when the selected tracks don't share a rate
+    muse::RetVal<WritableSampleTrackArray> chooseRecordingTracks(au3::Au3Project& project) const;
+    muse::Ret stopTransportAndMonitoring();
     void cancelRecording();
     void commitRecording();
     bool labelDropouts();
