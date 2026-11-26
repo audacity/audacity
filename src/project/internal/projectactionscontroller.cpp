@@ -539,7 +539,7 @@ bool ProjectActionsController::askAboutStoppingCloudSync()
 
     static const Uri CLOUD_PROJECT_SYNC_URI("audacity://project/cloudprojectsyncing");
 
-    RetVal<Val> rv = interactive()->openSync(CLOUD_PROJECT_SYNC_URI);
+    RetVal<Val> rv = interactive()->openSync(UriQuery(CLOUD_PROJECT_SYNC_URI));
     std::string status = rv.val.toString();
     return status == "stopped" || status == "synced";
 }
@@ -808,11 +808,11 @@ IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityPr
 
     std::string body = muse::trc("project", "Your changes will be lost if you don’t save them.");
 
-    IInteractive::Result result = interactive()->warningSync(title, body, {
+    IInteractive::Result result = interactive()->warningSync(title, body, interactive()->buttonDataList({
         IInteractive::Button::DontSave,
         IInteractive::Button::Cancel,
         IInteractive::Button::Save
-    }, IInteractive::Button::Save, { IInteractive::Option::WithIcon },
+    }), int(IInteractive::Button::Save), { IInteractive::Option::WithIcon },
                                                              muse::trc("project", "Unsaved changes"));
 
     return result.standardButton();
@@ -1435,8 +1435,8 @@ muse::Ret ProjectActionsController::updateCloudAudioPreview(const Params& params
         const IInteractive::Result result = interactive()->warningSync(
             trc("cloud", "The project must be saved before updating the audio preview"),
             trc("cloud", "Save your changes to continue, or cancel the update."),
-            { IInteractive::Button::Cancel, IInteractive::Button::Save },
-            IInteractive::Button::Save,
+            interactive()->buttonDataList({ IInteractive::Button::Cancel, IInteractive::Button::Save }),
+            int(IInteractive::Button::Save),
             { IInteractive::Option::WithIcon },
             trc("cloud", "Unsaved changes"));
 
