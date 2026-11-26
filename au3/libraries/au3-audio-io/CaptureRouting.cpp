@@ -3,18 +3,6 @@
 */
 #include "CaptureRouting.h"
 
-namespace {
-bool isStereoToMonoMixdown(size_t inputChannels, size_t trackChannels)
-{
-    return inputChannels == 2 && trackChannels == 1;
-}
-
-bool isMonoToStereoDuplication(size_t inputChannels, size_t trackChannels)
-{
-    return inputChannels == 1 && trackChannels == 2;
-}
-}
-
 CaptureChannelSources GetCaptureChannelSources(size_t inputChannels, size_t trackChannels, size_t trackChannel)
 {
     CaptureChannelSources result;
@@ -22,10 +10,10 @@ CaptureChannelSources GetCaptureChannelSources(size_t inputChannels, size_t trac
         return result;
     }
 
-    if (isStereoToMonoMixdown(inputChannels, trackChannels)) {
+    if (IsStereoToMonoMixdown(inputChannels, trackChannels)) {
         result.sources = { 0, 1 };
         result.count = 2;
-    } else if (isMonoToStereoDuplication(inputChannels, trackChannels)) {
+    } else if (IsMonoToStereoDuplication(inputChannels, trackChannels)) {
         result.sources[0] = 0;
         result.count = 1;
     } else if (trackChannel < inputChannels) {
@@ -47,7 +35,7 @@ CaptureRouting MakeCaptureRouting(size_t inputChannels, size_t trackChannels)
     for (size_t channel = 0; channel < trackChannels; ++channel) {
         routing.trackChannels.push_back(GetCaptureChannelSources(inputChannels, trackChannels, channel));
     }
-    routing.needsMixdown = isStereoToMonoMixdown(inputChannels, trackChannels);
+    routing.needsMixdown = IsStereoToMonoMixdown(inputChannels, trackChannels);
 
     return routing;
 }

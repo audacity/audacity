@@ -4,6 +4,7 @@
 
 #include "au3recordingtracks.h"
 
+#include "au3-audio-io/CaptureRouting.h"
 #include "au3-wave-track/WaveTrack.h"
 
 #include "au3wrap/internal/domaccessor.h"
@@ -73,7 +74,7 @@ WritableSampleTrackArray ChooseSelectedRecordingTracks(Au3Project& proj, const d
         const int nChannels = static_cast<int>(candidate->NChannels());
         if (strictRules && nChannels > recordingChannels) {
             const bool stereoTrackMonoInput
-                =(recordingChannels == 1 && nChannels == 2 && candidates.empty());
+                = IsMonoToStereoDuplication(recordingChannels, nChannels) && candidates.empty();
             if (stereoTrackMonoInput) {
                 candidates.clear();
                 channelCounts.clear();
@@ -109,10 +110,10 @@ WritableSampleTrackArray ChooseSelectedRecordingTracks(Au3Project& proj, const d
 
     if (strictRules && !candidates.empty()) {
         const bool allowDownmix
-            =(recordingChannels == 2 && totalChannels == 1 && candidates.size() == 1);
+            = IsStereoToMonoMixdown(recordingChannels, totalChannels) && candidates.size() == 1;
         const bool allowUpmix
-            =(recordingChannels == 1 && totalChannels == 2 && candidates.size() == 1
-              && !channelCounts.empty() && channelCounts.front() == 2);
+            = IsMonoToStereoDuplication(recordingChannels, totalChannels) && candidates.size() == 1
+              && !channelCounts.empty() && channelCounts.front() == 2;
         if (allowDownmix || allowUpmix) {
             return candidates;
         }
