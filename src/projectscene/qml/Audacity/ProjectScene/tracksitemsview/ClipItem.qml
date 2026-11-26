@@ -141,6 +141,8 @@ Rectangle {
     //! releases them once it stayed not interactive for a while.
     property bool interactive: true
     readonly property bool interactivePartsCreated: prv.interactivePartsCreated
+    //! Hovered, or being edited or navigated to
+    readonly property bool inUse: prv.isInUse()
 
     onInteractiveChanged: {
         if (interactive) {
@@ -184,7 +186,7 @@ Rectangle {
     }
 
     property int borderWidth: 1
-    property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered
+    property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered || prv.assumedHover
     property bool headerHovered: false
     property var lastSample: undefined
     property bool altPressed: false
@@ -281,6 +283,7 @@ Rectangle {
         readonly property int doubleClickInterval: 400
         readonly property int doubleClickMaxDistance: 5
 
+        property bool assumedHover: false
         property bool singleMenuLoaded: false
         property bool multiMenuLoaded: false
 
@@ -574,6 +577,26 @@ Rectangle {
         id: clipHoverHandler
 
         enabled: root.enableCursorInteraction
+
+        onHoveredChanged: {
+            if (hovered) {
+                prv.assumedHover = false
+            }
+        }
+    }
+
+    //! NOTE A clip created under the mouse isn't told that it is hovered until the mouse moves or a frame
+    //! passes, and a collapsed clip only shows its header, to drag it by, once hovered. So the clip takes
+    //! itself for hovered from the start, until it is told, or for a moment if the mouse is gone by then.
+    function assumeHovered() {
+        prv.assumedHover = true
+        assumedHoverTimer.restart()
+    }
+
+    Timer {
+        id: assumedHoverTimer
+        interval: 200
+        onTriggered: prv.assumedHover = false
     }
 
     // NOTE: hover events from polyline are not visible in MouseArea
@@ -802,6 +825,13 @@ Rectangle {
                         e.accepted = false
                         return
                     }
+
+                    //! NOTE The clip can have been created under the mouse a moment ago, and not been told
+                    //! yet that the mouse is over its header, or where: the press tells both
+                    root.headerHovered = true
+                    //! NOTE Told again even if it was known: something else can have told otherwise meanwhile
+                    root.headerHoveredChanged()
+                    root.clipItemMousePositionChanged(e.x, e.y)
 
                     var currentTime = Date.now()
                     if (currentTime - lastClickTime < prv.doubleClickInterval) {

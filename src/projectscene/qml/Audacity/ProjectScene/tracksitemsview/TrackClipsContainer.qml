@@ -36,6 +36,9 @@ TrackItemsContainer {
     signal clearPreviewClip
     signal trackMousePositionChanged(real x, real y)
 
+    //! Where a clip nobody interacts with can show as a light view instead of a full ClipItem
+    readonly property bool lightViewPossible: root.isWaveformViewVisible && !root.isSpectrogramViewVisible && !root.isAutomationEnabled
+
     QtObject {
         id: prv
         readonly property bool isMultiView: root.isSpectrogramViewVisible && root.isWaveformViewVisible
@@ -122,13 +125,35 @@ TrackItemsContainer {
                 property bool multiSampleEdit: false
                 property int currentChannel: 0
 
+                //! NOTE A light view has none of what the clips are asked for or told below
+                function isFullClipItem(item) {
+                    return Boolean(item) && !item.isLightView
+                }
+
+                //! NOTE A full ClipItem that goes away, e.g. back to a light view, doesn't tell that it is
+                //! no longer hovered or near a sample
+                function refreshClipStates(headerWasHovered) {
+                    root.isNearSample = checkIfAnyClip(clipItem => clipItem.isNearSample)
+                    root.hover = checkIfAnyClip(clipItem => clipItem.hover)
+                    root.isBrush = checkIfAnyClip(clipItem => clipItem.isBrush)
+                    root.leftTrimContainsMouse = checkIfAnyClip(clipItem => clipItem.leftTrimContainsMouse)
+                    root.rightTrimContainsMouse = checkIfAnyClip(clipItem => clipItem.rightTrimContainsMouse)
+                    root.leftTrimPressedButtons = checkIfAnyClip(clipItem => clipItem.leftTrimPressedButtons)
+                    root.rightTrimPressedButtons = checkIfAnyClip(clipItem => clipItem.rightTrimPressedButtons)
+                    //! NOTE Whether a header is hovered is told for all the tracks together: a clip that goes away
+                    //! in this track must not take it back for a header hovered in another one
+                    if (headerWasHovered) {
+                        root.itemHeaderHoveredChanged(checkIfAnyClip(clipItem => clipItem.headerHovered))
+                    }
+                }
+
                 function mapToAllClips(e, f) {
                     const controller = {
                         shouldStop: false
                     }
                     for (let i = 0; i < repeator.count; i++) {
                         let clipLoader = repeator.itemAt(i)
-                        if (clipLoader && clipLoader.item) {
+                        if (clipLoader && isFullClipItem(clipLoader.item)) {
                             let clipPos = clipLoader.mapFromItem(this, e.x, e.y)
                             f(clipLoader.item, {
                                 button: e.button,
@@ -146,7 +171,7 @@ TrackItemsContainer {
                 function checkIfAnyClip(f) {
                     for (let i = 0; i < repeator.count; i++) {
                         let clipLoader = repeator.itemAt(i)
-                        if (clipLoader && clipLoader.item) {
+                        if (clipLoader && isFullClipItem(clipLoader.item)) {
                             if (f(clipLoader.item)) {
                                 return true
                             }
@@ -274,6 +299,10 @@ TrackItemsContainer {
                             })
                         }
 
+                        if (root.lightViewPossible) {
+                            clipsModel.requestDelegateAt(e.x)
+                        }
+
                         // Show the snap guideline while hovering the empty track body
                         // (the area between/around clips that no ClipItem covers).
                         let time = root.context.findGuideline(root.context.positionToTime(e.x, true))
@@ -299,6 +328,10 @@ TrackItemsContainer {
                             }, function (clipItem, mouseEvent) {
                                 clipItem.setContainsMouse(containsMouse)
                             })
+                        }
+
+                        if (!containsMouse) {
+                            clipsModel.releaseHoverDelegates()
                         }
 
                         if (!containsMouse && !root.moveActive) {
@@ -332,22 +365,82 @@ TrackItemsContainer {
 
                         readonly property bool inView: (itemData.x + itemData.width) >= -clipsModel.cacheBufferPx && itemData.x <= clipsContainer.width + clipsModel.cacheBufferPx
 
-                        //! NOTE: Clips are not unloaded outside the viewport: zooming
-                        //! moves most clips across its edges, and recreating them on
-                        //! every zoom step made zooming lag. Clips outside it are created
-                        //! over several frames instead, so that opening a project with many
-                        //! clips doesn't freeze; clips in view are created at once, so that
-                        //! they never show up late (one still loading completes as it comes into view)
+                        //! NOTE: Only the clips interacted with get a full ClipItem, the others a light view
+                        readonly property bool fullViewWanted: !root.lightViewPossible || itemData.delegateRequested || itemData.needsFullView || itemData.selected || itemData.focused || itemData.dragged || itemData.isDragGhost || itemData.titleEditRequested || itemData.movesWithSelection || (clipsModel.keyboardNavigation && Boolean(root.navigationPanel) && root.navigationPanel.active)
+
+                        //! NOTE: Not switched while the view is being loaded. A ClipItem destroyed half created
+                        //! crashes: what is in it then looks for its context, which is gone by that time.
+                        property bool fullView: fullViewWanted
+
+                        function updateFullView() {
+                            if (status !== Loader.Loading) {
+                                fullView = fullViewWanted
+                            }
+                        }
+
+                        onFullViewWantedChanged: updateFullView()
+                        onStatusChanged: Qt.callLater(updateFullView)
+                        Component.onCompleted: fullView = fullViewWanted
+
+                        //! NOTE: Light views outside the view and its buffer are unloaded, as they are cheap to recreate,
+                        //! e.g. when resizing the view; full ClipItems are kept
+                        active: inView || fullView
                         asynchronous: !inView
-                        sourceComponent: {
-                            //! NOTE This optimization is disabled, it is probably not needed,
-                            // and if it needs to be enabled, it should be modified, add handlers
+                        sourceComponent: fullView ? clipComp : clipLightComp
 
-                            // if (itemData.width < 24) {
-                            //     return clipSmallComp
-                            // }
+                        property bool hadFullClipItem: false
+                        property bool itemHeaderHovered: false
+                        onItemChanged: {
+                            const wasFull = hadFullClipItem
+                            hadFullClipItem = clipsContainer.isFullClipItem(item)
+                            //! NOTE Created for the mouse being over the clip
+                            if (!wasFull && hadFullClipItem && itemData.delegateRequested) {
+                                item.assumeHovered()
+                            }
+                            if (wasFull && !hadFullClipItem) {
+                                clipsContainer.refreshClipStates(itemHeaderHovered)
+                                itemHeaderHovered = false
+                            }
+                        }
 
-                            return clipComp
+                        Component {
+                            id: clipLightComp
+
+                            ClipItemLight {
+                                id: lightItem
+
+                                context: root.context
+                                clipKey: loader.itemData.key
+                                clipTime: loader.itemData.time
+                                title: loader.itemData.title
+                                clipColor: loader.itemData.color
+                                clipSelectedColor: loader.itemData.selectedColor
+                                clipTimeSelectionColor: clipsModel.timeSelectionColor(loader.itemData.color)
+                                currentClipStyle: clipsModel.clipStyle
+                                headerHeight: root.headerHeight
+                                collapsed: root.trackViewState.isTrackCollapsed
+                                isAudible: root.isTrackAudible
+                                isDataSelected: root.isDataSelected
+                                showChannelSplitter: clipsModel.isStereo
+                                channelHeightRatio: root.trackViewState.channelHeightRatio
+                                isLinear: root.trackViewState.isLinear
+                                dbRange: root.dbRange
+                                displayBounds: root.trackViewState.displayBounds
+                                selectionStart: loader.itemData.selectionStart
+                                selectionWidth: loader.itemData.selectionWidth
+                                leftVisibleMargin: loader.itemData.leftVisibleMargin
+                                pitch: loader.itemData.pitch
+                                isPitchModified: loader.itemData.isPitchModified
+                                speedPercentage: loader.itemData.speedPercentage
+                                isSpeedModified: loader.itemData.isSpeedModified
+
+                                Connections {
+                                    target: loader.itemData
+                                    function onContentChanged() {
+                                        lightItem.updateView()
+                                    }
+                                }
+                            }
                         }
 
                         Component {
@@ -453,7 +546,15 @@ TrackItemsContainer {
                                 channelHeightRatio: root.trackViewState.channelHeightRatio
                                 showChannelSplitter: clipsModel.isStereo
 
-                                interactive: loader.inView || itemData.focused || itemData.selected
+                                interactive: root.lightViewPossible || loader.inView || itemData.focused || itemData.selected
+
+                                onInUseChanged: {
+                                    if (inUse) {
+                                        clipsModel.holdDelegate(itemData.key)
+                                    } else {
+                                        clipsModel.releaseDelegate(itemData.key)
+                                    }
+                                }
 
                                 navigationName: Boolean(itemData) ? itemData.key.itemId() : ""
                                 navigationPanel: root.navigationPanel
@@ -526,6 +627,12 @@ TrackItemsContainer {
                                 }
 
                                 onHeaderHoveredChanged: function () {
+                                    //! NOTE The mouse can come to be over the header without moving, when the clip
+                                    //! is created under it, so the hovered clip isn't only told on mouse moves
+                                    loader.itemHeaderHovered = headerHovered
+                                    if (headerHovered) {
+                                        root.setHoveredItemKey(itemData.key)
+                                    }
                                     root.itemHeaderHoveredChanged(headerHovered)
                                 }
 
