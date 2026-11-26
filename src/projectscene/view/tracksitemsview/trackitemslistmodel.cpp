@@ -104,6 +104,7 @@ void TrackItemsListModel::updateItemsMetrics()
         updateItemMetrics(m_items[i]);
     }
     updateDragGhostsMetrics();
+    onItemsMetricsUpdated();
 }
 
 void TrackItemsListModel::setSelectedItems(const QList<ViewTrackItem*>& items)

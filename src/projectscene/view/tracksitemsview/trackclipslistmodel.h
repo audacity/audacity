@@ -116,6 +116,9 @@ private:
     void onSelectionTimeChanged();
     void onMoveActiveChanged() override;
     void updateItemMetrics(ViewTrackItem* item) override;
+    void onItemsMetricsUpdated() override;
+    void updateNeighborDistances();
+    void unloadClipsOutOfView();
     ViewTrackItem* createDragGhost(const trackedit::TrackItemKey& key) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
     trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
@@ -144,5 +147,6 @@ private:
     std::set<trackedit::ClipId> m_heldDelegates;
     trackedit::ClipId m_hoveredClip = -1;
     QTimer m_delegateReleaseTimer;
+    QTimer m_unloadTimer;
 };
 }

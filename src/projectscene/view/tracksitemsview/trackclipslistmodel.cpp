@@ -39,6 +39,10 @@ TrackClipsListModel::TrackClipsListModel(QObject* parent)
     m_delegateReleaseTimer.setSingleShot(true);
     m_delegateReleaseTimer.setInterval(500);
     connect(&m_delegateReleaseTimer, &QTimer::timeout, this, &TrackClipsListModel::releaseUnusedDelegates);
+
+    m_unloadTimer.setSingleShot(true);
+    m_unloadTimer.setInterval(1000);
+    connect(&m_unloadTimer, &QTimer::timeout, this, &TrackClipsListModel::unloadClipsOutOfView);
 }
 
 void TrackClipsListModel::onSelectionTimeChanged()
@@ -139,6 +143,7 @@ void TrackClipsListModel::onReload()
                 updateItemMetrics(item);
             }
         }
+        updateNeighborDistances();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     // When recording ends, the playhead pin disengages: recompute so the clip
@@ -454,9 +459,11 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         item->setLeftVisibleMargin(0);
         item->setRightVisibleMargin(0);
         item->setSelectionPixels(0.0, 0.0);
+        item->setInView(false);
         return;
     }
 
+    item->setInView(true);
     item->setTime(time);
     // Integer edges keep the clip's rounded-corner layer texture aligned to the
     // screen pixel grid: at fractional positions the texture is resampled with
@@ -479,6 +486,30 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     item->setSelectionPixels(start, end - start);
     item->setLeftVisibleMargin(std::max(m_context->frameStartTime() - time.itemStartTime, 0.0) * m_context->zoom());
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
+}
+
+void TrackClipsListModel::onItemsMetricsUpdated()
+{
+    updateNeighborDistances();
+    m_unloadTimer.start();
+}
+
+void TrackClipsListModel::updateNeighborDistances()
+{
+    for (int i = 0; i < m_items.size(); ++i) {
+        auto* item = static_cast<TrackClipItem*>(m_items[i]);
+        const ViewTrackItem* left = i > 0 ? m_items[i - 1] : nullptr;
+        const ViewTrackItem* right = i + 1 < m_items.size() ? m_items[i + 1] : nullptr;
+        item->setNeighborDistances(left ? item->x() - (left->x() + left->width()) : -1.0,
+                                   right ? right->x() - (item->x() + item->width()) : -1.0);
+    }
+}
+
+void TrackClipsListModel::unloadClipsOutOfView()
+{
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        static_cast<TrackClipItem*>(item)->unload();
+    }
 }
 
 ViewTrackItem* TrackClipsListModel::createDragGhost(const trackedit::TrackItemKey& key)

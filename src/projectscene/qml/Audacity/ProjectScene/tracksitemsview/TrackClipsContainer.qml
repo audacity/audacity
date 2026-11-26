@@ -363,7 +363,7 @@ TrackItemsContainer {
                         visible: !itemData.dragged && (inView || itemData.focused)
                         enabled: !itemData.dragged && !itemData.isDragGhost
 
-                        readonly property bool inView: (itemData.x + itemData.width) >= -clipsModel.cacheBufferPx && itemData.x <= clipsContainer.width + clipsModel.cacheBufferPx
+                        readonly property bool inView: itemData.inView
 
                         //! NOTE: Only the clips interacted with get a full ClipItem, the others a light view
                         readonly property bool fullViewWanted: !root.lightViewPossible || itemData.delegateRequested || itemData.needsFullView || itemData.selected || itemData.focused || itemData.dragged || itemData.isDragGhost || itemData.titleEditRequested || itemData.movesWithSelection || (clipsModel.keyboardNavigation && Boolean(root.navigationPanel) && root.navigationPanel.active)
@@ -382,9 +382,8 @@ TrackItemsContainer {
                         onStatusChanged: Qt.callLater(updateFullView)
                         Component.onCompleted: fullView = fullViewWanted
 
-                        //! NOTE: Light views outside the view and its buffer are unloaded, as they are cheap to recreate,
-                        //! e.g. when resizing the view; full ClipItems are kept
-                        active: inView || fullView
+                        //! NOTE: Light views that stay outside the view and its buffer are unloaded; full ClipItems are kept
+                        active: itemData.loaded || fullView
                         asynchronous: !inView
                         sourceComponent: fullView ? clipComp : clipLightComp
 
@@ -570,20 +569,8 @@ TrackItemsContainer {
                                     }
                                 }
 
-                                distanceToLeftNeighbor: {
-                                    let leftNeighbor = clipsModel.prev(itemData.key)
-                                    if (!leftNeighbor) {
-                                        return -1
-                                    }
-                                    return itemData.x - (leftNeighbor.x + leftNeighbor.width)
-                                }
-                                distanceToRightNeighbor: {
-                                    let rightNeighbor = clipsModel.next(itemData.key)
-                                    if (!rightNeighbor) {
-                                        return -1
-                                    }
-                                    return rightNeighbor.x - (itemData.x + itemData.width)
-                                }
+                                distanceToLeftNeighbor: itemData.distanceToLeftNeighbor
+                                distanceToRightNeighbor: itemData.distanceToRightNeighbor
 
                                 onIsNearSampleChanged: function () {
                                     root.isNearSample = clipsContainer.checkIfAnyClip(function (clipItem) {

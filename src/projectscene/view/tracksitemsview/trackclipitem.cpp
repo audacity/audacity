@@ -116,3 +116,35 @@ void TrackClipItem::setNeedsFullView(bool needsFullView)
     m_needsFullView = needsFullView;
     emit needsFullViewChanged();
 }
+
+void TrackClipItem::setInView(bool inView)
+{
+    if (inView && !m_loaded) {
+        m_loaded = true;
+        emit loadedChanged();
+    }
+    if (m_inView == inView) {
+        return;
+    }
+    m_inView = inView;
+    emit inViewChanged();
+}
+
+void TrackClipItem::unload()
+{
+    if (m_inView || !m_loaded) {
+        return;
+    }
+    m_loaded = false;
+    emit loadedChanged();
+}
+
+void TrackClipItem::setNeighborDistances(double left, double right)
+{
+    if (muse::RealIsEqual(m_distanceToLeftNeighbor, left) && muse::RealIsEqual(m_distanceToRightNeighbor, right)) {
+        return;
+    }
+    m_distanceToLeftNeighbor = left;
+    m_distanceToRightNeighbor = right;
+    emit neighborDistancesChanged();
+}
