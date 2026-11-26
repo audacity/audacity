@@ -34,9 +34,10 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
     bool bGoodResult = true;
     int ntrack = 0;
 
+    Generator* self = this;
     outputs.Get().Any().VisitWhile(bGoodResult,
-                                   [&, this](auto&& fallthrough){
-        return [&, this](WaveTrack& track) {
+                                   [&, mT0 = mT0, mT1 = mT1, preserve = mPreserveUnderlyingClipBoundaries, self](auto&& fallthrough){
+        return [&, self](WaveTrack& track) {
             if (!track.GetSelected()) {
                 return fallthrough();
             }
@@ -58,14 +59,14 @@ bool Generator::Process(EffectInstance&, EffectSettings& settings)
                 // Create a temporary track
                 auto copy = WaveTrackUtilities::EmptyCopy(track, WaveTrackUtilities::RealtimeEffectsCopy::Ref);
                 // Fill with data
-                if (!GenerateTrack(settings, *copy)) {
+                if (!self->GenerateTrack(settings, *copy)) {
                     bGoodResult = false;
                 }
                 if (bGoodResult) {
                     copy->Flush();
                     PasteTimeWarper warper { mT1, mT0 + duration };
                     constexpr auto merge = true;
-                    track.ClearAndPaste(mT0, mT1, *copy, mPreserveUnderlyingClipBoundaries, merge, &warper);
+                    track.ClearAndPaste(mT0, mT1, *copy, preserve, merge, &warper);
                 } else {
                     return;
                 }
