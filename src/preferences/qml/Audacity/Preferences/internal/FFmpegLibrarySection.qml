@@ -63,7 +63,7 @@ BaseSection {
                 navigation.order: 1
 
                 onClicked: {
-                    api.launcher.openUrl("https://support.audacityteam.org/basics/installing-ffmpeg")
+                    api.launcher.openUrl("https://www.audacityteam.org/manual/installing-ffmpeg/")
                 }
             }
 
