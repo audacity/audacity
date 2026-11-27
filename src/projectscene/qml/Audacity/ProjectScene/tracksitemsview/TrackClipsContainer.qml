@@ -388,14 +388,18 @@ TrackItemsContainer {
                         asynchronous: !inView
                         sourceComponent: fullView ? clipComp : clipLightComp
 
+                        z: clipsContainer.isFullClipItem(item) && item.raised ? 1 : 0
+
                         property bool hadFullClipItem: false
                         property bool itemHeaderHovered: false
                         onItemChanged: {
                             const wasFull = hadFullClipItem
                             hadFullClipItem = clipsContainer.isFullClipItem(item)
-                            //! NOTE Created for the mouse being over the clip
-                            if (!wasFull && hadFullClipItem && itemData.delegateRequested) {
-                                item.assumeHovered()
+                            if (!wasFull && hadFullClipItem) {
+                                //! NOTE Created for the mouse being over the clip
+                                if (itemData.delegateRequested) {
+                                    item.assumeHovered()
+                                }
                             }
                             if (wasFull && !hadFullClipItem) {
                                 clipsContainer.refreshClipStates(itemHeaderHovered)

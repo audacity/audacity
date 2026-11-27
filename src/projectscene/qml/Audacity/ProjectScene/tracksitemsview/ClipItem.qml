@@ -181,9 +181,10 @@ Rectangle {
     border.color: ui.theme.extra["black_color"]
     opacity: root.moveActive && (clipSelected || clipMovesWithSelection) ? 0.5 : isAudible ? 1.0 : 0.3
 
-    onMoveActiveChanged: {
-        root.parent.z = moveActive && (clipSelected || clipMovesWithSelection) ? 1 : 0
-    }
+    //! Whether the clip, with its handles, focus border and cursor, shows on top of the clips nearby.
+    //! Told from what the clip is in, not set when that changes: the clip can be created already selected,
+    //! and one change must not take back what another one still asks for.
+    readonly property bool raised: clipSelected || (moveActive && clipMovesWithSelection) || (Boolean(navigation) && navigation.active) || leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons !== 0 || rightTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.pressedButtons !== 0
 
     property int borderWidth: 1
     property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered || prv.assumedHover
@@ -228,8 +229,6 @@ Rectangle {
             accessible.name: qsTrc("projectscene", "Clip: %1").arg(root.title)
 
             onActiveChanged: function (active) {
-                // Make sure the focus navigation border is visible on top of other clips
-                root.parent.z = active ? 1 : 0
                 if (active) {
                     root.forceActiveFocus()
                 }
@@ -250,7 +249,7 @@ Rectangle {
         border.width: root.enableContrastBorder ? 2 : 1
         border.color: ui.theme.extra["black_color"]
         radius: root.enableContrastBorder ? 0 : 4
-        z: root.parent.z + 1
+        z: root.raised ? 2 : 1
     }
 
     NavigationFocusBorder {
@@ -626,14 +625,8 @@ Rectangle {
 
         cursorShape: Qt.BlankCursor
 
-        // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
             root.leftTrimContainsMouse = containsMouse
-            if (containsMouse || pressedButtons) {
-                root.parent.z = 1
-            } else {
-                root.parent.z = 0
-            }
         }
 
         onPressed: function (e) {
@@ -686,14 +679,8 @@ Rectangle {
 
         cursorShape: Qt.BlankCursor
 
-        // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
             root.rightTrimContainsMouse = containsMouse
-            if (containsMouse || pressedButtons) {
-                root.parent.z = 1
-            } else {
-                root.parent.z = 0
-            }
         }
 
         onPressed: function (e) {
@@ -1380,13 +1367,9 @@ Rectangle {
         }
     }
 
-    // make sure clip and its handles are visible on top of nearby clips
     onClipSelectedChanged: {
         if (clipSelected) {
             prv.createInteractivePartsIfNeeded(true)
-            root.parent.z = 1
-        } else {
-            root.parent.z = 0
         }
     }
 
