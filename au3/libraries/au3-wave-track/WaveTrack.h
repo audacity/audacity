@@ -414,6 +414,10 @@ public:
     void Clear(double t0, double t1, bool moveClips) override;
     void Paste(double t0, const Track& src, bool moveClips) override;
     using Track::Paste; // Get the non-virtual overload too
+    /*
+     @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
+     */
+    void PasteWaveTrack(double t0, const WaveTrack& other, bool merge, bool moveClips);
 
     /*!
      @brief Replaces t0 to t1 by silence and then pastes src at t0, eating into clips in the way.
@@ -825,10 +829,6 @@ private:
     void DoSetPan(float value);
     void DoSetVolume(float value);
 
-    /*
-     @pre `other.NChannels() == 1 || other.NChannels() == NChannels()`
-     */
-    void PasteWaveTrack(double t0, const WaveTrack& other, bool merge, bool moveClips);
     /*
      * @copybrief ClearAndPasteAtSameTempo
      * @pre Preconditions of `PasteWaveTrack`

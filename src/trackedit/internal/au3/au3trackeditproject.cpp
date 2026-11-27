@@ -1,6 +1,7 @@
 #include "au3trackeditproject.h"
 
 #include <algorithm>
+#include <set>
 
 #include "au3-label-track/LabelTrack.h"
 #include "au3-track/Track.h"
@@ -28,7 +29,9 @@ struct Au3TrackeditProject::Au3Impl
 
     // events
     Observer::Subscription tracksSubc;
-    bool trackReplacing = false;
+    //! Tracks being replaced: one is removed, then (asynchronously) its replacement is added.
+    //! Several can be replaced before the first replacement is added (e.g. by an effect).
+    std::set<TrackId> replacingTracks;
     Observer::Subscription projectTimeSignatureSubscription;
 };
 
@@ -204,16 +207,15 @@ void Au3TrackeditProject::onTrackListEvent(const TrackListEvent& e)
     switch (e.mType) {
     case TrackListEvent::DELETION: {
         if (e.mExtra == 1) {
-            m_impl->trackReplacing = true;
+            m_impl->replacingTracks.insert(trackId);
         } else {
             updateHasAudioContent();
             updateHasLabels();
         }
     } break;
     case TrackListEvent::ADDITION: {
-        if (m_impl->trackReplacing) {
+        if (m_impl->replacingTracks.erase(trackId) != 0) {
             onTrackDataChanged(trackId);
-            m_impl->trackReplacing = false;
         }
         updateHasAudioContent();
         updateHasLabels();

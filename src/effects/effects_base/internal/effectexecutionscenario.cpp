@@ -227,7 +227,10 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     const spectrogram::FrequencySelection frequencySelection = frequencySelectionController()->frequencySelection();
 
     const trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
-    const auto numSelectedClips = selectedClips.size();
+    auto numSelectedClips = selectedClips.size();
+    std::vector<int64_t> clipIdsInTimeRange;
+    std::vector<int64_t> labelIdsInTimeRange;
+    std::optional<std::pair<secs_t, secs_t> > clipSpan;
 
     {
         //! NOTE Step 1.2 - get effect
@@ -236,11 +239,44 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             return make_ret(Err::EffectNotFound);
         }
 
+        //! NOTE Step 1.3 - process a clip and label selection as one time range, if the effect wants that.
+        //! The selection itself is left as it is: the clips' and labels' tracks are already selected.
+        const trackedit::LabelKeyList selectedLabels = selectionController()->selectedLabels();
+        if ((numSelectedClips != 0 || !selectedLabels.empty()) && effect->processClipSelectionAsTimeRange()) {
+            std::optional<secs_t> start;
+            std::optional<secs_t> end;
+            const auto extend = [&](std::optional<secs_t> itemStart, std::optional<secs_t> itemEnd) {
+                if (itemStart && itemEnd) {
+                    start = start ? std::min(*start, *itemStart) : *itemStart;
+                    end = end ? std::max(*end, *itemEnd) : *itemEnd;
+                }
+            };
+            if (numSelectedClips != 0) {
+                extend(selectionController()->leftMostSelectedClipStartTime(), selectionController()->rightMostSelectedClipEndTime());
+            }
+            if (!selectedLabels.empty()) {
+                extend(selectionController()->leftMostSelectedLabelStartTime(), selectionController()->rightMostSelectedLabelEndTime());
+            }
+            if (start && end && *end > *start) {
+                clipSpan = { *start, *end };
+                for (const trackedit::ClipKey& clip : selectedClips) {
+                    clipIdsInTimeRange.push_back(clip.itemId);
+                }
+                for (const trackedit::LabelKey& label : selectedLabels) {
+                    labelIdsInTimeRange.push_back(label.itemId);
+                }
+                numSelectedClips = 0;
+            }
+        }
+
         if (numSelectedClips > 1 && !effectsProvider()->paramsAreInputAgnostic(effectId)) {
             return make_ret(Err::EffectMultipleClipSelectionNotSupported);
         }
 
-        if (numSelectedClips != 0) {
+        if (clipSpan) {
+            t0 = clipSpan->first;
+            t1 = clipSpan->second;
+        } else if (numSelectedClips != 0) {
             // If multiple clips are selected, we have checked that the effect supports it, in which case these global time boundaries shouldn't be relevant.
             // If this is just a single-clip selection, though, that will just be start and end times of the selected clip.
             t0 = selectionController()->selectedClipStartTime().value_or(0.0);
@@ -412,6 +448,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         effect->mProjectRate = tp.projectRate;
         effect->mT0 = tp.t0;
         effect->mT1 = tp.t1;
+        effect->mSelectedClipIds = clipIdsInTimeRange;
+        effect->mSelectedLabelIds = labelIdsInTimeRange;
 
         effect->SetTracks(&au3::Au3TrackList::Get(project));
         // Update track/group counts
@@ -481,6 +519,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! NOTE Step 7 - cleanup
     //! ============================================================================
 
+    effect->mSelectedClipIds.clear();
+    effect->mSelectedLabelIds.clear();
     // Don't hold a dangling pointer when done
     effect->SetTracks(nullptr);
     effect->mPresetNames.clear();
@@ -505,6 +545,15 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             const auto shortDesc = effectsProvider()->effectName(effectId.toStdString());
             const auto longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String { shortDesc.c_str() }).toStdString();
             projectHistory()->pushHistoryState(longDesc, shortDesc);
+
+            //! NOTE Like Au3, make the time selection cover the processed range
+            //! if the effect changed its end (e.g. Repeat, Paulstretch).
+            //! Only after the push: a complete selection change saves into the current history state,
+            //! which before the push is the state from before the effect.
+            if (numSelectedClips == 0 && !clipSpan && effect->GetType() != EffectTypeGenerate
+                && effect->mT1 > effect->mT0 && !muse::RealIsEqual(effect->mT1, tp.t1)) {
+                selectionController()->setDataSelectedEndTime(effect->mT1, true);
+            }
         }
 
         //! NOTE Step 8.2 - remember a successful effect
@@ -554,6 +603,7 @@ muse::Ret EffectExecutionScenario::performGenerator(au3::Au3Project& project, Ef
 
     if (ret) {
         const auto clipsAfter = getAllClips(*prj);
+
         const std::vector<const au::trackedit::Clip*> newClips = trackedit::utils::clipSetDifference(clipsAfter, clipsBefore);
         if (!newClips.empty()) {
             for (const auto* clip : newClips) {
@@ -916,12 +966,30 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         const auto pProject = effect.mTracks->GetOwner();
         newCtx.tracks = au::au3::Au3TrackList::Create(pProject);
 
+        // If the effect processes a clip and label selection as one time range (e.g. Repeat), preview only the selected clips
+        std::shared_ptr<au::au3::Au3TrackList> selectedClipsOnly;
+        if (!(effect.mSelectedClipIds.empty() && effect.mSelectedLabelIds.empty())) {
+            selectedClipsOnly = au::au3::Au3TrackList::Create(nullptr);
+            for (const WaveTrack* src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
+                // A backup duplicate keeps the clip IDs
+                const auto copy = std::static_pointer_cast<WaveTrack>(src->Duplicate(Track::DuplicateOptions {}.Backup()));
+                for (const auto& clip : std::vector(copy->Intervals().begin(), copy->Intervals().end())) {
+                    if (std::find(effect.mSelectedClipIds.begin(), effect.mSelectedClipIds.end(), clip->GetId())
+                        == effect.mSelectedClipIds.end()) {
+                        copy->RemoveInterval(clip);
+                    }
+                }
+                selectedClipsOnly->Add(copy);
+            }
+        }
+        const au::au3::Au3TrackList& sourceTracks = selectedClipsOnly ? *selectedClipsOnly : *originCtx.tracks;
+
         // Linear Effect preview optimised by pre-mixing to one track.
         // Generators need to generate per track.
         const bool isLinearEffect = effect.IsLinearEffect();
         if (isLinearEffect && !isGenerator) {
             auto newTrack = MixAndRender(
-                originCtx.tracks->Selected<const au::au3::Au3WaveTrack>(),
+                sourceTracks.Selected<const au::au3::Au3WaveTrack>(),
                 Mixer::WarpOptions { pProject },
                 wxString {}, // Don't care about the name of the temporary tracks
                 effect.mFactory, effect.mProjectRate, floatSample, effect.mT0, newCtx.t1);
@@ -937,7 +1005,7 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
             std::static_pointer_cast<WaveTrack>(newTrack)->SetMute(false);
         } else {
             if (effect.mNumTracks > 0) {
-                for (const WaveTrack* src : originCtx.tracks->Selected<const au::au3::Au3WaveTrack>()) {
+                for (const WaveTrack* src : sourceTracks.Selected<const au::au3::Au3WaveTrack>()) {
                     const auto dest = std::static_pointer_cast<WaveTrack>(src->Copy(effect.mT0, newCtx.t1));
                     dest->ShiftBy(0, effect.mT0); // Not MoveTo: it could be that the first `Copy`d clip starts later than effect.mT0.
                     dest->SetSelected(true);

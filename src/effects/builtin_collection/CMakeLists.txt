@@ -172,6 +172,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/reverse/reverseeffect.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/repeat/repeateffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/repeat/repeateffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/repeat/repeatviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/repeat/repeatviewmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/repair/repaireffect.h
 
