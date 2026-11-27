@@ -79,6 +79,10 @@ void SessionsManager::restore(const io::paths_t& projects)
 void SessionsManager::discard(const io::paths_t& projects)
 {
     for (const io::path_t& path : projects) {
+        // Do not touch any projects that are already opened
+        if (multiwindowsProvider()->isProjectAlreadyOpened(path)) {
+            continue;
+        }
         removeUnsavedChanges(path);
         removeProjectFromSession(path);
     }
