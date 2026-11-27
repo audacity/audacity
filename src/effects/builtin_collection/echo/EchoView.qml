@@ -26,7 +26,6 @@ BuiltinEffectBase {
     }
 
     builtinEffectModel: EchoViewModelFactory.createModel(root, root.instanceId)
-    property alias echo: root.builtinEffectModel
     property NavigationPanel echoNavigationPanel: NavigationPanel {
         name: "EchoControls"
         enabled: root.enabled && root.visible
@@ -41,65 +40,47 @@ BuiltinEffectBase {
         width: parent.width
         spacing: prv.columnSpacing
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.preferredWidth: 1
-            spacing: prv.labelSpacing
+        Repeater {
+            model: ["Delay", "Decay"]
 
-            StyledTextLabel {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignLeft
-                text: echo.delayLabel
-            }
+            delegate: ColumnLayout {
+                id: setting
 
-            IncrementalPropertyControl {
-                id: delayControl
+                required property string modelData
+                required property int index
+
+                readonly property var settingModel: EchoSettingModelFactory.createModel(root, root.instanceId, modelData)
 
                 Layout.fillWidth: true
+                Layout.preferredWidth: 1
+                spacing: prv.labelSpacing
 
-                navigation.panel: root.echoNavigationPanel
-                navigation.order: 0
-
-                currentValue: echo.delay
-                measureUnitsSymbol: echo.delayUnitSymbol
-                minValue: echo.delayMin
-                maxValue: echo.delayMax
-                decimals: echo.delayDecimals
-                step: echo.delayStep
-
-                onValueEdited: function (newValue) {
-                    echo.delay = newValue
+                Component.onCompleted: {
+                    settingModel.init()
                 }
-            }
-        }
 
-        ColumnLayout {
-            Layout.fillWidth: true
-            Layout.preferredWidth: 1
-            spacing: prv.labelSpacing
+                StyledTextLabel {
+                    Layout.fillWidth: true
+                    horizontalAlignment: Text.AlignLeft
+                    text: setting.settingModel.title
+                }
 
-            StyledTextLabel {
-                Layout.fillWidth: true
-                horizontalAlignment: Text.AlignLeft
-                text: echo.decayLabel
-            }
+                IncrementalPropertyControl {
+                    Layout.fillWidth: true
 
-            IncrementalPropertyControl {
-                id: decayControl
+                    navigation.panel: root.echoNavigationPanel
+                    navigation.order: setting.index
 
-                Layout.fillWidth: true
+                    currentValue: setting.settingModel.value
+                    measureUnitsSymbol: setting.settingModel.unit
+                    minValue: setting.settingModel.min
+                    maxValue: setting.settingModel.max
+                    decimals: setting.settingModel.decimals
+                    step: setting.settingModel.step
 
-                navigation.panel: root.echoNavigationPanel
-                navigation.order: delayControl.navigation.order + 1
-
-                currentValue: echo.decay
-                minValue: echo.decayMin
-                maxValue: echo.decayMax
-                decimals: echo.decayDecimals
-                step: echo.decayStep
-
-                onValueEdited: function (newValue) {
-                    echo.decay = newValue
+                    onValueEdited: function (newValue) {
+                        setting.settingModel.value = newValue
+                    }
                 }
             }
         }
