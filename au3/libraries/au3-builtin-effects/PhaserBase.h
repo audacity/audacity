@@ -140,7 +140,7 @@ protected:
         EffectPhaserSettings::stagesDefault,
         2,
         NUM_STAGES,
-        1
+        2
     };
 
     static constexpr EffectParameter DryWet {
@@ -157,7 +157,8 @@ protected:
                                             EffectPhaserSettings::freqDefault,
                                             0.001,
                                             4.0,
-                                            10.0 };
+                                            0.001,
+                                            3 };
 
     static constexpr EffectParameter Phase { &EffectPhaserSettings::mPhase,
                                              L"Phase",
@@ -188,6 +189,7 @@ protected:
         EffectPhaserSettings::outGainDefault,
         -30.0,
         30.0,
+        0.1,
         1
     };
 };

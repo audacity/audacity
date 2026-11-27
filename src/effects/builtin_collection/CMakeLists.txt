@@ -23,6 +23,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/common/measureunits.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/settingaccess.h
 
     ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.h
@@ -103,6 +104,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbsettingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbviewmodel.h
 
@@ -110,6 +113,27 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/basstreble/basstrebleeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/basstreble/basstrebleviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/basstreble/basstrebleviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echoeffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echoeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echosettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echosettingmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echoviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/echo/echoviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phasereffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phasereffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phasersettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phasersettingmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phaserviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/phaser/phaserviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwaheffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwaheffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahsettingmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahviewmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.h
@@ -212,3 +236,7 @@ set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_EFFECTS_TESTS)
+    add_subdirectory(tests)
+endif()

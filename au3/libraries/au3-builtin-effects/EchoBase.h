@@ -93,15 +93,17 @@ protected:
     static constexpr EffectParameter Delay { &EchoSettings::delay,
                                              L"Delay",
                                              EchoSettings::delayDefault,
-                                             0.001f,
+                                             0.001,
                                              FLT_MAX,
-                                             1.0f };
+                                             0.1,
+                                             3 };
     static constexpr EffectParameter Decay { &EchoSettings::decay,
                                              L"Decay",
                                              EchoSettings::decayDefault,
                                              0.0f,
                                              FLT_MAX,
-                                             1.0f };
+                                             0.1,
+                                             3 };
 
 #endif
 };

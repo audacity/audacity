@@ -13,6 +13,9 @@ Item {
     property bool knobFirst: true // Only relevant is `isVertical` is true
     property int radius: 16
 
+    implicitWidth: knobLoader.implicitWidth
+    implicitHeight: knobLoader.implicitHeight
+
     Component.onCompleted: {
         root.model.init()
     }
@@ -20,10 +23,8 @@ Item {
     Loader {
         id: knobLoader
 
-        onLoaded: {
-            root.width = knobLoader.item.width
-            root.height = knobLoader.item.height
-        }
+        anchors.fill: parent
+
         sourceComponent: isVertical ? verticalKnob : horizontalKnob
     }
 
@@ -65,8 +66,8 @@ Item {
             radius: root.radius
             defaultValue: root.model.defaultValue
             parameter: {
-                "title": root.title,
-                "unit": root.unit,
+                "title": root.model.title,
+                "unit": root.model.unit,
                 "min": root.model.min,
                 "max": root.model.max,
                 "value": root.model.value,
