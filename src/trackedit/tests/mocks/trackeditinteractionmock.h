@@ -74,6 +74,15 @@ public:
     MOCK_METHOD(bool, newMonoTrack, (), (override));
     MOCK_METHOD(bool, newStereoTrack, (), (override));
     MOCK_METHOD(muse::RetVal<TrackId>, newLabelTrack, (const muse::String&), (override));
+    MOCK_METHOD(bool, newBusTrack, (), (override));
+    MOCK_METHOD(TrackId, trackOutput, (TrackId), (const, override));
+    MOCK_METHOD(bool, setTrackOutput, (TrackId, TrackId), (override));
+    MOCK_METHOD(bool, canOutputTo, (TrackId, TrackId), (const, override));
+    MOCK_METHOD(TrackSendList, trackSends, (TrackId), (const, override));
+    MOCK_METHOD(bool, addTrackSend, (TrackId, TrackId), (override));
+    MOCK_METHOD(bool, removeTrackSend, (TrackId, TrackId), (override));
+    MOCK_METHOD(bool, setTrackSendLevel, (TrackId, TrackId, volume_dbfs_t, bool), (override));
+    MOCK_METHOD(bool, setTrackSendPreFader, (TrackId, TrackId, bool), (override));
 
     MOCK_METHOD(bool, deleteTracks, (const TrackIdList&), (override));
     MOCK_METHOD(bool, duplicateTracks, (const TrackIdList&), (override));

@@ -1,14 +1,39 @@
 #include "framework/global/log.h"
 #include "global/types/translatablestring.h"
 
+#include <optional>
+#include <type_traits>
+
 #include "au3wrap/internal/domaccessor.h"
 
+#include "au3-bus-track/BusTrack.h"
 #include "au3-wave-track/WaveTrack.h"
 
 #include "au3trackplaybackcontrol.h"
 
 using namespace au::playback;
 using namespace au::au3;
+
+namespace {
+//! A track with a volume and a pan: an audio track or a bus
+template<typename F>
+std::optional<std::invoke_result_t<F, BusTrack&> > withMixable(Au3Project& project, long trackId, F f)
+{
+    Au3Track* track = DomAccessor::findTrack(project, Au3TrackId(trackId));
+    if (auto wave = dynamic_cast<Au3WaveTrack*>(track)) {
+        return f(*wave);
+    }
+    if (auto bus = dynamic_cast<BusTrack*>(track)) {
+        return f(*bus);
+    }
+    return std::nullopt;
+}
+
+PlayableTrack* findPlayableTrack(Au3Project& project, long trackId)
+{
+    return dynamic_cast<PlayableTrack*>(DomAccessor::findTrack(project, Au3TrackId(trackId)));
+}
+}
 
 Au3Project& Au3TrackPlaybackControl::projectRef() const
 {
@@ -18,22 +43,23 @@ Au3Project& Au3TrackPlaybackControl::projectRef() const
 
 volume_dbfs_t Au3TrackPlaybackControl::volume(long trackId) const
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
+    const auto volume = withMixable(projectRef(), trackId, [](auto& track) { return track.GetVolume(); });
+    IF_ASSERT_FAILED(volume) {
         return 0.0;
     }
 
-    return LINEAR_TO_DB(track->GetVolume());
+    return LINEAR_TO_DB(*volume);
 }
 
 void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol, bool completed)
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
+    const auto set = withMixable(projectRef(), trackId, [vol](auto& track) {
+        track.SetVolume(vol > -60 ? DB_TO_LINEAR(vol) : 0);
+        return true;
+    });
+    IF_ASSERT_FAILED(set) {
         return;
     }
-
-    track->SetVolume(vol > -60 ? DB_TO_LINEAR(vol) : 0);
 
     if (completed) {
         projectHistory()->pushHistoryState(muse::trc("playback", "Moved volume slider"),
@@ -45,22 +71,23 @@ void Au3TrackPlaybackControl::setVolume(long trackId, volume_dbfs_t vol, bool co
 
 pan_t Au3TrackPlaybackControl::pan(long trackId) const
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
+    const auto pan = withMixable(projectRef(), trackId, [](auto& track) { return track.GetPan(); });
+    IF_ASSERT_FAILED(pan) {
         return 0.0;
     }
 
-    return track->GetPan();
+    return *pan;
 }
 
 void Au3TrackPlaybackControl::setPan(long trackId, au::audio::pan_t pan, bool completed)
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
+    const auto set = withMixable(projectRef(), trackId, [pan](auto& track) {
+        track.SetPan(pan);
+        return true;
+    });
+    IF_ASSERT_FAILED(set) {
         return;
     }
-
-    track->SetPan(pan);
 
     if (completed) {
         projectHistory()->pushHistoryState(muse::trc("playback", "Moved pan dial"),
@@ -72,7 +99,7 @@ void Au3TrackPlaybackControl::setPan(long trackId, au::audio::pan_t pan, bool co
 
 bool Au3TrackPlaybackControl::setMuteOrSolo(long trackId, bool value, MuteOrSolo which, bool exclusive)
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    PlayableTrack* track = findPlayableTrack(projectRef(), trackId);
     if (!track) {
         return false;
     }
@@ -115,7 +142,7 @@ void Au3TrackPlaybackControl::setSolo(long trackId, bool solo, bool exclusive)
 
 bool Au3TrackPlaybackControl::solo(long trackId) const
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    PlayableTrack* track = findPlayableTrack(projectRef(), trackId);
     if (!track) {
         return false;
     }
@@ -147,7 +174,7 @@ void Au3TrackPlaybackControl::setMuted(const trackedit::TrackIdList& trackIds, b
 
 bool Au3TrackPlaybackControl::muted(long trackId) const
 {
-    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    PlayableTrack* track = findPlayableTrack(projectRef(), trackId);
     if (!track) {
         return false;
     }

@@ -55,6 +55,7 @@ set( LIBRARIES
    au3-audio-graph
    au3-tags
    au3-realtime-effects
+   au3-recording
    au3-audio-io
    au3-wave-track
    au3-wave-track-settings
@@ -88,6 +89,7 @@ set( LIBRARIES
 #   au3-audacity-application-logic # not yet used in AU4
    au3-builtin-effects
    au3-label-track
+   au3-bus-track
    au3-wave-track-fft
 )
 

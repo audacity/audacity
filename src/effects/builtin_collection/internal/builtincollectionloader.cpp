@@ -45,6 +45,8 @@
 #include "reverb/reverbviewmodel.h"
 #include "basstreble/basstrebleeffect.h"
 #include "basstreble/basstrebleviewmodel.h"
+#include "cpuload/cpuloadeffect.h"
+#include "cpuload/cpuloadviewmodel.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
@@ -102,6 +104,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
     static BuiltinEffectsModule::Registration< BassTrebleEffect > regBassTreble;
+    static BuiltinEffectsModule::Registration< CpuLoadEffect > regCpuLoad;
     static BuiltinEffectsModule::Registration< PaulstretchEffect > regPaulstretch;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< SlidingStretchEffect > regSlidingStretch;
@@ -168,6 +171,9 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(BassTrebleViewModelFactory);
     regView(BassTrebleEffect::Symbol, u"qrc:/basstreble/BassTrebleView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(CpuLoadViewModelFactory);
+    regView(CpuLoadEffect::Symbol, u"qrc:/cpuload/CpuLoadView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");

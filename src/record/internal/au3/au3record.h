@@ -25,7 +25,6 @@
 #include "../../irecordconfiguration.h"
 
 struct TransportSequences;
-struct AudioIOStartTransportOptions;
 
 namespace au::record {
 class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Contextable

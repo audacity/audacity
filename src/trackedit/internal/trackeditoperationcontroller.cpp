@@ -802,6 +802,79 @@ muse::RetVal<TrackId> TrackeditOperationController::newLabelTrack(const muse::St
     return track;
 }
 
+bool TrackeditOperationController::newBusTrack()
+{
+    if (tracksInteraction()->newBusTrack()) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Created new bus"), muse::trc("trackedit", "New bus"));
+        return true;
+    }
+    return false;
+}
+
+TrackId TrackeditOperationController::trackOutput(TrackId trackId) const
+{
+    return tracksInteraction()->trackOutput(trackId);
+}
+
+bool TrackeditOperationController::setTrackOutput(TrackId trackId, TrackId busId)
+{
+    if (tracksInteraction()->setTrackOutput(trackId, busId)) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed the output of a track"), muse::trc("trackedit", "Track output"));
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::canOutputTo(TrackId trackId, TrackId busId) const
+{
+    return tracksInteraction()->canOutputTo(trackId, busId);
+}
+
+TrackSendList TrackeditOperationController::trackSends(TrackId trackId) const
+{
+    return tracksInteraction()->trackSends(trackId);
+}
+
+bool TrackeditOperationController::addTrackSend(TrackId trackId, TrackId busId)
+{
+    if (tracksInteraction()->addTrackSend(trackId, busId)) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Added a send"), muse::trc("trackedit", "Add send"));
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::removeTrackSend(TrackId trackId, TrackId busId)
+{
+    if (tracksInteraction()->removeTrackSend(trackId, busId)) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Removed a send"), muse::trc("trackedit", "Remove send"));
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::setTrackSendLevel(TrackId trackId, TrackId busId, volume_dbfs_t level, bool completed)
+{
+    if (!tracksInteraction()->setTrackSendLevel(trackId, busId, level, completed)) {
+        return false;
+    }
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Moved send level slider"), muse::trc("trackedit", "Send level"),
+                                           UndoPushType::CONSOLIDATE);
+    }
+    return true;
+}
+
+bool TrackeditOperationController::setTrackSendPreFader(TrackId trackId, TrackId busId, bool preFader)
+{
+    if (tracksInteraction()->setTrackSendPreFader(trackId, busId, preFader)) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed a send before or after the fader"),
+                                           muse::trc("trackedit", "Send pre/post fader"));
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)
 {
     if (tracksInteraction()->deleteTracks(trackIds)) {

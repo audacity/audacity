@@ -311,6 +311,53 @@ muse::RetVal<TrackId> TrackeditInteraction::newLabelTrack(const muse::String& ti
     return withPlaybackStopRetVal(&ITrackeditInteraction::newLabelTrack, title);
 }
 
+bool TrackeditInteraction::newBusTrack()
+{
+    return withPlaybackStop(&ITrackeditInteraction::newBusTrack);
+}
+
+TrackId TrackeditInteraction::trackOutput(TrackId trackId) const
+{
+    return m_interaction->trackOutput(trackId);
+}
+
+bool TrackeditInteraction::setTrackOutput(TrackId trackId, TrackId busId)
+{
+    // The engine routes the tracks as playback starts
+    return withPlaybackStop(&ITrackeditInteraction::setTrackOutput, trackId, busId);
+}
+
+bool TrackeditInteraction::canOutputTo(TrackId trackId, TrackId busId) const
+{
+    return m_interaction->canOutputTo(trackId, busId);
+}
+
+TrackSendList TrackeditInteraction::trackSends(TrackId trackId) const
+{
+    return m_interaction->trackSends(trackId);
+}
+
+bool TrackeditInteraction::addTrackSend(TrackId trackId, TrackId busId)
+{
+    // The engine routes the tracks as playback starts
+    return withPlaybackStop(&ITrackeditInteraction::addTrackSend, trackId, busId);
+}
+
+bool TrackeditInteraction::removeTrackSend(TrackId trackId, TrackId busId)
+{
+    return withPlaybackStop(&ITrackeditInteraction::removeTrackSend, trackId, busId);
+}
+
+bool TrackeditInteraction::setTrackSendLevel(TrackId trackId, TrackId busId, volume_dbfs_t level, bool completed)
+{
+    return m_interaction->setTrackSendLevel(trackId, busId, level, completed);
+}
+
+bool TrackeditInteraction::setTrackSendPreFader(TrackId trackId, TrackId busId, bool preFader)
+{
+    return withPlaybackStop(&ITrackeditInteraction::setTrackSendPreFader, trackId, busId, preFader);
+}
+
 bool TrackeditInteraction::deleteTracks(const TrackIdList& trackIds)
 {
     return withPlaybackStop(&ITrackeditInteraction::deleteTracks, trackIds);

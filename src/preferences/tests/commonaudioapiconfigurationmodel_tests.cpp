@@ -372,4 +372,22 @@ TEST_F(CommonAudioApiConfigurationModelTests, ExternalDeviceChangeIsForwardedAsA
     EXPECT_EQ(outputChangedCount, 1);
     EXPECT_EQ(inputChangedCount, 1);
 }
+
+TEST_F(CommonAudioApiConfigurationModelTests, Apply_SubmitsThePendingSoftwareBufferLength)
+{
+    constexpr double appliedLength = 50.0;
+    constexpr double selectedLength = 20.0;
+    m_applied.softwareBufferLength = appliedLength;
+    m_model->softwareBufferLengthSelected(QString::number(selectedLength));
+    EXPECT_DOUBLE_EQ(m_model->softwareBufferLength(), selectedLength);
+
+    EXPECT_CALL(*m_controller, apply(_, _))
+    .WillOnce([=](const muse::modularity::ContextPtr&, const audio::AudioConfigurationChange& change) {
+        EXPECT_EQ(change.softwareBufferLength, std::optional<double>(selectedLength));
+        EXPECT_FALSE(change.bufferLength);
+        return audio::ApplyResult { audio::ApplyStatus::Applied };
+    });
+
+    EXPECT_TRUE(m_model->apply());
+}
 }

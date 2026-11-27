@@ -4,8 +4,10 @@
 #pragma once
 
 #include <chrono>
+#include <cstdint>
 #include <memory>
 #include <optional>
+#include <utility>
 #include <vector>
 
 #include "framework/global/async/channel.h"
@@ -16,15 +18,24 @@
 #include "au3wrap/au3types.h"
 #include "audioconfigurationtypes.h"
 #include "audiotypes.h"
+#include "iaudiometer.h"
 
 struct TransportSequences;
-struct AudioIOStartTransportOptions;
 class ChannelGroup;
 class RealtimeEffectState;
 namespace au::audio {
 struct AudioCallbackInfo {
     std::chrono::steady_clock::time_point dacTime;
     int numSamples = 0;
+};
+
+//! As the device reports them, in seconds
+struct DeviceLatency {
+    //! None if the device was opened without inputs, or without outputs
+    std::optional<double> input;
+    std::optional<double> output;
+
+    bool operator==(const DeviceLatency&) const = default;
 };
 
 class IAudioEngine : MODULE_GLOBAL_INTERFACE
@@ -73,8 +84,17 @@ public:
     virtual std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                             size_t effectListIndex, const std::string& newEffectId) = 0;
 
+    //! The meters fed by streams started for this project.
+    virtual void setPlaybackMeter(AudacityProject& project, const IAudioMeterPtr& meter) = 0;
+    virtual void setCaptureMeter(AudacityProject& project, const IAudioMeterPtr& meter) = 0;
+    //! Clears the meter queues of the project's meters.
+    virtual void stopMeters(AudacityProject& project) = 0;
+
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
+    //! The track whose realtime effects the monitored input goes through, then the master's, if the engine can do that;
+    //! the master's only if none. Engines that can't monitor through the effects monitor the input as it comes.
+    virtual void setMonitoredTrack(std::optional<int64_t> track) = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
     virtual float getInputVolume() const = 0;
@@ -86,6 +106,8 @@ public:
     virtual void handleDeviceChange() = 0;
 
     virtual muse::String lastErrorString() const = 0;
+    //! Where the last recording lost input, as pairs of start time and duration.
+    virtual std::vector<std::pair<double, double> > lostCaptureIntervals() const = 0;
     virtual double getPlaybackSampleRate() const = 0;
     virtual void updateTimePosition(unsigned long newlyConsumedSamples) = 0;
     virtual std::optional<AudioCallbackInfo> consumeNextCallbackInfo() = 0;
@@ -95,6 +117,10 @@ public:
     virtual muse::async::Notification recordingCommitRequested() const = 0;
     virtual muse::async::Notification recordingFinished() const = 0;
     virtual muse::async::Notification streamStopped() const = 0;
+
+    //! Of the device opened last, if any
+    virtual std::optional<DeviceLatency> deviceLatency() const = 0;
+    virtual muse::async::Notification deviceLatencyChanged() const = 0;
     virtual muse::async::Channel<au3::Au3TrackId, au3::Au3ClipId> recordingClipChanged() const = 0;
 };
 }

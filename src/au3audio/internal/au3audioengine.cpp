@@ -11,12 +11,13 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "au3audiometer.h"
 #include "defaultplaybackpolicy.h"
-#include "au3audioiolistener.h"
+#include "au3wrap/au3audioiolistener.h"
 
 using namespace au::au3audio;
 
-std::shared_ptr<Au3AudioIOListener> s_audioIOListener;
+std::shared_ptr<au::au3::Au3AudioIOListener> s_audioIOListener;
 
 static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
     [](au::au3::Au3Project& project, const bool newDefault) -> AudioIOStartTransportOptions {
@@ -45,9 +46,14 @@ static ProjectAudioIO::DefaultOptions::Scope s_defaultOptionsScope {
         return options;
     } };
 
+Au3AudioEngine::Au3AudioEngine()
+{
+    // Notifications are subscribed to before init()
+    s_audioIOListener = std::make_shared<au::au3::Au3AudioIOListener>();
+}
+
 void Au3AudioEngine::init()
 {
-    s_audioIOListener = std::make_shared<Au3AudioIOListener>();
     AudioIO::Init();
 
     m_streamStatusSubscription = AudioIO::Get()->Subscribe([this](const AudioIOEvent& event) {
@@ -135,6 +141,7 @@ int Au3AudioEngine::startTransport(const TransportSequences& sequences, const do
         ProjectAudioIO::Get(project).SetAudioIOToken(token);
         LOGI() << "PortAudio latency report (ms): outputLatency=" << audioIO.GetHardwarePlaybackLatencyMs() <<
             ", inputLatency=" << audioIO.GetHardwareCaptureLatencyMs();
+        updateDeviceLatency();
     }
     return token;
 }
@@ -174,11 +181,51 @@ void Au3AudioEngine::seek(double time)
     AudioIO::Get()->Seek(time - AudioIO::Get()->GetTransportTime());
 }
 
+void Au3AudioEngine::setPlaybackMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter)
+{
+    ProjectAudioIO::Get(project).SetPlaybackMeter(meter ? std::make_shared<Au3AudioMeter>(meter) : nullptr);
+}
+
+void Au3AudioEngine::setCaptureMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter)
+{
+    ProjectAudioIO::Get(project).SetCaptureMeter(meter ? std::make_shared<Au3AudioMeter>(meter) : nullptr);
+}
+
+void Au3AudioEngine::stopMeters(AudacityProject& project)
+{
+    const auto& projectAudioIO = ProjectAudioIO::Get(project);
+    if (const auto& playbackMeter = projectAudioIO.GetPlaybackMeter()) {
+        playbackMeter->stop();
+    }
+    if (const auto& captureMeter = projectAudioIO.GetCaptureMeter()) {
+        captureMeter->stop();
+    }
+}
+
 void Au3AudioEngine::startMonitoring(AudacityProject& project)
 {
     AudioIOStartTransportOptions options = ProjectAudioIO::GetDefaultOptions(project);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     AudioIO::Get()->StartMonitoring(options);
+    if (AudioIO::Get()->IsMonitoring()) {
+        updateDeviceLatency();
+    }
+}
+
+void Au3AudioEngine::updateDeviceLatency()
+{
+    const auto& audioIO = *AudioIO::Get();
+    audio::DeviceLatency latency;
+    if (audioIO.GetNumCaptureChannels() > 0) {
+        latency.input = audioIO.GetHardwareCaptureLatencyMs() / 1000.0;
+    }
+    if (audioIO.GetNumPlaybackChannels() > 0) {
+        latency.output = audioIO.GetHardwarePlaybackLatencyMs() / 1000.0;
+    }
+    if (latency != m_deviceLatency) {
+        m_deviceLatency = latency;
+        m_deviceLatencyChanged.notify();
+    }
 }
 
 void Au3AudioEngine::stopMonitoring()
@@ -239,6 +286,11 @@ muse::String Au3AudioEngine::lastErrorString() const
     return au::au3::wxToString(AudioIO::Get()->LastPaErrorString());
 }
 
+std::vector<std::pair<double, double> > Au3AudioEngine::lostCaptureIntervals() const
+{
+    return AudioIO::Get()->LostCaptureIntervals();
+}
+
 double Au3AudioEngine::getPlaybackSampleRate() const
 {
     return AudioIO::Get()->GetPlaybackSampleRate();
@@ -281,6 +333,16 @@ muse::async::Notification Au3AudioEngine::recordingFinished() const
 muse::async::Notification Au3AudioEngine::streamStopped() const
 {
     return m_streamStopped;
+}
+
+std::optional<au::audio::DeviceLatency> Au3AudioEngine::deviceLatency() const
+{
+    return m_deviceLatency;
+}
+
+muse::async::Notification Au3AudioEngine::deviceLatencyChanged() const
+{
+    return m_deviceLatencyChanged;
 }
 
 muse::async::Channel<au::au3::Au3TrackId, au::au3::Au3ClipId> Au3AudioEngine::recordingClipChanged() const

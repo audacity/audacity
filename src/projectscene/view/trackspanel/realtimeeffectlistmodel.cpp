@@ -327,7 +327,8 @@ bool RealtimeEffectListModel::prop_trackSupportsEffects() const
         return false;
     }
 
-    return track->type == trackedit::TrackType::Mono || track->type == trackedit::TrackType::Stereo;
+    return track->type == trackedit::TrackType::Mono || track->type == trackedit::TrackType::Stereo
+           || track->type == trackedit::TrackType::Bus;
 }
 
 QHash<int, QByteArray> RealtimeEffectListModel::roleNames() const

@@ -56,6 +56,12 @@ StyledPopupView {
                     icon: IconCode.LOOP_IN,
                     text: qsTrc("projectscene", "Label"),
                     enabled: true
+                },
+                {
+                    type: TrackType.BUS,
+                    icon: IconCode.MIXER,
+                    text: qsTrc("projectscene", "Bus"),
+                    enabled: true
                 }
             ]
 

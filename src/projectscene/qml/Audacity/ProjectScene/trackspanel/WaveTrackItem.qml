@@ -97,12 +97,13 @@ TrackItem {
                 }
             }
 
-            FlatButton {
+            RowLayout {
+                id: bottomRow
+
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
 
-                text: qsTrc("projectscene", "Effects")
-                toolTipDescription: qsTrc("projectscene", "Opens effects panel")
+                spacing: 4
 
                 opacity: topRow.visible && root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
                 visible: opacity !== 0
@@ -112,12 +113,84 @@ TrackItem {
                     }
                 }
 
-                navigation.panel: root.headerNavigationPanel
-                navigation.order: root.headerTrailingControlsNavigationEnd + 1
-                navigation.enabled: topRow.visible
+                FlatButton {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
 
-                onClicked: {
-                    root.openEffectsRequested()
+                    text: qsTrc("projectscene", "Effects")
+                    toolTipDescription: qsTrc("projectscene", "Opens effects panel")
+
+                    navigation.panel: root.headerNavigationPanel
+                    navigation.order: root.headerTrailingControlsNavigationEnd + 1
+                    navigation.enabled: bottomRow.visible
+
+                    onClicked: {
+                        root.openEffectsRequested()
+                    }
+                }
+
+                FlatButton {
+                    id: outputButton
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+
+                    // Only once there are busses to go to
+                    visible: Boolean(root.item) && root.item.hasOutputChoice
+
+                    text: Boolean(root.item) ? root.item.outputTitle : ""
+                    //: Where a track's audio goes: the master, or a bus
+                    toolTipTitle: qsTrc("projectscene", "Output")
+                    toolTipDescription: qsTrc("projectscene", "Sends this track to the master or to a bus")
+
+                    navigation.panel: root.headerNavigationPanel
+                    navigation.order: root.headerTrailingControlsNavigationEnd + 2
+                    navigation.enabled: bottomRow.visible && visible
+                    navigation.accessible.name: qsTrc("projectscene", "Output: %1").arg(text)
+
+                    onClicked: {
+                        outputMenuLoader.toggleOpened(root.item.outputMenu())
+                    }
+
+                    StyledMenuLoader {
+                        id: outputMenuLoader
+
+                        onHandleMenuItem: function (itemId) {
+                            root.item.setOutput(itemId)
+                        }
+                    }
+                }
+
+                FlatButton {
+                    id: sendsButton
+
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 24
+
+                    // Only once there are busses to send to
+                    visible: outputButton.visible
+
+                    //: What a track sends to busses besides its output
+                    text: qsTrc("projectscene", "Sends")
+                    toolTipDescription: qsTrc("projectscene", "Sends this track to busses besides its output")
+
+                    navigation.panel: root.headerNavigationPanel
+                    navigation.order: root.headerTrailingControlsNavigationEnd + 3
+                    navigation.enabled: bottomRow.visible && visible
+
+                    onClicked: {
+                        if (sendsPopup.isOpened) {
+                            sendsPopup.close()
+                        } else {
+                            sendsPopup.open()
+                        }
+                    }
+
+                    SendsPopup {
+                        id: sendsPopup
+
+                        trackId: Boolean(root.item) ? root.item.trackId : null
+                    }
                 }
             }
         }

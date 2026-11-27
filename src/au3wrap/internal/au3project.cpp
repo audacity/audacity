@@ -7,6 +7,7 @@
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 
+#include "au3-bus-track/BusTrack.h"
 #include "au3-project-history/ProjectHistory.h"
 #include "au3-project-history/UndoManager.h"
 #include "au3-realtime-effects/SavedMasterEffectList.h"
@@ -180,6 +181,11 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
     Au3TrackList& tracks = Au3TrackList::Get(project);
     for (auto pTrack : tracks) {
         pTrack->LinkConsistencyFix();
+    }
+    // Once all the tracks are loaded: the busses they go and send to
+    for (auto pTrack : tracks) {
+        TrackOutput::Get(*pTrack).ResolveSaved();
+        TrackSends::Get(*pTrack).ResolveSaved();
     }
 
     // Update saved state BEFORE sanitizing

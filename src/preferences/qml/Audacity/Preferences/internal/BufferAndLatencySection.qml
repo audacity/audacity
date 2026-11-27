@@ -40,6 +40,7 @@ BaseSection {
 
         Column {
             width: root.columnWidth
+            spacing: root.spacing
 
             IncrementalPropertyControlWithTitle {
                 title: qsTrc("preferences", "Buffer length")
@@ -59,6 +60,29 @@ BaseSection {
 
                 onValueEdited: function (newValue) {
                     apiModel.bufferLengthSelected(newValue)
+                }
+            }
+
+            // How far ahead of the device the new audio engine renders the tracks
+            IncrementalPropertyControlWithTitle {
+                title: qsTrc("preferences", "Software buffer size")
+
+                currentValue: apiModel.softwareBufferLength
+                minValue: 10
+
+                columnWidth: root.columnWidth
+                spacing: root.columnSpacing
+
+                //: Abbreviation of "milliseconds"
+                measureUnitsSymbol: qsTrc("global", "ms")
+
+                navigation.name: "SoftwareBufferLengthControl"
+                navigation.panel: root.navigation
+                navigation.row: 2
+                navigation.column: 0
+
+                onValueEdited: function (newValue) {
+                    apiModel.softwareBufferLengthSelected(newValue)
                 }
             }
         }

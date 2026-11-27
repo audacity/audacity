@@ -89,8 +89,8 @@ private:
     {
         std::vector<StateAndSettings> items;
         append(items, RealtimeEffectList::Get(project));
-        const auto tracks = TrackList::Get(project).Any<WaveTrack>();
-        for (WaveTrack* track : tracks) {
+        const auto tracks = TrackList::Get(project).Any<PlayableTrack>();
+        for (PlayableTrack* track : tracks) {
             append(items, RealtimeEffectList::Get(*track));
         }
         return items;

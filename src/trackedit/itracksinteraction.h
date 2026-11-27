@@ -48,6 +48,22 @@ public:
     virtual bool newMonoTrack() = 0;
     virtual bool newStereoTrack() = 0;
     virtual muse::RetVal<TrackId> newLabelTrack(const muse::String& title = muse::String()) = 0;
+    //! A bus, which no track goes to yet
+    virtual bool newBusTrack() = 0;
+    //! The bus an audio track or a bus goes to; INVALID_TRACK for the master
+    virtual TrackId trackOutput(TrackId trackId) const = 0;
+    //! @param busId INVALID_TRACK for the master
+    virtual bool setTrackOutput(TrackId trackId, TrackId busId) = 0;
+    //! Whether a track may go to a bus: not if it would feed the bus back into itself
+    virtual bool canOutputTo(TrackId trackId, TrackId busId) const = 0;
+
+    virtual TrackSendList trackSends(TrackId trackId) const = 0;
+    //! As canOutputTo allows, if it doesn't send to the bus yet
+    virtual bool addTrackSend(TrackId trackId, TrackId busId) = 0;
+    virtual bool removeTrackSend(TrackId trackId, TrackId busId) = 0;
+    //! Also while playing
+    virtual bool setTrackSendLevel(TrackId trackId, TrackId busId, volume_dbfs_t level, bool completed) = 0;
+    virtual bool setTrackSendPreFader(TrackId trackId, TrackId busId, bool preFader) = 0;
 
     virtual bool deleteTracks(const TrackIdList& trackIds) = 0;
     virtual bool duplicateTracks(const TrackIdList& trackIds) = 0;

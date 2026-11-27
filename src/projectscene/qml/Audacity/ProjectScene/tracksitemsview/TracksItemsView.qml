@@ -928,7 +928,16 @@ Rectangle {
 
                     width: tracksItemsView.width
 
-                    sourceComponent: trackType === TrackType.LABEL ? trackLabelsContainer : trackClipsContainerComp
+                    sourceComponent: {
+                        switch (trackType) {
+                        case TrackType.LABEL:
+                            return trackLabelsContainer
+                        case TrackType.BUS:
+                            return busTrackContainer
+                        default:
+                            return trackClipsContainerComp
+                        }
+                    }
 
                     onLoaded: {
                         trackItemLoader.item.init()
@@ -1129,6 +1138,33 @@ Rectangle {
                                     }
                                 }
                             }
+                        }
+                    }
+
+                    Component {
+                        id: busTrackContainer
+
+                        BusTrackContainer {
+                            property var itemData: trackItemLoader.itemData
+                            property int index: trackItemLoader.index
+
+                            width: trackItemLoader.width
+
+                            context: timeline.context
+                            container: tracksItemsView
+                            canvas: content
+
+                            trackId: itemData.trackId
+                            trackTitle: itemData.trackTitle
+                            isTrackSelected: itemData.isTrackSelected
+                            isTrackFocused: itemData.isTrackFocused
+                            isTrackAudible: itemData.isTrackAudible
+
+                            selectionInProgress: selectionViewController.selectionInProgress
+                            selectionEditInProgress: selectionViewController.selectionEditInProgress
+                            verticalSelectionEditInProgress: selectionViewController.verticalSelectionEditInProgress
+
+                            navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
                         }
                     }
 

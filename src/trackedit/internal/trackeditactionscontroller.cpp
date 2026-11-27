@@ -194,6 +194,7 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_NEW_MONO_TRACK_COMMAND, apply([this]() { return trackeditInteraction()->newMonoTrack(); }));
     cd->onRequest(this, TRACKEDIT_NEW_STEREO_TRACK_COMMAND, apply([this]() { return trackeditInteraction()->newStereoTrack(); }));
     cd->onRequest(this, TRACKEDIT_NEW_LABEL_TRACK_COMMAND, apply([this]() { return trackeditInteraction()->newLabelTrack().ret; }));
+    cd->onRequest(this, TRACKEDIT_NEW_BUS_TRACK_COMMAND, apply([this]() { return trackeditInteraction()->newBusTrack(); }));
 
     cd->onRequest(this, TRACKEDIT_TRACK_DUPLICATE_COMMAND, [this]() { return duplicateTracks(); });
     cd->onRequest(this, TRACKEDIT_TRACK_MOVE_UP_COMMAND, [this]() { return moveTracksUp(); });

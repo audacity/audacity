@@ -119,6 +119,7 @@ set(MODULE_LINK
         au3wrap
         au3-audio-graph
         au3-effects
+        au3-bus-track
         au3-exceptions
         au3-label-track
         au3-math

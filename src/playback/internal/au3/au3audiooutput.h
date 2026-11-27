@@ -12,14 +12,16 @@
 #include "au3-utility/LockFreeQueue.h"
 
 #include "context/iglobalcontext.h"
+#include "audio/iaudiobackendselector.h"
 #include "audio/iaudioengine.h"
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/au3audiometer.h"
+#include "audio/iaudiometer.h"
 
 namespace au::playback {
 class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+    muse::GlobalInject<au::audio::IAudioBackendSelector> audioBackendSelector;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
@@ -46,6 +48,6 @@ private:
     muse::async::Channel<float> m_playbackVolumeChanged;
     muse::async::Channel<audio::sample_rate_t> m_sampleRateChanged;
 
-    const std::shared_ptr<au::au3::Au3AudioMeter> m_outputMeter;
+    const audio::IAudioMeterPtr m_outputMeter;
 };
 }

@@ -3,7 +3,11 @@
 */
 #pragma once
 
+#include <QVariantList>
+
 #include "framework/global/iapplication.h"
+
+#include "context/iglobalcontext.h"
 
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "playback/iplayback.h"
@@ -30,12 +34,18 @@ class WaveTrackItem : public TrackItem
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
+    //! Where it goes, if the project has busses: the master or a bus
+    Q_PROPERTY(bool hasOutputChoice READ hasOutputChoice NOTIFY outputChanged)
+    Q_PROPERTY(QString outputTitle READ outputTitle NOTIFY outputChanged)
+
     muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
     muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
     muse::ContextInject<playback::IPlayback> playback{ this };
     muse::ContextInject<record::IRecord> record{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
 
 public:
     explicit WaveTrackItem(QObject* parent = nullptr);
@@ -58,6 +68,13 @@ public:
 
     bool solo() const;
     bool muted() const;
+
+    bool hasOutputChoice() const;
+    QString outputTitle() const;
+    //! The master and the busses, those it can't go to disabled: they would feed back
+    Q_INVOKABLE QVariantList outputMenu() const;
+    //! @param id of the bus, or of the master, as `outputMenu` gives them
+    Q_INVOKABLE void setOutput(const QString& id);
 
     void loadOutputParams(const audio::AudioOutputParams& newParams);
 
@@ -84,6 +101,7 @@ signals:
     void panChanged(int pan);
     void soloChanged();
     void mutedChanged();
+    void outputChanged();
 
     void outputParamsChanged(const audio::AudioOutputParams& params);
 

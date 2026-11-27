@@ -37,6 +37,7 @@ inline static const muse::rcommand::Command TRACKEDIT_TRACK_SPLIT_AT_COMMAND("co
 inline static const muse::rcommand::Command TRACKEDIT_NEW_MONO_TRACK_COMMAND("command://trackedit/new-mono-track");
 inline static const muse::rcommand::Command TRACKEDIT_NEW_STEREO_TRACK_COMMAND("command://trackedit/new-stereo-track");
 inline static const muse::rcommand::Command TRACKEDIT_NEW_LABEL_TRACK_COMMAND("command://trackedit/new-label-track");
+inline static const muse::rcommand::Command TRACKEDIT_NEW_BUS_TRACK_COMMAND("command://trackedit/new-bus-track");
 
 inline static const muse::rcommand::Command TRACKEDIT_TRACK_DUPLICATE_COMMAND("command://trackedit/track-duplicate");
 inline static const muse::rcommand::Command TRACKEDIT_TRACK_MOVE_UP_COMMAND("command://trackedit/track-move-up");
