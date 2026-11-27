@@ -6,6 +6,7 @@
 
 #include "multiclipcontextmenumodel.h"
 
+#include "projectscene/projectscenecommands.h"
 #include "trackedit/trackeditcommands.h"
 
 using namespace au::projectscene;
@@ -47,6 +48,8 @@ MenuItemList MultiClipContextMenuModel::makeItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString("multiclip", "Cut and…"), cutAndItems, "menu-cut-and"),
         makeMenu(muse::TranslatableString("multiclip", "Delete and…"), deleteAndItems, "menu-delete-and"),
+        makeSeparator(),
+        makeMenuItem(PROJECTSCENE_CLIP_EDIT_FADES_COMMAND),
         makeSeparator(),
         makeMenuItem(trackedit::TRACKEDIT_JOIN_COMMAND,
                      //: Verb: context menu command that joins the selected clips

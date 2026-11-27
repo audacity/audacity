@@ -21,6 +21,7 @@
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveClip.h"
+#include "au3-clip-processing/ClipFades.h"
 #include "au3-clip-processing/PlayableSequenceFactory.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project-rate/ProjectRate.h"
@@ -295,6 +296,8 @@ void Au3Record::init()
             IF_ASSERT_FAILED(pendingClip) {
                 return;
             }
+
+            splitClipAtRecordingStart(*origWaveTrack, pendingClip->GetPlayStartTime());
 
             // Create a matching clip on the original track at the recording start position
             auto origClip = origWaveTrack->CreateClip(pendingClip->GetPlayStartTime(), pendingClip->GetName());
@@ -761,6 +764,7 @@ Ret Au3Record::doRecord(Au3Project& project,
     };
 
     auto& pendingTracks = PendingTracks::Get(project);
+    std::vector<RecordingStartSplit> recordingStartSplits;
     const bool deferClipCreation = (leadInTime > 0.0);
 
     if (appendRecord) {
@@ -816,6 +820,9 @@ Ret Au3Record::doRecord(Au3Project& project,
                 // Don't notify UI — clip will be created on original when recording starts
             } else {
                 // Normal recording: create clip on original track immediately
+                if (auto split = splitClipAtRecordingStart(*wt, t0)) {
+                    recordingStartSplits.push_back(std::move(*split));
+                }
                 Au3WaveTrack::IntervalHolder newClip{};
                 newClip = insertEmptyInterval(*wt, t0, true);
 
@@ -973,6 +980,9 @@ Ret Au3Record::doRecord(Au3Project& project,
     success = (token > 0);
 
     if (!success) {
+        for (const RecordingStartSplit& split : recordingStartSplits) {
+            undoSplitAtRecordingStart(split);
+        }
         cancelRecording();
 
         Ret ret = make_ret(Err::RecordingError);
@@ -982,6 +992,58 @@ Ret Au3Record::doRecord(Au3Project& project,
     }
 
     return make_ok();
+}
+
+std::optional<Au3Record::RecordingStartSplit> Au3Record::splitClipAtRecordingStart(Au3WaveTrack& track, double recordingStart)
+{
+    recordingStart = track.SnapToSample(recordingStart);
+    std::shared_ptr<Au3WaveClip> clip;
+    for (const auto& interval : track.Intervals()) {
+        if (interval->SplitsPlayRegion(recordingStart)) {
+            clip = interval;
+            break;
+        }
+    }
+    if (!clip) {
+        return std::nullopt;
+    }
+
+    RecordingStartSplit split { &track };
+
+    // properties that must be stored before the split
+    split.left = clip;
+    split.leftTrimRight = clip->GetTrimRight();
+    split.leftFadeOut = ClipFades::Get(*clip).fadeOut();
+
+    // Not only when the recording stops and makes room for itself: the fades of the split clip are updated right away,
+    // e.g. the part that the recording overwrites loses the fade-in it would otherwise show until then
+    const auto [left, right] = track.SplitAt(recordingStart);
+    if (!left || !right) {
+        assert(!left && !right);
+        return std::nullopt;
+    }
+
+    split.right = right;
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(&track, left.get()));
+    prj->notifyAboutClipAdded(DomConverter::clip(&track, right.get()));
+    prj->notifyAboutTrackChanged(DomConverter::track(&track));
+
+    return split;
+}
+
+void Au3Record::undoSplitAtRecordingStart(const RecordingStartSplit& split)
+{
+    const trackedit::Clip removed = DomConverter::clip(split.track, split.right.get());
+    split.track->RemoveInterval(split.right);
+    split.left->SetTrimRight(split.leftTrimRight);
+    ClipFades::Get(*split.left).setFadeOut(split.leftFadeOut);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipRemoved(removed);
+    prj->notifyAboutClipChanged(DomConverter::clip(split.track, split.left.get()));
+    prj->notifyAboutTrackChanged(DomConverter::track(split.track));
 }
 
 void Au3Record::cancelRecording()

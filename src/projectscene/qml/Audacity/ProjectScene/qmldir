@@ -1,4 +1,5 @@
 module Audacity.ProjectScene
+singleton FadeTypeOptions 1.0 tracksitemsview/FadeTypeOptions.qml
 ProjectToolBar 1.0 toolbars/ProjectToolBar.qml
 UndoRedoToolBar 1.0 toolbars/UndoRedoToolBar.qml
 PlaybackToolBar 1.0 toolbars/PlaybackToolBar.qml

@@ -7,6 +7,7 @@
 #include <QQuickPaintedItem>
 
 #include "types/projectscenetypes.h"
+#include "../fadetypeconversion.h"
 
 class QPainter;
 
@@ -21,6 +22,8 @@ class ClipFadeCurveItem : public QQuickPaintedItem
     Q_PROPERTY(qreal fadeX READ fadeX WRITE setFadeX FINAL)
     Q_PROPERTY(qreal fadeWidth READ fadeWidth WRITE setFadeWidth FINAL)
     Q_PROPERTY(FadeTypes::Type fadeType READ fadeType WRITE setFadeType FINAL)
+    //! Where the center of the boundary line is, in this item's coordinates
+    Q_PROPERTY(qreal lineX READ lineX WRITE setLineX FINAL)
     //! Above it, the fade isn't drawn
     Q_PROPERTY(qreal drawingTop READ drawingTop WRITE setDrawingTop FINAL)
     //! E.g. while the fade is dragged
@@ -39,6 +42,8 @@ public:
     void setFadeWidth(qreal width);
     FadeTypes::Type fadeType() const { return m_fadeType; }
     void setFadeType(FadeTypes::Type type);
+    qreal lineX() const { return m_lineX; }
+    void setLineX(qreal x);
     qreal drawingTop() const { return m_drawingTop; }
     void setDrawingTop(qreal top);
     bool highlighted() const { return m_highlighted; }
@@ -54,7 +59,8 @@ private:
     bool m_isFadeIn = true;
     qreal m_fadeX = 0;
     qreal m_fadeWidth = 0;
-    FadeTypes::Type m_fadeType = FadeTypes::Type::LINEAR;
+    FadeTypes::Type m_fadeType = toFadeTypesType(trackedit::defaultFadeType);
+    qreal m_lineX = 0;
     qreal m_drawingTop = 0;
     bool m_highlighted = false;
 };

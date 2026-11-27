@@ -7,6 +7,7 @@
 #include "framework/global/realfn.h"
 #include "framework/ui/view/iconcodes.h"
 
+#include "projectscene/projectscenecommands.h"
 #include "spectrogram/spectrogramcommands.h"
 #include "trackedit/dom/track.h"
 #include "trackedit/trackeditcommands.h"
@@ -66,6 +67,8 @@ void ClipContextMenuModel::load()
         makeSeparator(),
         makeMenu(muse::TranslatableString("clip", "Cut and…"), cutAndItems, "menu-cut-and"),
         makeMenu(muse::TranslatableString("clip", "Delete and…"), deleteAndItems, "menu-delete-and"),
+        makeSeparator(),
+        makeMenuItem(PROJECTSCENE_CLIP_EDIT_FADES_COMMAND),
         makeSeparator(),
         makeMenuItem(trackedit::TRACKEDIT_SPLIT_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_DISJOIN_COMMAND, muse::TranslatableString("clip", "Split at silences")),

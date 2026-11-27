@@ -143,11 +143,11 @@ TEST_F(ClipFadesPersistenceTests, FadesAreLoaded)
     EXPECT_DOUBLE_EQ(fades.fadeOut(), TEST_FADE_OUT);
 }
 
-TEST_F(ClipFadesPersistenceTests, FadeTypesAreLoadedAndDefaultToLinear)
+TEST_F(ClipFadesPersistenceTests, FadeTypesAreLoadedAndDefaultToSCurve)
 {
     const auto& fades = ClipFades::Get(onlyClip(firstTrack()));
     // The test XML's first clip only has its fade-out specified as logarithmic.
-    EXPECT_EQ(fades.fadeInType(), FadeType::Linear);
+    EXPECT_EQ(fades.fadeInType(), FadeType::SCurve);
     EXPECT_EQ(fades.fadeOutType(), FadeType::Logarithmic);
 }
 
@@ -157,7 +157,7 @@ TEST_F(ClipFadesPersistenceTests, FadesAreSaved)
     onlyClip(firstTrack()).WriteXML(0, writer);
     EXPECT_NE(writer.Find(wxString::Format("fadeIn=\"%.8f\"", TEST_FADE_IN)), wxNOT_FOUND) << writer;
     EXPECT_NE(writer.Find(wxString::Format("fadeOut=\"%.8f\"", TEST_FADE_OUT)), wxNOT_FOUND) << writer;
-    EXPECT_NE(writer.Find("fadeInType=\"0\""), wxNOT_FOUND) << writer;
+    EXPECT_NE(writer.Find("fadeInType=\"5\""), wxNOT_FOUND) << writer;
     EXPECT_NE(writer.Find("fadeOutType=\"1\""), wxNOT_FOUND) << writer;
 }
 

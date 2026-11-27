@@ -18,6 +18,7 @@
 #include "iopensaveprojectscenario.h"
 #include "framework/toast/itoastservice.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/itrackeditinteraction.h"
 #include "importexport/export/internal/exportconfiguration.h"
 #include "importexport/import/iimporter.h"
 #include "au3cloud/iau3audiocomservice.h"
@@ -51,6 +52,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::rc
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
     muse::ContextInject<importexport::IImporter> importer { this };
     muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<effects::IMissingEffectChecker> missingEffectChecker { this };

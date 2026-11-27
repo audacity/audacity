@@ -155,9 +155,24 @@ class FadeTypes
 public:
     enum class Type {
         LINEAR = 0,
-        LOGARITHMIC
+        EXPONENTIAL,
+        LOGARITHMIC,
+        SQUARE_ROOT,
+        EQUAL_POWER,
+        S_CURVE
     };
     Q_ENUM(Type)
+};
+
+class ClipSides
+{
+    Q_GADGET
+public:
+    enum class Side {
+        Left = 0,
+        Right
+    };
+    Q_ENUM(Side)
 };
 
 class DirectionType

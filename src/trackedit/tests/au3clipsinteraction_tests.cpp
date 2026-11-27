@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include "../internal/au3/au3clipsinteraction.h"
+#include "../internal/au3/au3projecthistory.h"
 #include "../internal/au3/au3trackdata.h"
 
 #include "au3-project-file-io/ProjectFileIO.h"
@@ -16,6 +17,8 @@
 #include "au3-project-history/ProjectHistory.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-clip-processing/TempoChange.h"
+#include "au3-clip-processing/ClipFades.h"
+#include "trackedit/clipfadedrag.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-xml/XMLFileReader.h"
 
@@ -26,6 +29,7 @@
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditconfigurationmock.h"
 #include "mocks/projecthistorymock.h"
+#include "mocks/trackeditinteractionmock.h"
 #include "automation/tests/mocks/clipgaininteractionmock.h"
 
 #include "interactive/tests/mocks/interactivemock.h"
@@ -70,6 +74,15 @@ public:
         .WillByDefault(Return(m_trackEditProject));
 
         initTestProject();
+    }
+
+    //! A real one, for tests that need what it does, e.g. rolling back
+    std::unique_ptr<Au3ProjectHistory> makeProjectHistory() const
+    {
+        auto history = std::make_unique<Au3ProjectHistory>(muse::modularity::globalCtx());
+        history->globalContext.set(m_globalContext);
+        history->init();
+        return history;
     }
 
     std::shared_ptr<Au3ClipsInteraction> m_clipsInteraction;
@@ -1414,6 +1427,189 @@ TEST_F(Au3ClipsInteractionTests, MoveClipOfAnotherRateOntoNeighbourStartTrimsPas
 
     removeTrack(destinationId);
     removeTrack(sourceId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipLandingWithinAFadeInLeavesNoFadeInAfterIt)
+{
+    //! [GIVEN] A clip with a fade-in and a fade-out, and after it, a short clip
+    constexpr double clipDuration = 2.0;
+    constexpr double fadeIn = 1.0;
+    constexpr double fadeOut = 0.5;
+    constexpr double shortClipStart = 3.0;
+    constexpr double shortClipDuration = 0.1;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", {
+            { 0.0, { { clipDuration, TrackTemplateFactory::createNoise } } },
+            { shortClipStart, { { shortClipDuration, TrackTemplateFactory::createNoise } } } });
+    ClipFades& fades = ClipFades::Get(*track->GetClip(0));
+    fades.setFadeIn(fadeIn);
+    fades.setFadeOut(fadeOut);
+    const TrackId trackId = factory.addTrackToProject(track);
+    const ClipKey shortClipKey { trackId, track->GetClip(1)->GetId() };
+
+    //! [WHEN] The short clip is moved within the fade-in, as when recording there (https://github.com/audacity/audacity/issues/12783)
+    constexpr double landingStart = fadeIn / 2;
+    static_assert(landingStart + shortClipDuration < fadeIn);
+    ASSERT_TRUE(m_clipsInteraction->changeClipStartTime(shortClipKey, landingStart, true));
+
+    //! [THEN] The clip is cut in two: the left part keeps the fade-in but not the fade-out,
+    //! and the right part, after the short clip, keeps the fade-out but has no fade-in
+    const Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    ASSERT_EQ(projectTrack->NIntervals(), 3);
+    const ClipFades& leftFades = ClipFades::Get(*projectTrack->GetSortedClipByIndex(0));
+    const ClipFades& rightFades = ClipFades::Get(*projectTrack->GetSortedClipByIndex(2));
+    EXPECT_GT(leftFades.fadeIn(), 0.0);
+    EXPECT_EQ(leftFades.fadeOut(), 0.0);
+    EXPECT_EQ(rightFades.fadeIn(), 0.0);
+    EXPECT_DOUBLE_EQ(rightFades.fadeOut(), fadeOut);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipLandingRightAfterAnotherPreservesFadeOut)
+{
+    //! [GIVEN] clip A with a fade-out, and after it, clip B, with some space between the two
+    constexpr double clipDuration = 2.0;
+    constexpr double clipAStart = 0.0;
+    constexpr double clipAFadeOut = 0.5;
+    constexpr double clipBStart = clipAStart + clipDuration + 1;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", {
+            { clipAStart, { { clipDuration, TrackTemplateFactory::createNoise } } },
+            { clipBStart, { { clipDuration, TrackTemplateFactory::createNoise } } } });
+    ClipFades::Get(*track->GetClip(0)).setFadeOut(clipAFadeOut);
+    const TrackId trackId = factory.addTrackToProject(track);
+    const ClipKey clipB { trackId, track->GetClip(1)->GetId() };
+
+    //! [WHEN] The short clip is moved to start where the clip ends, touching it without overlapping
+    ASSERT_TRUE(m_clipsInteraction->changeClipStartTime(clipB, clipAStart + clipDuration, true));
+
+    //! [THEN] The clip, which lost no edge, keeps its fade-out
+    const Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    ASSERT_EQ(projectTrack->NIntervals(), 2);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*projectTrack->GetSortedClipByIndex(0)).fadeOut(), clipAFadeOut);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, ClipLandingRightBeforeAnotherPreservesFadeIn)
+{
+    //! [GIVEN] A clip clip, and after it, a clip with a fade-in
+    constexpr double clipDuration = 2.0;
+    constexpr double clipAStart = 1.0;
+    constexpr double clipBStart = 10.0;
+    constexpr double clipBFadeIn = 0.5;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", {
+            { clipAStart, { { clipDuration, TrackTemplateFactory::createNoise } } },
+            { clipBStart, { { clipDuration, TrackTemplateFactory::createNoise } } } });
+    ClipFades::Get(*track->GetClip(1)).setFadeIn(clipBFadeIn);
+    const TrackId trackId = factory.addTrackToProject(track);
+    const ClipKey clipA { trackId, track->GetClip(0)->GetId() };
+
+    //! [WHEN] The short clip is moved to end where the clip starts, touching it without overlapping
+    ASSERT_TRUE(m_clipsInteraction->changeClipStartTime(clipA, clipBStart - clipDuration, true));
+
+    //! [THEN] The clip, which lost no edge, keeps its fade-in
+    const Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    ASSERT_EQ(projectTrack->NIntervals(), 2);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*projectTrack->GetSortedClipByIndex(1)).fadeIn(), clipBFadeIn);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, CanceledFadeDragKeepsTheFadeStoredBeyondATrimmedClip)
+{
+    //! [GIVEN] A clip with a fade-in, trimmed shorter than the fade: the fade is stored whole but takes effect only
+    //! up to the clip's end
+    constexpr double clipDuration = 10.0;
+    constexpr double fadeIn = 8.0;
+    constexpr double trimmedDuration = 5.0;
+    static_assert(trimmedDuration < fadeIn);
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", { { 0.0, { { clipDuration, TrackTemplateFactory::createNoise } } } });
+    const TrackId trackId = factory.addTrackToProject(track);
+    Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    const auto clip = DomAccessor::findWaveClip(projectTrack, track->GetClip(0)->GetId());
+    ASSERT_NE(clip, nullptr);
+    ClipFades::Get(*clip).setFadeIn(fadeIn);
+    clip->SetTrimRight(clipDuration - trimmedDuration);
+
+    //! [WHEN] Its fade-in is dragged, and the drag is canceled (reset before commit)
+    const std::unique_ptr<Au3ProjectHistory> history = makeProjectHistory();
+    NiceMock<TrackeditInteractionMock> interaction;
+    ON_CALL(interaction, changeClipFadeIn(_, _, _)).WillByDefault([this](const ClipKey& key, secs_t duration, bool) {
+        return m_clipsInteraction->changeClipFadeIn(key, duration);
+    });
+    std::unique_ptr<ClipFadeDrag> drag = ClipFadeDrag::start(interaction, *history, m_trackEditProject,
+                                                             Clips { DomConverter::clip(projectTrack, clip.get()) },
+                                                             ClipKey { trackId, clip->GetId() }, ClipSide::Left);
+    ASSERT_NE(drag, nullptr);
+    drag->changeFade(trimmedDuration / 2);
+    drag.reset();
+
+    //! [THEN] Once the clip is untrimmed, the fade-in is whole again, as if there had been no drag. The clip is looked up
+    //! again: rolling back restores the clips as new objects
+    const auto restoredClip = DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId)), clip->GetId());
+    ASSERT_NE(restoredClip, nullptr);
+    restoredClip->SetTrimRight(0.0);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*restoredClip).fadeIn(), fadeIn);
+
+    removeTrack(trackId);
+}
+
+TEST_F(Au3ClipsInteractionTests, NoUndoOrRedoWhileAFadeIsDragged)
+{
+    //! [GIVEN] A clip whose fade-in was changed and undone, so that there is both something to undo and to redo
+    constexpr double clipDuration = 10.0;
+    constexpr double firstFadeIn = 1.0;
+    constexpr double secondFadeIn = 2.0;
+    constexpr double draggedFadeIn = 3.0;
+    TrackTemplateFactory factory(projectRef(), DEFAULT_SAMPLE_RATE);
+    const auto track = factory.createTrackFromTemplate("track", { { 0.0, { { clipDuration, TrackTemplateFactory::createNoise } } } });
+    const TrackId trackId = factory.addTrackToProject(track);
+    Au3WaveTrack* projectTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
+    ASSERT_NE(projectTrack, nullptr);
+    const auto clipId = track->GetClip(0)->GetId();
+    const ClipKey clipKey { trackId, clipId };
+
+    const std::unique_ptr<Au3ProjectHistory> history = makeProjectHistory();
+    ASSERT_TRUE(m_clipsInteraction->changeClipFadeIn(clipKey, firstFadeIn));
+    history->pushHistoryState("first", "first");
+    ASSERT_TRUE(m_clipsInteraction->changeClipFadeIn(clipKey, secondFadeIn));
+    history->pushHistoryState("second", "second");
+    history->undo();
+    ASSERT_TRUE(history->undoAvailable());
+    ASSERT_TRUE(history->redoAvailable());
+
+    //! [WHEN] Its fade-in is being dragged
+    NiceMock<TrackeditInteractionMock> interaction;
+    ON_CALL(interaction, changeClipFadeIn(_, _, _)).WillByDefault([this](const ClipKey& key, secs_t duration, bool) {
+        return m_clipsInteraction->changeClipFadeIn(key, duration);
+    });
+    const auto clip = DomAccessor::findWaveClip(DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId)), clipId);
+    ASSERT_NE(clip, nullptr);
+    std::unique_ptr<ClipFadeDrag> drag = ClipFadeDrag::start(interaction, *history, m_trackEditProject,
+                                                             Clips { DomConverter::clip(projectTrack, clip.get()) }, clipKey,
+                                                             ClipSide::Left);
+    ASSERT_NE(drag, nullptr);
+    drag->changeFade(draggedFadeIn);
+
+    //! [THEN] Neither undo nor redo is available: the drag would otherwise go on from the restored state, and its
+    //! release make an undo step of it
+    EXPECT_FALSE(history->undoAvailable());
+    EXPECT_FALSE(history->redoAvailable());
+
+    //! [THEN] Both are available again once the drag is over
+    drag.reset();
+    EXPECT_TRUE(history->undoAvailable());
+    EXPECT_TRUE(history->redoAvailable());
+
+    removeTrack(trackId);
 }
 
 TEST_F(Au3ClipsInteractionTests, MoveClipOntoNeighbourAtExactSampleBoundaryLeavesNoGap)

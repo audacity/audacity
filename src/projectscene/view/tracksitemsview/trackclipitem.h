@@ -7,6 +7,7 @@
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "trackedit/dom/clip.h"
 
+#include "fadetypeconversion.h"
 #include "viewtrackitem.h"
 
 namespace au::projectscene {
@@ -58,7 +59,7 @@ private:
     double m_speed = 1.0;
     double m_fadeInDuration = 0.0;
     double m_fadeOutDuration = 0.0;
-    FadeTypes::Type m_fadeInType = FadeTypes::Type::LINEAR;
-    FadeTypes::Type m_fadeOutType = FadeTypes::Type::LINEAR;
+    FadeTypes::Type m_fadeInType = toFadeTypesType(trackedit::defaultFadeType);
+    FadeTypes::Type m_fadeOutType = toFadeTypesType(trackedit::defaultFadeType);
 };
 }

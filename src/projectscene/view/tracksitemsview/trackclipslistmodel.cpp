@@ -3,6 +3,10 @@
 */
 #include "trackclipslistmodel.h"
 
+#include <algorithm>
+#include <iterator>
+
+#include "fadetypeconversion.h"
 #include "global/realfn.h"
 #include "global/async/async.h"
 
@@ -18,6 +22,7 @@ using namespace au::trackedit;
 constexpr double MIN_CLIP_WIDTH = 3.0;
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
+static const muse::Uri EDIT_CLIP_FADES_URI("audacity://projectscene/editclipfades");
 
 TrackClipsListModel::TrackClipsListModel(QObject* parent)
     : TrackItemsListModel(parent)
@@ -356,69 +361,143 @@ bool TrackClipsListModel::changeClipTitle(const ClipKey& key, const QString& new
     return trackeditInteraction()->changeClipTitle(key.key, newTitle);
 }
 
-void TrackClipsListModel::startClipFadeEdit(const ClipKey& key)
+void TrackClipsListModel::startClipFadeEdit(const ClipKey& key, ClipSides::Side side)
 {
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
+    if (!prj || !prj->clip(key.key).isValid()) {
         return;
     }
-    trackedit::Clip clip = prj->clip(key.key);
-    if (!clip.isValid()) {
-        return;
-    }
-    // So that nothing writes the ongoing edit into the undo state it should leave as it was
-    projectHistory()->startUserInteraction();
-    m_fadeEditedClip = std::move(clip);
+
+    // The previous drag, if any, gives the clips their fades back and ends its user interaction before this one reads
+    // the clips and starts its own
+    m_fadeDrag.reset();
+    const ClipKeyList keys = clipsForFadeEdit(key);
+    trackedit::Clips clips;
+    std::ranges::transform(keys, std::back_inserter(clips),
+                           [&](const trackedit::ClipKey& clipKey) { return prj->clip(clipKey); });
+    m_fadeDrag = ClipFadeDrag::start(*trackeditInteraction(), *projectHistory(), prj, std::move(clips), key.key, toTrackeditClipSide(side));
 }
 
-bool TrackClipsListModel::changeClipFade(const ClipKey& key, bool completed, const std::function<bool()>& change)
+bool TrackClipsListModel::changeClipFade(const ClipKey& key, double duration, bool completed)
 {
-    // E.g., the rest of a canceled drag
-    if (!m_fadeEditedClip || m_fadeEditedClip->key != key.key) {
+    ClipFadeDrag* const drag = m_fadeDrag && m_fadeDrag->leadClip() == key.key ? m_fadeDrag.get() : nullptr;
+    if (!drag) {
         return false;
     }
-    const bool changed = change();
-    if (completed) {
-        m_fadeEditedClip.reset();
-        // In case the change failed and so pushed no state
-        projectHistory()->endUserInteraction();
-    }
-    return changed;
-}
-
-bool TrackClipsListModel::changeClipFadeIn(const ClipKey& key, double duration, bool completed)
-{
-    return changeClipFade(key, completed, [&] {
-        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+    if (const TrackClipItem* item = clipItemByKey(key.key)) {
+        if (drag->side() == ClipSide::Left) {
             const double start = item->time().startTime;
             duration = m_context->applyDetectedSnap(start + duration) - start;
-        }
-        return trackeditInteraction()->changeClipFadeIn(key.key, duration, completed);
-    });
-}
-
-bool TrackClipsListModel::changeClipFadeOut(const ClipKey& key, double duration, bool completed)
-{
-    return changeClipFade(key, completed, [&] {
-        if (const TrackClipItem* item = clipItemByKey(key.key)) {
+        } else {
             const double end = item->time().endTime;
             duration = end - m_context->applyDetectedSnap(end - duration);
         }
-        return trackeditInteraction()->changeClipFadeOut(key.key, duration, completed);
-    });
+    }
+    const bool changed = drag->changeFade(duration);
+    if (!completed) {
+        return changed;
+    }
+    const bool committed = drag->commit();
+    m_fadeDrag.reset();
+    return committed;
 }
 
 void TrackClipsListModel::cancelClipFadeEdit()
 {
-    if (!m_fadeEditedClip) {
+    m_fadeDrag.reset();
+}
+
+double TrackClipsListModel::findFadeGuideline(const ClipKey& key) const
+{
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!m_fadeDrag || m_fadeDrag->leadClip() != key.key || !prj) {
+        return TimelineContext::INVALID_GUIDELINE_TIME;
+    }
+    const trackedit::Clip clip = prj->clip(key.key);
+    if (!clip.isValid()) {
+        return TimelineContext::INVALID_GUIDELINE_TIME;
+    }
+    const double fadeEnd = m_fadeDrag->side() == ClipSide::Left ? clip.startTime + clip.fadeInDuration
+                           : clip.endTime - clip.fadeOutDuration;
+    const double guidelineTime = m_context->findGuideline(fadeEnd);
+    return m_context->isGuidelineValid(guidelineTime) ? guidelineTime : TimelineContext::INVALID_GUIDELINE_TIME;
+}
+
+bool TrackClipsListModel::changeClipFadeInType(const ClipKey& key, FadeTypes::Type type)
+{
+    const trackedit::FadeType fadeType = toTrackeditFadeType(type);
+    return changeClipsForFadeEdit(key, [this, fadeType](const trackedit::ClipKey& clipKey, bool completed) {
+        return trackeditInteraction()->changeClipFadeInType(clipKey, fadeType, completed);
+    }, [fadeType](const trackedit::Clip& clip) { return clip.fadeInType != fadeType; });
+}
+
+bool TrackClipsListModel::changeClipFadeOutType(const ClipKey& key, FadeTypes::Type type)
+{
+    const trackedit::FadeType fadeType = toTrackeditFadeType(type);
+    return changeClipsForFadeEdit(key, [this, fadeType](const trackedit::ClipKey& clipKey, bool completed) {
+        return trackeditInteraction()->changeClipFadeOutType(clipKey, fadeType, completed);
+    }, [fadeType](const trackedit::Clip& clip) { return clip.fadeOutType != fadeType; });
+}
+
+void TrackClipsListModel::openClipFadeInLengthEdit(const ClipKey& key)
+{
+    openClipFadesEdit(key, ClipSides::Side::Left);
+}
+
+void TrackClipsListModel::openClipFadeOutLengthEdit(const ClipKey& key)
+{
+    openClipFadesEdit(key, ClipSides::Side::Right);
+}
+
+bool TrackClipsListModel::removeClipFadeIn(const ClipKey& key)
+{
+    return removeClipFades(key, ClipSide::Left);
+}
+
+bool TrackClipsListModel::removeClipFadeOut(const ClipKey& key)
+{
+    return removeClipFades(key, ClipSide::Right);
+}
+
+bool TrackClipsListModel::removeClipFades(const ClipKey& key, ClipSide side)
+{
+    return changeClipsForFadeEdit(key, [this, side](const trackedit::ClipKey& clipKey, bool completed) {
+        return side == ClipSide::Left ? trackeditInteraction()->changeClipFadeIn(clipKey, 0.0, completed)
+               : trackeditInteraction()->changeClipFadeOut(clipKey, 0.0, completed);
+    });
+}
+
+bool TrackClipsListModel::changeClipsForFadeEdit(const ClipKey& key,
+                                                 const std::function<bool(const trackedit::ClipKey&, bool completed)>& change,
+                                                 const std::function<bool(const trackedit::Clip&)>& needsChange)
+{
+    ClipKeyList keys = clipsForFadeEdit(key);
+    if (needsChange) {
+        const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        if (!prj) {
+            return false;
+        }
+        std::erase_if(keys, [&](const trackedit::ClipKey& clipKey) { return !needsChange(prj->clip(clipKey)); });
+    }
+    bool changed = false;
+    for (const trackedit::ClipKey& clipKey : keys) {
+        changed |= change(clipKey, &clipKey == &keys.back());
+    }
+    return changed;
+}
+
+void TrackClipsListModel::openClipFadesEdit(const ClipKey& key, ClipSides::Side focusedFade)
+{
+    selectClip(key);
+
+    if (interactive()->isOpened(EDIT_CLIP_FADES_URI).val) {
         return;
     }
 
-    constexpr auto completed = false;
-    trackeditInteraction()->changeClipFadeIn(m_fadeEditedClip->key, m_fadeEditedClip->fadeInDuration, completed);
-    trackeditInteraction()->changeClipFadeOut(m_fadeEditedClip->key, m_fadeEditedClip->fadeOutDuration, completed);
-    m_fadeEditedClip.reset();
-    projectHistory()->endUserInteraction();
+    muse::UriQuery query(EDIT_CLIP_FADES_URI);
+    query.addParam("focusedFade", muse::Val(static_cast<int>(focusedFade)));
+
+    interactive()->open(query);
 }
 
 bool TrackClipsListModel::isKeyboardTriggered() const
@@ -493,6 +572,11 @@ bool TrackClipsListModel::asymmetricStereoHeightsPossible() const
 bool TrackClipsListModel::isContrastFocusBorderEnabled() const
 {
     return !uiConfiguration()->isDarkMode();
+}
+
+ClipKeyList TrackClipsListModel::clipsForFadeEdit(const ClipKey& key) const
+{
+    return keyboardModifiers().testFlag(Qt::ControlModifier) ? ClipKeyList { key.key } : clipsForInteraction(key);
 }
 
 ClipKeyList TrackClipsListModel::clipsForInteraction(const ClipKey& key) const

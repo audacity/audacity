@@ -30,6 +30,8 @@
 #include "au3-mixer/AudioIOSequences.h"
 #include "au3-track/PendingTracks.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-clip-processing/ClipFades.h"
 
 using ::testing::_;
 using ::testing::DoAll;
@@ -344,6 +346,35 @@ TEST_F(Au3RecordTests, SoundActivationLevelWithinTheMeterRangeIsKept)
 
     //! [THEN] The engine gets the configured level
     EXPECT_DOUBLE_EQ(transportOptions.soundActivationLevelDb, audio::DEFAULT_SOUND_ACTIVATION_LEVEL_DB);
+}
+
+TEST_F(Au3RecordTests, FailingToStartRecordingWithinAClipLeavesTheClipAsItWas)
+{
+    //! [GIVEN] A selected track with a clip that has fades, and the playhead within the clip
+    constexpr double clipDuration = 2.0;
+    constexpr double fadeIn = 1.0;
+    constexpr double fadeOut = 0.5;
+    constexpr double recordingStart = fadeIn / 2;
+    Au3WaveTrack* track = addSelectedMonoTrack();
+    const auto clip = track->CreateClip(0.0, "clip");
+    const std::vector<float> samples(static_cast<size_t>(clipDuration * TEST_SAMPLE_RATE), 0.0f);
+    constSamplePtr buffer = reinterpret_cast<constSamplePtr>(samples.data());
+    clip->Append(&buffer, sampleFormat::floatSample, samples.size(), 1, sampleFormat::floatSample);
+    clip->Flush();
+    track->InsertInterval(clip, true);
+    ClipFades::Get(*clip).setFadeIn(fadeIn);
+    ClipFades::Get(*clip).setFadeOut(fadeOut);
+    ON_CALL(*m_playbackState, playbackPosition()).WillByDefault(Return(muse::secs_t(recordingStart)));
+
+    //! [WHEN] Recording fails to start
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _)).WillOnce(Return(0 /* failure */));
+    const muse::Ret ret = m_record->start();
+    EXPECT_FALSE(ret);
+
+    //! [THEN] The clip is neither split nor stripped of its fades
+    EXPECT_DOUBLE_EQ(clip->GetPlayEndTime(), clipDuration);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*clip).fadeIn(), fadeIn);
+    EXPECT_DOUBLE_EQ(ClipFades::Get(*clip).fadeOut(), fadeOut);
 }
 
 TEST_F(Au3RecordTests, RecordingWithOverdubPlaysOnlyTheTracksNotRecordedInto)
