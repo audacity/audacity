@@ -48,6 +48,7 @@
 #include "echo/echoeffect.h"
 #include "echo/echoviewmodel.h"
 #include "phaser/phasereffect.h"
+#include "phaser/phasersettingmodel.h"
 #include "phaser/phaserviewmodel.h"
 #include "wahwah/wahwaheffect.h"
 #include "wahwah/wahwahviewmodel.h"
@@ -182,6 +183,7 @@ void BuiltinCollectionLoader::init()
     regView(EchoEffect::Symbol, u"qrc:/echo/EchoView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PhaserViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PhaserSettingModelFactory);
     regView(PhaserEffect::Symbol, u"qrc:/phaser/PhaserView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(WahWahViewModelFactory);
