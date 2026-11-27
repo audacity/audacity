@@ -42,6 +42,7 @@
 #include "tonegen/chirpeffect.h"
 #include "tonegen/toneeffect.h"
 #include "reverb/reverbeffect.h"
+#include "reverb/reverbsettingmodel.h"
 #include "reverb/reverbviewmodel.h"
 #include "basstreble/basstrebleeffect.h"
 #include "basstreble/basstrebleviewmodel.h"
@@ -176,6 +177,7 @@ void BuiltinCollectionLoader::init()
     regView(ToneEffect::Symbol, u"qrc:/tonegen/ToneView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ReverbViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ReverbSettingModelFactory);
     regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(BassTrebleViewModelFactory);

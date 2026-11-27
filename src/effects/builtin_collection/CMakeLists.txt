@@ -104,6 +104,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbeffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbeffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbsettingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbviewmodel.h
 
