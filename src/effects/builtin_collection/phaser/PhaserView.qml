@@ -19,7 +19,6 @@ BuiltinEffectBase {
 
     builtinEffectModel: PhaserViewModelFactory.createModel(root, root.instanceId)
     numNavigationPanels: 2
-    property alias phaser: root.builtinEffectModel
 
     property NavigationPanel mainNavigationPanel: NavigationPanel {
         name: "PhaserMain"
@@ -45,10 +44,6 @@ BuiltinEffectBase {
         readonly property int columnSpacing: 32
         readonly property int cardRadius: 4
         readonly property int knobRadius: 24
-    }
-
-    function newParameterValueRequested(key, value) {
-        phaser.setParam(key, value)
     }
 
     RowLayout {
@@ -81,80 +76,22 @@ BuiltinEffectBase {
                 rowSpacing: prv.rowSpacing
                 columnSpacing: prv.columnSpacing
 
-                BigParameterKnob {
-                    id: freqKnob
+                Repeater {
+                    model: ["Freq", "Depth", "Stages", "Feedback"]
 
-                    Layout.fillWidth: true
+                    delegate: SettingKnob {
+                        required property string modelData
+                        required property int index
 
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: 0
+                        Layout.fillWidth: true
 
-                    parameter: phaser.paramsList["Freq"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
+                        navigationPanel: root.mainNavigationPanel
+                        navigationOrder: index
 
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
+                        isVertical: true
+                        radius: prv.knobRadius
+                        model: PhaserSettingModelFactory.createModel(root, root.instanceId, modelData)
                     }
-
-                    onCommitRequested: phaser.commitSettings()
-                }
-
-                BigParameterKnob {
-                    id: depthKnob
-
-                    Layout.fillWidth: true
-
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: freqKnob.navigation.order + 1
-
-                    parameter: phaser.paramsList["Depth"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
-
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
-                    }
-
-                    onCommitRequested: phaser.commitSettings()
-                }
-
-                BigParameterKnob {
-                    id: stagesKnob
-
-                    Layout.fillWidth: true
-
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: depthKnob.navigation.order + 1
-
-                    parameter: phaser.paramsList["Stages"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
-
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
-                    }
-
-                    onCommitRequested: phaser.commitSettings()
-                }
-
-                BigParameterKnob {
-                    id: feedbackKnob
-
-                    Layout.fillWidth: true
-
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: stagesKnob.navigation.order + 1
-
-                    parameter: phaser.paramsList["Feedback"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
-
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
-                    }
-
-                    onCommitRequested: phaser.commitSettings()
                 }
             }
         }
@@ -165,60 +102,31 @@ BuiltinEffectBase {
 
             spacing: prv.narrowRowSpacing
 
-            ParameterKnob {
-                id: phaseKnob
-
+            SettingKnob {
                 Layout.fillWidth: true
 
-                navigation.panel: root.secondaryNavigationPanel
-                navigation.order: 0
+                navigationPanel: root.secondaryNavigationPanel
+                navigationOrder: 0
 
-                parameter: phaser.paramsList["Phase"]
-                defaultValue: parameter ? parameter["defaultValue"] : 0
-
-                onNewValueRequested: function (key, newValue) {
-                    newParameterValueRequested(key, newValue)
-                }
-
-                onCommitRequested: phaser.commitSettings()
+                model: PhaserSettingModelFactory.createModel(root, root.instanceId, "Phase")
             }
 
             SeparatorLine {}
 
-            ParameterKnob {
-                id: dryWetKnob
+            Repeater {
+                model: ["DryWet", "Gain"]
 
-                Layout.fillWidth: true
+                delegate: SettingKnob {
+                    required property string modelData
+                    required property int index
 
-                navigation.panel: root.secondaryNavigationPanel
-                navigation.order: phaseKnob.navigation.order + 1
+                    Layout.fillWidth: true
 
-                parameter: phaser.paramsList["DryWet"]
-                defaultValue: parameter ? parameter["defaultValue"] : 0
+                    navigationPanel: root.secondaryNavigationPanel
+                    navigationOrder: index + 1
 
-                onNewValueRequested: function (key, newValue) {
-                    newParameterValueRequested(key, newValue)
+                    model: PhaserSettingModelFactory.createModel(root, root.instanceId, modelData)
                 }
-
-                onCommitRequested: phaser.commitSettings()
-            }
-
-            ParameterKnob {
-                id: gainKnob
-
-                Layout.fillWidth: true
-
-                navigation.panel: root.secondaryNavigationPanel
-                navigation.order: dryWetKnob.navigation.order + 1
-
-                parameter: phaser.paramsList["Gain"]
-                defaultValue: parameter ? parameter["defaultValue"] : 0
-
-                onNewValueRequested: function (key, newValue) {
-                    newParameterValueRequested(key, newValue)
-                }
-
-                onCommitRequested: phaser.commitSettings()
             }
         }
     }
