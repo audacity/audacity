@@ -11,6 +11,7 @@
 #include "FFmpegFunctions.h"
 
 #include <wx/string.h>
+#include <wx/dir.h>
 #include <wx/dynlib.h>
 #include <wx/log.h>
 #include <wx/utils.h>
@@ -330,6 +331,7 @@ std::vector<wxString> FFmpegFunctions::GetSearchPaths(bool fromUserPathOnly)
     }
 
 #if defined(__WXMSW__)
+    // This is deprecated, but should be kept for compatibility with FFmpeg for Audacity installers
     wxRegKey reg(wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg for Audacity"));
     wxString path;
 
@@ -341,9 +343,39 @@ std::vector<wxString> FFmpegFunctions::GetSearchPaths(bool fromUserPathOnly)
         paths.emplace_back(path);
     }
 
+    wxRegKey providers(wxT("HKEY_LOCAL_MACHINE\\Software\\FFmpeg\\Providers"));
+    wxString provider;
+    long index = 0;
+
+    if (providers.Exists()) {
+        for (bool found = providers.GetFirstKey(provider, index); found; found = providers.GetNextKey(provider, index)) {
+            wxRegKey providerKey(providers, provider);
+            wxString installPath;
+
+            if (providerKey.HasValue(wxT("InstallPath"))) {
+                providerKey.QueryValue(wxT("InstallPath"), installPath);
+            }
+
+            if (!installPath.empty()) {
+                paths.emplace_back(installPath + wxT("\\bin"));
+            }
+        }
+    }
+
 #elif defined(__WXMAC__)
     paths.emplace_back(wxT("/Library/Application Support/audacity/libs"));
     paths.emplace_back(wxT("/usr/local/lib/audacity"));
+
+    const wxString providersDir = wxT("/Library/Application Support/FFmpeg/Providers");
+    wxDir providers;
+    wxString provider;
+
+    if (wxDirExists(providersDir) && providers.Open(providersDir)) {
+        for (bool found = providers.GetFirst(&provider, wxEmptyString, wxDIR_DIRS); found; found = providers.GetNext(&provider)) {
+            paths.emplace_back(providersDir + wxT("/") + provider + wxT("/lib"));
+        }
+    }
+
     // x86_64 Homebrew
     paths.emplace_back(wxT("/usr/local/lib"));
     // ARM64 Homebrew
