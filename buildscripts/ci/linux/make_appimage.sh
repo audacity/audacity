@@ -192,7 +192,7 @@ additional_qt_components=(
   # At an unknown point in time, the libqgtk3 plugin stopped being deployed
   plugins/platformthemes/libqgtk3.so
 
-  # Wayland support (run with QT_QPA_PLATFORM=wayland to use)
+  # Wayland support (used by default; run with QT_QPA_PLATFORM=xcb to force X11)
   plugins/wayland-decoration-client
   plugins/wayland-graphics-integration-client
   plugins/wayland-shell-integration
