@@ -45,6 +45,15 @@
 #include "reverb/reverbviewmodel.h"
 #include "basstreble/basstrebleeffect.h"
 #include "basstreble/basstrebleviewmodel.h"
+#include "echo/echoeffect.h"
+#include "echo/echosettingmodel.h"
+#include "echo/echoviewmodel.h"
+#include "phaser/phasereffect.h"
+#include "phaser/phasersettingmodel.h"
+#include "phaser/phaserviewmodel.h"
+#include "wahwah/wahwaheffect.h"
+#include "wahwah/wahwahsettingmodel.h"
+#include "wahwah/wahwahviewmodel.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
@@ -102,6 +111,9 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
     static BuiltinEffectsModule::Registration< BassTrebleEffect > regBassTreble;
+    static BuiltinEffectsModule::Registration< EchoEffect > regEcho;
+    static BuiltinEffectsModule::Registration< PhaserEffect > regPhaser;
+    static BuiltinEffectsModule::Registration< WahWahEffect > regWahWah;
     static BuiltinEffectsModule::Registration< PaulstretchEffect > regPaulstretch;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< SlidingStretchEffect > regSlidingStretch;
@@ -168,6 +180,18 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(BassTrebleViewModelFactory);
     regView(BassTrebleEffect::Symbol, u"qrc:/basstreble/BassTrebleView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(EchoViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(EchoSettingModelFactory);
+    regView(EchoEffect::Symbol, u"qrc:/echo/EchoView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PhaserViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PhaserSettingModelFactory);
+    regView(PhaserEffect::Symbol, u"qrc:/phaser/PhaserView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(WahWahViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(WahWahSettingModelFactory);
+    regView(WahWahEffect::Symbol, u"qrc:/wahwah/WahWahView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
     regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
