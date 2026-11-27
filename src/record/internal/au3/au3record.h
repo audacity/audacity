@@ -10,6 +10,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/types/retval.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/rcommand/icommanddispatcher.h"
 
@@ -18,6 +19,7 @@
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "audio/iaudioengine.h"
 #include "audio/driver/iaudiodrivercontroller.h"
 #include "au3wrap/au3types.h"
@@ -25,6 +27,7 @@
 
 #include "../../irecord.h"
 #include "../../irecordconfiguration.h"
+#include "au3recordingtracks.h"
 
 struct TransportSequences;
 struct AudioIOStartTransportOptions;
@@ -43,6 +46,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Co
     muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
     friend class Au3RecordTests;
 
@@ -63,6 +67,7 @@ public:
     muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
 
     const std::vector<trackedit::ClipKey>& recordingClipKeys() const override;
+    std::vector<trackedit::TrackId> recordingTrackIds() const override;
 
     muse::async::Notification recordingFinished() const override;
 
@@ -81,6 +86,9 @@ private:
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
                        const double audioStreamSampleRate, double leadInTime = 0.0,
                        std::vector<std::vector<float> >* crossfadeData = nullptr);
+    //! The tracks to record into, or an error when the selected tracks don't share a rate
+    muse::RetVal<WritableSampleTrackArray> chooseRecordingTracks(au3::Au3Project& project) const;
+    muse::Ret stopTransportAndMonitoring();
     void cancelRecording();
     void commitRecording();
     bool labelDropouts();
@@ -108,6 +116,7 @@ private:
     IAudioInputPtr m_audioInput;
     std::vector<RecordData> m_recordData;
     std::vector<trackedit::ClipKey> m_recordingClipKeys;
+    std::vector<trackedit::TrackId> m_recordingTrackIds;
 
     muse::ValCh<muse::secs_t> m_recordPosition;
     muse::async::Notification m_recordingFinished;

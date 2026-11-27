@@ -28,10 +28,6 @@ WaveTrackItem::WaveTrackItem(QObject* parent)
             resetAudioChannelsVolumePressure();
         }
     });
-
-    connect(this, &WaveTrackItem::isFocusedChanged, this, [this]() {
-        checkMainAudioInput();
-    });
 }
 
 void WaveTrackItem::init(const trackedit::Track& track)
@@ -42,24 +38,12 @@ void WaveTrackItem::init(const trackedit::Track& track)
 
     playback()->audioOutput()->playbackTrackSignalChanges(trackId())
     .onReceive(this, [this](audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
-        setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
-        setAudioChannelRMS(channel, meterSignal.rms.pressure);
+        showSignal(m_playbackLevels, channel, meterSignal);
     }, muse::async::Asyncable::Mode::SetReplace);
 
     record()->audioInput()->recordTrackSignalChanges(trackId())
     .onReceive(this, [this](audio::audioch_t channel, const au::audio::MeterSignal& meterSignal) {
-        setAudioChannelVolumePressure(channel, meterSignal.peak.pressure);
-        setAudioChannelRMS(channel, meterSignal.rms.pressure);
-    }, muse::async::Asyncable::Mode::SetReplace);
-
-    audioDriverController()->configurationChanged().onReceive(this, [this](const audio::AudioConfigurationDelta& delta) {
-        if (!delta.contains(audio::AudioConfigurationField::InputChannels)) {
-            return;
-        }
-        const int inputChannelsCount = audioDriverController()->configuration().inputChannels;
-        m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
-                                      || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
-        checkMainAudioInput();
+        showSignal(m_inputLevels, channel, meterSignal);
     }, muse::async::Asyncable::Mode::SetReplace);
 
     const auto ctrl = trackPlaybackControl();
@@ -79,12 +63,6 @@ void WaveTrackItem::init(const trackedit::Track& track)
         }
         muteOrSoloChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
-
-    const int inputChannelsCount = audioDriverController()->configuration().inputChannels;
-    m_recordStreamChannelsMatch = (trackType() == trackedit::TrackType::Mono && inputChannelsCount == 1)
-                                  || (trackType() == trackedit::TrackType::Stereo && inputChannelsCount == 2);
-
-    checkMainAudioInput();
 }
 
 void WaveTrackItem::muteOrSoloChanged()
@@ -274,29 +252,30 @@ void WaveTrackItem::setAudioChannelRMS(const trackedit::audioch_t chNum, const f
     chNum == 0 ? setLeftChannelRMS(clampedValue) : setRightChannelRMS(clampedValue);
 }
 
+void WaveTrackItem::showSignal(TrackLevels& levels, const trackedit::audioch_t chNum, const audio::MeterSignal& meterSignal)
+{
+    if (chNum >= levels.size()) {
+        return;
+    }
+
+    levels[chNum] = { meterSignal.peak.pressure, meterSignal.rms.pressure };
+    setAudioChannelVolumePressure(chNum, std::max(m_playbackLevels[chNum].pressure, m_inputLevels[chNum].pressure));
+    setAudioChannelRMS(chNum, std::max(m_playbackLevels[chNum].rms, m_inputLevels[chNum].rms));
+}
+
 void WaveTrackItem::resetAudioChannelsVolumePressure()
 {
+    m_playbackLevels = {};
+    m_inputLevels = {};
     setLeftChannelPressure(playback::MIN_DISPLAYED_DBFS);
     setRightChannelPressure(playback::MIN_DISPLAYED_DBFS);
+    setLeftChannelRMS(playback::MIN_DISPLAYED_DBFS);
+    setRightChannelRMS(playback::MIN_DISPLAYED_DBFS);
 }
 
 const AudioOutputParams& WaveTrackItem::outputParams() const
 {
     return m_outParams;
-}
-
-void WaveTrackItem::checkMainAudioInput()
-{
-    if (isFocused() && m_recordStreamChannelsMatch) {
-        record()->audioInput()->recordSignalChanges().onReceive(this,
-                                                                [this](const audioch_t audioChNum, const audio::MeterSignal& meterSignal) {
-            setAudioChannelVolumePressure(audioChNum,
-                                          meterSignal.peak.pressure);
-            setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
-        }, muse::async::Asyncable::Mode::SetReplace);
-    } else {
-        record()->audioInput()->recordSignalChanges().disconnect(this);
-    }
 }
 
 bool WaveTrackItem::isAudible() const

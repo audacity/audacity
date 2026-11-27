@@ -3,9 +3,10 @@
 */
 #pragma once
 
+#include <array>
+
 #include "framework/global/iapplication.h"
 
-#include "audio/driver/iaudiodrivercontroller.h"
 #include "playback/iplayback.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "record/irecord.h"
@@ -30,7 +31,6 @@ class WaveTrackItem : public TrackItem
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
-    muse::GlobalInject<audio::IAudioDriverController> audioDriverController;
     muse::GlobalInject<muse::IApplication> application;
 
     muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
@@ -91,7 +91,6 @@ protected:
     void setAudioChannelVolumePressure(const trackedit::audioch_t chNum, const float newValue);
     void setAudioChannelRMS(const trackedit::audioch_t chNum, const float newValue);
     void resetAudioChannelsVolumePressure();
-    void checkMainAudioInput();
     void muteOrSoloChanged();
 
     bool isAudible() const override;
@@ -105,6 +104,17 @@ private:
     float m_rightChannelRMS = playback::MIN_DISPLAYED_DBFS;
 
     bool m_outputOnly = false;
-    bool m_recordStreamChannelsMatch = 0;
+
+    struct ChannelLevels {
+        float pressure = playback::MIN_DISPLAYED_DBFS;
+        float rms = playback::MIN_DISPLAYED_DBFS;
+    };
+    using TrackLevels = std::array<ChannelLevels, 2>;
+
+    //! Playback and input can both reach a track's meter: the louder one is shown
+    void showSignal(TrackLevels& levels, const trackedit::audioch_t chNum, const audio::MeterSignal& meterSignal);
+
+    TrackLevels m_playbackLevels;
+    TrackLevels m_inputLevels;
 };
 }

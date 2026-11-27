@@ -47,6 +47,8 @@ public:
         bool operator<(const TrackId& other) const { return value < other.value; }
     };
 
+    static constexpr int64_t MainMeterTrackId = -2;
+
     using OptionalTimePoint = std::optional<TimePoint>;
 
     virtual ~IAudioMeter() = default;

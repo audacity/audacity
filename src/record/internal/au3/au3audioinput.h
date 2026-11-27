@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include <vector>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
@@ -49,17 +51,20 @@ private:
 
     void initMeter();
     bool isTrackMeterMonitoring() const;
-    int getFocusedTrackChannels() const;
+    void subscribeToTrackChanges();
+    void onRecordingTracksChanged();
+    bool updateMonitoredTracks();
 
     void updateAudioEngineMonitoring() const;
     void startAudioEngineMonitoring() const;
     void stopAudioEngineMonitoring() const;
+    bool isTransportActive() const;
     bool canStartAudioEngineMonitoring() const;
     bool audioEngineShouldBeMonitoring() const;
 
     mutable muse::async::Channel<float> m_recordVolumeChanged;
     const std::shared_ptr<au::au3::Au3AudioMeter> m_inputMeter;
     int m_inputChannelsCount{};
-    int m_focusedTrackChannels{};
+    std::vector<audio::MonitoredTrack> m_monitoredTracks;
 };
 }

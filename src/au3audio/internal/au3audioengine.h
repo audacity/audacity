@@ -44,6 +44,7 @@ public:
 
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
+    void setMonitoredTracks(const std::vector<audio::MonitoredTrack>& tracks) override;
 
     void setInputVolume(float newInputVolume) override;
     float getInputVolume() const override;

@@ -850,30 +850,17 @@ void AudioIO::ConfigureCaptureRouting(size_t inputChannelsCount)
         return;
     }
 
-    const auto captureChannelsCount = mCaptureChannelLayout.size();
+    CaptureRouting routing = MakeCaptureRouting(inputChannelsCount, mCaptureChannelLayout.size());
+    mTrackChannelSourceMap = std::move(routing.trackChannels);
+    mCaptureNeedsMixdown = routing.needsMixdown;
+}
 
-    mTrackChannelSourceMap.resize(captureChannelsCount);
-
-    // Only allow up/down mixing for mono<->stereo cases
-    const bool canMix = (inputChannelsCount <= 2 && captureChannelsCount <= 2);
-
-    if (canMix && inputChannelsCount == 2 && captureChannelsCount == 1) {
-        // Stereo input -> Mono track: mix both input channels to mono
-        mCaptureNeedsMixdown = true;
-        mTrackChannelSourceMap[0].push_back(0);
-        mTrackChannelSourceMap[0].push_back(1);
-    } else if (canMix && inputChannelsCount == 1 && captureChannelsCount == 2) {
-        // Mono input -> Stereo track: duplicate mono to both channels
-        mCaptureNeedsMixdown = false;
-        mTrackChannelSourceMap[0].push_back(0);
-        mTrackChannelSourceMap[1].push_back(0);
-    } else {
-        // 1 to 1 mapping
-        mCaptureNeedsMixdown = false;
-        for (size_t t = 0; t < std::min(captureChannelsCount, inputChannelsCount); ++t) {
-            mTrackChannelSourceMap[t].push_back(t);
-        }
-    }
+void AudioIO::SetMonitoredTracks(const std::vector<MonitoredTrack>& tracks)
+{
+    MonitoredTracks monitored;
+    monitored.count = std::min(tracks.size(), MaxMonitoredTracks);
+    std::copy_n(tracks.begin(), monitored.count, monitored.tracks.begin());
+    mMonitoredTracks.Write(monitored);
 }
 
 void AudioIO::StartMonitoring(const AudioIOStartTransportOptions& options)
@@ -2539,7 +2526,7 @@ void AudioIO::DrainRecordBuffers()
                     break;
                 }
 
-                const auto& sources = mTrackChannelSourceMap[trackChannelIndex];
+                const auto sources = mTrackChannelSourceMap[trackChannelIndex].inputChannels();
                 if (sources.empty()) {
                     ++trackChannelIndex;
                     continue;
@@ -3209,35 +3196,49 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
         return;
     }
 
-    // Update meter tracks
-    auto sptr = values;
-    for (const auto& sequence : mCaptureSequences) {
-        auto nChannels = sequence->NChannels();
-        const int64_t id = sequence->GetRecordableSequenceId();
-        for (size_t ch = 0; ch < nChannels; ch++) {
-            // Map track channel to input channel, wrapping if track has more channels than input
-            size_t inputCh = ch % mNumCaptureChannels;
-            sender->push(ch, { sptr + inputCh, frames, mNumCaptureChannels, dacTime }, IMeterSender::TrackId { id });
+    if (mCaptureSequences.empty()) {
+        // Monitoring: the tracks that would be recorded into show the input as it would be recorded
+        const MonitoredTracks monitored = mMonitoredTracks.Read();
+        size_t trackChannels = 0;
+        for (size_t i = 0; i < monitored.count; ++i) {
+            trackChannels += monitored.tracks[i].channels;
+        }
+        size_t trackChannel = 0;
+        for (size_t i = 0; i < monitored.count; ++i) {
+            const MonitoredTrack& track = monitored.tracks[i];
+            for (size_t channel = 0; channel < track.channels; ++channel, ++trackChannel) {
+                const CaptureChannelSources sources = GetCaptureChannelSources(mNumCaptureChannels, trackChannels, trackChannel);
+                PushRoutedInputValues(sender, values, frames, dacTime, channel, sources.inputChannels(), track.trackId);
+            }
         }
     }
 
+    // Update meter tracks: each track channel shows the input channels routed to it (see ConfigureCaptureRouting)
+    const size_t routedChannels = std::min(mCaptureChannelLayout.size(), mTrackChannelSourceMap.size());
+    for (size_t i = 0; i < routedChannels; ++i) {
+        const auto& info = mCaptureChannelLayout[i];
+        if (info.sequenceIndex >= mCaptureSequences.size()) {
+            continue;
+        }
+        PushRoutedInputValues(sender, values, frames, dacTime, info.channelIndex, mTrackChannelSourceMap[i].inputChannels(),
+                              mCaptureSequences[info.sequenceIndex]->GetRecordableSequenceId());
+    }
+
     // Update main meter
-    // If the input source has more than 2 channels it will be splitted on multiple mono sequences
+    // With more than two input channels, odd and even input channels are folded into the two meter channels by their peak
     if (mNumCaptureChannels <= 2) {
         for (size_t ch = 0; ch < mNumCaptureChannels; ++ch) {
-            sender->push(ch, { sptr + ch, frames, mNumCaptureChannels, dacTime });
+            sender->push(ch, { values + ch, frames, mNumCaptureChannels, dacTime });
         }
     } else {
         constexpr size_t maxMainTrackChannels = 2;
         const auto mainTrackInput = stackAllocate(float, frames * maxMainTrackChannels);
         std::memset(mainTrackInput, 0, frames * maxMainTrackChannels * sizeof(float));
 
-        for (size_t i = 0; i < frames; ++i) {
-            for (size_t seqNum = 0; seqNum < mCaptureSequences.size(); seqNum++) {
-                const auto channel = seqNum % maxMainTrackChannels;
-                mainTrackInput[channel * frames + i] = std::max(
-                    mainTrackInput[channel * frames + i], *sptr);
-                sptr++;
+        for (size_t frame = 0; frame < frames; ++frame) {
+            for (size_t inputCh = 0; inputCh < mNumCaptureChannels; ++inputCh) {
+                float& folded = mainTrackInput[(inputCh % maxMainTrackChannels) * frames + frame];
+                folded = std::max(folded, std::fabs(values[frame * mNumCaptureChannels + inputCh]));
             }
         }
 
@@ -3245,6 +3246,32 @@ void AudioIoCallback::PushInputMeterValues(const IMeterSenderPtr& sender, const 
             sender->push(ch, { mainTrackInput + ch * frames, frames, 1, dacTime });
         }
     }
+}
+
+void AudioIoCallback::PushRoutedInputValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames,
+                                            const TimePoint& dacTime, size_t channelIndex, std::span<const size_t> sources,
+                                            int64_t trackId)
+{
+    if (sources.empty()) {
+        return;
+    }
+
+    if (sources.size() == 1) {
+        sender->push(channelIndex, { values + sources.front(), frames, mNumCaptureChannels, dacTime }, IMeterSender::TrackId { trackId });
+        return;
+    }
+
+    // Several input channels mixed into one track channel: show their average, as recorded
+    const auto mixed = stackAllocate(float, frames);
+    const float gain = 1.0f / static_cast<float>(sources.size());
+    for (size_t frame = 0; frame < frames; ++frame) {
+        float sum = 0.0f;
+        for (const auto source : sources) {
+            sum += values[frame * mNumCaptureChannels + source];
+        }
+        mixed[frame] = sum * gain;
+    }
+    sender->push(channelIndex, { mixed, frames, 1, dacTime }, IMeterSender::TrackId { trackId });
 }
 
 void AudioIoCallback::PushMasterOutputMeterValues(const IMeterSenderPtr& sender, const float* values, uint8_t channels,

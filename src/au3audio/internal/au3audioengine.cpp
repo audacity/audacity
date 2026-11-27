@@ -186,6 +186,16 @@ void Au3AudioEngine::stopMonitoring()
     AudioIO::Get()->StopMonitoring();
 }
 
+void Au3AudioEngine::setMonitoredTracks(const std::vector<au::audio::MonitoredTrack>& tracks)
+{
+    std::vector<AudioIO::MonitoredTrack> monitoredTracks;
+    monitoredTracks.reserve(tracks.size());
+    for (const auto& [trackId, channels] : tracks) {
+        monitoredTracks.push_back({ .trackId = trackId, .channels = channels });
+    }
+    AudioIO::Get()->SetMonitoredTracks(monitoredTracks);
+}
+
 void Au3AudioEngine::setInputVolume(const float newInputVolume)
 {
     int inputSource;

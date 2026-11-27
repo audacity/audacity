@@ -33,6 +33,7 @@ public:
     virtual muse::async::Channel<muse::secs_t> recordPositionChanged() const = 0;
 
     virtual const std::vector<trackedit::ClipKey>& recordingClipKeys() const = 0;
+    virtual std::vector<trackedit::TrackId> recordingTrackIds() const = 0;
 
     virtual muse::async::Notification recordingFinished() const = 0;
 };

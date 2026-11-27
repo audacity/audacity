@@ -16,6 +16,7 @@
 #include "project/tests/testtools.h"
 #include "trackedit/tests/mocks/selectioncontrollermock.h"
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
+#include "trackedit/tests/mocks/tracknavigationcontrollermock.h"
 
 #include "au3audio/tests/mocks/audioenginemock.h"
 #include "playback/tests/mocks/playbackconfigurationmock.h"
@@ -23,6 +24,7 @@
 #include "mocks/recordconfigurationmock.h"
 
 #include "au3wrap/internal/au3project.h"
+#include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/au3types.h"
 
 #include "playback/playbackcommands.h"
@@ -63,6 +65,9 @@ public:
             });
         });
         m_selectionController = std::make_shared<NiceMock<trackedit::SelectionControllerMock> >();
+        m_trackNavigationController = std::make_shared<NiceMock<trackedit::TrackNavigationControllerMock> >();
+        ON_CALL(*m_trackNavigationController, focusedTrack())
+        .WillByDefault(Return(trackedit::INVALID_TRACK));
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
         m_audioEngine = std::make_shared<NiceMock<audio::AudioEngineMock> >();
         m_recordConfiguration = std::make_shared<NiceMock<RecordConfigurationMock> >();
@@ -74,6 +79,7 @@ public:
         m_record->globalContext.set(m_globalContext);
         m_record->commandDispatcher.set(m_commandDispatcher);
         m_record->selectionController.set(m_selectionController);
+        m_record->trackNavigationController.set(m_trackNavigationController);
         m_record->audioEngine.set(m_audioEngine);
         m_record->recordConfiguration.set(m_recordConfiguration);
         m_record->audioDriverController.set(m_audioDriverController);
@@ -162,8 +168,13 @@ public:
 
     Au3WaveTrack* addMonoTrack(bool selected)
     {
+        return addTrack(1, selected);
+    }
+
+    Au3WaveTrack* addTrack(size_t channels, bool selected)
+    {
         auto& trackFactory = Au3WaveTrackFactory::Get(projectRef());
-        auto track = trackFactory.Create(sampleFormat::floatSample, TEST_SAMPLE_RATE);
+        auto track = trackFactory.Create(channels, sampleFormat::floatSample, TEST_SAMPLE_RATE);
         Au3TrackList::Get(projectRef()).Add(track, ::TrackList::DoAssignId::Yes,
                                             ::TrackList::EventPublicationSynchrony::Synchronous);
         track->SetSelected(selected);
@@ -182,11 +193,52 @@ public:
         });
     }
 
+    void focusTrack(const Au3WaveTrack* track)
+    {
+        ON_CALL(*m_trackNavigationController, focusedTrack())
+        .WillByDefault(Return(trackedit::TrackId(track->GetId())));
+    }
+
+    void setInputChannels(int channels)
+    {
+        audio::AudioConfiguration audioConfiguration;
+        audioConfiguration.inputChannels = channels;
+        ON_CALL(*m_audioDriverController, configuration())
+        .WillByDefault(Return(audioConfiguration));
+        ON_CALL(*m_audioDriverController, inputChannelsAvailable())
+        .WillByDefault(Return(channels));
+    }
+
+    std::vector<trackedit::TrackId> recordedTrackIds() const
+    {
+        std::vector<trackedit::TrackId> ids;
+        for (const auto& key : m_record->recordingClipKeys()) {
+            ids.push_back(key.trackId);
+        }
+        return ids;
+    }
+
+    std::vector<size_t> recordedTrackChannels() const
+    {
+        std::vector<size_t> channels;
+        for (const auto& id : recordedTrackIds()) {
+            const Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(id));
+            channels.push_back(track ? track->NChannels() : 0);
+        }
+        return channels;
+    }
+
+    static trackedit::TrackId idOf(const Au3WaveTrack* track)
+    {
+        return trackedit::TrackId(track->GetId());
+    }
+
     std::shared_ptr<Au3Record> m_record;
 
     std::shared_ptr<context::GlobalContextMock> m_globalContext;
     std::shared_ptr<muse::rcommand::CommandDispatcherMock> m_commandDispatcher;
     std::shared_ptr<trackedit::SelectionControllerMock> m_selectionController;
+    std::shared_ptr<trackedit::TrackNavigationControllerMock> m_trackNavigationController;
     std::shared_ptr<context::PlaybackStateMock> m_playbackState;
     std::shared_ptr<audio::AudioEngineMock> m_audioEngine;
     std::shared_ptr<RecordConfigurationMock> m_recordConfiguration;
@@ -465,5 +517,349 @@ TEST_F(Au3RecordTests, LeadInRecordingWithoutOverdubPlaysTheTrackRecordedIntoUnt
     ASSERT_EQ(sequences.playbackSequences.size(), 1u);
     ASSERT_EQ(sequences.leadInTimeSequences.size(), 1u);
     EXPECT_EQ(sequences.leadInTimeSequences.front(), sequences.playbackSequences.front());
+}
+
+TEST_F(Au3RecordTests, RecordingWithoutSelectedTracksGoesIntoTheFocusedTrack)
+{
+    //! [GIVEN] Two tracks, none selected, the second one focused
+    addTrack(1, false);
+    Au3WaveTrack* focused = addTrack(1, false);
+    focusTrack(focused);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records into the focused track, without adding a track
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { trackedit::TrackId(focused->GetId()) });
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>().size(), 2u);
+}
+
+TEST_F(Au3RecordTests, RecordingGoesIntoTheSelectedTrackRatherThanTheFocusedOne)
+{
+    //! [GIVEN] A selected track and another, focused track
+    Au3WaveTrack* selected = addTrack(1, true);
+    Au3WaveTrack* focused = addTrack(1, false);
+    focusTrack(focused);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records into the selected track
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { trackedit::TrackId(selected->GetId()) });
+}
+
+TEST_F(Au3RecordTests, RecordingWithoutSelectedOrFocusedTrackGoesIntoANewTrack)
+{
+    //! [GIVEN] A track that is neither selected nor focused
+    Au3WaveTrack* existing = addTrack(1, false);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records into a new track
+    const auto recorded = recordedTrackIds();
+    ASSERT_EQ(recorded.size(), 1u);
+    EXPECT_NE(recorded.front(), trackedit::TrackId(existing->GetId()));
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>().size(), 2u);
+}
+
+TEST_F(Au3RecordTests, RecordingWithMoreInputChannelsThanTheFocusedTrackGoesIntoIt)
+{
+    //! [GIVEN] Four input channels and a focused stereo track, no track selected
+    setInputChannels(4);
+    Au3WaveTrack* focused = addTrack(2, false);
+    focusTrack(focused);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records the first input channels into the focused track
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { trackedit::TrackId(focused->GetId()) });
+}
+
+TEST_F(Au3RecordTests, StereoInputIntoTheFocusedMonoTrackRecordsIntoIt)
+{
+    //! [GIVEN] A stereo input and a focused mono track, no track selected
+    setInputChannels(2);
+    Au3WaveTrack* focused = addTrack(1, false);
+    focusTrack(focused);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The focused track records, without adding a track
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { idOf(focused) });
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>().size(), 1u);
+}
+
+TEST_F(Au3RecordTests, LeadInRecordingWithoutSelectedTracksGoesIntoTheFocusedTrack)
+{
+    //! [GIVEN] Two tracks, none selected, the second one focused, and the playhead at 8s
+    addTrack(1, false);
+    Au3WaveTrack* focused = addTrack(1, false);
+    focusTrack(focused);
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(muse::secs_t(8.0)));
+
+    TransportSequences sequences;
+    EXPECT_CALL(*m_audioEngine, startTransport(_, _, _, _, _, _))
+    .WillOnce(DoAll(SaveArg<0>(&sequences), Return(1)));
+
+    //! [WHEN] Lead-in recording is initiated
+    muse::Ret ret = m_record->leadInRecording();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records into the focused track
+    ASSERT_EQ(sequences.captureSequences.size(), 1u);
+    EXPECT_EQ(sequences.captureSequences.front()->GetRecordableSequenceId(), idOf(focused));
+}
+
+TEST_F(Au3RecordTests, LeadInRecordingReportsTheFocusedTrackAsRecordedInto)
+{
+    //! [GIVEN] Two tracks, none selected, the second one focused, and the playhead at 8s
+    addTrack(1, false);
+    Au3WaveTrack* focused = addTrack(1, false);
+    focusTrack(focused);
+    ON_CALL(*m_playbackState, playbackPosition())
+    .WillByDefault(Return(muse::secs_t(8.0)));
+
+    //! [WHEN] Lead-in recording is initiated
+    muse::Ret ret = m_record->leadInRecording();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The focused track is reported as recorded into
+    EXPECT_EQ(m_record->recordingTrackIds(), std::vector<trackedit::TrackId> { idOf(focused) });
+}
+
+TEST_F(Au3RecordTests, RecordingIntoANewTrackReportsItAsRecordedInto)
+{
+    //! [GIVEN] A track that is neither selected nor focused
+    Au3WaveTrack* existing = addTrack(1, false);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The new track is reported as recorded into
+    const auto reported = m_record->recordingTrackIds();
+    ASSERT_EQ(reported.size(), 1u);
+    EXPECT_NE(reported.front(), idOf(existing));
+    EXPECT_EQ(reported, recordedTrackIds());
+}
+
+TEST_F(Au3RecordTests, RecordingWithMoreInputChannelsThanTheSelectedTracksGoesIntoThem)
+{
+    //! [GIVEN] Four input channels and three selected mono tracks
+    setInputChannels(4);
+    const std::vector<trackedit::TrackId> selected {
+        trackedit::TrackId(addTrack(1, true)->GetId()),
+        trackedit::TrackId(addTrack(1, true)->GetId()),
+        trackedit::TrackId(addTrack(1, true)->GetId()),
+    };
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records into the three selected tracks, without adding a track
+    EXPECT_EQ(recordedTrackIds(), selected);
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>().size(), 3u);
+}
+
+TEST_F(Au3RecordTests, MonoInputIntoTwoSelectedMonoTracksRecordsOnlyTheFirst)
+{
+    //! [GIVEN] A mono input and two selected mono tracks
+    setInputChannels(1);
+    Au3WaveTrack* first = addTrack(1, true);
+    addTrack(1, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Only the first track records
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { idOf(first) });
+}
+
+TEST_F(Au3RecordTests, StereoInputIntoTwoSelectedMonoTracksRecordsBoth)
+{
+    //! [GIVEN] A stereo input and two selected mono tracks
+    setInputChannels(2);
+    Au3WaveTrack* first = addTrack(1, true);
+    Au3WaveTrack* second = addTrack(1, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Both tracks record, in track order
+    EXPECT_EQ(recordedTrackIds(), (std::vector<trackedit::TrackId> { idOf(first), idOf(second) }));
+}
+
+TEST_F(Au3RecordTests, StereoInputIntoOneSelectedMonoTrackRecordsIntoIt)
+{
+    //! [GIVEN] A stereo input and one selected mono track
+    setInputChannels(2);
+    Au3WaveTrack* track = addTrack(1, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The mono track records, without adding a track
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { idOf(track) });
+    EXPECT_EQ(Au3TrackList::Get(projectRef()).Any<Au3WaveTrack>().size(), 1u);
+}
+
+TEST_F(Au3RecordTests, MonoInputIntoASelectedStereoTrackRecordsIntoIt)
+{
+    //! [GIVEN] A mono input and one selected stereo track
+    setInputChannels(1);
+    Au3WaveTrack* track = addTrack(2, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The stereo track records
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { idOf(track) });
+}
+
+TEST_F(Au3RecordTests, StereoInputIntoASelectedStereoTrackRecordsIntoIt)
+{
+    //! [GIVEN] A stereo input and one selected stereo track
+    setInputChannels(2);
+    Au3WaveTrack* track = addTrack(2, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The stereo track records
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { idOf(track) });
+}
+
+TEST_F(Au3RecordTests, StereoInputIntoThreeSelectedMonoTracksRecordsTheFirstTwo)
+{
+    //! [GIVEN] A stereo input and three selected mono tracks
+    setInputChannels(2);
+    Au3WaveTrack* first = addTrack(1, true);
+    Au3WaveTrack* second = addTrack(1, true);
+    addTrack(1, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The first two tracks record, the third gets nothing
+    EXPECT_EQ(recordedTrackIds(), (std::vector<trackedit::TrackId> { idOf(first), idOf(second) }));
+}
+
+TEST_F(Au3RecordTests, StereoInputPrefersASelectedStereoTrackOverAPrecedingMonoTrack)
+{
+    //! [GIVEN] A stereo input, and a selected mono track followed by a selected stereo track
+    setInputChannels(2);
+    addTrack(1, true);
+    Au3WaveTrack* stereo = addTrack(2, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Only the stereo track records
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId> { idOf(stereo) });
+}
+
+TEST_F(Au3RecordTests, MoreSelectedTracksThanInputsRecordsTheFirstTracks)
+{
+    //! [GIVEN] Four input channels and six selected mono tracks
+    setInputChannels(4);
+    std::vector<trackedit::TrackId> tracks;
+    for (int i = 0; i < 6; ++i) {
+        tracks.push_back(idOf(addTrack(1, true)));
+    }
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The first four tracks record, the others get nothing
+    EXPECT_EQ(recordedTrackIds(), std::vector<trackedit::TrackId>(tracks.begin(), tracks.begin() + 4));
+}
+
+TEST_F(Au3RecordTests, MoreInputsThanTrackChannelsRecordsIntoAllSelectedTracks)
+{
+    //! [GIVEN] Four input channels, and a selected stereo track and a selected mono track
+    setInputChannels(4);
+    Au3WaveTrack* stereo = addTrack(2, true);
+    Au3WaveTrack* mono = addTrack(1, true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] Both tracks record, in track order
+    EXPECT_EQ(recordedTrackIds(), (std::vector<trackedit::TrackId> { idOf(stereo), idOf(mono) }));
+}
+
+TEST_F(Au3RecordTests, RecordingFollowsTrackOrderRatherThanSelectionOrder)
+{
+    //! [GIVEN] A stereo input and two mono tracks, the second one selected first
+    setInputChannels(2);
+    Au3WaveTrack* first = addTrack(1, false);
+    Au3WaveTrack* second = addTrack(1, false);
+    second->SetSelected(true);
+    first->SetSelected(true);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] The tracks record in track order
+    EXPECT_EQ(recordedTrackIds(), (std::vector<trackedit::TrackId> { idOf(first), idOf(second) }));
+}
+
+TEST_F(Au3RecordTests, StereoInputWithoutSelectedOrFocusedTrackGoesIntoANewStereoTrack)
+{
+    //! [GIVEN] A stereo input and no tracks
+    setInputChannels(2);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records into one new stereo track
+    EXPECT_EQ(recordedTrackChannels(), std::vector<size_t> { 2 });
+}
+
+TEST_F(Au3RecordTests, MultichannelInputWithoutSelectedOrFocusedTrackGoesIntoNewMonoTracks)
+{
+    //! [GIVEN] Three input channels and no tracks
+    setInputChannels(3);
+
+    //! [WHEN] Recording is initiated
+    muse::Ret ret = m_record->start();
+    EXPECT_TRUE(ret);
+
+    //! [THEN] It records into three new mono tracks
+    EXPECT_EQ(recordedTrackChannels(), (std::vector<size_t> { 1, 1, 1 }));
+}
+
+TEST_F(Au3RecordTests, SelectedTracksWithDifferentRatesAreNotRecorded)
+{
+    //! [GIVEN] Two selected tracks with different rates
+    addTrack(1, true);
+    addTrack(1, true)->SetRate(TEST_SAMPLE_RATE * 2);
+
+    //! [WHEN] Recording is initiated
+    //! [THEN] It is refused
+    muse::Ret ret = m_record->start();
+    EXPECT_FALSE(ret);
+    EXPECT_TRUE(recordedTrackIds().empty());
 }
 }

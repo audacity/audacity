@@ -123,6 +123,23 @@ TEST_F(RecordControllerTests, LeadInRecordingStartsFromPlayheadNotSelectionStart
     EXPECT_DOUBLE_EQ(m_controller->leadInRecordingStartTime().to_double(), 8.0);
 }
 
+TEST_F(RecordControllerTests, LeadInRecordingIndicatorShowsTheTracksRecordedInto)
+{
+    //! [GIVEN] A label track is selected, so the recording goes into another track
+    const trackedit::TrackId labelTrackId = 1;
+    const trackedit::TrackId recordedTrackId = 2;
+    ON_CALL(*m_selectionController, selectedTracks())
+    .WillByDefault(Return(trackedit::TrackIdList { labelTrackId }));
+    ON_CALL(*m_record, recordingTrackIds())
+    .WillByDefault(Return(std::vector<trackedit::TrackId> { recordedTrackId }));
+
+    //! [WHEN] Lead-in recording is initiated
+    leadInRecording();
+
+    //! [THEN] The indicator is shown on the track being recorded into
+    EXPECT_EQ(m_controller->leadInRecordingTrackIds(), std::vector<trackedit::TrackId> { recordedTrackId });
+}
+
 TEST_F(RecordControllerTests, LeadInRecordingFromPausedPlaybackStopsPlaybackFirst)
 {
     //! [GIVEN] Playback is paused

@@ -75,6 +75,8 @@ public:
 
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
+    //! The tracks whose meters show the input while monitoring, in the order they would be recorded into
+    virtual void setMonitoredTracks(const std::vector<MonitoredTrack>& tracks) = 0;
 
     virtual void setInputVolume(float newInputVolume) = 0;
     virtual float getInputVolume() const = 0;

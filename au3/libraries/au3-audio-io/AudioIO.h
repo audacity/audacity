@@ -17,14 +17,17 @@
 #include "au3-mixer/AudioIOSequences.h"
 #include "PlaybackSchedule.h" // member variable
 #include "RingBuffer.h"
+#include "CaptureRouting.h" // member variable
 #include "au3-utility/LockFreeQueue.h"
 
 #include <functional>
 #include <memory>
 #include <mutex>
 #include <thread>
+#include <type_traits>
 #include <utility>
 #include <array>
+#include <span>
 #include <wx/atomic.h> // member variable
 #include <wx/thread.h>
 
@@ -216,6 +219,8 @@ public:
                                      const TimePoint& dacTime);
     void PushTrackMeterValues(const IMeterSenderPtr& sender, unsigned long frames, const TimePoint& dacTime);
     void PushInputMeterValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames, const TimePoint& dacTime);
+    void PushRoutedInputValues(const IMeterSenderPtr& sender, const float* values, unsigned long frames, const TimePoint& dacTime,
+                               size_t channelIndex, std::span<const size_t> sources, int64_t trackId);
 
     /** \brief Get the number of audio samples ready in all of the playback
     * buffers.
@@ -242,8 +247,21 @@ public:
         size_t channelIndex{};
     };
     std::vector<TrackChannelInfo> mCaptureChannelLayout;
-    std::vector<std::vector<size_t> > mTrackChannelSourceMap;
+    std::vector<CaptureChannelSources> mTrackChannelSourceMap;
     bool mCaptureNeedsMixdown{ false };
+    struct MonitoredTrack {
+        int64_t trackId{};
+        size_t channels{};
+    };
+    static constexpr size_t MaxMonitoredTracks = 64;
+    //! The tracks whose meters show the input while monitoring, in the order they would be recorded into
+    struct MonitoredTracks {
+        std::array<MonitoredTrack, MaxMonitoredTracks> tracks{};
+        size_t count{ 0 };
+    };
+    static_assert(std::is_trivially_copyable_v<MonitoredTracks>, "MessageBuffer::Read moves from its slot");
+    //! Written by the main thread, read by the audio callback, which routes the input to these tracks itself
+    MessageBuffer<MonitoredTracks> mMonitoredTracks;
     //!Buffers that hold outcome of transformations applied to each individual sample source.
     //!Number of buffers equals to the sum of number all source channels.
     std::vector<std::vector<float> > mProcessingBuffers;
@@ -469,6 +487,10 @@ public:
 
     /** \brief Stop monitoring */
     void StopMonitoring() override;
+
+    //! The tracks whose meters show the input while monitoring, in the order they would be recorded into.
+    //! Only the first MaxMonitoredTracks are kept.
+    void SetMonitoredTracks(const std::vector<MonitoredTrack>& tracks);
 
     /** \brief Wait for busy state to end */
     void WaitWhileBusy() const;

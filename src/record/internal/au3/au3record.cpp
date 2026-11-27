@@ -34,15 +34,13 @@
 #include "playback/playbackcommands.h"
 
 #include "au3audioinput.h"
+#include "au3recordingtracks.h"
 #include "../../recorderrors.h"
 
 using namespace muse;
 using namespace muse::async;
 using namespace au::record;
 using namespace au::au3;
-
-constexpr int RATE_NOT_SELECTED = -1;
-using WritableSampleTrackArray = std::vector< std::shared_ptr< WritableSampleTrack > >;
 
 namespace {
 std::shared_ptr<Au3WaveClip> linkedPendingClip(Au3WaveTrack& pendingTrack, Au3WaveClip& origClip)
@@ -54,135 +52,6 @@ std::shared_ptr<Au3WaveClip> linkedPendingClip(Au3WaveTrack& pendingTrack, Au3Wa
     }
     return nullptr;
 }
-}
-
-struct PropertiesOfSelected
-{
-    bool allSameRate = false;
-    int rateOfSelected = RATE_NOT_SELECTED;
-    bool anySelected = false;
-};
-
-// GetSelectedProperties collects information about
-// currently selected audio tracks
-PropertiesOfSelected GetPropertiesOfSelected(const Au3Project& proj)
-{
-    double rateOfSelection = RATE_NOT_SELECTED;
-
-    PropertiesOfSelected result;
-    result.allSameRate = true;
-
-    const auto selectedTracks{
-        Au3TrackList::Get(proj).Selected<const Au3WaveTrack>() };
-
-    for (const auto& track : selectedTracks) {
-        if (rateOfSelection != RATE_NOT_SELECTED
-            && track->GetRate() != rateOfSelection) {
-            result.allSameRate = false;
-        } else if (rateOfSelection == RATE_NOT_SELECTED) {
-            rateOfSelection = track->GetRate();
-        }
-    }
-
-    result.anySelected = !selectedTracks.empty();
-    result.rateOfSelected = rateOfSelection;
-
-    return result;
-}
-
-WritableSampleTrackArray ChooseExistingRecordingTracks(Au3Project& proj, const bool selectedOnly, const double targetRate,
-                                                       const int recordingChannels)
-{
-    auto p = &proj;
-    bool strictRules = (recordingChannels <= 2);
-
-    // Iterate over all wave tracks, or over selected wave tracks only.
-    // If target rate was specified, ignore all tracks with other rates.
-    //
-    // In the usual cases of one or two recording channels, seek a first-fit
-    // unbroken sub-sequence for which the total number of channels matches the
-    // required number exactly.  Never drop inputs or fill only some channels
-    // of a track.
-    //
-    // In case of more than two recording channels, choose tracks only among the
-    // selected.  Simply take the earliest wave tracks, until the number of
-    // channels is enough.  If there are fewer channels than inputs, but at least
-    // one channel, then some of the input channels will be dropped.
-    //
-    // Resulting tracks may be non-consecutive within the list of all tracks
-    // (there may be non-wave tracks between, or non-selected tracks when
-    // considering selected tracks only.)
-
-    if (!strictRules && !selectedOnly) {
-        return {};
-    }
-
-    auto& trackList = Au3TrackList::Get(*p);
-    WritableSampleTrackArray candidates;
-    std::vector<int> channelCounts;
-    int totalChannels = 0;
-    const auto range = trackList.Any<Au3WaveTrack>();
-    for (auto candidate : selectedOnly ? range + &Au3Track::IsSelected : range) {
-        if (targetRate != RATE_NOT_SELECTED && candidate->GetRate() != targetRate) {
-            continue;
-        }
-
-        // count channels in this track
-        const int nChannels = static_cast<int>(candidate->NChannels());
-        if (strictRules && nChannels > recordingChannels) {
-            const bool stereoTrackMonoInput
-                =(recordingChannels == 1 && nChannels == 2 && candidates.empty());
-            if (stereoTrackMonoInput) {
-                candidates.clear();
-                channelCounts.clear();
-                candidates.push_back(candidate->SharedPointer<Au3WaveTrack>());
-                channelCounts.push_back(nChannels);
-                totalChannels = nChannels;
-                break;
-            }
-
-            candidates.clear();
-            channelCounts.clear();
-            totalChannels = 0;
-            continue;
-        } else {
-            // Might use this but may have to discard some of the accumulated
-            while (strictRules
-                   && nChannels + totalChannels > recordingChannels) {
-                candidates.erase(candidates.begin());
-                auto nOldChannels = channelCounts[0];
-                assert(nOldChannels > 0);
-                channelCounts.erase(channelCounts.begin());
-                totalChannels -= nOldChannels;
-            }
-            candidates.push_back(candidate->SharedPointer<Au3WaveTrack>());
-            channelCounts.push_back(nChannels);
-            totalChannels += nChannels;
-            if (totalChannels >= recordingChannels) {
-                // Done!
-                return candidates;
-            }
-        }
-    }
-
-    if (strictRules && !candidates.empty()) {
-        const bool allowDownmix
-            =(recordingChannels == 2 && totalChannels == 1 && candidates.size() == 1);
-        const bool allowUpmix
-            =(recordingChannels == 1 && totalChannels == 2 && candidates.size() == 1
-              && !channelCounts.empty() && channelCounts.front() == 2);
-        if (allowDownmix || allowUpmix) {
-            return candidates;
-        }
-    }
-
-    if (!strictRules && !candidates.empty()) {
-        // good enough
-        return candidates;
-    }
-
-    // If the loop didn't exit early, we could not find enough channels
-    return {};
 }
 
 TransportSequences MakeTransportTracks(Au3TrackList& trackList, bool selectedOnly, bool nonWaveToo)
@@ -434,37 +303,39 @@ muse::Ret Au3Record::start()
 
     double projectRate = ProjectRate::Get(project).GetRate();
 
-    WritableSampleTrackArray existingTracks;
-
-    // Checking the selected tracks: counting them and
-    // making sure they all have the same rate
-    const auto selectedTracks{ GetPropertiesOfSelected(project) };
-    const int rateOfSelected{ selectedTracks.rateOfSelected };
-    const bool anySelected{ selectedTracks.anySelected };
-    const bool allSameRate{ selectedTracks.allSameRate };
-
-    if (!allSameRate) {
-        return make_ret(Err::MismatchedSamplingRatesError);
+    const RetVal<WritableSampleTrackArray> chosenTracks = chooseRecordingTracks(project);
+    if (!chosenTracks.ret) {
+        return chosenTracks.ret;
     }
-
-    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
-
-    // Try to find wave tracks to record into.  (If any are selected,
-    // try to choose only from them; else if wave tracks exist, may record into any.)
-    existingTracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
+    const WritableSampleTrackArray& existingTracks = chosenTracks.val;
     if (!existingTracks.empty()) {
-        projectRate = rateOfSelected;
-    } else {
-        if (anySelected && rateOfSelected != projectRate) {
-            return make_ret(Err::TooFewCompatibleTracksSelected);
-        }
-
-        existingTracks = ChooseExistingRecordingTracks(project, false, projectRate, recordingChannels);
+        projectRate = existingTracks.front()->GetRate();
     }
 
     const TransportSequences transportTracks
         = MakeRecordingTransportTracks(Au3TrackList::Get(project), existingTracks, recordConfiguration()->isOverdubOn(), false);
 
+    if (const Ret ret = stopTransportAndMonitoring(); !ret) {
+        return ret;
+    }
+
+    return doRecord(project, transportTracks, t0, t1, false, projectRate);
+}
+
+RetVal<WritableSampleTrackArray> Au3Record::chooseRecordingTracks(Au3Project& project) const
+{
+    const auto selectedTracks{ GetPropertiesOfSelected(project) };
+    if (!selectedTracks.allSameRate) {
+        return make_ret(Err::MismatchedSamplingRatesError);
+    }
+
+    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
+    return RetVal<WritableSampleTrackArray>::make_ok(
+        ChooseRecordingTracks(project, selectedTracks, trackNavigationController()->focusedTrack(), recordingChannels));
+}
+
+Ret Au3Record::stopTransportAndMonitoring()
+{
     if (audioEngine()->isBusy()) {
         if (audioEngine()->isCapturing()) {
             return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
@@ -473,8 +344,7 @@ muse::Ret Au3Record::start()
     }
 
     audioEngine()->stopMonitoring();
-
-    return doRecord(project, transportTracks, t0, t1, false, projectRate);
+    return make_ok();
 }
 
 muse::Ret Au3Record::pause()
@@ -540,21 +410,16 @@ muse::Ret Au3Record::leadInRecording()
         return make_ret(Err::LeadInRecordingNoValidClipAtCursor);
     }
 
-    // Checking the selected tracks: making sure they all have the same rate
-    const auto selectedTracks{ GetPropertiesOfSelected(project) };
-    const int rateOfSelected{ selectedTracks.rateOfSelected };
-    const bool allSameRate{ selectedTracks.allSameRate };
-
-    if (!allSameRate) {
-        return make_ret(Err::MismatchedSamplingRatesError);
+    // Find tracks to record into: the selected tracks, or the focused one
+    const RetVal<WritableSampleTrackArray> chosenTracks = chooseRecordingTracks(project);
+    if (!chosenTracks.ret) {
+        return chosenTracks.ret;
     }
-
-    // Find tracks to record into (must be selected)
-    const int recordingChannels = std::max(0, audioDriverController()->configuration().inputChannels);
-    auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected, recordingChannels);
+    const WritableSampleTrackArray& tracks = chosenTracks.val;
     if (tracks.empty()) {
         return make_ret(Err::LeadInRecordingNoTracksSelected);
     }
+    const double recordingRate = tracks.front()->GetRate();
 
     // Try to extract crossfade data from existing audio at the lead-in point.
     // If the cursor is not inside a clip, skip crossfade — just record from that position.
@@ -632,19 +497,14 @@ muse::Ret Au3Record::leadInRecording()
 
     selectionController()->resetSelectedClips();
 
-    if (audioEngine()->isBusy()) {
-        if (audioEngine()->isCapturing()) {
-            return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
-        }
-        audioEngine()->stopTransport();
+    if (const Ret ret = stopTransportAndMonitoring(); !ret) {
+        return ret;
     }
-
-    audioEngine()->stopMonitoring();
 
     double leadInTime = std::max(0.0, std::min(t1, recordConfiguration()->leadInTimeDuration()));
 
     auto* pCrossfadeData = crossfadeData.empty() ? nullptr : &crossfadeData;
-    Ret ret = doRecord(project, transportTracks, t1, DBL_MAX, false, rateOfSelected, leadInTime, pCrossfadeData);
+    Ret ret = doRecord(project, transportTracks, t1, DBL_MAX, false, recordingRate, leadInTime, pCrossfadeData);
 
     if (ret) {
         // Initialize recording position to punch point so that cancelling
@@ -676,6 +536,11 @@ muse::async::Channel<muse::secs_t> Au3Record::recordPositionChanged() const
 const std::vector<au::trackedit::ClipKey>& Au3Record::recordingClipKeys() const
 {
     return m_recordingClipKeys;
+}
+
+std::vector<au::trackedit::TrackId> Au3Record::recordingTrackIds() const
+{
+    return m_recordingTrackIds;
 }
 
 void Au3Record::rebuildRecordingClipKeys()
@@ -711,6 +576,7 @@ Ret Au3Record::doRecord(Au3Project& project,
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
     m_recordPosition.set(t0);
+    m_recordingTrackIds.clear();
 
     if (audioEngine()->isBusy()) {
         LOGE() << "Audio IO is busy";
@@ -776,6 +642,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 assert(false);
                 continue;
             }
+            m_recordingTrackIds.push_back(wt->GetId());
 
             // If the track was chosen for recording and playback both,
             // its playback stops when recording starts.
@@ -954,6 +821,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
             insertEmptyInterval(*pending, t0, false, newTrack.get());
             transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
+            m_recordingTrackIds.push_back(newTrack->GetId());
 
             m_recordData.push_back(RecordData { trackedit::ClipKey(newTrack->GetId(), newClip->GetId()), newClip->GetId(), false, false });
             rebuildRecordingClipKeys();
