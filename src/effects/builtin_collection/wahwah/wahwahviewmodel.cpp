@@ -6,6 +6,7 @@
 #include "framework/global/log.h"
 #include "framework/global/translation.h"
 
+#include <algorithm>
 #include <cmath>
 
 using namespace au::effects;
@@ -139,6 +140,8 @@ void WahWahViewModel::setParam(const QString& key, double val)
     IF_ASSERT_FAILED(s) {
         return;
     }
+    const QVariantMap item = m_paramsList.value(key).toMap();
+    val = std::clamp(val, item["min"].toDouble(), item["max"].toDouble());
     modifySettings<EffectWahwahSettings>([s, val](EffectSettings& settings) {
         s(*settings.cast<EffectWahwahSettings>(), val);
     });
