@@ -23,6 +23,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/generatoreffectmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/common/measureunits.h
+    ${CMAKE_CURRENT_LIST_DIR}/common/settingaccess.h
 
     ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.cpp
     ${CMAKE_CURRENT_LIST_DIR}/common/valuewarper/valuewarper.h
