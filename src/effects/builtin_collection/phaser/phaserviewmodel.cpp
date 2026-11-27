@@ -83,7 +83,8 @@ void PhaserViewModel::doReload()
                                       PhaserEffect::Stages.max,
                                       PhaserEffect::Stages.def,
                                       STAGES_STEP,
-                                      [](EffectPhaserSettings& settings, double v) { settings.mStages = std::lround(v); }
+                                      // The stage count must be even
+                                      [](EffectPhaserSettings& settings, double v) { settings.mStages = std::lround(v) & ~1; }
                                       );
 
     m_paramsList["Depth"] = makeItem("Depth",
