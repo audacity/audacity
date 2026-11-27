@@ -3,7 +3,7 @@
  */
 #include <gtest/gtest.h>
 
-#include "au3-audio-io/CaptureRouting.h"
+#include "au3-recording/CaptureRouting.h"
 
 using Sources = std::vector<std::vector<size_t> >;
 

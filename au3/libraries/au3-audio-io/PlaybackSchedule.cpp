@@ -10,11 +10,12 @@
 
 #include "PlaybackSchedule.h"
 
-#include "au3-audio-devices/AudioIOBase.h"
+#include "au3-audio-io/AudioIOBase.h"
 #include "au3-mixer/Envelope.h"
 #include "au3-mixer/Mix.h"
 #include "au3-project/Project.h"
 #include "au3-math/SampleCount.h"
+#include "au3-recording/RecordingSchedule.h"
 
 PlaybackPolicy::~PlaybackPolicy() = default;
 
@@ -255,21 +256,6 @@ void PlaybackSchedule::RealTimeInit(double trackTime)
 void PlaybackSchedule::RealTimeRestart()
 {
     mWarpedTime = 0;
-}
-
-double RecordingSchedule::ToConsume() const
-{
-    return mDuration - Consumed();
-}
-
-double RecordingSchedule::Consumed() const
-{
-    return std::max(0.0, mPosition + TotalCorrection());
-}
-
-double RecordingSchedule::ToDiscard() const
-{
-    return std::max(0.0, -(mPosition + TotalCorrection()));
 }
 
 PlaybackSchedule::TimeQueue::TimeQueue() = default;
