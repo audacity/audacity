@@ -126,6 +126,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwaheffect.cpp
     ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwaheffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahsettingmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/wahwah/wahwahviewmodel.h
 

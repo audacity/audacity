@@ -51,6 +51,7 @@
 #include "phaser/phasersettingmodel.h"
 #include "phaser/phaserviewmodel.h"
 #include "wahwah/wahwaheffect.h"
+#include "wahwah/wahwahsettingmodel.h"
 #include "wahwah/wahwahviewmodel.h"
 #include "paulstretch/paulstretcheffect.h"
 #include "paulstretch/paulstretchviewmodel.h"
@@ -187,6 +188,7 @@ void BuiltinCollectionLoader::init()
     regView(PhaserEffect::Symbol, u"qrc:/phaser/PhaserView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(WahWahViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(WahWahSettingModelFactory);
     regView(WahWahEffect::Symbol, u"qrc:/wahwah/WahWahView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
