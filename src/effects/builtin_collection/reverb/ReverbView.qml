@@ -18,7 +18,6 @@ BuiltinEffectBase {
 
     builtinEffectModel: ReverbViewModelFactory.createModel(root, root.instanceId)
     numNavigationPanels: 2
-    property alias reverb: root.builtinEffectModel
     property NavigationPanel leftColumnNavigationPanel: NavigationPanel {
         name: "ReverbLeftColumn"
         enabled: root.enabled && root.visible
@@ -147,14 +146,21 @@ BuiltinEffectBase {
             CheckBox {
                 id: wetOnly
 
+                readonly property var settingModel: ReverbSettingModelFactory.createModel(root, root.instanceId, "WetOnly")
+
                 navigation.panel: root.rightColumnNavigationPanel
                 navigation.order: 6
 
-                text: qsTrc("effects/reverb", "Wet only")
-                checked: reverb.wetOnly
+                text: settingModel.title
+                checked: settingModel.value !== 0
+
+                Component.onCompleted: {
+                    settingModel.init()
+                }
+
                 onClicked: function () {
-                    reverb.wetOnly = !reverb.wetOnly
-                    reverb.commitSettings()
+                    settingModel.value = checked ? 0 : 1
+                    settingModel.commitSettings()
                 }
             }
 

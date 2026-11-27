@@ -45,6 +45,10 @@ ReverbSettingModel::ReverbSettingModel(QObject* parent, int instanceId)
               muse::qtrc("effects/reverb", "Stereo width"),
               muse::qtrc("global", "%"),
               makeSettingAccess(ReverbEffect::StereoWidth) } },
+        { "WetOnly", {
+              muse::qtrc("effects/reverb", "Wet only"),
+              QString(),
+              makeSettingAccess(ReverbEffect::WetOnly) } },
     })
 {
 }
