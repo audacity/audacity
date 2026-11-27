@@ -211,7 +211,7 @@ bool DefaultPlaybackPolicy::RepositionPlayback(
     // adjust the schedule...
     auto mine = std::tie(schedule.mT0, mLoopEndTime);
     auto theirs = std::tie(data.mT0, data.mT1);
-    if ((loopWasEnabled != mLoopEnabled) || (mine != theirs)) {
+    if ((loopWasEnabled != mLoopEnabled) || (mLoopEnabled && mine != theirs)) {
         kicked = true;
         if (!empty) {
             mine = theirs;
