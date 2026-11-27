@@ -13,10 +13,12 @@ struct TestSettings
 {
     double gain = 0.0;
     int stages = 2;
+    bool wetOnly = false;
 };
 
 constexpr EffectParameter Gain { &TestSettings::gain, L"Gain", 1.5, 0.1, 10.0, 0.01, 2 };
 constexpr EffectParameter Stages { &TestSettings::stages, L"Stages", 2, 2, 24, 2 };
+constexpr EffectParameter WetOnly { &TestSettings::wetOnly, L"WetOnly", false, false, true, 1 };
 }
 
 TEST(SettingAccessTests, ReportsTheParameterDescription)
@@ -62,6 +64,23 @@ TEST(SettingAccessTests, RoundsAnIntegerSetting)
 
     EXPECT_EQ(settings.stages, 8);
     EXPECT_DOUBLE_EQ(access.get(settings), 8.0);
+}
+
+TEST(SettingAccessTests, TreatsABooleanSettingAsZeroOrOne)
+{
+    const SettingAccess<TestSettings> access = makeSettingAccess(WetOnly);
+    TestSettings settings;
+
+    EXPECT_DOUBLE_EQ(access.min, 0.0);
+    EXPECT_DOUBLE_EQ(access.max, 1.0);
+    EXPECT_DOUBLE_EQ(access.get(settings), 0.0);
+
+    access.set(settings, 1.0);
+    EXPECT_TRUE(settings.wetOnly);
+    EXPECT_DOUBLE_EQ(access.get(settings), 1.0);
+
+    access.set(settings, 0.0);
+    EXPECT_FALSE(settings.wetOnly);
 }
 
 TEST(SettingAccessTests, AdjustsTheValueOnceItIsInTheRange)
