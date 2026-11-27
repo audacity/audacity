@@ -335,6 +335,7 @@ MenuItem* AppMenuModel::makeViewMenu()
               << makeMenuItem(projectscene::PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND)
               << makeMenuItem(PROJECT_OPEN_METADATA_DIALOG_COMMAND)
               << makeMenuItem(APP_TOGGLE_HISTORY_PANEL_COMMAND)
+              << makeMenuItem(APP_TOGGLE_VIDEO_PANEL_COMMAND)
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
         << makeMenu(TranslatableString("appshell-menu-view", "W&orkspaces"),

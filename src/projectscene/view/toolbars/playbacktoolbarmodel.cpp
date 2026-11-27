@@ -42,7 +42,8 @@ static PlaybackToolBarModel::ItemType itemType(const Command& command)
         { PROJECTSCENE_TOGGLE_CLIP_GAIN_AUTOMATION_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { au::trackedit::TRACKEDIT_GLOBAL_VIEW_SPECTROGRAM_COMMAND, PlaybackToolBarModel::PLAYBACK_CONTROL },
-        { PROJECTSCENE_SNAP_COMMAND, PlaybackToolBarModel::SNAP }
+        { PROJECTSCENE_SNAP_COMMAND, PlaybackToolBarModel::SNAP },
+        { PROJECTSCENE_VIDEO_THUMBNAIL_COMMAND, PlaybackToolBarModel::VIDEO }
     };
 
     return muse::value(types, command, PlaybackToolBarModel::PROJECT_CONTROL);
@@ -312,13 +313,17 @@ void PlaybackToolBarModel::updateActions()
     }
 
     setItems(items);
+
+    emit hasVideoItemChanged();
 }
 
 ToolBarItem* PlaybackToolBarModel::makeLocalItem(const Command& command)
 {
     PlaybackToolBarModel::ItemType type = itemType(command);
 
-    if (type == PlaybackToolBarModel::PROJECT_CONTROL) {
+    // Carries no state of its own - the picture comes from the video service
+    // through the delegate - so a plain item with the right type is enough.
+    if (type == PlaybackToolBarModel::PROJECT_CONTROL || type == PlaybackToolBarModel::VIDEO) {
         ToolBarItem* item = AbstractToolBarModel::makeItem(command);
         if (item) {
             item->setType(static_cast<ToolBarItemType::Type>(type));
@@ -369,6 +374,17 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const Command& command)
     }
 
     return result;
+}
+
+bool PlaybackToolBarModel::hasVideoItem() const
+{
+    for (const muse::uicomponents::ToolBarItem* item : items()) {
+        if (item != nullptr && item->command() == PROJECTSCENE_VIDEO_THUMBNAIL_COMMAND) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 bool PlaybackToolBarModel::isEnabled() const

@@ -44,6 +44,9 @@ inline const muse::ui::ToolConfig& defaultPlaybackToolBarConfig()
             { "", true },
             { PROJECTSCENE_SNAP_COMMAND, true },
             { "", true },
+            // Off by default: it is only meaningful once a video is attached.
+            { PROJECTSCENE_VIDEO_THUMBNAIL_COMMAND, false },
+            { "", true },
             { record::RECORD_LEVEL_COMMAND, true },
             { playback::PLAYBACK_LEVEL_COMMAND, true }
         };

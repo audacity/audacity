@@ -127,6 +127,14 @@ public:
          mAVStream->discard = static_cast<AVDiscard>(discard);
    }
 
+   AudacityAVRational GetAvgFrameRate() const noexcept override
+   {
+      if (mAVStream != nullptr)
+         return { mAVStream->avg_frame_rate.num, mAVStream->avg_frame_rate.den };
+
+      return {};
+   }
+
    AudacityAVRational GetSampleAspectRatio() const noexcept override
    {
       if (mAVStream != nullptr)
@@ -205,7 +213,11 @@ public:
 #if LIBAVFORMAT_VERSION_MAJOR <= 58
       return mFFmpeg.CreateAVCodecContextWrapper(mAVStream->codec);
 #else
-      // No memory management is involved here!
+      // Unlike the branch above, where the context belongs to the stream, this
+      // one allocates a context for the caller and has to hand ownership over
+      // with it. Without that nothing ever frees it, nor anything the decoder
+      // allocates inside it once it is opened - measured at several megabytes
+      // per open, in the importer and exporter as well as here.
       auto avcodec = mForEncoding ?
                         mFFmpeg.avcodec_find_encoder(mAVStream->codecpar->codec_id) :
                         mFFmpeg.avcodec_find_decoder(mAVStream->codecpar->codec_id);
@@ -216,6 +228,14 @@ public:
          return {};
 
       auto context = mFFmpeg.CreateAVCodecContextWrapper(codecContext);
+
+      if (context == nullptr)
+      {
+         mFFmpeg.avcodec_free_context(&codecContext);
+         return {};
+      }
+
+      context->TakeOwnership();
 
       if (!mForEncoding)
       {

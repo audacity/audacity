@@ -1,5 +1,7 @@
 #include "projectactionscontroller.h"
 
+#include "video/videoattachpolicy.h"
+
 #include <QFileDialog>
 #include <QWindow>
 
@@ -341,7 +343,39 @@ muse::Ret ProjectActionsController::importFiles(const Params& params)
         }
     }
 
-    return project->import(filePaths);
+    const muse::Ret ret = project->import(filePaths);
+    if (ret) {
+        attachImportedVideo(filePaths);
+    }
+
+    return ret;
+}
+
+void ProjectActionsController::attachImportedVideo(const muse::io::paths_t& filePaths)
+{
+    // Importing a video already puts its sound on the timeline; showing the
+    // picture at the same time is what was meant, and Detach undoes it in one
+    // click. Deliberately conservative - see videoToAttachAfterImport.
+    if (!videoService()) {
+        return;   // the video module can be compiled out
+    }
+
+    std::vector<std::string> paths;
+    paths.reserve(filePaths.size());
+    for (const muse::io::path_t& path : filePaths) {
+        paths.push_back(path.toStdString());
+    }
+
+    // hasRecordedAttachment(), not isAttached(): a project whose video sits
+    // on an unplugged drive has one, it just could not be opened, and an
+    // unrelated import must not quietly take its place.
+    const auto candidate = video::videoToAttachAfterImport(paths, videoService()->hasRecordedAttachment());
+
+    if (candidate.has_value()) {
+        // Failure is not reported: the audio import succeeded, which is what
+        // was asked for, and the panel states its own reason.
+        videoService()->attach(*candidate);
+    }
 }
 
 muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
@@ -359,7 +393,7 @@ muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
 
     const bool removeAfterImport = params.at(PROJECT_REMOVE_AFTER_IMPORT_PARAM, Val(false)).toBool();
 
-    Ret ret = processMediaFiles(filePaths);
+    Ret ret = processMediaFiles(filePaths, !removeAfterImport);
     if (removeAfterImport) {
         for (const auto& filePath : filePaths) {
             fileSystem()->remove(filePath);
@@ -373,7 +407,7 @@ muse::Ret ProjectActionsController::importStartupMedia(const Params& params)
     return ret;
 }
 
-muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& paths)
+muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& paths, bool attachVideo)
 {
     if (paths.empty()) {
         return make_ret(Ret::Code::Cancel);
@@ -411,7 +445,12 @@ muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& p
         return ret;
     }
 
-    return project->import(actualPaths);
+    const muse::Ret importRet = project->import(actualPaths);
+    if (importRet && attachVideo) {
+        attachImportedVideo(actualPaths);
+    }
+
+    return importRet;
 }
 
 bool ProjectActionsController::isUrlSupported(const QUrl& url) const
@@ -749,8 +788,8 @@ muse::io::paths_t ProjectActionsController::selectImportFiles()
 {
     std::string audioFileExt
         = "*.aac *.ac3 *.mp2 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf";
-    std::string videoFileExt
-        = "*.avi *.mp4 *.mkv *.mov *.flv *.wmv *.asf *.webm *.mpg *.mpeg *.m4v *.ts *.gxf *.mxf *.nut *.dv *.3gp *.3g2 *.mj2";
+    // Shared with the video panel's own dialog, so the two cannot drift.
+    std::string videoFileExt = video::videoFileFilter();
     std::string gameMediaFileExt
         =
             "*.roq *.bethsoftvid *.c93 *.dsicin *.dxa *.ea *.cdata *.film_cpk *.idcin *.ipmovie *.psxstr *.rl2 *.siff *.smk *.thp *.tiertexseq *.vmd *.wc3movie *.wsaud *.wsvqa *.txd";

@@ -52,6 +52,7 @@ inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_EFFECTS_PANEL_CO
 inline static const muse::rcommand::Command PROJECTSCENE_AUDIO_SETUP_COMMAND("command://projectscene/audio-setup");
 inline static const muse::rcommand::Command PROJECTSCENE_TOGGLE_SPLIT_TOOL_COMMAND("command://projectscene/toggle-split-tool");
 inline static const muse::rcommand::Command PROJECTSCENE_SNAP_COMMAND("command://projectscene/snap");
+inline static const muse::rcommand::Command PROJECTSCENE_VIDEO_THUMBNAIL_COMMAND("command://projectscene/video-thumbnail");
 inline static const muse::rcommand::Command PROJECTSCENE_REALTIME_EFFECT_MOVE_UP_COMMAND("command://projectscene/realtime-effect-move-up");
 inline static const muse::rcommand::Command PROJECTSCENE_REALTIME_EFFECT_MOVE_DOWN_COMMAND(
     "command://projectscene/realtime-effect-move-down");

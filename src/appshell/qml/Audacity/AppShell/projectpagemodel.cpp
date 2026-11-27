@@ -6,6 +6,7 @@
 #include "framework/global/log.h"
 #include "framework/global/async/async.h"
 #include "framework/dockwindow/dockcommands.h"
+#include "framework/dockwindow/idockwindow.h"
 
 #include "playback/playbackcommands.h"
 #include "projectscene/view/toolbars/playbacktoolbarconfig.h"
@@ -35,10 +36,34 @@ void ProjectPageModel::init()
             updatePlaybackMeterVisibility();
         });
 
+        if (videoService()) {
+            videoService()->attachedChanged().onNotify(this, [this]() {
+                revealVideoPanelIfAttached();
+            });
+        }
+
         m_inited = true;
     }
 
     updatePlaybackMeterVisibility();
+    revealVideoPanelIfAttached();
+}
+
+void ProjectPageModel::revealVideoPanelIfAttached()
+{
+    if (!videoService() || !videoService()->isAttached()) {
+        return;
+    }
+
+    const dock::IDockWindow* window = dockWindowProvider()->window();
+    if (!window || window->isDockOpen(VIDEO_PANEL_NAME)) {
+        return;
+    }
+
+    commandDispatcher()->dispatch(dock::DOCK_SET_OPEN_COMMAND, {
+        { "dock_name", Val(videoPanelName().toStdString()) },
+        { "open", Val(true) },
+    });
 }
 
 void ProjectPageModel::updatePlaybackMeterVisibility()
@@ -90,6 +115,11 @@ QString ProjectPageModel::tracksPanelName() const
 QString ProjectPageModel::historyPanelName() const
 {
     return HISTORY_PANEL_NAME;
+}
+
+QString ProjectPageModel::videoPanelName() const
+{
+    return VIDEO_PANEL_NAME;
 }
 
 QString ProjectPageModel::playbackMeterPanelName() const

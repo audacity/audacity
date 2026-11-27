@@ -383,6 +383,16 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::MAGNET),
         Availability::Internal
     },
+    CommandInfo{
+        PROJECTSCENE_VIDEO_THUMBNAIL_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Video"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Show the video in the toolbar"),
+        InputSchema(),
+        Decoration(IconCode::Code::EYE_OPEN),
+        Availability::Internal
+    },
 };
 }
 
