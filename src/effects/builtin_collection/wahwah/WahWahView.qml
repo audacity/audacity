@@ -19,7 +19,6 @@ BuiltinEffectBase {
 
     builtinEffectModel: WahWahViewModelFactory.createModel(root, root.instanceId)
     numNavigationPanels: 2
-    property alias wahwah: root.builtinEffectModel
 
     property NavigationPanel mainNavigationPanel: NavigationPanel {
         name: "WahWahMain"
@@ -45,10 +44,6 @@ BuiltinEffectBase {
         readonly property int columnSpacing: 32
         readonly property int cardRadius: 4
         readonly property int knobRadius: 24
-    }
-
-    function newParameterValueRequested(key, value) {
-        wahwah.setParam(key, value)
     }
 
     RowLayout {
@@ -81,80 +76,22 @@ BuiltinEffectBase {
                 rowSpacing: prv.rowSpacing
                 columnSpacing: prv.columnSpacing
 
-                BigParameterKnob {
-                    id: freqKnob
+                Repeater {
+                    model: ["Freq", "Depth", "Resonance", "Offset"]
 
-                    Layout.fillWidth: true
+                    delegate: SettingKnob {
+                        required property string modelData
+                        required property int index
 
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: 0
+                        Layout.fillWidth: true
 
-                    parameter: wahwah.paramsList["Freq"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
+                        navigationPanel: root.mainNavigationPanel
+                        navigationOrder: index
 
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
+                        isVertical: true
+                        radius: prv.knobRadius
+                        model: WahWahSettingModelFactory.createModel(root, root.instanceId, modelData)
                     }
-
-                    onCommitRequested: wahwah.commitSettings()
-                }
-
-                BigParameterKnob {
-                    id: depthKnob
-
-                    Layout.fillWidth: true
-
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: freqKnob.navigation.order + 1
-
-                    parameter: wahwah.paramsList["Depth"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
-
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
-                    }
-
-                    onCommitRequested: wahwah.commitSettings()
-                }
-
-                BigParameterKnob {
-                    id: resonanceKnob
-
-                    Layout.fillWidth: true
-
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: depthKnob.navigation.order + 1
-
-                    parameter: wahwah.paramsList["Resonance"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
-
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
-                    }
-
-                    onCommitRequested: wahwah.commitSettings()
-                }
-
-                BigParameterKnob {
-                    id: offsetKnob
-
-                    Layout.fillWidth: true
-
-                    navigation.panel: root.mainNavigationPanel
-                    navigation.order: resonanceKnob.navigation.order + 1
-
-                    parameter: wahwah.paramsList["Offset"]
-                    defaultValue: parameter ? parameter["defaultValue"] : 0
-                    radius: prv.knobRadius
-
-                    onNewValueRequested: function (key, newValue) {
-                        newParameterValueRequested(key, newValue)
-                    }
-
-                    onCommitRequested: wahwah.commitSettings()
                 }
             }
         }
@@ -165,42 +102,24 @@ BuiltinEffectBase {
 
             spacing: prv.narrowRowSpacing
 
-            ParameterKnob {
-                id: phaseKnob
-
+            SettingKnob {
                 Layout.fillWidth: true
 
-                navigation.panel: root.secondaryNavigationPanel
-                navigation.order: 0
+                navigationPanel: root.secondaryNavigationPanel
+                navigationOrder: 0
 
-                parameter: wahwah.paramsList["Phase"]
-                defaultValue: parameter ? parameter["defaultValue"] : 0
-
-                onNewValueRequested: function (key, newValue) {
-                    newParameterValueRequested(key, newValue)
-                }
-
-                onCommitRequested: wahwah.commitSettings()
+                model: WahWahSettingModelFactory.createModel(root, root.instanceId, "Phase")
             }
 
             SeparatorLine {}
 
-            ParameterKnob {
-                id: gainKnob
-
+            SettingKnob {
                 Layout.fillWidth: true
 
-                navigation.panel: root.secondaryNavigationPanel
-                navigation.order: phaseKnob.navigation.order + 1
+                navigationPanel: root.secondaryNavigationPanel
+                navigationOrder: 1
 
-                parameter: wahwah.paramsList["Gain"]
-                defaultValue: parameter ? parameter["defaultValue"] : 0
-
-                onNewValueRequested: function (key, newValue) {
-                    newParameterValueRequested(key, newValue)
-                }
-
-                onCommitRequested: wahwah.commitSettings()
+                model: WahWahSettingModelFactory.createModel(root, root.instanceId, "Gain")
             }
         }
     }
