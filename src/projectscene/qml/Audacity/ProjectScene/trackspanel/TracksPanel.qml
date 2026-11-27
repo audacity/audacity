@@ -35,10 +35,23 @@ Item {
         id: tracksViewState
     }
 
+    TracksPanelContextMenuModel {
+        id: panelContextMenuModel
+    }
+
+    ContextMenuLoader {
+        id: panelContextMenuLoader
+
+        onHandleMenuItem: function (itemId) {
+            panelContextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
     Component.onCompleted: {
         tracksViewState.init()
         tracksModel.load()
         effectSectionModel.load()
+        panelContextMenuModel.load()
     }
 
     QtObject {
@@ -50,6 +63,20 @@ Item {
     Rectangle {
         anchors.fill: parent
         color: ui.theme.backgroundSecondaryColor
+    }
+
+    // Under the track list: only right clicks on its empty part, below the tracks, reach it
+    MouseArea {
+        x: contentColumn.x
+        y: contentColumn.y
+        width: contentColumn.width
+        height: contentColumn.height
+
+        acceptedButtons: Qt.RightButton
+
+        onClicked: function (e) {
+            panelContextMenuLoader.show(Qt.point(e.x + x, e.y + y), panelContextMenuModel.items)
+        }
     }
 
     RowLayout {
@@ -319,13 +346,12 @@ Item {
                         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
 
                         onWheel: function (wheelEvent) {
-                            let headerHeight = view.headerItem ? view.headerItem.height : 0
                             let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
                             let offset = view.contentY - delta
 
-                            let maxContentY = view.contentHeight - view.height
+                            let maxContentY = view.originY + view.contentHeight - view.height
                             maxContentY = Math.max(maxContentY, view.contentY)
-                            offset = Math.max(Math.min(offset, maxContentY), -headerHeight)
+                            offset = Math.max(Math.min(offset, maxContentY), view.originY)
 
                             view.contentY = offset
                         }
@@ -353,7 +379,7 @@ Item {
                                 let loader = view.itemAtIndex(dragHandler.dropIndex)
                                 return Boolean(loader) ? loader.y - view.contentY : 0
                             }
-                            return view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
+                            return view.originY + view.contentHeight - view.contentY - tracksViewState.tracksVerticalScrollPadding
                         }
                     }
 

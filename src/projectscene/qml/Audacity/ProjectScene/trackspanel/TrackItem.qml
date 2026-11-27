@@ -284,6 +284,10 @@ ListItemBlank {
         onReleased: {
             root.interactionEnded()
         }
+
+        onDoubleClicked: {
+            trackViewState.resetTrackHeight()
+        }
     }
 
     SeparatorLine {

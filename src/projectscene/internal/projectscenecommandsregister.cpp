@@ -201,6 +201,138 @@ const std::vector<CommandInfo> s_commandInfos = {
         Availability::All
     },
     CommandInfo{
+        PROJECTSCENE_INCREASE_TRACK_HEIGHT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Increase track height"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Make the focused or selected tracks taller"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_DECREASE_TRACK_HEIGHT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Decrease track height"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Make the focused or selected tracks shorter"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_INCREASE_ALL_TRACK_HEIGHTS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Increase all track heights"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Make all tracks taller"),
+        InputSchema(),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_DECREASE_ALL_TRACK_HEIGHTS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Decrease all track heights"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Make all tracks shorter"),
+        InputSchema(),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_COLLAPSE_TRACKS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Collapse tracks"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Collapse the focused or selected tracks"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_EXPAND_TRACKS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Expand tracks"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Expand the focused or selected tracks back to their height before collapsing"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Collapse all tracks"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Collapse all tracks"),
+        InputSchema(),
+        Decoration(IconCode::Code::TRACKS_COLLAPSE),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Expand collapsed tracks"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Expand all collapsed tracks back to their height before collapsing"),
+        InputSchema(),
+        Decoration(IconCode::Code::TRACKS_EXPAND),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_FIT_TRACKS_TO_HEIGHT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Fit tracks to height"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Fit the focused or selected tracks to the height of the view and collapse the others"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_FIT_ALL_TRACKS_TO_HEIGHT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Fit all tracks to height"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Share the height of the view between all tracks"),
+        InputSchema(),
+        Decoration(IconCode::Code::TRACKS_FIT_HEIGHT),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_RESET_TRACK_HEIGHT_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Reset track height"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Reset the focused or selected tracks to their default height"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
+        PROJECTSCENE_RESET_ALL_TRACK_HEIGHTS_COMMAND,
+        //: Command title: shown as a menu item or a button label; keep it short
+        TranslatableString("command", "Reset all track heights"),
+        //: Command description: shown as a tooltip; can be a full sentence
+        TranslatableString("command_description", "Reset all tracks to their default height"),
+        InputSchema(),
+        Decoration(),
+        Availability::All
+    },
+    CommandInfo{
         PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Scroll timeline left one page"),

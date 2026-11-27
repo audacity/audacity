@@ -297,7 +297,9 @@ void PlaybackToolBarModel::updateActions()
         }
 
         if (citem.isSeparator()) {
-            items << AbstractToolBarModel::makeSeparator();
+            if (!items.isEmpty() && items.last()->type() != ToolBarItemType::SEPARATOR) {
+                items << AbstractToolBarModel::makeSeparator();
+            }
             continue;
         }
 

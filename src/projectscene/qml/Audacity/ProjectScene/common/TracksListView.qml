@@ -40,7 +40,14 @@ StyledListView {
         if (verticalScrollLocked) {
             contentY = lockedVerticalScrollPosition
         } else {
-            root.tracksViewState.changeTracksVerticalOffset(contentY + root.listHeaderHeight)
+            root.tracksViewState.changeTracksVerticalOffset(contentY - originY)
+        }
+    }
+
+    // The list moves its origin when tracks above the view change height, so offsets are counted from the origin
+    onOriginYChanged: {
+        if (!verticalScrollLocked) {
+            root.tracksViewState.changeTracksVerticalOffset(contentY - originY)
         }
     }
 
@@ -48,12 +55,12 @@ StyledListView {
         target: root.tracksViewState
 
         function onTracksVerticalOffsetChanged() {
-            root.contentY = root.tracksViewState.tracksVerticalOffset - root.listHeaderHeight
+            root.contentY = root.tracksViewState.tracksVerticalOffset + root.originY
         }
     }
 
     function ensureVerticallyVisible(item) {
         let itemViewY = item.mapToItem(root.contentItem, Qt.point(0, 0)).y
-        root.tracksViewState.ensureVerticallyVisible(contentY + root.listHeaderHeight, height, itemViewY + root.listHeaderHeight, item.height)
+        root.tracksViewState.ensureVerticallyVisible(contentY - originY, height, itemViewY - originY, item.height)
     }
 }

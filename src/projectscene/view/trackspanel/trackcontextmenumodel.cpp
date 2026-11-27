@@ -3,8 +3,12 @@
 */
 #include "trackcontextmenumodel.h"
 
-#include "framework/global/async/async.h"
+#include <algorithm>
 
+#include "framework/global/async/async.h"
+#include "framework/global/containers.h"
+
+#include "project/iaudacityproject.h"
 #include "project/projectcommands.h"
 #include "projectscene/projectscenecommands.h"
 #include "record/recordcommands.h"
@@ -63,6 +67,7 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString("trackcontextmenu", "Track height"), makeTrackHeightItems()),
         makeMenuItem(PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
@@ -88,6 +93,7 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString("trackcontextmenu", "Track height"), makeTrackHeightItems()),
         makeMenuItem(PROJECTSCENE_TOGGLE_VERTICAL_RULERS_COMMAND),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Meters && monitoring"), makeMeterMonitoringItems()),
         makeSeparator(),
@@ -110,6 +116,7 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
+        makeMenu(muse::TranslatableString("trackcontextmenu", "Track height"), makeTrackHeightItems()),
         makeSeparator(),
         makeMenuItem(make_query(project::PROJECT_EXPORT_LABELS_COMMAND, {
             { project::PROJECT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) },
@@ -131,6 +138,7 @@ void TrackContextMenuModel::load()
 
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList&) {
         updateTrackMonoState();
+        updateTrackHeightState();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     trackNavigationController()->openContextMenuRequested().onReceive(this, [this](const trackedit::TrackItemKey& key) {
@@ -172,6 +180,7 @@ void TrackContextMenuModel::load()
     updateTrackMonoState();
     updateTrackViewCheckedState();
     updateTrackHalfWaveCheckedState();
+    updateTrackHeightState();
     updateRecordingState();
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -185,6 +194,11 @@ void TrackContextMenuModel::load()
 
         project->viewState()->isHalfWave(m_trackId).ch.onReceive(this, [this](bool) {
             updateTrackHalfWaveCheckedState();
+        }, muse::async::Asyncable::Mode::SetReplace);
+
+        // Collapsing or expanding any track changes the total height
+        project->viewState()->totalTrackHeight().ch.onReceive(this, [this](int) {
+            updateTrackHeightState();
         }, muse::async::Asyncable::Mode::SetReplace);
     }
 }
@@ -251,6 +265,10 @@ void TrackContextMenuModel::onCommandStateChanged(const Command& command, const 
 
     if (command == trackedit::TRACKEDIT_TRACK_MAKE_STEREO_COMMAND) {
         updateTrackMonoState();
+    }
+
+    if (command == PROJECTSCENE_COLLAPSE_TRACKS_COMMAND || command == PROJECTSCENE_EXPAND_TRACKS_COMMAND) {
+        updateTrackHeightState();
     }
 }
 
@@ -401,6 +419,31 @@ void TrackContextMenuModel::updateTrackMonoState()
     makeStereoItem.setEnabled(canMakeStereo);
 }
 
+void TrackContextMenuModel::updateTrackHeightState()
+{
+    const project::IAudacityProjectPtr project = globalContext()->currentProject();
+    const IProjectViewStatePtr viewState = project ? project->viewState() : nullptr;
+    if (!viewState) {
+        return;
+    }
+
+    const trackedit::TrackIdList selected = selectionController()->selectedTracks();
+    const trackedit::TrackIdList tracks = muse::contains(selected, m_trackId) ? selected : trackedit::TrackIdList { m_trackId };
+    const auto isCollapsed = [&viewState](const trackedit::TrackId trackId) {
+        return viewState->isTrackCollapsed(trackId).val;
+    };
+
+    MenuItem& collapseItem = findItem(PROJECTSCENE_COLLAPSE_TRACKS_COMMAND);
+    if (collapseItem.isValid()) {
+        collapseItem.setEnabled(!std::ranges::all_of(tracks, isCollapsed));
+    }
+
+    MenuItem& expandItem = findItem(PROJECTSCENE_EXPAND_TRACKS_COMMAND);
+    if (expandItem.isValid()) {
+        expandItem.setEnabled(std::ranges::any_of(tracks, isCollapsed));
+    }
+}
+
 void TrackContextMenuModel::updateRecordingState()
 {
     bool recording = globalContext()->isRecording();
@@ -464,6 +507,23 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackRateItems()
     items << makeSeparator();
     items << makeMenuItem(trackedit::TRACKEDIT_TRACK_CHANGE_RATE_CUSTOM_COMMAND);
     return items;
+}
+
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackHeightItems()
+{
+    const auto onThisTrack = [this](const Command& command, const muse::TranslatableString& title) {
+        return makeMenuItem(make_query(command, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) },
+        }), title);
+    };
+
+    return {
+        onThisTrack(PROJECTSCENE_COLLAPSE_TRACKS_COMMAND, muse::TranslatableString("trackcontextmenu", "Collapse")),
+        onThisTrack(PROJECTSCENE_EXPAND_TRACKS_COMMAND, muse::TranslatableString("trackcontextmenu", "Expand")),
+        onThisTrack(PROJECTSCENE_FIT_TRACKS_TO_HEIGHT_COMMAND, muse::TranslatableString("trackcontextmenu", "Fit to height")),
+        makeSeparator(),
+        onThisTrack(PROJECTSCENE_RESET_TRACK_HEIGHT_COMMAND, muse::TranslatableString("trackcontextmenu", "Reset height")),
+    };
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackMoveItems()

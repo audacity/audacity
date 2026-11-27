@@ -128,6 +128,14 @@ void TracksViewStateModel::requestVerticalScrollUnlock()
     }
 }
 
+void TracksViewStateModel::setTracksViewportHeight(int height)
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->setTracksViewportHeight(height);
+    }
+}
+
 void TracksViewStateModel::ensureVerticallyVisible(int viewContentY, int viewHeight, int itemY, int itemHeight)
 {
     static constexpr int PADDING = 10;

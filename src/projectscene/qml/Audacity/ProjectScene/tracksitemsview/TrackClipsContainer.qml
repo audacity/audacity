@@ -40,6 +40,19 @@ TrackItemsContainer {
         readonly property real viewHeight: (root.height - root.headerHeight) / (prv.isMultiView ? 2 : 1)
     }
 
+    Rectangle {
+        id: clipHeaderArea
+
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.leftMargin: (root.canvas && root.canvas.anchors && root.canvas.anchors.leftMargin) ? -root.canvas.anchors.leftMargin : 0
+        height: root.headerHeight
+
+        color: ui.theme.extra["black_color"]
+        opacity: 0.1
+    }
+
     TrackClipsListModel {
         id: clipsModel
         moveController: root.moveController

@@ -107,6 +107,14 @@ void TrackViewStateModel::changeTrackHeight(int deltaY)
     }
 }
 
+void TrackViewStateModel::resetTrackHeight()
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->setTrackHeight(m_trackId, vs->trackDefaultHeight(m_trackId));
+    }
+}
+
 void TrackViewStateModel::changeChannelHeightRatio(double ratio)
 {
     IProjectViewStatePtr vs = viewState();

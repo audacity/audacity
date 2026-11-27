@@ -51,6 +51,7 @@ private:
     muse::uicomponents::MenuItemList makeLabelTrackItems();
 
     muse::uicomponents::MenuItemList makeTrackColorItems();
+    muse::uicomponents::MenuItemList makeTrackHeightItems();
     muse::uicomponents::MenuItemList makeTrackFormatItems();
     muse::uicomponents::MenuItemList makeTrackRateItems();
     muse::uicomponents::MenuItemList makeTrackMoveItems();
@@ -63,6 +64,7 @@ private:
     void updateTrackMonoState();
     void updateTrackViewCheckedState();
     void updateTrackHalfWaveCheckedState();
+    void updateTrackHeightState();
     void updateRecordingState();
 
     trackedit::TrackId m_trackId;

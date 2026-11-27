@@ -27,12 +27,17 @@
 
 using namespace au::projectscene;
 
-constexpr int TRACK_DEFAULT_HEIGHT = 116;
+constexpr int TRACK_DEFAULT_HEIGHT = 114;
 constexpr int TRACK_LABEL_DEFAULT_HEIGHT = 86;
 constexpr int TRACK_MIN_HEIGHT = 44;
 constexpr int TRACK_COLLAPSE_HEIGHT = 72;
 
 namespace {
+bool isCollapsedHeight(int height)
+{
+    return height < TRACK_COLLAPSE_HEIGHT;
+}
+
 constexpr int numDecimals(float value)
 {
     constexpr int MAX_DECIMAL_PLACES = 4;
@@ -360,7 +365,7 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
                 savedHeight = savedHeight <= 0 ? defaultHeight : savedHeight;
                 height = std::max(savedHeight, TRACK_MIN_HEIGHT);
             }
-            d.collapsed.val = height <= TRACK_COLLAPSE_HEIGHT;
+            d.collapsed.val = isCollapsedHeight(height);
             d.height.val = height;
         }
     }
@@ -463,47 +468,56 @@ muse::ValCh<double> ProjectViewState::channelHeightRatio(const trackedit::TrackI
     return d.channelHeightRatio;
 }
 
-void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int delta)
+ProjectViewState::TrackData& ProjectViewState::trackData(const trackedit::TrackId& trackId)
 {
-    TrackData* d = nullptr;
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
-        d = &it->second;
-    } else {
-        d = &makeTrackData(trackId);
+        return it->second;
     }
 
-    int oldHeight = d->height.val;
-    int newHeight = std::max(oldHeight + delta, TRACK_MIN_HEIGHT);
+    return makeTrackData(trackId);
+}
 
-    d->height.set(newHeight);
-    d->collapsed.set(newHeight < TRACK_COLLAPSE_HEIGHT);
-
-    recomputeTotalTrackHeight();
-
-    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
-    if (prj) {
-        au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
-        if (au3Project) {
-            auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
-            au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
-        }
-    }
+void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int delta)
+{
+    setTrackHeight(trackId, trackData(trackId).height.val + delta);
 }
 
 void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int height)
 {
-    TrackData* d = nullptr;
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        d = &it->second;
-    } else {
-        d = &makeTrackData(trackId);
+    trackData(trackId).heightBeforeCollapse = 0;
+    doSetTrackHeight(trackId, height);
+}
+
+void ProjectViewState::collapseTrack(const trackedit::TrackId& trackId)
+{
+    TrackData& d = trackData(trackId);
+    if (d.collapsed.val) {
+        return;
     }
 
-    int newHeight = std::max(height, TRACK_MIN_HEIGHT);
-    d->height.set(newHeight);
-    d->collapsed.set(height < TRACK_COLLAPSE_HEIGHT);
+    d.heightBeforeCollapse = d.height.val;
+    doSetTrackHeight(trackId, TRACK_MIN_HEIGHT);
+}
+
+void ProjectViewState::expandTrack(const trackedit::TrackId& trackId)
+{
+    TrackData& d = trackData(trackId);
+    if (!d.collapsed.val) {
+        return;
+    }
+
+    const int height = d.heightBeforeCollapse > 0 ? d.heightBeforeCollapse : trackDefaultHeight(trackId);
+    setTrackHeight(trackId, height);
+}
+
+void ProjectViewState::doSetTrackHeight(const trackedit::TrackId& trackId, int height)
+{
+    TrackData& d = trackData(trackId);
+
+    const int newHeight = std::max(height, TRACK_MIN_HEIGHT);
+    d.height.set(newHeight);
+    d.collapsed.set(isCollapsedHeight(newHeight));
 
     recomputeTotalTrackHeight();
 
@@ -512,7 +526,9 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
         au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
         if (au3Project) {
             auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
-            au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+            if (track) {
+                au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+            }
         }
     }
 }
@@ -1188,6 +1204,32 @@ muse::async::Notification ProjectViewState::modifiersReleased() const
 int ProjectViewState::trackDefaultHeight() const
 {
     return TRACK_DEFAULT_HEIGHT;
+}
+
+int ProjectViewState::trackDefaultHeight(const trackedit::TrackId& trackId) const
+{
+    const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    const std::optional<trackedit::Track> track = prj ? prj->track(trackId) : std::nullopt;
+    if (track && track->type == trackedit::TrackType::Label) {
+        return TRACK_LABEL_DEFAULT_HEIGHT;
+    }
+
+    return TRACK_DEFAULT_HEIGHT;
+}
+
+int ProjectViewState::trackMinHeight() const
+{
+    return TRACK_MIN_HEIGHT;
+}
+
+int ProjectViewState::tracksViewportHeight() const
+{
+    return m_tracksViewportHeight;
+}
+
+void ProjectViewState::setTracksViewportHeight(int height)
+{
+    m_tracksViewportHeight = height;
 }
 
 int ProjectViewState::calculateVerticalRulerWidth() const

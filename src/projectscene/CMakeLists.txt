@@ -39,6 +39,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectscenecommandsstate.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackheightcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/trackheightcontroller.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/tapholdshortcut.h
@@ -75,6 +77,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/labeltrackitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackspanelcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackspanelcontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistitemmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/realtimeeffectlistmodel.cpp

@@ -13,6 +13,7 @@ class ProjectSceneActionsController;
 class ProjectSceneConfiguration;
 class RealtimeEffectPanelTrackSelection;
 class ProjectSceneUiState;
+class TrackHeightController;
 
 class ProjectSceneModule : public muse::modularity::IModuleSetup
 {
@@ -46,6 +47,7 @@ private:
     std::shared_ptr<ProjectSceneActionsController> m_projectSceneActionsController;
     std::shared_ptr<RealtimeEffectPanelTrackSelection> m_realtimeEffectPanelTrackSelection;
     std::shared_ptr<ProjectSceneUiState> m_uiState;
+    std::shared_ptr<TrackHeightController> m_trackHeightController;
 };
 }
 

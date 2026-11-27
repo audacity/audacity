@@ -119,6 +119,14 @@ public:
     virtual muse::async::Notification modifiersReleased() const = 0;
 
     virtual int trackDefaultHeight() const = 0;
+    virtual int trackDefaultHeight(const trackedit::TrackId& trackId) const = 0;
+    virtual int trackMinHeight() const = 0;
+    virtual void collapseTrack(const trackedit::TrackId& trackId) = 0;
+    //! Restores the height the track had before collapseTrack, or its default height
+    virtual void expandTrack(const trackedit::TrackId& trackId) = 0;
+
+    virtual int tracksViewportHeight() const = 0;
+    virtual void setTracksViewportHeight(int height) = 0;
 };
 
 using IProjectViewStatePtr = std::shared_ptr<IProjectViewState>;

@@ -318,4 +318,82 @@ TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesLabelBoundaries)
 
     EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 1.5, 3.5 }));
 }
+
+TEST_F(ProjectViewStateTests, IsTrackCollapsed_BelowCollapseHeight)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_FALSE(tracks.empty());
+
+    m_projectViewState->setTrackHeight(tracks[0], 72);
+    EXPECT_FALSE(m_projectViewState->isTrackCollapsed(tracks[0]).val);
+
+    m_projectViewState->setTrackHeight(tracks[0], 71);
+    EXPECT_TRUE(m_projectViewState->isTrackCollapsed(tracks[0]).val);
+}
+
+TEST_F(ProjectViewStateTests, ExpandTrack_RestoresHeightBeforeCollapse)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_FALSE(tracks.empty());
+    m_projectViewState->setTrackHeight(tracks[0], 200);
+
+    m_projectViewState->collapseTrack(tracks[0]);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, m_projectViewState->trackMinHeight());
+    EXPECT_TRUE(m_projectViewState->isTrackCollapsed(tracks[0]).val);
+
+    m_projectViewState->expandTrack(tracks[0]);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 200);
+    EXPECT_FALSE(m_projectViewState->isTrackCollapsed(tracks[0]).val);
+}
+
+TEST_F(ProjectViewStateTests, ExpandTrack_UsesDefaultHeightAfterManualResize)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_FALSE(tracks.empty());
+    m_projectViewState->setTrackHeight(tracks[0], 200);
+    m_projectViewState->collapseTrack(tracks[0]);
+
+    m_projectViewState->setTrackHeight(tracks[0], 50);
+    m_projectViewState->expandTrack(tracks[0]);
+
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, m_projectViewState->trackDefaultHeight(tracks[0]));
+}
+
+TEST_F(ProjectViewStateTests, ExpandTrack_KeepsExpandedTrackHeight)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_FALSE(tracks.empty());
+    m_projectViewState->setTrackHeight(tracks[0], 200);
+
+    m_projectViewState->expandTrack(tracks[0]);
+
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 200);
+}
+
+TEST_F(ProjectViewStateTests, SetTrackHeight_DoesNotCrashForATrackNotInTheProject)
+{
+    const trackedit::TrackId unknownTrack = 999999;
+
+    m_projectViewState->setTrackHeight(unknownTrack, 200);
+
+    EXPECT_EQ(m_projectViewState->trackHeight(unknownTrack).val, 200);
+}
+
+TEST_F(ProjectViewStateTests, TrackDefaultHeight_IsShorterForLabelTracks)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
+
+    trackedit::Track label;
+    label.id = tracks[0];
+    label.type = trackedit::TrackType::Label;
+    trackedit::Track mono;
+    mono.id = tracks[1];
+    mono.type = trackedit::TrackType::Mono;
+    ON_CALL(*m_trackeditProjectMock, track(tracks[0])).WillByDefault(Return(label));
+    ON_CALL(*m_trackeditProjectMock, track(tracks[1])).WillByDefault(Return(mono));
+
+    EXPECT_LT(m_projectViewState->trackDefaultHeight(tracks[0]), m_projectViewState->trackDefaultHeight(tracks[1]));
+    EXPECT_EQ(m_projectViewState->trackDefaultHeight(tracks[1]), m_projectViewState->trackDefaultHeight());
+}
 } // namespace au::projectscene
