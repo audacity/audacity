@@ -85,7 +85,6 @@ set(MODULE_SRC
 
 set(MODULE_LINK
         au3wrap
-        au3-audio-io
         au3-project-rate
         au3-clip-processing
         au3-time-frequency-selection

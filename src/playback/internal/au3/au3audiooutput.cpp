@@ -7,11 +7,9 @@
 #include "framework/global/async/async.h"
 #include "framework/global/types/ratio.h"
 
-#include "au3-audio-io/ProjectAudioIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
 #include "au3wrap/au3types.h"
-#include "au3wrap/internal/au3audiometerfactory.h"
 
 #include "audio/audiotypes.h"
 
@@ -21,7 +19,7 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioOutput::Au3AudioOutput(const muse::modularity::ContextPtr& ctx)
-    : muse::Contextable(ctx), m_outputMeter{au::au3::createAudioMeter()}
+    : muse::Contextable(ctx), m_outputMeter{audio::IAudioMeter::create()}
 {
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
@@ -41,8 +39,7 @@ void Au3AudioOutput::initMeter()
         return;
     }
 
-    auto& projectAudioIO = ProjectAudioIO::Get(*project);
-    projectAudioIO.SetPlaybackMeter(m_outputMeter);
+    audioEngine()->setPlaybackMeter(*project, m_outputMeter);
 }
 
 void Au3AudioOutput::notifyAboutSampleRateChanged()

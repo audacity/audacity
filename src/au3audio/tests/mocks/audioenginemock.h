@@ -37,6 +37,9 @@ public:
     MOCK_METHOD(void, startMonitoring, (AudacityProject & project), (override));
     MOCK_METHOD(void, stopMonitoring, (), (override));
     MOCK_METHOD(void, setMonitoredTracks, (const std::vector<MonitoredTrack>& tracks), (override));
+    MOCK_METHOD(void, setPlaybackMeter, (AudacityProject&, const IAudioMeterPtr&), (override));
+    MOCK_METHOD(void, setCaptureMeter, (AudacityProject&, const IAudioMeterPtr&), (override));
+    MOCK_METHOD(void, stopMeters, (AudacityProject &), (override));
     MOCK_METHOD(void, setInputVolume, (float newInputVolume), (override));
     MOCK_METHOD(float, getInputVolume, (), (const, override));
     MOCK_METHOD(void, setPlaybackVolume, (float newPlaybackVolume), (override));
@@ -47,6 +50,7 @@ public:
     MOCK_METHOD(void, handleDeviceChange, (), (override));
 
     MOCK_METHOD(muse::String, lastErrorString, (), (const, override));
+    MOCK_METHOD((std::vector<std::pair<double, double> >), lostCaptureIntervals, (), (const, override));
     MOCK_METHOD(double, getPlaybackSampleRate, (), (const, override));
     MOCK_METHOD(void, updateTimePosition, (unsigned long newlyConsumedSamples), (override));
     MOCK_METHOD(std::optional<AudioCallbackInfo>, consumeNextCallbackInfo, (), (override));

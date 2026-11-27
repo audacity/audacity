@@ -686,7 +686,7 @@ bool MIDIPlay::StartPortMidiStream(double rate)
     // Duplicating a bit of AudioIO::StartStream
     // Detect whether ALSA is the chosen host, and do the various involved MIDI
     // timing compensations only then.
-    mUsingAlsa = (AudioIOHost.Read() == L"ALSA");
+    mUsingAlsa = (AudioDeviceSettings::Host.Read() == L"ALSA");
 #endif
 
     int i;

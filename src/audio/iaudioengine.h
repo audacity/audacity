@@ -6,6 +6,7 @@
 #include <chrono>
 #include <memory>
 #include <optional>
+#include <utility>
 #include <vector>
 
 #include "framework/global/async/channel.h"
@@ -16,9 +17,9 @@
 #include "au3wrap/au3types.h"
 #include "audioconfigurationtypes.h"
 #include "audiotypes.h"
+#include "iaudiometer.h"
 
 struct TransportSequences;
-struct AudioIOStartTransportOptions;
 class ChannelGroup;
 class RealtimeEffectState;
 namespace au::audio {
@@ -73,6 +74,12 @@ public:
     virtual std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group,
                                                                             size_t effectListIndex, const std::string& newEffectId) = 0;
 
+    //! The meters fed by streams started for this project.
+    virtual void setPlaybackMeter(AudacityProject& project, const IAudioMeterPtr& meter) = 0;
+    virtual void setCaptureMeter(AudacityProject& project, const IAudioMeterPtr& meter) = 0;
+    //! Clears the meter queues of the project's meters.
+    virtual void stopMeters(AudacityProject& project) = 0;
+
     virtual void startMonitoring(AudacityProject& project) = 0;
     virtual void stopMonitoring() = 0;
     //! The tracks whose meters show the input while monitoring, in the order they would be recorded into
@@ -88,6 +95,7 @@ public:
     virtual void handleDeviceChange() = 0;
 
     virtual muse::String lastErrorString() const = 0;
+    virtual std::vector<std::pair<double, double> > lostCaptureIntervals() const = 0;
     virtual double getPlaybackSampleRate() const = 0;
     virtual void updateTimePosition(unsigned long newlyConsumedSamples) = 0;
     virtual std::optional<AudioCallbackInfo> consumeNextCallbackInfo() = 0;

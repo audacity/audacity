@@ -21,7 +21,6 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
-#include "au3-audio-devices/AudioIOBase.h"
 #include "au3-audio-devices/DeviceManager.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-project-rate/QualitySettings.h"
@@ -240,7 +239,7 @@ void Au3AudioDriverController::initDefaults()
     settings()->setDefaultValue(AUTOMATIC_LATENCY_COMPENSATION, muse::Val(false));
     settings()->setDefaultValue(LATENCY_COMPENSATION, muse::Val(-130.0));
     settings()->setDefaultValue(ASIO_USE_DEVICE_SAMPLE_RATE, muse::Val(true));
-    settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(AudioIOBase::GetOptimalSupportedSampleRate()));
+    settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(DeviceManager::GetOptimalSupportedSampleRate()));
     settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_FORMAT,
                                 muse::Val(QualitySettings::SampleFormatSetting.Default().Internal().ToStdString()));
 }
@@ -347,8 +346,8 @@ int Au3AudioDriverController::inputChannelsAvailable(const std::string& api, con
 std::vector<uint64_t> Au3AudioDriverController::sampleRates() const
 {
     std::vector<uint64_t> rates;
-    for (int i = 0; i < AudioIOBase::NumStandardRates; ++i) {
-        rates.push_back(AudioIOBase::StandardRates[i]);
+    for (int i = 0; i < DeviceManager::NumStandardRates; ++i) {
+        rates.push_back(DeviceManager::StandardRates[i]);
     }
     return rates;
 }

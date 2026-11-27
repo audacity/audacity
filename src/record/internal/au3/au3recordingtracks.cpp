@@ -4,7 +4,7 @@
 
 #include "au3recordingtracks.h"
 
-#include "au3-audio-io/CaptureRouting.h"
+#include "au3-recording/CaptureRouting.h"
 #include "au3-wave-track/WaveTrack.h"
 
 #include "au3wrap/internal/domaccessor.h"

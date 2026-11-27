@@ -14,7 +14,7 @@ namespace au::au3audio {
 class Au3AudioEngine final : public au::audio::IAudioEngine
 {
 public:
-    Au3AudioEngine() = default;
+    Au3AudioEngine();
 
     muse::GlobalInject<au::record::IRecordConfiguration> recordConfiguration;
 
@@ -42,6 +42,10 @@ public:
     std::shared_ptr<RealtimeEffectState> replaceRealtimeEffectState(AudacityProject& project, ChannelGroup* group, size_t effectListIndex,
                                                                     const std::string& newEffectId) override;
 
+    void setPlaybackMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter) override;
+    void setCaptureMeter(AudacityProject& project, const audio::IAudioMeterPtr& meter) override;
+    void stopMeters(AudacityProject& project) override;
+
     void startMonitoring(AudacityProject& project) override;
     void stopMonitoring() override;
     void setMonitoredTracks(const std::vector<audio::MonitoredTrack>& tracks) override;
@@ -55,6 +59,7 @@ public:
 
     void handleDeviceChange() override;
     muse::String lastErrorString() const override;
+    std::vector<std::pair<double, double> > lostCaptureIntervals() const override;
     double getPlaybackSampleRate() const override;
     void updateTimePosition(unsigned long newlyConsumedSamples) override;
     std::optional<au::audio::AudioCallbackInfo> consumeNextCallbackInfo() override;
