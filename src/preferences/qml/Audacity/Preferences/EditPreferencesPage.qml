@@ -116,6 +116,27 @@ PreferencesPage {
 
         SeparatorLine {}
 
+        ZoomSection {
+            id: zoomSection
+
+            mouseZoomPrecision: editPreferencesModel.mouseZoomPrecision
+
+            navigation.section: root.navigationSection
+            navigation.order: monoStereoConversionSection.navigationOrderEnd + 1
+
+            onMouseZoomPrecisionChangeRequested: function (zoomPrecision) {
+                editPreferencesModel.setMouseZoomPrecision(zoomPrecision)
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine {}
+
         ZoomToggleSection {
             id: zoomToggleSection
 
@@ -124,7 +145,7 @@ PreferencesPage {
             zoomPreset2: editPreferencesModel.zoomPreset2
 
             navigation.section: root.navigationSection
-            navigation.order: monoStereoConversionSection.navigationOrderEnd + 1
+            navigation.order: zoomSection.navigationOrderEnd + 1
 
             onZoomPreset1ChangeRequested: function (preset) {
                 editPreferencesModel.setZoomPreset1(preset)
