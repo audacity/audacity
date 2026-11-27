@@ -227,3 +227,7 @@ set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_EFFECTS_TESTS)
+    add_subdirectory(tests)
+endif()
