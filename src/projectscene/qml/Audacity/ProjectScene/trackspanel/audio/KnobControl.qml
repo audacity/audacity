@@ -277,7 +277,7 @@ Dial {
         onWheel: function (wheel) {
             wheel.accepted = false
             Qt.callLater(function () {
-                root.newValueRequested(Math.round(value))
+                root.newValueRequested(value)
             })
         }
     }

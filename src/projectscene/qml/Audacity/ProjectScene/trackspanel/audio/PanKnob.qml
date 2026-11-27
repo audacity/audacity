@@ -20,7 +20,7 @@ KnobControl {
     signal newPanRequested(real pan, bool completed)
 
     onNewValueRequested: function (value) {
-        newPanRequested(value, false)
+        newPanRequested(Math.round(value), false)
     }
 
     ValueTooltip {
