@@ -152,7 +152,7 @@
             { "command": "command://projectscene/collapse-all-tracks", "sequences": ["Ctrl+Alt+Shift+C", "Ctrl+Shift+C"] },
             { "command": "command://projectscene/expand-all-tracks", "sequences": ["Ctrl+Alt+Shift+X"] },
             { "command": "command://projectscene/fit-tracks-to-height", "sequences": ["Ctrl+Alt+F"] },
-            { "command": "command://projectscene/fit-all-tracks-to-height", "sequences": ["Ctrl+Alt+Shift+F"] },
+            { "command": "command://projectscene/fit-all-tracks-to-height", "sequences": ["Ctrl+Alt+Shift+F", "Ctrl+Shift+F"] },
             { "command": "command://projectscene/reset-track-height", "sequences": ["Ctrl+Alt+0"] },
             { "command": "command://projectscene/realtime-effect-move-up", "sequences": ["Alt+Up"] },
             { "command": "command://projectscene/realtime-effect-move-down", "sequences": ["Alt+Down"] }
