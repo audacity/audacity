@@ -14,6 +14,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/projecthistorymock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/tracknavigationcontrollermock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditinteractionmock.h
+    ${CMAKE_CURRENT_LIST_DIR}/mocks/clipfadesmock.h
 
     ${CMAKE_CURRENT_LIST_DIR}/trackeditactionscontroller_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/trackeditcommandsstate_tests.cpp
@@ -27,6 +28,7 @@ set(MODULE_TEST_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/changedetection_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/clipfadedrag_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/clipfades_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/trackeditutils_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3trackeditclipboard_tests.cpp
     )

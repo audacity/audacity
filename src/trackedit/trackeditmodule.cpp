@@ -41,6 +41,7 @@
 #include "internal/trackeditoperationcontroller.h"
 #include "internal/clipboarddata.h"
 #include "internal/selectstephandler.h"
+#include "internal/clipfades.h"
 #include "internal/tracknavigationcontroller.h"
 #include "internal/tracksviewrequestsservice.h"
 #include "internal/trackspectrogramsettingsupdater.h"
@@ -150,6 +151,7 @@ void TrackeditContext::registerExports()
     m_trackNavigationController = std::make_shared<TrackNavigationController>(iocContext());
     m_trackSpectrogramSettingsUpdater = std::make_shared<TrackSpectrogramSettingsUpdater>(iocContext());
     m_tracksViewRequestsService = std::make_shared<TracksViewRequestsService>(iocContext());
+    m_clipFades = std::make_shared<ClipFades>(iocContext());
 
     ioc()->registerExport<ITrackeditInteraction>(mname,
                                                  new TrackeditInteraction(iocContext(), std::make_unique<TrackeditOperationController>(
@@ -159,6 +161,7 @@ void TrackeditContext::registerExports()
     ioc()->registerExport<ITrackeditClipboard>(mname, new Au3TrackeditClipboard(iocContext()));
     ioc()->registerExport<ITrackNavigationController>(mname, m_trackNavigationController);
     ioc()->registerExport<ITracksViewRequestsService>(mname, m_tracksViewRequestsService);
+    ioc()->registerExport<IClipFades>(mname, m_clipFades);
 
     ioc()->registerExport<ITracksInteraction>(mname, new Au3TracksInteraction(iocContext()));
     ioc()->registerExport<IClipsInteraction>(mname, new Au3ClipsInteraction(iocContext()));
@@ -184,6 +187,7 @@ void TrackeditContext::onInit(const muse::IApplication::RunMode&)
     m_selectionController->init();
     m_trackNavigationController->init();
     m_trackSpectrogramSettingsUpdater->init();
+    m_clipFades->init();
 }
 
 void TrackeditContext::onDeinit()

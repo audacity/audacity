@@ -12,6 +12,7 @@ class Au3SelectionController;
 class TrackNavigationController;
 class TrackSpectrogramSettingsUpdater;
 class TracksViewRequestsService;
+class ClipFades;
 
 class TrackeditModule : public muse::modularity::IModuleSetup
 {
@@ -48,5 +49,6 @@ private:
     std::shared_ptr<TrackNavigationController> m_trackNavigationController;
     std::shared_ptr<TrackSpectrogramSettingsUpdater> m_trackSpectrogramSettingsUpdater;
     std::shared_ptr<TracksViewRequestsService> m_tracksViewRequestsService;
+    std::shared_ptr<ClipFades> m_clipFades;
 };
 }

@@ -255,6 +255,10 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateItemsBoundaries(false);
     });
+
+    clipFades()->draggedFadeChanged().onNotify(this, [this] {
+        updateItemsBoundaries(false);
+    });
 }
 
 muse::ValCh<int> ProjectViewState::totalTrackHeight() const
@@ -1137,6 +1141,13 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
 
             boundaries.insert(clip.startTime);
             boundaries.insert(clip.endTime);
+            const auto [fadeInEnd, fadeOutEnd] = clipFades()->snappableFadeEnds(clip);
+            if (fadeInEnd) {
+                boundaries.insert(*fadeInEnd);
+            }
+            if (fadeOutEnd) {
+                boundaries.insert(*fadeOutEnd);
+            }
         }
 
         // Add labels boundaries

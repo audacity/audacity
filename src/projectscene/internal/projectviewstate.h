@@ -12,6 +12,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/iclipfades.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
 #include "../iprojectsceneconfiguration.h"
 
@@ -31,6 +32,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<trackedit::IClipFades> clipFades{ this };
 
 public:
     ProjectViewState(const muse::modularity::ContextPtr& ctx);

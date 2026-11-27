@@ -59,6 +59,29 @@ ClipSide ClipFadeDrag::side() const
     return m_side;
 }
 
+IClipFades::FadeEnds ClipFadeDrag::snappableFadeEnds(const Clip& clip) const
+{
+    IClipFades::FadeEnds ends { clip.startTime + clip.fadeInDuration, clip.endTime - clip.fadeOutDuration };
+    const auto atStart = std::find_if(m_clips.begin(), m_clips.end(), [&](const Clip& c) { return c.key == clip.key; });
+    if (atStart == m_clips.end()) {
+        // `clip`'s fades aren't being dragged - both its fades are snappable.
+        return ends;
+    }
+
+    // `clip`'s dragged fade (left or right) isn't snappable.
+    const bool fadeInDragged = m_side == ClipSide::Left;
+    (fadeInDragged ? ends.first : ends.second).reset();
+
+    // `clip`'s non-dragged fade might still be pushed by the dragged one. If it is, it's not snappable anymore.
+    const double otherLength = fadeInDragged ? clip.fadeOutDuration : clip.fadeInDuration;
+    const double otherLengthAtStart = fadeInDragged ? atStart->fadeOutDuration : atStart->fadeInDuration;
+    if (!muse::RealIsEqual(otherLength, otherLengthAtStart)) {
+        (fadeInDragged ? ends.second : ends.first).reset();
+    }
+
+    return ends;
+}
+
 double ClipFadeDrag::fadeLength(const Clip& clip) const
 {
     return m_side == ClipSide::Left ? clip.fadeInDuration : clip.fadeOutDuration;

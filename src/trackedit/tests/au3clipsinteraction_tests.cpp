@@ -18,7 +18,7 @@
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-clip-processing/TempoChange.h"
 #include "au3-clip-processing/ClipFades.h"
-#include "trackedit/clipfadedrag.h"
+#include "trackedit/internal/clipfadedrag.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-xml/XMLFileReader.h"
 
