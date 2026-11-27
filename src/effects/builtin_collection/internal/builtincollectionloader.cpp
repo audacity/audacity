@@ -46,6 +46,7 @@
 #include "basstreble/basstrebleeffect.h"
 #include "basstreble/basstrebleviewmodel.h"
 #include "echo/echoeffect.h"
+#include "echo/echosettingmodel.h"
 #include "echo/echoviewmodel.h"
 #include "phaser/phasereffect.h"
 #include "phaser/phasersettingmodel.h"
@@ -181,6 +182,7 @@ void BuiltinCollectionLoader::init()
     regView(BassTrebleEffect::Symbol, u"qrc:/basstreble/BassTrebleView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(EchoViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(EchoSettingModelFactory);
     regView(EchoEffect::Symbol, u"qrc:/echo/EchoView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PhaserViewModelFactory);
