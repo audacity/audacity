@@ -269,7 +269,7 @@ bool NavigableAppMenuModel::processEventForAppMenu(QEvent* event)
                                   && isSingleSymbol
                                   && isNavigationStarted;
     bool isNavigationWithAlt = (modifiers & Qt::AltModifier)
-                               && !(modifiers & Qt::ShiftModifier)
+                               && !(modifiers & (Qt::ShiftModifier | Qt::ControlModifier | Qt::MetaModifier))
                                && isSingleSymbol;
 
     bool isAltKey = key == Qt::Key_Alt
