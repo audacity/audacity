@@ -12,7 +12,7 @@
 using namespace au::effects;
 
 namespace {
-constexpr double FREQ_STEP = 0.01;
+constexpr double FREQ_STEP = 0.001;
 constexpr double PHASE_STEP = 1.0;
 constexpr double STAGES_STEP = 2.0;
 constexpr double DEPTH_STEP = 1.0;
