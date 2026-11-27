@@ -27,6 +27,34 @@ static const muse::Uri EDIT_CLIP_FADES_URI("audacity://projectscene/editclipfade
 TrackClipsListModel::TrackClipsListModel(QObject* parent)
     : TrackItemsListModel(parent)
 {
+    connect(this, &TrackItemsListModel::timelineContextChanged, this, [this]() {
+        if (!m_context) {
+            return;
+        }
+        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &TrackClipsListModel::onSelectionTimeChanged);
+        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &TrackClipsListModel::onSelectionTimeChanged);
+        onSelectionTimeChanged();
+    });
+
+    m_delegateReleaseTimer.setSingleShot(true);
+    m_delegateReleaseTimer.setInterval(500);
+    connect(&m_delegateReleaseTimer, &QTimer::timeout, this, &TrackClipsListModel::releaseUnusedDelegates);
+
+    m_unloadTimer.setSingleShot(true);
+    m_unloadTimer.setInterval(1000);
+    connect(&m_unloadTimer, &QTimer::timeout, this, &TrackClipsListModel::unloadClipsOutOfView);
+}
+
+void TrackClipsListModel::onSelectionTimeChanged()
+{
+    //! NOTE The context also notifies these on every scroll step, which updates the items anyway
+    if (muse::RealIsEqual(m_selectionStartTime, m_context->selectionStartTime())
+        && muse::RealIsEqual(m_selectionEndTime, m_context->selectionEndTime())) {
+        return;
+    }
+    m_selectionStartTime = m_context->selectionStartTime();
+    m_selectionEndTime = m_context->selectionEndTime();
+    updateItemsMetrics();
 }
 
 void TrackClipsListModel::onInit()
@@ -38,6 +66,10 @@ void TrackClipsListModel::onInit()
             }
         });
     }
+
+    navigationController()->highlightChanged().onNotify(this, [this] {
+        emit keyboardNavigationChanged();
+    });
 
     // Escape
     trackeditInteraction()->cancelDragEditRequested().onNotify(this, [this] {
@@ -111,6 +143,7 @@ void TrackClipsListModel::onReload()
                 updateItemMetrics(item);
             }
         }
+        updateNeighborDistances();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     // When recording ends, the playhead pin disengages: recompute so the clip
@@ -172,6 +205,72 @@ void TrackClipsListModel::onReload()
     update();
 }
 
+bool TrackClipsListModel::keyboardNavigation() const
+{
+    return navigationController()->isHighlight();
+}
+
+void TrackClipsListModel::requestDelegateAt(double x)
+{
+    //! NOTE The trim and fade handles reach a little beyond the clip
+    constexpr double edgeMargin = 8.0;
+
+    const trackedit::ClipId previousHoveredClip = m_hoveredClip;
+    m_hoveredClip = -1;
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        if (item->width() > 0.0 && x >= item->x() - edgeMargin && x <= item->x() + item->width() + edgeMargin) {
+            auto* clipItem = static_cast<TrackClipItem*>(item);
+            m_hoveredClip = clipItem->key().key.itemId;
+            clipItem->setDelegateRequested(true);
+            break;
+        }
+    }
+    startDelegateRelease(m_hoveredClip != previousHoveredClip);
+}
+
+void TrackClipsListModel::startDelegateRelease(bool restart)
+{
+    //! NOTE Restarted when the clip under the mouse or a clip in use changed, not on every move
+    //! of the mouse, which would put the release off for as long as the mouse moves
+    if (restart || !m_delegateReleaseTimer.isActive()) {
+        m_delegateReleaseTimer.start();
+    }
+}
+
+void TrackClipsListModel::releaseHoverDelegates()
+{
+    m_hoveredClip = -1;
+    startDelegateRelease(true);
+}
+
+void TrackClipsListModel::holdDelegate(const ClipKey& key)
+{
+    m_heldDelegates.insert(key.key.itemId);
+    if (TrackClipItem* item = clipItemByKey(key.key)) {
+        item->setDelegateRequested(true);
+    }
+}
+
+void TrackClipsListModel::releaseDelegate(const ClipKey& key)
+{
+    m_heldDelegates.erase(key.key.itemId);
+    if (m_hoveredClip == key.key.itemId) {
+        m_hoveredClip = -1;
+    }
+    startDelegateRelease(true);
+}
+
+void TrackClipsListModel::releaseUnusedDelegates()
+{
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        auto* clipItem = static_cast<TrackClipItem*>(item);
+        const ClipId id = clipItem->key().key.itemId;
+        if (clipItem->delegateRequested() && id != m_hoveredClip && !muse::contains(m_heldDelegates, id)) {
+            clipItem->setDelegateRequested(false);
+        }
+    }
+}
+
 TrackClipItem* TrackClipsListModel::clipItemByKey(const trackedit::ClipKey& k) const
 {
     return static_cast<TrackClipItem*>(itemByKey(k));
@@ -195,7 +294,8 @@ void TrackClipsListModel::update()
         auto it = oldItems.find(c.key.itemId);
         TrackClipItem* item = nullptr;
 
-        if (it != oldItems.end()) {
+        const bool isNew = it == oldItems.end();
+        if (!isNew) {
             item = it->second;
             oldItems.erase(it);
         } else {
@@ -203,6 +303,10 @@ void TrackClipsListModel::update()
         }
 
         item->setClip(c);
+        // The delegate decides how to load the clip from its position when it is created
+        if (isNew) {
+            updateItemMetrics(item);
+        }
         newList.append(item);
     }
 
@@ -299,42 +403,42 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 {
     TrackClipItem* item = static_cast<TrackClipItem*>(viewItem);
 
-    ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return;
-    }
-
-    trackedit::Clip clip = prj->clip(item->key().key);
-    if (!clip.isValid()) {
-        return;
-    }
+    double clipStartTime = item->clipStartTime();
+    double clipEndTime = item->clipEndTime();
 
     if (item->isDragGhost()) {
-        clip.startTime += moveTimeOffset();
-        clip.endTime += moveTimeOffset();
+        clipStartTime += moveTimeOffset();
+        clipEndTime += moveTimeOffset();
     }
 
     // Pin the recording clip's visual boundary to the smooth playhead: data is
     // committed in chunks, so following the committed end would make the edge
     // jump. Data ahead of the playhead is revealed as the playhead reaches it.
+    bool recording = false;
     if (globalContext()->isRecording()) {
         for (const auto& rk : recordController()->recordingClipKeys()) {
             if (rk == item->key().key) {
                 double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
-                clip.endTime = std::max(clip.startTime, projectedEnd);
+                clipEndTime = std::max(clipStartTime, projectedEnd);
+                recording = true;
                 break;
             }
         }
     }
 
+    //! NOTE The light clip view shows neither the fades nor the recording clip
+    item->setNeedsFullView(recording || item->fadeInDuration() > 0.0 || item->fadeOutDuration() > 0.0);
+
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = cacheBufferPx() / m_context->zoom();
+    const double cacheStartTime = m_context->frameStartTime() - cacheTime;
+    const double cacheEndTime = m_context->frameEndTime() + cacheTime;
 
     ClipTime time;
-    time.startTime = clip.startTime;
-    time.endTime = clip.endTime;
-    time.itemStartTime = std::max(clip.startTime, (m_context->frameStartTime() - cacheTime));
-    time.itemEndTime = std::min(clip.endTime, (m_context->frameEndTime() + cacheTime));
+    time.startTime = clipStartTime;
+    time.endTime = clipEndTime;
+    time.itemStartTime = std::max(clipStartTime, cacheStartTime);
+    time.itemEndTime = std::min(clipEndTime, cacheEndTime);
 
     if (selectionController()->isDataSelectedOnTrack(m_trackId)) {
         time.selectionStartTime = selectionController()->dataSelectedStartTime();
@@ -342,11 +446,68 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     }
     item->setMovesWithSelection(muse::contains(m_clipsMovingWithSelection, item->key().key));
 
+    //! NOTE A clip outside the view and its buffer gets values that don't follow the view, so that
+    //! scrolling, e.g. with the pinned playhead, doesn't update every clip of the track on each step
+    const bool beforeView = clipEndTime <= cacheStartTime;
+    if (beforeView || clipStartTime >= cacheEndTime) {
+        time.itemStartTime = time.itemEndTime = beforeView ? clipEndTime : clipStartTime;
+        item->setTime(time);
+
+        const double viewWidth = std::round(m_context->timeToPosition(m_context->frameEndTime()));
+        item->setX(beforeView ? -cacheBufferPx() - 1 : viewWidth + cacheBufferPx() + 1);
+        item->setWidth(0);
+        item->setLeftVisibleMargin(0);
+        item->setRightVisibleMargin(0);
+        item->setSelectionPixels(0.0, 0.0);
+        item->setInView(false);
+        return;
+    }
+
+    item->setInView(true);
     item->setTime(time);
-    item->setX(m_context->timeToPosition(time.itemStartTime));
-    item->setWidth((time.itemEndTime - time.itemStartTime) * m_context->zoom());
+    // The edges lie on device pixels, so that they stay sharp. WaveView compensates for what is left
+    // to the exact position. Both edges are snapped, so that trimming one does not move the other, and
+    // on a grid that scrolls as a whole, so that the clip keeps its width while scrolling.
+    const double left = m_context->timeToSnappedPosition(time.itemStartTime);
+    const double right = m_context->timeToSnappedPosition(time.itemEndTime);
+    item->setX(left);
+    item->setWidth(right - left);
+
+    //! NOTE Uses the same integer rounding as WaveBitmapCache. Computed here rather than in QML,
+    //! where it depended on the selection's position in the view and so changed on every scroll step.
+    const double selectionStart = m_context->timeToPosition(m_context->selectionStartTime()) - left;
+    const double selectionEnd = m_context->timeToPosition(m_context->selectionEndTime()) - left;
+    //! NOTE Kept within the clip: nothing cuts off what a clip draws beside itself
+    const double itemWidth = right - left;
+    const double start = std::clamp(std::floor(selectionStart + 0.5), 0.0, itemWidth);
+    const double end = std::clamp(std::floor(selectionEnd + 0.5), start, itemWidth);
+    item->setSelectionPixels(start, end - start);
     item->setLeftVisibleMargin(std::max(m_context->frameStartTime() - time.itemStartTime, 0.0) * m_context->zoom());
     item->setRightVisibleMargin(std::max(time.itemEndTime - m_context->frameEndTime(), 0.0) * m_context->zoom());
+}
+
+void TrackClipsListModel::onItemsMetricsUpdated()
+{
+    updateNeighborDistances();
+    m_unloadTimer.start();
+}
+
+void TrackClipsListModel::updateNeighborDistances()
+{
+    for (int i = 0; i < m_items.size(); ++i) {
+        auto* item = static_cast<TrackClipItem*>(m_items[i]);
+        const ViewTrackItem* left = i > 0 ? m_items[i - 1] : nullptr;
+        const ViewTrackItem* right = i + 1 < m_items.size() ? m_items[i + 1] : nullptr;
+        item->setNeighborDistances(left ? item->x() - (left->x() + left->width()) : -1.0,
+                                   right ? right->x() - (item->x() + item->width()) : -1.0);
+    }
+}
+
+void TrackClipsListModel::unloadClipsOutOfView()
+{
+    for (ViewTrackItem* item : std::as_const(m_items)) {
+        static_cast<TrackClipItem*>(item)->unload();
+    }
 }
 
 ViewTrackItem* TrackClipsListModel::createDragGhost(const trackedit::TrackItemKey& key)
@@ -589,12 +750,33 @@ ClipKeyList TrackClipsListModel::clipsForInteraction(const ClipKey& key) const
     return selectedClips;
 }
 
+std::optional<au::trackedit::Clip> TrackClipsListModel::currentClip(const trackedit::ClipKey& key) const
+{
+    //! NOTE The item is updated by the clip change notification, which can arrive after the next mouse move,
+    //! so boundary edits read the clip from the project
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return std::nullopt;
+    }
+    trackedit::Clip clip = prj->clip(key);
+    if (!clip.isValid()) {
+        return std::nullopt;
+    }
+    return clip;
+}
+
 bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action)
 {
     TrackClipItem* item = clipItemByKey(key.key);
     IF_ASSERT_FAILED(item) {
         return false;
     }
+
+    const std::optional<trackedit::Clip> currentClipData = currentClip(key.key);
+    IF_ASSERT_FAILED(currentClipData) {
+        return false;
+    }
+    const trackedit::Clip& clip = *currentClipData;
 
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
@@ -615,7 +797,7 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
             offset = -offset;
         }
 
-        newStartTime = item->time().startTime + offset;
+        newStartTime = clip.startTime + offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Shrink) {
@@ -639,15 +821,15 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = item->time().endTime - newStartTime;
+    double newClipTime = clip.endTime - newStartTime;
     if (newClipTime < minClipTime) {
-        newStartTime = item->time().endTime - minClipTime;
+        newStartTime = clip.endTime - minClipTime;
     }
 
     newStartTime = std::max(newStartTime, 0.0);
 
     const bool ok = trackeditInteraction()->trimClipsLeft(clipsForInteraction(key),
-                                                          newStartTime - item->time().startTime,
+                                                          newStartTime - clip.startTime,
                                                           minClipTime,
                                                           completed,
                                                           undoType);
@@ -670,7 +852,18 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
         return false;
     }
 
-    auto vs = globalContext()->currentProject()->viewState();
+    const std::optional<trackedit::Clip> currentClipData = currentClip(key.key);
+    IF_ASSERT_FAILED(currentClipData) {
+        return false;
+    }
+    const trackedit::Clip& clip = *currentClipData;
+
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
     if (!vs) {
         return false;
     }
@@ -684,7 +877,7 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
             offset = -offset;
         }
 
-        newEndTime = item->time().endTime - offset;
+        newEndTime = clip.endTime - offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Expand) {
@@ -708,13 +901,13 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = newEndTime - item->time().startTime;
+    double newClipTime = newEndTime - clip.startTime;
     if (newClipTime < minClipTime) {
-        newEndTime = item->time().startTime + minClipTime;
+        newEndTime = clip.startTime + minClipTime;
     }
 
     bool ok = trackeditInteraction()->trimClipsRight(clipsForInteraction(key),
-                                                     item->time().endTime - newEndTime,
+                                                     clip.endTime - newEndTime,
                                                      minClipTime,
                                                      completed,
                                                      undoType);
@@ -737,7 +930,18 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
         return false;
     }
 
-    auto vs = globalContext()->currentProject()->viewState();
+    const std::optional<trackedit::Clip> currentClipData = currentClip(key.key);
+    IF_ASSERT_FAILED(currentClipData) {
+        return false;
+    }
+    const trackedit::Clip& clip = *currentClipData;
+
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
     if (!vs) {
         return false;
     }
@@ -751,7 +955,7 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
             offset = -offset;
         }
 
-        newStartTime = item->time().startTime + offset;
+        newStartTime = clip.startTime + offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Shrink) {
@@ -773,8 +977,8 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
             newStartTime = m_context->applySnapToItem(newStartTime);
         }
 
-        const double naturalDuration = (item->time().endTime - item->time().startTime) / item->speed();
-        const double originalStartTime = item->time().endTime - naturalDuration;
+        const double naturalDuration = (clip.endTime - clip.startTime) / clip.speed;
+        const double originalStartTime = clip.endTime - naturalDuration;
         const double snapThreshold = 8.0 / m_context->zoom();
         if (std::abs(newStartTime - originalStartTime) < snapThreshold) {
             newStartTime = originalStartTime;
@@ -782,15 +986,15 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = item->time().endTime - newStartTime;
+    double newClipTime = clip.endTime - newStartTime;
     if (newClipTime < minClipTime) {
-        newStartTime = item->time().endTime - minClipTime;
+        newStartTime = clip.endTime - minClipTime;
     }
 
     newStartTime = std::max(newStartTime, 0.0);
 
     bool ok = trackeditInteraction()->stretchClipsLeft(clipsForInteraction(key),
-                                                       newStartTime - item->time().startTime,
+                                                       newStartTime - clip.startTime,
                                                        minClipTime,
                                                        completed,
                                                        undoType);
@@ -813,7 +1017,18 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
         return false;
     }
 
-    auto vs = globalContext()->currentProject()->viewState();
+    const std::optional<trackedit::Clip> currentClipData = currentClip(key.key);
+    IF_ASSERT_FAILED(currentClipData) {
+        return false;
+    }
+    const trackedit::Clip& clip = *currentClipData;
+
+    auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    auto vs = project->viewState();
     if (!vs) {
         return false;
     }
@@ -827,7 +1042,7 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
             offset = -offset;
         }
 
-        newEndTime = item->time().endTime - offset;
+        newEndTime = clip.endTime - offset;
 
         Direction direction = Direction::Left;
         if (action == ClipBoundary::Action::Expand) {
@@ -849,8 +1064,8 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
             newEndTime = m_context->applySnapToItem(newEndTime);
         }
 
-        const double naturalDuration = (item->time().endTime - item->time().startTime) / item->speed();
-        const double originalEndTime = item->time().startTime + naturalDuration;
+        const double naturalDuration = (clip.endTime - clip.startTime) / clip.speed;
+        const double originalEndTime = clip.startTime + naturalDuration;
         const double snapThreshold = 8.0 / m_context->zoom();
         if (std::abs(newEndTime - originalEndTime) < snapThreshold) {
             newEndTime = originalEndTime;
@@ -858,13 +1073,13 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
-    double newClipTime = newEndTime - item->time().startTime;
+    double newClipTime = newEndTime - clip.startTime;
     if (newClipTime < minClipTime) {
-        newEndTime = item->time().startTime + minClipTime;
+        newEndTime = clip.startTime + minClipTime;
     }
 
     bool ok = trackeditInteraction()->stretchClipsRight(clipsForInteraction(key),
-                                                        item->time().endTime - newEndTime,
+                                                        clip.endTime - newEndTime,
                                                         minClipTime,
                                                         completed,
                                                         undoType);

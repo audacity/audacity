@@ -202,8 +202,8 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
     QPoint pixelsScrolled = pixelDelta;
     QPoint stepsScrolled = angleDelta;
 
-    int dx = 0;
-    int dy = 0;
+    qreal dx = 0.0;
+    qreal dy = 0.0;
     qreal stepsX = 0.0;
     qreal stepsY = 0.0;
 
@@ -240,15 +240,15 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
         qreal correction = 1.0 / zoom();
 
         if (modifiers.testFlag(Qt::ShiftModifier)) {
-            int abs = sqrt(dx * dx + dy * dy) * (dy > -dx ? -1 : 1);
+            qreal abs = sqrt(dx * dx + dy * dy) * (dy > -dx ? -1 : 1);
             shiftFrameTime(abs * correction);
             emit userHorizontalScrolled();
         } else {
-            if (dx != 0) {
+            if (!qFuzzyIsNull(dx)) {
                 shiftFrameTime(-dx * correction);
                 emit userHorizontalScrolled();
             }
-            if (dy != 0) {
+            if (!qFuzzyIsNull(dy)) {
                 emit viewContentYChangeRequested(-dy);
             }
         }
@@ -792,6 +792,27 @@ double TimelineContext::timeToPosition(double time) const
     return m_zoom * (time - m_frameStartTime);
 }
 
+double TimelineContext::timeToSnappedPosition(double time) const
+{
+    const double scale = m_zoom * m_devicePixelRatio;
+    return (std::round(time * scale) - std::round(m_frameStartTime * scale)) / m_devicePixelRatio;
+}
+
+double TimelineContext::devicePixelRatio() const
+{
+    return m_devicePixelRatio;
+}
+
+void TimelineContext::setDevicePixelRatio(double devicePixelRatio)
+{
+    if (devicePixelRatio <= 0.0 || muse::RealIsEqual(m_devicePixelRatio, devicePixelRatio)) {
+        return;
+    }
+    m_devicePixelRatio = devicePixelRatio;
+    emit devicePixelRatioChanged();
+    emit frameTimeChanged();
+}
+
 double TimelineContext::positionToTime(double position, bool withSnap) const
 {
     double result = m_frameStartTime + position / m_zoom;
@@ -1304,5 +1325,5 @@ bool TimelineContext::pinnedPlayHeadEnabled() const
 
 double TimelineContext::lastPlaybackSeekPosition() const
 {
-    return timeToPosition(playbackController()->lastPlaybackSeekTime());
+    return timeToSnappedPosition(playbackController()->lastPlaybackSeekTime());
 }

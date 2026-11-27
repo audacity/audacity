@@ -47,6 +47,8 @@ public:
     Q_INVOKABLE bool isMajorSection(int y) const;
 
     IntervalInfo intervalInfo();
+    //! The ticks of what the timeline shows now
+    Ticks ticks();
 
     void setFormatter(const TimelineRulerMode mode);
 
@@ -58,10 +60,11 @@ public:
 
 signals:
     void timelineContextChanged();
-    void ticksChanged(Ticks ticks);
+    void ticksChanged();
     void formatterChanged();
 
 private:
+    void updateView();
     Ticks prepareTickData(const IntervalInfo& timeInterval, double w, double h);
     TickType determineTickType(double value, const IntervalInfo& timeInterval);
     void drawLabels(QPainter* painter, const Ticks& ticks, double w, double h);

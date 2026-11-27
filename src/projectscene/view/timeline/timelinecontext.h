@@ -40,6 +40,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(double frameStartTime READ frameStartTime NOTIFY frameStartTimeChanged FINAL)
     Q_PROPERTY(double frameEndTime READ frameEndTime NOTIFY frameEndTimeChanged FINAL)
     Q_PROPERTY(double zoom READ zoom NOTIFY zoomChanged FINAL)
+    Q_PROPERTY(double devicePixelRatio READ devicePixelRatio WRITE setDevicePixelRatio NOTIFY devicePixelRatioChanged FINAL)
     Q_PROPERTY(int BPM READ BPM WRITE setBPM NOTIFY BPMChanged FINAL)
 
     Q_PROPERTY(double selectionStartTime READ selectionStartTime NOTIFY selectionStartTimeChanged FINAL)
@@ -145,6 +146,11 @@ public:
     Q_INVOKABLE void stopAutoScroll();
 
     Q_INVOKABLE double timeToPosition(double time) const;
+    //! The position of the time on the grid of device pixels. Unlike two rounded positions,
+    //! two of these keep their distance while scrolling, as all of them step together.
+    double timeToSnappedPosition(double time) const;
+    double devicePixelRatio() const;
+    void setDevicePixelRatio(double devicePixelRatio);
     Q_INVOKABLE double positionToTime(double position, bool withSnap = false) const;
     double singleStepToTime(double position, Direction direction, const Snap& snap) const;
     double applySnapToTime(double time) const;
@@ -186,6 +192,7 @@ signals:
     void frameTimeChanged(); // any or both together
 
     void zoomChanged();
+    void devicePixelRatioChanged();
     void BPMChanged();
     void timeSigUpperChanged();
     void timeSigLowerChanged();
@@ -271,6 +278,7 @@ private:
     double m_lastZoomEndTime = 0.0;
 
     double m_zoom = 1.0; // see initToViewState
+    double m_devicePixelRatio = 1.0;
     int m_BPM = 120;
     // time signature
     int m_timeSigUpper = 4;

@@ -116,8 +116,6 @@ private:
     secs_t clampRightTrimDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
     secs_t clampLeftStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
     secs_t clampRightStretchDelta(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration) const;
-    bool trimClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
-    bool trimClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed);
 
     //! Returns the @p edit result for the last clip.
     bool applyClipEdit(const ClipKeyList& clipKeys, bool completed, const std::function<bool(au3::Au3WaveClip&)>& edit);

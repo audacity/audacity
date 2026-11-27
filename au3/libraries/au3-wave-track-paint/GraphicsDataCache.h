@@ -46,6 +46,8 @@ struct WAVE_TRACK_PAINT_API GraphicsDataCacheElementBase /* not final */
     uint64_t LastUpdate { 0 };
     //! Cache implementation is responsible to set this flag when all the data of the item is filled
     bool IsComplete { false };
+    //! Set when what the item was made from has changed, so the item is to be made again
+    bool Stale { false };
     //! This flag is used to simplify the eviction algorithm
     bool AwaitsEviction { false };
 };
@@ -108,6 +110,12 @@ protected:
 
     //! Perform a lookup for the given key. This method modifies mLookup and invalidates any previous result.
     const GraphicsDataCacheElementBase* PerformBaseLookup(GraphicsDataCacheKey key);
+
+    //! Mark cached elements overlapping [firstPixel, lastPixel) at the given zoom for re-initialization.
+    void InvalidatePixelRange(double pixelsPerSecond, int64_t firstPixel, int64_t lastPixel);
+
+    //! Mark cached elements at every zoom except the given one for re-initialization.
+    void InvalidateOtherZoomLevels(double pixelsPerSecond);
 
 private:
     // Called internally to create a list of items in the mNewLookupItems

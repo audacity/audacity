@@ -500,5 +500,60 @@ TEST_P(TrackeditOperationMoveTests, RangeSelectionMoveItemsIncludeTheWholeGroup)
     EXPECT_TRUE(items.labels.empty());
 }
 
+TEST_P(TrackeditOperationMoveTests, BoundaryDragReleasedWithoutAFinalMovePushesOneState)
+{
+    //! [GIVEN] A trim drag that changes the clip, then a move and the release that change nothing
+    auto clips = std::make_shared<NiceMock<ClipsInteractionMock> >();
+    auto* ioc = muse::modularity::ioc(m_testCtx);
+    ioc->unregister<IClipsInteraction>("utests");
+    ioc->registerExport<IClipsInteraction>("utests", clips);
+    EXPECT_CALL(*clips, trimClipsRight(_, _, _, false)).WillOnce(Return(true)).WillOnce(Return(false));
+    EXPECT_CALL(*clips, trimClipsRight(_, _, _, true)).WillOnce(Return(false));
+
+    //! [EXPECT] The drag is recorded as one history state
+    EXPECT_CALL(*m_history, pushHistoryState(_, _, _)).Times(1);
+
+    //! [WHEN] The drag is reported step by step
+    //! [THEN] Every step reports that the drag changed the clip
+    EXPECT_TRUE(m_operation->trimClipsRight({ m_sourceClip }, 0.01, 0.001, false, UndoPushType::NONE));
+    EXPECT_TRUE(m_operation->trimClipsRight({ m_sourceClip }, 0.0, 0.001, false, UndoPushType::NONE));
+    EXPECT_TRUE(m_operation->trimClipsRight({ m_sourceClip }, 0.0, 0.001, true, UndoPushType::NONE));
+}
+
+TEST_P(TrackeditOperationMoveTests, BoundaryClickWithoutMovingPushesNoState)
+{
+    //! [GIVEN] A stretch handle clicked and released without changing the clip
+    auto clips = std::make_shared<NiceMock<ClipsInteractionMock> >();
+    auto* ioc = muse::modularity::ioc(m_testCtx);
+    ioc->unregister<IClipsInteraction>("utests");
+    ioc->registerExport<IClipsInteraction>("utests", clips);
+    EXPECT_CALL(*clips, stretchClipsLeft(_, _, _, true)).WillOnce(Return(false));
+
+    //! [EXPECT] Nothing is recorded
+    EXPECT_CALL(*m_history, pushHistoryState(_, _, _)).Times(0);
+
+    //! [WHEN] The release is reported
+    //! [THEN] It reports no change
+    EXPECT_FALSE(m_operation->stretchClipsLeft({ m_sourceClip }, 0.0, 0.001, true, UndoPushType::NONE));
+}
+
+TEST_P(TrackeditOperationMoveTests, BoundaryReleaseMovingOnlyLabelsPushesAState)
+{
+    //! [GIVEN] A trim released while the clip stays on its sample boundary and a label is selected
+    auto clips = std::make_shared<NiceMock<ClipsInteractionMock> >();
+    auto* ioc = muse::modularity::ioc(m_testCtx);
+    ioc->unregister<IClipsInteraction>("utests");
+    ioc->registerExport<IClipsInteraction>("utests", clips);
+    EXPECT_CALL(*clips, trimClipsLeft(_, _, _, true)).WillOnce(Return(false));
+    ON_CALL(*clips, clipDuration(_)).WillByDefault(Return(secs_t(10.0)));
+
+    //! [EXPECT] The label's move is recorded
+    EXPECT_CALL(*m_history, pushHistoryState(_, _, _)).Times(1);
+
+    //! [WHEN] The release is reported with a move
+    //! [THEN] It reports a change
+    EXPECT_TRUE(m_operation->trimClipsLeft({ m_sourceClip }, 0.25, 0.001, true, UndoPushType::NONE));
+}
+
 INSTANTIATE_TEST_SUITE_P(SelectionOrder, TrackeditOperationMoveTests, Bool());
 }

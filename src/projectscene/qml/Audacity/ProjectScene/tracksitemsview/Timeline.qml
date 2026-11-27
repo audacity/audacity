@@ -87,6 +87,8 @@ Rectangle {
     TimelineContext {
         id: timelineContext
 
+        devicePixelRatio: root.Screen.devicePixelRatio
+
         onContextMenuRequested: {
             contextMenuModel.load()
             contextMenuLoader.show(Qt.point(0, root.height), contextMenuModel.items)

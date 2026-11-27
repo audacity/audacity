@@ -83,6 +83,9 @@ struct WAVE_TRACK_PAINT_API WaveCacheElement final : GraphicsDataCacheElementBas
 
     Columns Data;
     size_t AvailableColumns { 0 };
+    //! How many samples the clip had and how many of them the element took when it was last filled
+    int64_t SourceSamplesCount { -1 };
+    size_t ProcessedSamples { 0 };
 
     void Smooth(GraphicsDataCacheElementBase* prevElement) override;
 };
@@ -98,11 +101,15 @@ public:
 private:
     bool InitializeElement(
         const GraphicsDataCacheKey& key, WaveCacheElement& element) override;
+    bool UpdateElement(
+        const GraphicsDataCacheKey& key, GraphicsDataCacheElementBase& element) override;
+    int64_t SourceSamplesCount() const;
 
     DataProvider mProvider;
 
     WaveCacheSampleBlock mCachedBlock;
 
     const WaveClip& mWaveClip;
+    const int mChannelIndex;
     Observer::Subscription mStretchChangedSubscription;
 };

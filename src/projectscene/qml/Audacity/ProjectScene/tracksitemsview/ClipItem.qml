@@ -40,6 +40,7 @@ Rectangle {
     readonly property color classicHeaderHoveredColor: ui.theme.extra["classic_clip_header_hover_color"]
     property int currentClipStyle: ClipStyle.COLORFUL
     property bool isGrouped: false
+    property bool isDragGhost: false
     property bool clipSelected: false
     property bool clipMovesWithSelection: false
     property bool clipFocused: false
@@ -126,19 +127,71 @@ Rectangle {
     // so we are handling it manually
     signal clipItemMousePositionChanged(real x, real y)
 
-    property alias navigation: navCtrl
+    property string navigationName: ""
+    property NavigationPanel navigationPanel: null
+    property int navigationColumn: 0
+    readonly property NavigationControl navigation: prv.navigation
+    signal navigationActiveChanged(bool active)
+
+    //! While false, e.g. for a clip far outside the view, the parts only needed to interact
+    //! with the clip, e.g. its navigation and handles, are not created: each navigation control
+    //! registers for accessibility, and every one alive makes creating and destroying others slower.
+    //! A clip creates them once it stayed interactive for a moment, as resizing the view, e.g. when
+    //! switching workspaces, or scrolling moves many clips through the view only briefly, and
+    //! releases them once it stayed not interactive for a while.
+    property bool interactive: true
+    readonly property bool interactivePartsCreated: prv.interactivePartsCreated
+    //! One playback state is shared by the clips of a track
+    property bool isPlaying: false
+    //! Hovered, or being edited or navigated to
+    readonly property bool inUse: prv.isInUse()
+
+    onIsAutomationEnabledChanged: prv.initGainModelIfNeeded()
+
+    onInteractiveChanged: {
+        if (interactive) {
+            releaseInteractivePartsTimer.stop()
+            if (!prv.interactivePartsCreated) {
+                interactivePartsTimer.restart()
+            }
+        } else {
+            interactivePartsTimer.stop()
+            if (prv.interactivePartsCreated) {
+                releaseInteractivePartsTimer.restart()
+            }
+        }
+    }
+
+    onContainsMouseChanged: {
+        if (containsMouse) {
+            prv.createInteractivePartsIfNeeded(true)
+        }
+    }
+
+    Timer {
+        id: interactivePartsTimer
+        interval: 300
+        onTriggered: prv.createInteractivePartsIfNeeded()
+    }
+
+    Timer {
+        id: releaseInteractivePartsTimer
+        interval: 2000
+        onTriggered: prv.releaseInteractivePartsIfIdle()
+    }
 
     radius: 4
     color: clipSelected ? clipSelectedColor : clipColor
     border.color: ui.theme.extra["black_color"]
     opacity: root.moveActive && (clipSelected || clipMovesWithSelection) ? 0.5 : isAudible ? 1.0 : 0.3
 
-    onMoveActiveChanged: {
-        root.parent.z = moveActive && (clipSelected || clipMovesWithSelection) ? 1 : 0
-    }
+    //! Whether the clip, with its handles, focus border and cursor, shows on top of the clips nearby.
+    //! Told from what the clip is in, not set when that changes: the clip can be created already selected,
+    //! and one change must not take back what another one still asks for.
+    readonly property bool raised: clipSelected || (moveActive && clipMovesWithSelection) || (Boolean(navigation) && navigation.active) || leftTrimStretchEdgeHover.containsMouse || leftTrimStretchEdgeHover.pressedButtons !== 0 || rightTrimStretchEdgeHover.containsMouse || rightTrimStretchEdgeHover.pressedButtons !== 0
 
     property int borderWidth: 1
-    property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered
+    property bool hover: clipHoverHandler.hovered || root.containsMouse || root.headerHovered || prv.assumedHover
     property bool headerHovered: false
     property var lastSample: undefined
     property bool altPressed: false
@@ -152,13 +205,9 @@ Rectangle {
     property bool rightTrimContainsMouse: false
     property alias leftTrimPressedButtons: leftTrimStretchEdgeHover.pressedButtons
     property alias rightTrimPressedButtons: rightTrimStretchEdgeHover.pressedButtons
-    property bool enableFocusBorder: (navCtrl ? navCtrl.highlight : false) || root.clipSelected
+    property bool enableFocusBorder: (root.navigation ? root.navigation.highlight : false) || root.clipSelected
     property bool enableDefaultBorder: !isContrastFocusBorderEnabled && enableFocusBorder
     property bool enableContrastBorder: isContrastFocusBorderEnabled && enableFocusBorder
-
-    PlaybackStateModel {
-        id: playbackState
-    }
 
     ClipGainModel {
         id: clipGainModel
@@ -167,24 +216,28 @@ Rectangle {
     }
 
     // for navigating between clips
-    NavigationControl {
-        id: navCtrl
-        name: root.name
-        enabled: root.enabled && root.visible
+    Component {
+        id: clipNavigationControlComp
 
-        accessible.role: MUAccessible.Button
-        accessible.name: qsTrc("projectscene", "Clip: %1").arg(root.title)
+        NavigationControl {
+            name: root.navigationName
+            panel: root.navigationPanel
+            column: root.navigationColumn
+            enabled: root.enabled && root.visible
 
-        onActiveChanged: function (active) {
-            // Make sure the focus navigation border is visible on top of other clips
-            root.parent.z = active ? 1 : 0
-            if (active) {
-                root.forceActiveFocus()
+            accessible.role: MUAccessible.Button
+            accessible.name: qsTrc("projectscene", "Clip: %1").arg(root.title)
+
+            onActiveChanged: function (active) {
+                if (active) {
+                    root.forceActiveFocus()
+                }
+                root.navigationActiveChanged(active)
             }
-        }
 
-        onTriggered: {
-            clipNavigationPanel.requestActive()
+            onTriggered: {
+                root.clipNavigationPanel.requestActive()
+            }
         }
     }
 
@@ -196,13 +249,13 @@ Rectangle {
         border.width: root.enableContrastBorder ? 2 : 1
         border.color: ui.theme.extra["black_color"]
         radius: root.enableContrastBorder ? 0 : 4
-        z: root.parent.z + 1
+        z: root.raised ? 2 : 1
     }
 
     NavigationFocusBorder {
         id: focusBorder
 
-        navigationCtrl: navCtrl
+        navigationCtrl: root.navigation
 
         border.color: ui.theme.fontPrimaryColor
         border.width: 2
@@ -214,7 +267,7 @@ Rectangle {
     NavigationFocusBorder {
         id: contrastFocusBorder
 
-        navigationCtrl: navCtrl
+        navigationCtrl: root.navigation
 
         border.color: ui.theme.extra["white_color"]
         border.width: 2
@@ -229,8 +282,57 @@ Rectangle {
         readonly property int doubleClickInterval: 400
         readonly property int doubleClickMaxDistance: 5
 
+        property bool assumedHover: false
         property bool singleMenuLoaded: false
         property bool multiMenuLoaded: false
+
+        property bool interactivePartsCreated: false
+        property bool gainModelInitialized: false
+
+        function initGainModelIfNeeded() {
+            if (gainModelInitialized || !root.isAutomationEnabled) {
+                return
+            }
+            gainModelInitialized = true
+            clipGainModel.init()
+        }
+        property NavigationControl navigation: null
+
+        readonly property int handlesY: !root.collapsed ? header.height + 1 : 0
+        readonly property var handles: clipHandlesLoader.item
+        readonly property int handleHeight: handles ? handles.handleHeight : 0
+        readonly property bool handleEditActive: Boolean(handles) && (handles.leftTrimActive || handles.rightTrimActive || handles.leftStretchActive || handles.rightStretchActive)
+
+        function createInteractivePartsIfNeeded(force) {
+            if (interactivePartsCreated || !(root.interactive || force)) {
+                return
+            }
+            interactivePartsCreated = true
+            navigation = clipNavigationControlComp.createObject(root)
+            root.clipNavigationPanel = clipNavigationPanelComp.createObject(root)
+        }
+
+        function releaseInteractivePartsIfIdle() {
+            if (!interactivePartsCreated || root.interactive || isInUse()) {
+                return
+            }
+            interactivePartsCreated = false
+            const panel = root.clipNavigationPanel
+            const control = navigation
+            root.clipNavigationPanel = null
+            navigation = null
+            panel.destroy()
+            control.destroy()
+        }
+
+        function isInUse() {
+            return root.hover || root.clipSelected || handleEditActive || menuBtn.isMenuOpened || editLoader.isEditState || (navigation && navigation.active) || (root.clipNavigationPanel && root.clipNavigationPanel.active)
+        }
+
+        function requestNavigationActive() {
+            createInteractivePartsIfNeeded(true)
+            navigation.requestActive()
+        }
 
         function ensureSingleMenuLoaded() {
             if (!singleMenuLoaded) {
@@ -248,20 +350,26 @@ Rectangle {
     }
 
     // panel for navigating within the clip's items
-    property NavigationPanel clipNavigationPanel: NavigationPanel {
-        name: "ClipNavigationPanel"
-        enabled: navCtrl.active
-        direction: NavigationPanel.Horizontal
-        section: navigation.panel ? navigation.panel.section : null
-        onActiveChanged: function (active) {
-            if (active) {
-                root.forceActiveFocus()
-            }
-        }
+    property NavigationPanel clipNavigationPanel: null
 
-        onNavigationEvent: function (event) {
-            if (event.type === NavigationEvent.Escape && !clipHandles.leftTrimActive && !clipHandles.rightTrimActive && !clipHandles.leftStretchActive && !clipHandles.rightStretchActive) {
-                navCtrl.requestActive()
+    Component {
+        id: clipNavigationPanelComp
+
+        NavigationPanel {
+            name: "ClipNavigationPanel"
+            enabled: root.navigation ? root.navigation.active : false
+            direction: NavigationPanel.Horizontal
+            section: root.navigationPanel ? root.navigationPanel.section : null
+            onActiveChanged: function (active) {
+                if (active) {
+                    root.forceActiveFocus()
+                }
+            }
+
+            onNavigationEvent: function (event) {
+                if (event.type === NavigationEvent.Escape && !prv.handleEditActive) {
+                    root.navigation.requestActive()
+                }
             }
         }
     }
@@ -281,7 +389,7 @@ Rectangle {
     }
 
     function openContextMenu() {
-        navCtrl.requestActive()
+        prv.requestNavigationActive()
 
         if (root.multiClipsSelected || root.isGrouped) {
             prv.ensureMultiMenuLoaded()
@@ -297,7 +405,7 @@ Rectangle {
         }
 
         // Activate the control before it is set as parent-control of the context menu, so that the active control is set this clip.
-        navCtrl.requestActive()
+        prv.requestNavigationActive()
 
         if (root.multiClipsSelected) {
             prv.ensureMultiMenuLoaded()
@@ -329,7 +437,7 @@ Rectangle {
 
     function mousePressAndHold(x, y) {
         root.altPressed ? waveView.smoothLastClickPos(x, y - header.height) : waveView.setLastClickPos(x, y - header.height, x, y - header.height)
-        waveView.update()
+        waveView.scheduleRepaint()
     }
 
     function mouseReleased() {
@@ -360,7 +468,7 @@ Rectangle {
     }
 
     function updateViews() {
-        waveView.update()
+        waveView.scheduleRepaint()
         if (spectrogramViewLoader.item) {
             spectrogramViewLoader.item.update()
         }
@@ -415,8 +523,8 @@ Rectangle {
     }
 
     Component.onCompleted: {
-        playbackState.init()
-        clipGainModel.init()
+        prv.initGainModelIfNeeded()
+        prv.createInteractivePartsIfNeeded()
     }
 
     Component.onDestruction: {
@@ -436,7 +544,7 @@ Rectangle {
 
         hoverEnabled: true
 
-        readonly property bool forbidden: (root.isNearSample || root.isIsolationMode) && playbackState.isPlaying
+        readonly property bool forbidden: (root.isNearSample || root.isIsolationMode) && root.isPlaying
         cursorShape: forbidden ? Qt.ForbiddenCursor : Qt.BlankCursor
 
         function updateCustomCursor() {
@@ -476,6 +584,26 @@ Rectangle {
         id: clipHoverHandler
 
         enabled: root.enableCursorInteraction
+
+        onHoveredChanged: {
+            if (hovered) {
+                prv.assumedHover = false
+            }
+        }
+    }
+
+    //! NOTE A clip created under the mouse isn't told that it is hovered until the mouse moves or a frame
+    //! passes, and a collapsed clip only shows its header, to drag it by, once hovered. So the clip takes
+    //! itself for hovered from the start, until it is told, or for a moment if the mouse is gone by then.
+    function assumeHovered() {
+        prv.assumedHover = true
+        assumedHoverTimer.restart()
+    }
+
+    Timer {
+        id: assumedHoverTimer
+        interval: 200
+        onTriggered: prv.assumedHover = false
     }
 
     // NOTE: hover events from polyline are not visible in MouseArea
@@ -497,22 +625,16 @@ Rectangle {
         x: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? root.x - Math.min(distanceToLeftNeighbor / 2, 5) : root.x - 5
         width: distanceToLeftNeighbor >= -0.5 && distanceToLeftNeighbor <= 10 ? 6 + Math.min(distanceToLeftNeighbor / 2, 5) : 11
         z: headerDragArea.z + 1
-        y: clipHandles.y
-        height: clipHandles.handleHeight
+        y: prv.handlesY
+        height: prv.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
 
         cursorShape: Qt.BlankCursor
 
-        // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
             root.leftTrimContainsMouse = containsMouse
-            if (containsMouse || pressedButtons) {
-                root.parent.z = 1
-            } else {
-                root.parent.z = 0
-            }
         }
 
         onPressed: function (e) {
@@ -557,22 +679,16 @@ Rectangle {
         x: root.width - 6
         z: headerDragArea.z + 1
         width: distanceToRightNeighbor >= -0.5 && distanceToRightNeighbor <= 10 ? 6 + Math.min(distanceToRightNeighbor / 2, 5) : 11
-        y: clipHandles.y
-        height: clipHandles.handleHeight
+        y: prv.handlesY
+        height: prv.handleHeight
 
         hoverEnabled: true
         visible: !root.clipSelected && root.enableCursorInteraction
 
         cursorShape: Qt.BlankCursor
 
-        // make sure cursor is visible on top of nearby clips
         onContainsMouseChanged: {
             root.rightTrimContainsMouse = containsMouse
-            if (containsMouse || pressedButtons) {
-                root.parent.z = 1
-            } else {
-                root.parent.z = 0
-            }
         }
 
         onPressed: function (e) {
@@ -614,9 +730,22 @@ Rectangle {
     Rectangle {
         id: inner
 
-        anchors.fill: parent
+        // When the layer below is on, it renders this subtree into a texture, and
+        // textures have integer sizes: with a fractional width the content gets
+        // rescaled to fit, which visibly shimmers while trimming. Keep the layered
+        // subtree at an integer size so the texture always maps 1:1.
+        x: 0
+        y: 0
+        width: Math.floor(root.width)
+        height: Math.floor(root.height)
 
-        layer.enabled: true
+        color: "transparent"
+
+        //! NOTE: The header and the waveform round their own corners: the layer
+        //! re-renders a clip offscreen whenever it changes, for every clip on
+        //! every zoom step. It is still needed to round the spectrogram, and to
+        //! fade a translucent clip as a whole rather than each part separately.
+        layer.enabled: root.isSpectrogramViewVisible || root.opacity < 1
         layer.effect: RoundedCornersEffect {
             radius: root.radius
         }
@@ -630,17 +759,24 @@ Rectangle {
             height: root.headerHeight
             z: 2
 
+            topLeftRadius: root.radius
+            topRightRadius: root.radius
+
             visible: !root.collapsed || root.hover || menuBtn.isMenuOpened
 
             Rectangle {
                 id: headerSelectionRectangle
 
-                x: root.selectionStart
+                x: waveView.drawnSelectionValid ? waveView.drawnSelectionStart : root.selectionStart
                 z: 0 // Ensure this is below the header content
-                width: Math.min(root.selectionWidth, header.width)
+                width: waveView.drawnSelectionValid ? waveView.drawnSelectionEnd - waveView.drawnSelectionStart : Math.min(root.selectionWidth, header.width)
 
                 anchors.top: header.top
                 anchors.bottom: header.bottom
+
+                // Rounded only where it reaches the header's corners
+                topLeftRadius: x <= 0 ? root.radius : 0
+                topRightRadius: x + width >= header.width ? root.radius : 0
 
                 color: root.clipTimeSelectionColor
                 visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
@@ -684,6 +820,13 @@ Rectangle {
                         e.accepted = false
                         return
                     }
+
+                    //! NOTE The clip can have been created under the mouse a moment ago, and not been told
+                    //! yet that the mouse is over its header, or where: the press tells both
+                    root.headerHovered = true
+                    //! NOTE Told again even if it was known: something else can have told otherwise meanwhile
+                    root.headerHoveredChanged()
+                    root.clipItemMousePositionChanged(e.x, e.y)
 
                     var currentTime = Date.now()
                     if (currentTime - lastClickTime < prv.doubleClickInterval) {
@@ -733,28 +876,36 @@ Rectangle {
                 anchors.rightMargin: 8
                 horizontalAlignment: Qt.AlignLeft
 
-                NavigationControl {
-                    id: titleEditNavCtrl
-                    name: "TitleEditNavCtrl"
-                    enabled: root.enabled && root.visible
-                    panel: root.clipNavigationPanel
-                    column: 3
+                Loader {
+                    anchors.fill: parent
 
-                    accessible.role: MUAccessible.EditableText
-                    accessible.name: qsTrc("projectscene", "Clip name: %1").arg(root.title)
-                    accessible.enabled: titleEditNavCtrl.enabled
+                    active: prv.interactivePartsCreated
 
-                    onTriggered: {
-                        root.editTitle()
+                    sourceComponent: Item {
+                        NavigationControl {
+                            id: titleEditNavCtrl
+                            name: "TitleEditNavCtrl"
+                            enabled: root.enabled && root.visible
+                            panel: root.clipNavigationPanel
+                            column: 3
+
+                            accessible.role: MUAccessible.EditableText
+                            accessible.name: qsTrc("projectscene", "Clip name: %1").arg(root.title)
+                            accessible.enabled: titleEditNavCtrl.enabled
+
+                            onTriggered: {
+                                root.editTitle()
+                            }
+                        }
+
+                        NavigationFocusBorder {
+                            navigationCtrl: titleEditNavCtrl
+
+                            anchors.topMargin: 1
+                            anchors.bottomMargin: 0
+                            radius: 5
+                        }
                     }
-                }
-
-                NavigationFocusBorder {
-                    navigationCtrl: titleEditNavCtrl
-
-                    anchors.topMargin: 1
-                    anchors.bottomMargin: 0
-                    radius: 5
                 }
             }
 
@@ -823,44 +974,59 @@ Rectangle {
 
                 spacing: 2
 
-                ClipItemPropertyButton {
+                //! NOTE Only created on clips whose pitch or speed is modified
+                Loader {
                     id: pitchBtn
 
-                    mouseArea.visible: root.enableCursorInteraction
+                    anchors.verticalCenter: parent.verticalCenter
 
-                    text: {
-                        let semis = Math.trunc(root.pitch / 100)
-                        let cents = Math.abs(root.pitch % 100).toString().padStart(2, "0")
-                        return semis + (cents > "00" ? "." + cents : "")
-                    }
-                    icon: root.pitch > 0 ? IconCode.ARROW_UP : IconCode.ARROW_DOWN
+                    active: root.isPitchModified
+                    visible: active && header.width > (60 + pitchBtn.implicitWidth + speedBtn.implicitWidth + menuBtn.implicitWidth)
 
-                    visible: root.isPitchModified && header.width > (60 + pitchBtn.implicitWidth + speedBtn.implicitWidth * (root.isSpeedModified ? 1 : 0) + menuBtn.implicitWidth)
+                    sourceComponent: ClipItemPropertyButton {
+                        mouseArea.visible: root.enableCursorInteraction
 
-                    onClicked: function (mouse) {
-                        if (mouse.modifiers & Qt.ControlModifier) {
-                            root.pitchResetRequested()
-                        } else {
-                            root.pitchChangeRequested()
+                        text: {
+                            let semis = Math.trunc(root.pitch / 100)
+                            let cents = Math.abs(root.pitch % 100).toString().padStart(2, "0")
+                            return semis + (cents > "00" ? "." + cents : "")
+                        }
+                        icon: root.pitch > 0 ? IconCode.ARROW_UP : IconCode.ARROW_DOWN
+                        textColor: ui.theme.extra["black_color"]
+                        iconColor: ui.theme.extra["black_color"]
+
+                        onClicked: function (mouse) {
+                            if (mouse.modifiers & Qt.ControlModifier) {
+                                root.pitchResetRequested()
+                            } else {
+                                root.pitchChangeRequested()
+                            }
                         }
                     }
                 }
 
-                ClipItemPropertyButton {
+                Loader {
                     id: speedBtn
 
-                    mouseArea.visible: root.enableCursorInteraction
+                    anchors.verticalCenter: parent.verticalCenter
 
-                    icon: IconCode.CLOCK
-                    text: root.speedPercentage + "%"
+                    active: root.isSpeedModified
+                    visible: active && header.width > (60 + speedBtn.implicitWidth + menuBtn.implicitWidth)
 
-                    visible: root.isSpeedModified && header.width > (60 + speedBtn.implicitWidth + menuBtn.implicitWidth)
+                    sourceComponent: ClipItemPropertyButton {
+                        mouseArea.visible: root.enableCursorInteraction
 
-                    onClicked: function (mouse) {
-                        if (mouse.modifiers & Qt.ControlModifier) {
-                            root.speedResetRequested()
-                        } else {
-                            root.speedChangeRequested()
+                        icon: IconCode.CLOCK
+                        text: root.speedPercentage + "%"
+                        textColor: ui.theme.extra["black_color"]
+                        iconColor: ui.theme.extra["black_color"]
+
+                        onClicked: function (mouse) {
+                            if (mouse.modifiers & Qt.ControlModifier) {
+                                root.speedResetRequested()
+                            } else {
+                                root.speedChangeRequested()
+                            }
                         }
                     }
                 }
@@ -892,7 +1058,7 @@ Rectangle {
                     //! NOTE: Override doClicked function from FlatButton to run clip selection logic before the base
                     //! menu button emits clicked
                     function doClicked(mouse) {
-                        navCtrl.requestActive()
+                        prv.requestNavigationActive()
 
                         if (root.multiClipsSelected || root.isGrouped) {
                             prv.ensureMultiMenuLoaded()
@@ -930,9 +1096,12 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
-                fillColor: waveView.backgroundColor
-
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
+
+                cornerRadius: root.radius
+                // Without a header above, the waveform reaches the clip's top corners
+                roundTopCorners: root.collapsed || !header.visible
+                dragGhost: root.isDragGhost
 
                 clipColor: root.clipColor
                 clipSelectedColor: root.clipSelectedColor
@@ -947,12 +1116,12 @@ Rectangle {
                 function onWaveViewPositionChanged(x, y) {
                     if (waveView.isIsolationMode) {
                         waveView.setIsolatedPoint(x, y)
-                        waveView.update()
+                        waveView.scheduleRepaint()
                     } else if (root.multiSampleEdit && !root.altPressed) {
                         var lastX = root.lastSample.x
                         var lastY = root.lastSample.y
                         waveView.setLastClickPos(lastX, lastY, x, y)
-                        waveView.update()
+                        waveView.scheduleRepaint()
                     } else {
                         waveView.setLastMousePos(x, y)
                     }
@@ -1175,39 +1344,40 @@ Rectangle {
             }
         }
 
-        FlatButton {
-            id: accessibilitySelectBtn
-
+        Loader {
             anchors.horizontalCenter: viewsColumn.horizontalCenter
             anchors.bottom: viewsColumn.bottom
             anchors.bottomMargin: 10
 
-            navigation.name: "SelectBtn"
-            navigation.panel: root.clipNavigationPanel
-            navigation.column: 0
+            active: prv.interactivePartsCreated
 
-            width: 55
-            height: 20
-            text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
-            visible: root.clipNavigationPanel.highlight
-            normalColor: ui.theme.extra["accessibility_clip_select_button_color"]
+            sourceComponent: FlatButton {
+                id: accessibilitySelectBtn
 
-            onClicked: {
-                if (!root.clipSelected) {
-                    root.requestSelected()
-                } else {
-                    root.requestSelectionReset()
+                navigation.name: "SelectBtn"
+                navigation.panel: root.clipNavigationPanel
+                navigation.column: 0
+
+                width: 55
+                height: 20
+                text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
+                visible: Boolean(root.clipNavigationPanel) && root.clipNavigationPanel.highlight
+                normalColor: ui.theme.extra["accessibility_clip_select_button_color"]
+
+                onClicked: {
+                    if (!root.clipSelected) {
+                        root.requestSelected()
+                    } else {
+                        root.requestSelectionReset()
+                    }
                 }
             }
         }
     }
 
-    // make sure clip and its handles are visible on top of nearby clips
     onClipSelectedChanged: {
         if (clipSelected) {
-            root.parent.z = 1
-        } else {
-            root.parent.z = 0
+            prv.createInteractivePartsIfNeeded(true)
         }
     }
 
@@ -1223,7 +1393,7 @@ Rectangle {
         // The header covers the top of a collapsed clip when shown
         drawingTop: header.visible ? Math.max(0, header.y + header.height - y) : 0
         // Level with the trim and stretch handles, but dropping down with the header of a collapsed clip
-        handlesY: clipHandles.y - y + drawingTop
+        handlesY: prv.handlesY - y + drawingTop
 
         clipOffset: (waveView.itemStartTime - waveView.startTime) * root.context.zoom
         clipWidth: (waveView.endTime - waveView.startTime) * root.context.zoom
@@ -1261,58 +1431,66 @@ Rectangle {
         }
     }
 
-    ClipHandles {
-        id: clipHandles
+    Loader {
+        id: clipHandlesLoader
 
         // +1 not to overlap with header
-        y: !root.collapsed ? header.height + 1 : 0
+        y: prv.handlesY
         width: root.width
-        handlesVisible: root.clipSelected && !root.moveActive
-        canvas: root.canvas
-        collapsed: root.collapsed
-        clipHeight: root.height
-        headerHeight: header.height
-        altPressed: root.altPressed
-        exclusionItem: root.collapsed ? menuBtn : null
 
-        clipNavigationPanel: root.clipNavigationPanel
+        active: prv.interactivePartsCreated
+        asynchronous: true
 
-        onClipHandlesMousePositionChanged: function (xWithinClipHandles, yWithinClipHandles) {
-            var xWithinClipItem = xWithinClipHandles
-            var yWithinClipItem = header.height + 1 + yWithinClipHandles
-            clipItemMousePositionChanged(xWithinClipItem, yWithinClipItem)
-        }
+        sourceComponent: Component {
+            ClipHandles {
+                handlesVisible: root.clipSelected && !root.moveActive
+                canvas: root.canvas
+                collapsed: root.collapsed
+                clipHeight: root.height
+                headerHeight: header.height
+                altPressed: root.altPressed
+                exclusionItem: root.collapsed ? menuBtn : null
 
-        onClipStartEditRequested: function () {
-            root.clipStartEditRequested()
-        }
+                clipNavigationPanel: root.clipNavigationPanel
 
-        onClipEndEditRequested: function () {
-            root.clipEndEditRequested()
-        }
+                onClipHandlesMousePositionChanged: function (xWithinClipHandles, yWithinClipHandles) {
+                    var xWithinClipItem = xWithinClipHandles
+                    var yWithinClipItem = header.height + 1 + yWithinClipHandles
+                    root.clipItemMousePositionChanged(xWithinClipItem, yWithinClipItem)
+                }
 
-        onCancelClipDragEditRequested: function () {
-            root.cancelClipDragEditRequested()
-        }
+                onClipStartEditRequested: function () {
+                    root.clipStartEditRequested()
+                }
 
-        onTrimLeftRequested: function (completed, action) {
-            root.clipLeftTrimRequested(completed, action)
-        }
+                onClipEndEditRequested: function () {
+                    root.clipEndEditRequested()
+                }
 
-        onTrimRightRequested: function (completed, action) {
-            root.clipRightTrimRequested(completed, action)
-        }
+                onCancelClipDragEditRequested: function () {
+                    root.cancelClipDragEditRequested()
+                }
 
-        onStretchLeftRequested: function (completed, action) {
-            root.clipLeftStretchRequested(completed, action)
-        }
+                onTrimLeftRequested: function (completed, action) {
+                    root.clipLeftTrimRequested(completed, action)
+                }
 
-        onStretchRightRequested: function (completed, action) {
-            root.clipRightStretchRequested(completed, action)
-        }
+                onTrimRightRequested: function (completed, action) {
+                    root.clipRightTrimRequested(completed, action)
+                }
 
-        onStopAutoScroll: {
-            root.stopAutoScroll()
+                onStretchLeftRequested: function (completed, action) {
+                    root.clipLeftStretchRequested(completed, action)
+                }
+
+                onStretchRightRequested: function (completed, action) {
+                    root.clipRightStretchRequested(completed, action)
+                }
+
+                onStopAutoScroll: {
+                    root.stopAutoScroll()
+                }
+            }
         }
     }
 
@@ -1328,16 +1506,6 @@ Rectangle {
             PropertyChanges {
                 target: titleLabel
                 color: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
-                target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
-                target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: menuBtn
@@ -1356,16 +1524,6 @@ Rectangle {
                 color: ui.theme.extra["black_color"]
             }
             PropertyChanges {
-                target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
-                target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
                 target: menuBtn
                 iconColor: ui.theme.extra["black_color"]
             }
@@ -1382,16 +1540,6 @@ Rectangle {
                 color: ui.theme.extra["black_color"]
             }
             PropertyChanges {
-                target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
-                target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
                 target: menuBtn
                 iconColor: ui.theme.extra["black_color"]
             }
@@ -1406,16 +1554,6 @@ Rectangle {
             PropertyChanges {
                 target: titleLabel
                 color: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
-                target: pitchBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
-            }
-            PropertyChanges {
-                target: speedBtn
-                textColor: ui.theme.extra["black_color"]
-                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: menuBtn

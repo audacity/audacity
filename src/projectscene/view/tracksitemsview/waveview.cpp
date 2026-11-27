@@ -6,7 +6,11 @@
 #include "global/translation.h"
 
 #include <QPainter>
-#include <QElapsedTimer>
+#include <QPainterPath>
+#include <QTimer>
+
+#include <algorithm>
+#include <cmath>
 
 #include "global/types/color.h"
 #include "global/log.h"
@@ -15,6 +19,8 @@
 #include "au3/samplespainterutils.h"
 #include "view/timeline/timelinecontext.h"
 #include "view/common/selectioncolor.h"
+#include "waverenderertoggle.h"
+#include "waveviewnotifier.h"
 
 using namespace au::projectscene;
 
@@ -44,9 +50,42 @@ static const float SAMPLE_STALK_DEFAULT_ALPHA = 0.4;
 static const float SAMPLE_STALK_CLIP_SELECTED_ALPHA = 0.6;
 static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
 
-WaveView::WaveView(QQuickItem* parent)
-    : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+// ============================================================
+// PaintedFallback — internal QQuickPaintedItem child for
+// QPainter-based rendering, while the scene graph has nothing
+// to draw or the old renderer is switched on
+// ============================================================
+class WaveView::PaintedFallback : public QQuickPaintedItem
 {
+public:
+    explicit PaintedFallback(WaveView* owner)
+        : QQuickPaintedItem(owner)
+        , m_owner(owner)
+    {
+    }
+
+    void paint(QPainter* painter) override
+    {
+        m_owner->paintFallback(painter);
+    }
+
+private:
+    WaveView* m_owner = nullptr;
+};
+
+WaveView::WaveView(QQuickItem* parent)
+    : QQuickItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+{
+    setFlag(QQuickItem::ItemHasContents, true);
+
+    //! NOTE: The fallback starts hidden and is sized/recolored only while in
+    //! use (see updatePolish): resizing or recoloring it while hidden queues
+    //! texture repaints that Qt then runs alongside the scene graph content.
+    m_fallback = new PaintedFallback(this);
+    m_fallback->setVisible(false);
+
+    connect(WaveRendererToggle::instance(), &WaveRendererToggle::sceneGraphChanged, this, &WaveView::scheduleRepaint);
+
     //! NOTE: Push history state after edit is completed to avoid multiple unecessary calls.
     connect(this, &WaveView::isIsolationModeChanged, [this]() {
         if (!m_isIsolationMode) {
@@ -54,8 +93,11 @@ WaveView::WaveView(QQuickItem* parent)
         }
     });
 
+    // isNearSample() only changes with the visibility while near a sample
     connect(this, &WaveView::visibleChanged, [this]() {
-        emit isNearSampleChanged();
+        if (m_isNearSample) {
+            emit isNearSampleChanged();
+        }
     });
 
     connect(this, &WaveView::multiSampleEditChanged, [this]() {
@@ -63,31 +105,133 @@ WaveView::WaveView(QQuickItem* parent)
             pushProjectHistorySampleEdit();
         }
     });
+}
 
-    configuration()->isRMSInWaveformVisibleChanged().onReceive(this, [this](bool) {
-        update();
-    });
+WaveView::~WaveView()
+{
+    storePreparedData();
+}
 
-    configuration()->isClippingInWaveformVisibleChanged().onReceive(this, [this](bool) {
-        update();
-    });
+void WaveView::componentComplete()
+{
+    QQuickItem::componentComplete();
 
-    configuration()->clipStyleChanged().onReceive(this, [this](projectscene::ClipStyles::Style) {
+    //! NOTE Not subscribed to the channels themselves, see WaveViewNotifier
+    const WaveViewNotifier* notifier = WaveViewNotifier::forContext(iocContext());
+    connect(notifier, &WaveViewNotifier::waveformSettingsChanged, this, &WaveView::scheduleRepaint);
+    connect(notifier, &WaveViewNotifier::isRecordingChanged, this, &WaveView::scheduleRepaint);
+    connect(notifier, &WaveViewNotifier::clipStyleChanged, this, [this]() {
         emit backgroundColorChanged();
         update();
     });
 }
 
-WaveView::~WaveView()
+void WaveView::storePreparedData()
 {
+    if (m_clipKey.key.itemId != -1) {
+        m_sceneGraph.storeForReuse(m_clipKey.key);
+    }
+}
+
+bool WaveView::releaseIfOffscreen()
+{
+    //! NOTE: Off-screen clips stay loaded but idle until setClipTime() brings them back into view
+    if (m_clipTime.itemEndTime > m_clipTime.itemStartTime) {
+        return false;
+    }
+
+    m_sceneGraph.reset();
+    if (m_sceneGraph.hasNode()) {
+        update();
+    }
+    if (m_fallback && m_fallback->isVisible()) {
+        m_fallback->setVisible(false);
+    }
+    return true;
+}
+
+void WaveView::scheduleRepaint()
+{
+    if (releaseIfOffscreen()) {
+        return;
+    }
+
+    //! NOTE: polish() coalesces all repaint requests of a frame (clip time,
+    //! geometry, zoom, selection...) into a single updatePolish() call right
+    //! before the scene graph is synced.
+    polish();
+}
+
+void WaveView::updatePolish()
+{
+    // The clip may have left the view after the repaint was requested
+    if (releaseIfOffscreen()) {
+        return;
+    }
+
+    prepareSceneGraphData();
+    updateDrawnSelection();
+
+    if (m_sceneGraph.active()) {
+        // Scene graph path — hide fallback, trigger updatePaintNode
+        if (m_fallback->isVisible()) {
+            m_fallback->setVisible(false);
+        }
+
+        if (!m_sceneGraph.nodeUpToDate(static_cast<float>(width()))) {
+            update();
+        }
+    } else {
+        // Fallback QPainter path — show fallback, trigger its paint()
+        m_fallback->setSize(QSizeF(width(), height()));
+        m_fallback->setFillColor(backgroundColor());
+        if (!m_fallback->isVisible()) {
+            m_fallback->setVisible(true);
+        }
+        m_fallback->update();
+
+        // The scene graph node would otherwise stay on screen alongside the fallback
+        if (m_sceneGraph.hasNode()) {
+            update();
+        }
+    }
+}
+
+void WaveView::geometryChange(const QRectF& newGeometry, const QRectF& oldGeometry)
+{
+    QQuickItem::geometryChange(newGeometry, oldGeometry);
+
+    // A view laid out after its properties were set (or resized later) must
+    // re-prepare: a preparation that ran at zero height yields no vertices and
+    // would leave the view stuck on the fallback renderer.
+    if (newGeometry.size() != oldGeometry.size()) {
+        scheduleRepaint();
+    }
+}
+
+void WaveView::itemChange(ItemChange change, const ItemChangeData& value)
+{
+    QQuickItem::itemChange(change, value);
+
+    // In another window the item gets a new node, whatever the current one shows
+    if (change == ItemSceneChange) {
+        m_sceneGraph.invalidateNode();
+    }
 }
 
 void WaveView::setClipKey(const ClipKey& newClipKey)
 {
+    storePreparedData();
+
     m_clipKey = newClipKey;
     emit clipKeyChanged();
 
-    update();
+    // Another clip's vertices must not survive delegate reuse: they would be
+    // eligible for the stale-frame retention and the input-signature skip in
+    // prepareSceneGraphData().
+    m_sceneGraph.reset();
+
+    scheduleRepaint();
 }
 
 IWavePainter::Params WaveView::getWavePainterParams() const
@@ -109,11 +253,19 @@ IWavePainter::Params WaveView::getWavePainterParams() const
     params.dbRange = m_dbRange;
     params.displayBounds = m_displayBounds;
 
-    projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
-    if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
-        applyColorfulStyle(params, m_clipColor, m_clipSelectedColor, m_clipSelected);
+    //! NOTE The style is a dozen of color blends, and only changes with these
+    const projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
+    const StyleKey styleKey { clipStyle, m_clipColor.rgba(), m_clipSelectedColor.rgba(), m_clipSelected };
+    if (!m_style || !(m_styleKey == styleKey)) {
+        if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
+            applyColorfulStyle(params, m_clipColor, m_clipSelectedColor, m_clipSelected);
+        } else {
+            applyClassicStyle(params, m_clipSelected);
+        }
+        m_style = params.style;
+        m_styleKey = styleKey;
     } else {
-        applyClassicStyle(params, m_clipSelected);
+        params.style = *m_style;
     }
 
     return params;
@@ -188,15 +340,25 @@ void WaveView::applyClassicStyle(IWavePainter::Params& params, bool selected) co
     }
 }
 
-void WaveView::paint(QPainter* painter)
+void WaveView::paintFallback(QPainter* painter)
 {
+    if (m_cornerRadius > 0.0) {
+        // The same rounded corners as the scene graph path; extending the rect
+        // above the item keeps the top corners square when a header covers them
+        const qreal radius = std::min({ m_cornerRadius, width() / 2, height() / 2 });
+        const qreal top = m_roundTopCorners ? 0.0 : -radius;
+        QPainterPath path;
+        path.addRoundedRect(QRectF(0.0, top, width(), height() - top), radius, radius);
+        painter->setClipPath(path);
+    }
+
     IWavePainter::Params params = getWavePainterParams();
     IWavePainter::PlotType pType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key, params.zoom);
 
     bool isStemPlot = pType == IWavePainter::PlotType::Stem;
 
     setIsStemPlot(isStemPlot);
-    setAntialiasing(isStemPlot);
+    m_fallback->setAntialiasing(isStemPlot);
 
     wavePainter()->paint(*painter, m_clipKey.key, params, pType);
 
@@ -240,6 +402,56 @@ void WaveView::paintRecordingPlaceholder(QPainter& painter, const IWavePainter::
     }
 }
 
+void WaveView::prepareSceneGraphData()
+{
+    if (!m_context || m_clipKey.key.itemId == -1 || !WaveRendererToggle::instance()->sceneGraph()) {
+        m_sceneGraph.reset();
+        return;
+    }
+
+    //! NOTE The plot type and the metrics come from the clip data, so that the clip is looked up once
+    const std::optional<IMinMaxRMSPainter::ClipData> clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
+    if (!clipData) {
+        setPlotType(IWavePainter::PlotType::MinMaxRMS);
+        m_sceneGraph.reset();
+        return;
+    }
+
+    WaveSceneGraph::Input input;
+    input.params = getWavePainterParams();
+    input.plotType = wavepainterutils::getPlotType(clipData->samplesPerSecond, input.params.zoom);
+    setPlotType(input.plotType);
+    input.clipData = *clipData;
+
+    input.clipKey = m_clipKey.key;
+    input.clipTime = m_clipTime;
+    input.metrics = wavepainterutils::getWaveMetrics(clipData->playStartTime, clipData->trimLeft, clipData->samplesPerSecond,
+                                                     input.params, input.plotType == IWavePainter::PlotType::Stem);
+    input.containerExactX = m_context->timeToPosition(m_clipTime.itemStartTime);
+    input.containerX = m_context->timeToSnappedPosition(m_clipTime.itemStartTime);
+    input.devicePixelRatio = m_context->devicePixelRatio();
+    input.dragGhost = m_dragGhost;
+    input.recording = globalContext()->isRecording();
+    input.cornerRadius = static_cast<float>(m_cornerRadius);
+    input.roundTopCorners = m_roundTopCorners;
+
+    // Incomplete data is completed by the cache on a later lookup: ask again shortly
+    // so the view does not stay partial until the next user-triggered repaint
+    const bool retry = m_sceneGraph.prepare(input, *minMaxRMSPainter());
+    if (retry && !m_retryPending) {
+        m_retryPending = true;
+        QTimer::singleShot(80, this, [this]() {
+            m_retryPending = false;
+            scheduleRepaint();
+        });
+    }
+}
+
+QSGNode* WaveView::updatePaintNode(QSGNode* oldNode, UpdatePaintNodeData*)
+{
+    return m_sceneGraph.updatePaintNode(oldNode, static_cast<float>(width()));
+}
+
 ClipKey WaveView::clipKey() const
 {
     return m_clipKey;
@@ -263,20 +475,16 @@ void WaveView::setTimelineContext(TimelineContext* newContext)
     m_context = newContext;
 
     if (m_context) {
-        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
-        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
+        connect(m_context, &TimelineContext::frameTimeChanged, this, &WaveView::scheduleRepaint);
+        connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::scheduleRepaint);
+        connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::scheduleRepaint);
+        //! NOTE The plot type follows the zoom when the repaint prepares the waveform
+        connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::scheduleRepaint);
 
-        onWaveZoomChanged();
+        scheduleRepaint();
     }
 
     emit timelineContextChanged();
-}
-
-void WaveView::updateView()
-{
-    update();
 }
 
 QColor WaveView::clipColor() const
@@ -293,7 +501,7 @@ void WaveView::setClipColor(const QColor& newClipColor)
     emit clipColorChanged();
     emit backgroundColorChanged();
 
-    update();
+    scheduleRepaint();
 }
 
 QColor WaveView::clipSelectedColor() const
@@ -310,7 +518,7 @@ void WaveView::setClipSelectedColor(const QColor& newClipSelectedColor)
     emit clipSelectedColorChanged();
     emit backgroundColorChanged();
 
-    update();
+    scheduleRepaint();
 }
 
 bool WaveView::clipSelected() const
@@ -327,11 +535,15 @@ void WaveView::setClipSelected(bool newClipSelected)
     emit clipSelectedChanged();
     emit backgroundColorChanged();
 
-    update();
+    scheduleRepaint();
 }
 
 QColor WaveView::backgroundColor() const
 {
+    if (!m_context) {
+        return QColor();
+    }
+
     const IWavePainter::Params params = getWavePainterParams();
 
     const bool endWithinSelection = m_clipTime.selectionStartTime < m_clipTime.selectionEndTime
@@ -355,7 +567,7 @@ void WaveView::setClipTime(const ClipTime& newClipTime)
     emit clipTimeChanged();
     emit backgroundColorChanged();
 
-    update();
+    scheduleRepaint();
 }
 
 double WaveView::channelHeightRatio() const
@@ -365,9 +577,13 @@ double WaveView::channelHeightRatio() const
 
 void WaveView::setChannelHeightRatio(double channelHeightRatio)
 {
+    if (m_channelHeightRatio == channelHeightRatio) {
+        return;
+    }
+
     m_channelHeightRatio = channelHeightRatio;
     emit channelHeightRatioChanged();
-    update();
+    scheduleRepaint();
 }
 
 bool WaveView::isNearSample() const
@@ -467,7 +683,7 @@ void WaveView::setIsLinear(bool isLinear)
     }
 
     m_isLinear = isLinear;
-    update();
+    scheduleRepaint();
 }
 
 double WaveView::dbRange() const
@@ -482,7 +698,7 @@ void WaveView::setDbRange(double dbRange)
     }
 
     m_dbRange = dbRange;
-    update();
+    scheduleRepaint();
 }
 
 QVariant WaveView::displayBounds() const
@@ -505,7 +721,110 @@ void WaveView::setDisplayBounds(const QVariant& displayBounds)
     m_displayBounds.first = minBound;
     m_displayBounds.second = maxBound;
 
-    update();
+    scheduleRepaint();
+}
+
+qreal WaveView::cornerRadius() const
+{
+    return m_cornerRadius;
+}
+
+void WaveView::setCornerRadius(qreal cornerRadius)
+{
+    if (m_cornerRadius == cornerRadius) {
+        return;
+    }
+
+    m_cornerRadius = cornerRadius;
+    emit cornerRadiusChanged();
+    scheduleRepaint();
+}
+
+bool WaveView::roundTopCorners() const
+{
+    return m_roundTopCorners;
+}
+
+void WaveView::setRoundTopCorners(bool roundTopCorners)
+{
+    if (m_roundTopCorners == roundTopCorners) {
+        return;
+    }
+
+    m_roundTopCorners = roundTopCorners;
+    emit roundTopCornersChanged();
+    scheduleRepaint();
+}
+
+void WaveView::updateDrawnSelection()
+{
+    bool valid = false;
+    double start = 0.0;
+    double end = 0.0;
+
+    const bool hasView = m_context && m_clipKey.key.itemId != -1;
+    const IWavePainter::Params params = hasView ? getWavePainterParams() : IWavePainter::Params {};
+    if (hasView && params.selectionEndTime > params.selectionStartTime && m_plotType == IWavePainter::PlotType::Stem) {
+        const std::optional<IMinMaxRMSPainter::ClipData> clipData = minMaxRMSPainter()->clipData(m_clipKey.key);
+        if (clipData && clipData->samplesPerSecond > 0.0) {
+            // The same snapping and rounding as the samples painter applies to the selected background
+            const double samplesPerSecond = clipData->samplesPerSecond;
+            const auto toX = [&](double time) {
+                const double snapped = std::round((time - clipData->playStartTime) * samplesPerSecond) / samplesPerSecond;
+                return std::clamp(std::floor(0.5 + params.zoom * (snapped - params.fromTime)), 0.0, width());
+            };
+            valid = true;
+            start = toX(params.selectionStartTime);
+            end = std::max(start, toX(params.selectionEndTime));
+        }
+    } else if (m_sceneGraph.active()) {
+        // The header selection follows the drawn one, which is snapped to the waveform's columns
+        if (const auto span = m_sceneGraph.selectionSpan(static_cast<float>(width()))) {
+            valid = true;
+            start = span->first;
+            end = span->second;
+        }
+    }
+
+    if (valid == m_drawnSelectionValid && start == m_drawnSelectionStart && end == m_drawnSelectionEnd) {
+        return;
+    }
+
+    m_drawnSelectionValid = valid;
+    m_drawnSelectionStart = start;
+    m_drawnSelectionEnd = end;
+    emit drawnSelectionChanged();
+}
+
+bool WaveView::drawnSelectionValid() const
+{
+    return m_drawnSelectionValid;
+}
+
+double WaveView::drawnSelectionStart() const
+{
+    return m_drawnSelectionStart;
+}
+
+double WaveView::drawnSelectionEnd() const
+{
+    return m_drawnSelectionEnd;
+}
+
+bool WaveView::dragGhost() const
+{
+    return m_dragGhost;
+}
+
+void WaveView::setDragGhost(bool dragGhost)
+{
+    if (m_dragGhost == dragGhost) {
+        return;
+    }
+
+    m_dragGhost = dragGhost;
+    emit dragGhostChanged();
+    scheduleRepaint();
 }
 
 void WaveView::setLastMousePos(const unsigned int x, const unsigned int y)
@@ -615,12 +934,12 @@ void WaveView::setIsolatedPoint(const unsigned int x, const unsigned int y)
         m_clipKey.key, globalContext()->currentProject(), m_lastClickedPoint.value(), currentPosition, params);
 }
 
-void WaveView::onWaveZoomChanged()
+void WaveView::setPlotType(IWavePainter::PlotType plotType)
 {
-    const IWavePainter::PlotType currentPlotType = wavepainterutils::getPlotType(globalContext()->currentProject(), m_clipKey.key,
-                                                                                 m_context->zoom());
+    m_plotType = plotType;
+
     const bool wasStemPlot = m_isStemPlot;
-    const bool isStemPlot = currentPlotType == IWavePainter::PlotType::Stem;
+    const bool isStemPlot = plotType == IWavePainter::PlotType::Stem;
 
     if (wasStemPlot != isStemPlot) {
         setIsStemPlot(isStemPlot);
@@ -631,8 +950,6 @@ void WaveView::onWaveZoomChanged()
         // Note: When transitioning TO stem plot mode, ClipItem.qml onIsStemPlotChanged
         // will trigger mouse position update to force isNearSample to be set correctly
     }
-
-    update();
 }
 
 void WaveView::pushProjectHistorySampleEdit()

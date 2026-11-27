@@ -63,6 +63,8 @@ public:
 
     static int cacheBufferPx();
 
+    const QList<ViewTrackItem*>& items() const { return m_items; }
+
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
 
@@ -105,6 +107,7 @@ protected:
     void updateItemsMetrics();
     virtual void onMoveActiveChanged() {}
     virtual void updateItemMetrics(ViewTrackItem* item) = 0;
+    virtual void onItemsMetricsUpdated() {}
 
     void setSelectedItems(const QList<ViewTrackItem*>& items);
     void addSelectedItem(ViewTrackItem* item);

@@ -26,6 +26,8 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     m_fadeOutDuration = clip.fadeOutDuration;
     m_fadeInType = toFadeTypesType(clip.fadeInType);
     m_fadeOutType = toFadeTypesType(clip.fadeOutType);
+    m_clipStartTime = clip.startTime;
+    m_clipEndTime = clip.endTime;
 
     emit titleChanged();
     emit pitchChanged();
@@ -85,4 +87,64 @@ FadeTypes::Type TrackClipItem::fadeInType() const
 FadeTypes::Type TrackClipItem::fadeOutType() const
 {
     return m_fadeOutType;
+}
+
+void TrackClipItem::setSelectionPixels(double start, double width)
+{
+    if (muse::RealIsEqual(m_selectionStart, start) && muse::RealIsEqual(m_selectionWidth, width)) {
+        return;
+    }
+    m_selectionStart = start;
+    m_selectionWidth = width;
+    emit selectionPixelsChanged();
+}
+
+void TrackClipItem::setDelegateRequested(bool requested)
+{
+    if (m_delegateRequested == requested) {
+        return;
+    }
+    m_delegateRequested = requested;
+    emit delegateRequestedChanged();
+}
+
+void TrackClipItem::setNeedsFullView(bool needsFullView)
+{
+    if (m_needsFullView == needsFullView) {
+        return;
+    }
+    m_needsFullView = needsFullView;
+    emit needsFullViewChanged();
+}
+
+void TrackClipItem::setInView(bool inView)
+{
+    if (inView && !m_loaded) {
+        m_loaded = true;
+        emit loadedChanged();
+    }
+    if (m_inView == inView) {
+        return;
+    }
+    m_inView = inView;
+    emit inViewChanged();
+}
+
+void TrackClipItem::unload()
+{
+    if (m_inView || !m_loaded) {
+        return;
+    }
+    m_loaded = false;
+    emit loadedChanged();
+}
+
+void TrackClipItem::setNeighborDistances(double left, double right)
+{
+    if (muse::RealIsEqual(m_distanceToLeftNeighbor, left) && muse::RealIsEqual(m_distanceToRightNeighbor, right)) {
+        return;
+    }
+    m_distanceToLeftNeighbor = left;
+    m_distanceToRightNeighbor = right;
+    emit neighborDistancesChanged();
 }
