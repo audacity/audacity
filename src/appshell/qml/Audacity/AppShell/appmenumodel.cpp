@@ -34,6 +34,7 @@
 #include "effects/effects_base/effectscommands.h"
 #include "playback/playbackcommands.h"
 #include "project/projectcommands.h"
+#include "projectrecovery/projectrecoverycommands.h"
 #include "projectscene/projectscenecommands.h"
 #include "record/recordcommands.h"
 #include "trackedit/trackeditcommands.h"
@@ -683,6 +684,8 @@ MenuItemList AppMenuModel::makeToolItems()
         makeMenuItem(effects::EFFECTS_PLUGIN_MANAGER_COMMAND),
         makeSeparator(),
         makeMenuItem(APP_TOGGLE_MACRO_MANAGER_PANEL_COMMAND),
+        makeSeparator(),
+        makeMenuItem(projectrecovery::PROJECT_RECOVERY_COMMAND),
         makeSeparator(),
         // makeMenuItem("manage-macros"),
     };

@@ -36,6 +36,7 @@ if (AU_BUILD_MUSEHUB_MODULE)
 endif()
 add_subdirectory(context)
 add_subdirectory(project)
+add_subdirectory(projectrecovery)
 add_subdirectory(preferences)
 
 if (AU_BUILD_USAGEINFO_MODULE)
