@@ -28,6 +28,7 @@ PUBLIC
    au3-strings
    au3-utility
 PRIVATE
+   au3-string-utils
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

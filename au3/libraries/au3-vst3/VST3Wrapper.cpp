@@ -5,6 +5,7 @@
 #include <map>
 #include <vector>
 
+#include "au3-components/EffectAutomationParameters.h"
 #include "au3-components/EffectInterface.h"
 
 #include "AudacityVst3HostApplication.h"
@@ -17,6 +18,7 @@
 #include "au3-exceptions/AudacityException.h"
 #include "au3-module-manager/ConfigInterface.h"
 #include "au3-files/FileException.h"
+#include "au3-strings/Internat.h"
 #include "memorystream.h"
 #include "au3-utility/MemoryX.h"
 #include "VST3Utils.h"
@@ -92,8 +94,10 @@ std::map<Steinberg::Vst::ParamID, Steinberg::Vst::ParamValue> ParametersFromStri
 
         unsigned long id;
         double value;
+        // Accepts the dot written now and the locale's separator written by
+        // earlier versions
         if (!token.Left(split).ToULong(&id)
-            || !token.Right(token.Length() - split - 1).ToDouble(&value)) {
+            || !Internat::CompatibleToDouble(token.Right(token.Length() - split - 1), &value)) {
             continue;
         }
 
@@ -107,7 +111,8 @@ wxString ParametersToString(const std::map<Steinberg::Vst::ParamID, Steinberg::V
     wxString result;
     for (auto& p : params) {
         result.Append(wxString::Format(
-                          "%lu=%f;", static_cast<unsigned long>(p.first), p.second));
+                          "%lu=%s;", static_cast<unsigned long>(p.first),
+                          CommandParameters::FormatValue(p.second)));
     }
     return result;
 }

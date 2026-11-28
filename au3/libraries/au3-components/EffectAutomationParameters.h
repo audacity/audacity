@@ -128,8 +128,22 @@ public:
 
     virtual bool DoWriteDouble(const wxString& key, double value) override
     {
-        return DoWriteString(key, wxString::Format(wxT("%.8g"), value));
+        return DoWriteString(key, FormatValue(value));
     }
+
+    using wxFileConfig::Write;
+
+    // Replaces the inherited overload, which converts to double and would
+    // then write more digits than a float needs
+    bool Write(const wxString& key, float value)
+    {
+        return DoWriteString(key, FormatValue(value));
+    }
+
+    //! Formats with only as many digits as are needed to read back the same
+    //! value
+    static wxString FormatValue(double value);
+    static wxString FormatValue(float value);
 
     bool ReadFloat(const wxString& key, float* pf) const
     {
