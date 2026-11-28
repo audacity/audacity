@@ -63,11 +63,15 @@ void GeneralPreferencesModel::checkUpdateForCurrentLanguage()
     });
 
     m_languageUpdateProgress.finished().onReceive(this, [this, languageCode](const muse::ProgressResult& res) {
+        QString languageName = languagesService()->language(languageCode).name;
         if (res.ret.code() == static_cast<int>(Err::AlreadyUpToDate)) {
             //: %1 is the name of the language whose translation files are up to date
-            QString msg = muse::qtrc("preferences", "Your version of “%1” is up to date.")
-                          .arg(languagesService()->language(languageCode).name);
+            QString msg = muse::qtrc("preferences", "Your version of “%1” is up to date.").arg(languageName);
             interactive()->info(msg.toStdString(), std::string());
+        } else if (!res.ret) {
+            //: %1 is the name of the language whose translation files could not be updated
+            QString msg = muse::qtrc("preferences", "Could not update “%1”.").arg(languageName);
+            interactive()->error(msg.toStdString(), res.ret.text());
         }
     });
 }
