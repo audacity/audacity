@@ -153,7 +153,7 @@ Item {
         IncrementalPropertyControl {
             id: textEdit
 
-            navigation.accessible.name: root.parameter["title"] + " " + currentValue
+            navigation.accessible.name: root.parameter["title"]
 
             anchors.horizontalCenter: parent.horizontalCenter
 

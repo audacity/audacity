@@ -62,7 +62,7 @@ StyledPopupView {
 
                 navigation.panel: navPanel
                 navigation.order: 1
-                navigation.accessible.name: titleLabel.text + " : " + currentValue
+                navigation.accessible.name: titleLabel.text
 
                 onValueEdited: function (newValue) {
                     root.upperChangeRequested(newValue)
