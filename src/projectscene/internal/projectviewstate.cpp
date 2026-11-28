@@ -365,9 +365,15 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
             if (prj) {
                 auto track = au::au3::DomAccessor::findTrack(
                     *reinterpret_cast<au::au3::Au3Project*>(prj->au3ProjectPtr()), au::au3::Au3TrackId(trackId));
-                int savedHeight = au3::TrackHeightAttachment::Get(track).GetHeight();
+                auto& attachment = au3::TrackHeightAttachment::Get(track);
+                int savedHeight = attachment.GetHeight();
                 savedHeight = savedHeight <= 0 ? defaultHeight : savedHeight;
                 height = std::max(savedHeight, TRACK_MIN_HEIGHT);
+
+                const double savedChannelHeightRatio = attachment.GetChannelHeightRatio();
+                if (savedChannelHeightRatio >= 0.0 && savedChannelHeightRatio <= 1.0) {
+                    d.channelHeightRatio.val = savedChannelHeightRatio;
+                }
             }
             d.collapsed.val = isCollapsedHeight(height);
             d.height.val = height;
@@ -638,6 +644,17 @@ void ProjectViewState::setChannelHeightRatio(const trackedit::TrackId& trackId, 
     }
 
     d->channelHeightRatio.set(ratio);
+
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (prj) {
+        au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
+        if (au3Project) {
+            auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
+            if (track) {
+                au3::TrackHeightAttachment::Get(track).SetChannelHeightRatio(ratio);
+            }
+        }
+    }
 }
 
 bool ProjectViewState::isSnapEnabled() const
