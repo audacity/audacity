@@ -21,6 +21,7 @@
 #include "au3-strings/TranslatableString.h"
 
 #include "au3wrap/au3types.h"
+#include "au3wrap/internal/au3basicui.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/domconverter.h"
 #include "projectscene/view/tracksitemsview/dropcontroller.h"
@@ -32,6 +33,16 @@ using au::trackedit::Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 using namespace au::au3;
+
+namespace {
+void showImportError(const muse::modularity::ContextPtr& context, const TranslatableString& message)
+{
+    if (!message.empty()) {
+        BasicUI::ShowErrorDialog(Au3WindowPlacement(context), TranslatableString("import-export", "Error Importing"),
+                                 message, wxT("Importing_Audio"));
+    }
+}
+}
 
 class ImportProgress final : public ImportProgressListener
 {
@@ -159,16 +170,18 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     TrackHolders newTracks;
     TranslatableString errorMessage;
     std::optional<LibFileFormats::AcidizerTags> acidTags;
+    bool success;
     {
         ImportProgress importProgress(*project);
-        bool success = Importer::Get().Import(
+        success = Importer::Get().Import(
             *project, wxFromPath(filePath), &importProgress, &WaveTrackFactory::Get(*project),
             newTracks, newTags.get(), acidTags, errorMessage);
-
-        if (!success) {
-            return false;
-        }
     } // ImportProgress (and its dialog) destroyed here, before tempo detection
+
+    if (!success) {
+        showImportError(iocContext(), errorMessage);
+        return false;
+    }
 
     const auto projectTempo = ProjectTimeSignature::Get(*project).GetTempo();
     for (auto track : newTracks) {
@@ -279,10 +292,11 @@ bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path
     std::optional<LibFileFormats::AcidizerTags> acidTags;
     TranslatableString errorMessage;
 
+    bool success;
     {
         ImportProgress importProgressListener(*project);
         const wxString wxPath = wxFromPath(filePath);
-        const bool ok = Importer::Get().Import(
+        success = Importer::Get().Import(
             *project,
             wxPath,
             &importProgressListener,
@@ -292,11 +306,12 @@ bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path
             acidTags,
             errorMessage
             );
-
-        if (!ok || tmpTracks.empty()) {
-            return false;
-        }
     } // ImportProgress (and its dialog) destroyed here, before tempo detection
+
+    if (!success || tmpTracks.empty()) {
+        showImportError(iocContext(), errorMessage);
+        return false;
+    }
 
     wxString baseName = wxFromPath(muse::io::filename(filePath, false));
     std::vector<ITrackDataPtr> importedData;

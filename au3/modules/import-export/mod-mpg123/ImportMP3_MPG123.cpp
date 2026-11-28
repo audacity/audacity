@@ -206,15 +206,21 @@ MP3ImportFileHandle::MP3ImportFileHandle(const FilePath& filename)
 
         mpg123_delete(mHandle);
         mHandle = nullptr;
+        return;
     }
 
     // We force mpg123 to decode into floats
-    mpg123_param(mHandle, MPG123_FLAGS, MPG123_GAPLESS | MPG123_FORCE_FLOAT, 0.0);
+    errorCode = mpg123_param(mHandle, MPG123_FLAGS, MPG123_GAPLESS | MPG123_FORCE_FLOAT, 0.0);
+    if (errorCode == MPG123_OK) {
+        // Allow trailing padding while bounding the search for the next frame.
+        constexpr long resyncLimitBytes = 16 * 1024;
+        errorCode = mpg123_param(mHandle, MPG123_RESYNC_LIMIT, resyncLimitBytes, 0.0);
+    }
 
     if (errorCode != MPG123_OK) {
         wxLogError(
-            "Failed to set options on the MPG123 handle",
-            mpg123_plain_strerror(errorCode));
+            "Failed to set options on the MPG123 handle: %s",
+            mpg123_strerror(mHandle));
 
         mpg123_delete(mHandle);
         mHandle = nullptr;

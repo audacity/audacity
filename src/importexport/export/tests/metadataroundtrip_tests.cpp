@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include <gtest/gtest.h>
+#include <gmock/gmock.h>
 
 #include <QTemporaryDir>
 
@@ -26,6 +26,7 @@
 #include "au3-import-export/ExportUtils.h"
 #include "au3-import-export/Import.h"
 #include "au3-import-export/ImportPlugin.h"
+#include "au3-import-export/ImportProgressListener.h"
 #include "au3-tags/Tags.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "mod-ffmpeg/FFmpegDefines.h"
@@ -141,7 +142,7 @@ std::optional<std::vector<uint8_t> > id3TagStart(const std::string& path, Id3Loc
 }
 }
 
-class MetadataRoundTripTests : public ::testing::TestWithParam<MetadataFormat>
+class MetadataRoundTripFixture : public ::testing::Test
 {
 public:
     void SetUp() override
@@ -279,6 +280,80 @@ protected:
     QTemporaryDir m_dir;
     std::shared_ptr<au3::Au3ProjectAccessor> m_projectAccessor;
 };
+
+class MetadataRoundTripTests : public MetadataRoundTripFixture, public ::testing::WithParamInterface<MetadataFormat>
+{};
+
+class Mp3ImportTests : public MetadataRoundTripFixture
+{
+protected:
+    using ImportResult = ImportProgressListener::ImportResult;
+
+    void SetUp() override
+    {
+        ASSERT_NO_FATAL_FAILURE(MetadataRoundTripFixture::SetUp());
+        const Tags tags;
+        exportWithTags(MP3, tags, m_path);
+    }
+
+    void appendZeroPadding(size_t bytes)
+    {
+        std::ofstream file(m_path, std::ios::binary | std::ios::app);
+        const std::vector<char> padding(bytes, '\0');
+        ASSERT_TRUE(file.write(padding.data(), static_cast<std::streamsize>(padding.size())).flush());
+    }
+
+    void importMp3(ImportResult expected, TrackHolders& tracks)
+    {
+        // Exercise the native MP3 importer independently of optional fallback importers.
+        const auto& plugins = Importer::sImportPluginList();
+        const auto plugin = std::find_if(plugins.begin(), plugins.end(), [](auto* candidate) {
+            return candidate->GetPluginStringID() == wxT("libmpg123");
+        });
+        ASSERT_NE(plugin, plugins.end());
+        const auto file = (*plugin)->Open(wxString::FromUTF8(m_path), &project());
+        ASSERT_NE(file, nullptr);
+
+        ::testing::NiceMock<ImportProgressMock> progress;
+        EXPECT_CALL(progress, OnImportResult(expected)).Times(1);
+        Tags tags;
+        std::optional<LibFileFormats::AcidizerTags> acidTags;
+        file->Import(progress, &WaveTrackFactory::Get(project()), tracks, &tags, acidTags);
+    }
+
+private:
+    class ImportProgressMock : public ImportProgressListener
+    {
+    public:
+        MOCK_METHOD(bool, OnImportFileOpened, (ImportFileHandle&), (override));
+        MOCK_METHOD(void, OnImportProgress, (double), (override));
+        MOCK_METHOD(void, OnImportResult, (ImportResult), (override));
+    };
+
+    static constexpr MetadataFormat MP3 { "MP3", "mp3", Id3Location::FileStart };
+    const std::string m_path = exportPath(MP3);
+};
+
+TEST_F(Mp3ImportTests, ImportsAudioWith13KiBOfTrailingZeroPadding)
+{
+    TrackHolders original;
+    ASSERT_NO_FATAL_FAILURE(importMp3(ImportResult::Success, original));
+    ASSERT_EQ(original.size(), 1u);
+
+    ASSERT_NO_FATAL_FAILURE(appendZeroPadding(13 * 1024));
+    TrackHolders padded;
+    ASSERT_NO_FATAL_FAILURE(importMp3(ImportResult::Success, padded));
+    ASSERT_EQ(padded.size(), 1u);
+    EXPECT_DOUBLE_EQ(padded.front()->GetEndTime(), original.front()->GetEndTime());
+}
+
+TEST_F(Mp3ImportTests, RejectsAudioWith20KiBOfTrailingZeroPadding)
+{
+    ASSERT_NO_FATAL_FAILURE(appendZeroPadding(20 * 1024));
+    TrackHolders tracks;
+    ASSERT_NO_FATAL_FAILURE(importMp3(ImportResult::Error, tracks));
+    EXPECT_TRUE(tracks.empty());
+}
 
 TEST_P(MetadataRoundTripTests, TagsSurviveExportAndImport)
 {
