@@ -35,6 +35,37 @@ const std::vector<CommandInfo> s_commandInfos = {
         InputSchema(),
         Decoration(),
         Availability::UI
+    },    CommandInfo{
+        EFFECTS_PLUGIN_MANAGER_PROCESSORS_COMMAND,
+        TranslatableString("command", "Plugin manager"),
+        TranslatableString("command_description", "Plugin manager, showing only effect processors"),
+        InputSchema(),
+        Decoration(),
+        Availability::UI
+    },
+    CommandInfo{
+        EFFECTS_PLUGIN_MANAGER_GENERATORS_COMMAND,
+        TranslatableString("command", "Plugin manager"),
+        TranslatableString("command_description", "Plugin manager, showing only generators"),
+        InputSchema(),
+        Decoration(),
+        Availability::UI
+    },
+    CommandInfo{
+        EFFECTS_PLUGIN_MANAGER_ANALYZERS_COMMAND,
+        TranslatableString("command", "Plugin manager"),
+        TranslatableString("command_description", "Plugin manager, showing only analyzers"),
+        InputSchema(),
+        Decoration(),
+        Availability::UI
+    },
+    CommandInfo{
+        EFFECTS_PLUGIN_MANAGER_TOOLS_COMMAND,
+        TranslatableString("command", "Plugin manager"),
+        TranslatableString("command_description", "Plugin manager, showing only tools"),
+        InputSchema(),
+        Decoration(),
+        Availability::UI
     },
     CommandInfo{
         EFFECTS_TOGGLE_VENDOR_UI_COMMAND,

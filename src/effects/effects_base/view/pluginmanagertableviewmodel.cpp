@@ -3,6 +3,7 @@
  */
 
  #include "pluginmanagertableviewmodel.h"
+#include <unordered_map>
 
  #include "internal/effectsutils.h"
  #include "pluginmanagertableviewverticalheader.h"
@@ -92,6 +93,19 @@ void PluginManagerTableViewModel::componentComplete()
     m_sortFilterProxy->toggleColumnSort(s_vendorColumnIndex);
     m_sortFilterProxy->toggleColumnSort(s_nameColumnIndex);
 
+    if (!m_initialCategory.isEmpty()) {
+        static const std::unordered_map<QString, EffectType> categories = {
+            { "analyzer", EffectType::Analyzer },
+            { "generator", EffectType::Generator },
+            { "processor", EffectType::Processor },
+            { "tool", EffectType::Tool },
+        };
+        const auto it = categories.find(m_initialCategory);
+        if (it != categories.end()) {
+            setEffectTypeSelectedIndex(static_cast<int>(it->second) + 1);
+        }
+    }
+
     knownPlugins()->pluginInfoListChanged().onNotify(this, [this] {
         EffectMetaList effects = effectsProvider()->effectMetaList();
         effects.erase(std::remove_if(effects.begin(), effects.end(), [](const EffectMeta& meta) {
@@ -107,6 +121,11 @@ void PluginManagerTableViewModel::componentComplete()
         }
         rebuildSourceTable(std::move(effects));
     });
+}
+
+void PluginManagerTableViewModel::setInitialCategory(const QString& category)
+{
+    m_initialCategory = category.toLower();
 }
 
 void PluginManagerTableViewModel::aboutToDestroy()
