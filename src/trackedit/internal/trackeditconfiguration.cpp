@@ -17,6 +17,7 @@ static const muse::Settings::Key CLOSE_GAP_BEHAVIOR(moduleName, "trackedit/close
 static const muse::Settings::Key PASTE_BEHAVIOR(moduleName, "trackedit/pasteBehavior");
 static const muse::Settings::Key PASTE_INSERT_BEHAVIOR(moduleName, "trackedit/pasteInsertBehavior");
 static const muse::Settings::Key DEFAULT_AUDIO_TRACK_NAME(moduleName, "GUI/TrackNames/DefaultTrackName");
+static const muse::Settings::Key DEFAULT_STRETCH_METHOD(moduleName, "trackedit/defaultStretchMethod");
 
 void TrackeditConfiguration::init()
 {
@@ -54,6 +55,30 @@ void TrackeditConfiguration::init()
     muse::settings()->valueChanged(DEFAULT_AUDIO_TRACK_NAME).onReceive(nullptr, [this](const muse::Val&) {
         m_defaultAudioTrackNameChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(DEFAULT_STRETCH_METHOD, muse::Val(ClipStretchMethod::ChangeSpeed));
+    muse::settings()->valueChanged(DEFAULT_STRETCH_METHOD).onReceive(nullptr, [this](const muse::Val&) {
+        m_defaultStretchMethodChanged.notify();
+    });
+}
+
+ClipStretchMethod TrackeditConfiguration::defaultStretchMethod() const
+{
+    return muse::settings()->value(DEFAULT_STRETCH_METHOD).toEnum<ClipStretchMethod>();
+}
+
+void TrackeditConfiguration::setDefaultStretchMethod(ClipStretchMethod value)
+{
+    if (defaultStretchMethod() == value) {
+        return;
+    }
+    muse::settings()->setSharedValue(DEFAULT_STRETCH_METHOD, muse::Val(value));
+    m_defaultStretchMethodChanged.notify();
+}
+
+muse::async::Notification TrackeditConfiguration::defaultStretchMethodChanged() const
+{
+    return m_defaultStretchMethodChanged;
 }
 
 std::string TrackeditConfiguration::defaultAudioTrackName() const

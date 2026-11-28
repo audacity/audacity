@@ -88,3 +88,11 @@ size_t ClipTimeAndPitchSource::NChannels() const
 {
     return mClip.NChannels();
 }
+
+sampleCount ClipTimeAndPitchSource::NumRemainingSamples() const
+{
+    const auto remaining = mPlaybackDirection == PlaybackDirection::forward
+                           ? mClip.GetVisibleSampleCount() - mLastReadSample
+                           : mLastReadSample;
+    return remaining < sampleCount { 0 } ? sampleCount { 0 } : remaining;
+}

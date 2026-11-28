@@ -29,6 +29,9 @@ public:
 
     size_t NChannels() const;
 
+    //! How many samples are left to pull before the clip runs out
+    sampleCount NumRemainingSamples() const;
+
 private:
     const ClipInterface& mClip;
     sampleCount mLastReadSample = 0;

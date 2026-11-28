@@ -42,6 +42,7 @@ public:
     virtual bool changeClipFadeInType(const ClipKey& clipKey, FadeType type) = 0;
     virtual bool changeClipFadeOutType(const ClipKey& clipKey, FadeType type) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
+    virtual bool changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
 
     virtual ITrackDataPtr cutClip(const ClipKey& clipKey) = 0;

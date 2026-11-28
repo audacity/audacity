@@ -342,6 +342,33 @@ bool Au3ClipsInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, boo
     return true;
 }
 
+bool Au3ClipsInteraction::changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method)
+{
+    WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
+    IF_ASSERT_FAILED(waveTrack) {
+        return false;
+    }
+
+    std::shared_ptr<WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
+    IF_ASSERT_FAILED(clip) {
+        return false;
+    }
+
+    const StretchMethod au3Method = DomConverter::stretchMethod(method);
+    if (clip->GetStretchMethod() == au3Method) {
+        return false;
+    }
+
+    clip->SetStretchMethod(au3Method);
+    LOGD() << "changed stretch method of clip: " << clipKey.itemId << ", track: " << clipKey.trackId
+           << ", method: " << static_cast<int>(method);
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+
+    return true;
+}
+
 bool Au3ClipsInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
     interactive()->showProgress(muse::trc("trackedit", "Rendering pitch and speed…"), m_progress);

@@ -53,6 +53,38 @@ void EditPreferencesModel::init()
     workspacesManager()->workspacesListChanged().onNotify(this, [this]() {
         asymmetricStereoHeightWorkspacesCleanUp();
     });
+
+    trackeditConfiguration()->defaultStretchMethodChanged().onNotify(this, [this] {
+        emit defaultStretchMethodChanged();
+    });
+}
+
+int EditPreferencesModel::defaultStretchMethod() const
+{
+    return static_cast<int>(trackeditConfiguration()->defaultStretchMethod());
+}
+
+void EditPreferencesModel::setDefaultStretchMethod(int method)
+{
+    if (defaultStretchMethod() == method) {
+        return;
+    }
+    trackeditConfiguration()->setDefaultStretchMethod(static_cast<trackedit::ClipStretchMethod>(method));
+}
+
+QVariantList EditPreferencesModel::stretchMethodList() const
+{
+    using Method = trackedit::ClipStretchMethod;
+    const auto entry = [](Method method, const QString& title) {
+        return QVariantMap { { "title", title }, { "value", static_cast<int>(method) } };
+    };
+    return QVariantList {
+        entry(Method::ChangeSpeed, muse::qtrc("appshell/preferences", "Change speed")),
+        entry(Method::StaffPad, muse::qtrc("appshell/preferences", "StaffPad")),
+        entry(Method::SoundTouch, muse::qtrc("appshell/preferences", "SoundTouch")),
+        entry(Method::Sbsms, muse::qtrc("appshell/preferences", "SBSMS")),
+        entry(Method::Paulstretch, muse::qtrc("appshell/preferences", "Paulstretch")),
+    };
 }
 
 bool EditPreferencesModel::askBeforeConvertingToMonoOrStereo() const

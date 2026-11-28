@@ -43,6 +43,8 @@ private:
     int mCentShift;
     std::atomic<bool> mUpdateFormantPreservation = false;
     std::atomic<bool> mUpdateCentShift = false;
+    std::atomic<bool> mRestartStream = false;
     Observer::Subscription mOnSemitoneShiftChangeSubscription;
     Observer::Subscription mOnFormantPreservationChangeSubscription;
+    Observer::Subscription mOnStretchMethodChangeSubscription;
 };

@@ -140,5 +140,27 @@ PreferencesPage {
                 }
             }
         }
+
+        SeparatorLine {}
+
+        StretchMethodSection {
+            id: stretchMethodSection
+
+            stretchMethodModel: editPreferencesModel.stretchMethodList
+            stretchMethod: editPreferencesModel.defaultStretchMethod
+
+            navigation.section: root.navigationSection
+            navigation.order: zoomToggleSection.navigationOrderEnd + 1
+
+            onStretchMethodChangeRequested: function (method) {
+                editPreferencesModel.setDefaultStretchMethod(method)
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
     }
 }

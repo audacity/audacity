@@ -111,6 +111,11 @@ bool TrackeditInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, bo
     return withPlaybackStop(&ITrackeditInteraction::changeClipOptimizeForVoice, clipKey, optimize);
 }
 
+bool TrackeditInteraction::changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method)
+{
+    return withPlaybackStop(&ITrackeditInteraction::changeClipStretchMethod, clipKey, method);
+}
+
 bool TrackeditInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
     return withPlaybackStop(&ITrackeditInteraction::renderClipPitchAndSpeed, clipKey);

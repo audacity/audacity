@@ -18,6 +18,7 @@ using namespace muse::uicomponents;
 using namespace muse::rcommand;
 
 static const QString COLOR_MENU_ID("colorMenu");
+static const QString STRETCH_METHOD_MENU_ID("stretchMethodMenu");
 
 void ClipContextMenuModel::load()
 {
@@ -74,6 +75,7 @@ void ClipContextMenuModel::load()
         makeMenuItem(trackedit::TRACKEDIT_DISJOIN_COMMAND, muse::TranslatableString("clip", "Split at silences")),
         makeSeparator(),
         enableStretchItem,
+        makeMenu(muse::TranslatableString("clip", "Stretching method"), makeStretchMethodItems(), STRETCH_METHOD_MENU_ID),
         makeMenuItem(trackedit::TRACKEDIT_CLIP_PITCH_SPEED_OPEN_COMMAND),
         resetPitchSpeedItem,
         renderPitchSpeedItem,
@@ -110,6 +112,7 @@ void ClipContextMenuModel::load()
 
     setItems(items);
 
+    updateStretchMethodCheckedState();
     updateColorCheckedState();
     updateColorMenu();
 }
@@ -148,6 +151,53 @@ void ClipContextMenuModel::onCommandStateChanged(const Command& command, const C
 
     if (command == trackedit::TRACKEDIT_CLIP_CHANGE_COLOR_AUTO_COMMAND || command == trackedit::TRACKEDIT_CLIP_CHANGE_COLOR_COMMAND) {
         updateColorCheckedState();
+    }
+
+    if (command == trackedit::TRACKEDIT_CLIP_CHANGE_STRETCH_METHOD_COMMAND) {
+        updateStretchMethodCheckedState();
+    }
+}
+
+MenuItemList ClipContextMenuModel::makeStretchMethodItems()
+{
+    const auto makeItem = [this](trackedit::ClipStretchMethod method, const muse::TranslatableString& title) {
+        Params params = clipParams();
+        params[trackedit::TRACKEDIT_STRETCH_METHOD_PARAM] = Val(static_cast<int>(method));
+        const CommandQuery query = make_query(trackedit::TRACKEDIT_CLIP_CHANGE_STRETCH_METHOD_COMMAND, params);
+        MenuItem* item = makeMenuItem(query, title);
+        item->setCommandQuery(query);
+        return item;
+    };
+
+    using Method = trackedit::ClipStretchMethod;
+    return MenuItemList {
+        makeItem(Method::ChangeSpeed, muse::TranslatableString("clip", "Change speed")),
+        makeSeparator(),
+        makeItem(Method::StaffPad, muse::TranslatableString("clip", "StaffPad")),
+        makeItem(Method::SoundTouch, muse::TranslatableString("clip", "SoundTouch")),
+        makeItem(Method::Sbsms, muse::TranslatableString("clip", "SBSMS")),
+        makeItem(Method::Paulstretch, muse::TranslatableString("clip", "Paulstretch")),
+    };
+}
+
+void ClipContextMenuModel::updateStretchMethodCheckedState()
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+    const auto clip = project->trackeditProject()->clip(m_clipKey.key);
+    if (!clip.isValid()) {
+        return;
+    }
+
+    for (MenuItem* item : findMenu(STRETCH_METHOD_MENU_ID).subitems()) {
+        if (!item || !item->isValid()) {
+            continue;
+        }
+        const CommandQuery query = item->commandQuery();
+        item->setChecked(query.contains(trackedit::TRACKEDIT_STRETCH_METHOD_PARAM)
+                         && query.param(trackedit::TRACKEDIT_STRETCH_METHOD_PARAM).toInt() == static_cast<int>(clip.stretchMethod));
     }
 }
 

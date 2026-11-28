@@ -15,6 +15,7 @@
 #include "au3-utility/CRTPBase.h"
 #include "au3-utility/Observer.h"
 #include "au3-math/SampleCount.h"
+#include "au3-time-and-pitch/StretchMethod.h"
 
 #include <string_view>
 
@@ -118,6 +119,11 @@ public:
     [[nodiscard]] virtual Observer::Subscription
     SubscribeToPitchAndSpeedPresetChange(
         std::function<void(PitchAndSpeedPreset)> cb) const = 0;
+
+    virtual StretchMethod GetStretchMethod() const = 0;
+
+    [[nodiscard]] virtual Observer::Subscription
+    SubscribeToStretchMethodChange(std::function<void(StretchMethod)> cb) const = 0;
 
     [[nodiscard]] virtual Observer::Subscription SubscribeToStretchRatioChange(
         std::function<void(double oldRatio, double newRatio)> cb) const = 0;

@@ -168,6 +168,18 @@ void TrackeditActionsController::init()
     cd->onRequest(this, TRACKEDIT_STRETCH_CLIP_TO_MATCH_TEMPO_COMMAND, applyToClip([this](const ClipKey& clipKey) {
         return trackeditInteraction()->toggleStretchToMatchProjectTempo(clipKey);
     }));
+    cd->onRequest(this, TRACKEDIT_CLIP_CHANGE_STRETCH_METHOD_COMMAND, [this](const Params& params) {
+        if (!params.contains(TRACKEDIT_STRETCH_METHOD_PARAM)) {
+            return make_ret(Ret::Code::BadArgs);
+        }
+        const int method = params.at(TRACKEDIT_STRETCH_METHOD_PARAM).toInt();
+        if (method < static_cast<int>(ClipStretchMethod::StaffPad) || method > static_cast<int>(ClipStretchMethod::ChangeSpeed)) {
+            return make_ret(Ret::Code::BadArgs);
+        }
+        return applyToClip([this, method](const ClipKey& clipKey) {
+            return trackeditInteraction()->changeClipStretchMethod(clipKey, static_cast<ClipStretchMethod>(method));
+        })(params);
+    });
 
     cd->onRequest(this, TRACKEDIT_TRACK_SPLIT_AT_COMMAND, [this](const Params& params) {
         if (!params.contains(TRACKEDIT_TRACK_IDS_PARAM) || !params.contains(TRACKEDIT_PIVOTS_PARAM)) {

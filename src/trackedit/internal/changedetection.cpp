@@ -105,6 +105,7 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
                && first.stereo == second.stereo
                && first.pitch == second.pitch
                && first.speed == second.speed
+               && first.stretchMethod == second.stretchMethod
                && first.title == second.title;
         //! For now these do not result in "autosave",
         //  and so should not be criteria under undo/redo refresh.

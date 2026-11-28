@@ -113,6 +113,30 @@ static_assert(fadeType(ClipFades::defaultFadeType) == au::trackedit::defaultFade
               "The trackedit default fade type must mirror the au3 one");
 }
 
+au::trackedit::ClipStretchMethod DomConverter::stretchMethod(StretchMethod method)
+{
+    switch (method) {
+    case StretchMethod::SoundTouch: return trackedit::ClipStretchMethod::SoundTouch;
+    case StretchMethod::Sbsms: return trackedit::ClipStretchMethod::Sbsms;
+    case StretchMethod::Paulstretch: return trackedit::ClipStretchMethod::Paulstretch;
+    case StretchMethod::Varispeed: return trackedit::ClipStretchMethod::ChangeSpeed;
+    case StretchMethod::StaffPad: break;
+    }
+    return trackedit::ClipStretchMethod::StaffPad;
+}
+
+StretchMethod DomConverter::stretchMethod(trackedit::ClipStretchMethod method)
+{
+    switch (method) {
+    case trackedit::ClipStretchMethod::SoundTouch: return StretchMethod::SoundTouch;
+    case trackedit::ClipStretchMethod::Sbsms: return StretchMethod::Sbsms;
+    case trackedit::ClipStretchMethod::Paulstretch: return StretchMethod::Paulstretch;
+    case trackedit::ClipStretchMethod::ChangeSpeed: return StretchMethod::Varispeed;
+    case trackedit::ClipStretchMethod::StaffPad: break;
+    }
+    return StretchMethod::StaffPad;
+}
+
 au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3WaveClip* au3clip)
 {
     au::trackedit::Clip clip;
@@ -132,6 +156,7 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.pitch = au3clip->GetCentShift();
     clip.speed = au3clip->GetStretchRatio();
     clip.optimizeForVoice = au3clip->GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
+    clip.stretchMethod = stretchMethod(au3clip->GetStretchMethod());
 
     clip.stretchToMatchTempo = au3clip->GetStretchToMatchProjectTempo();
 

@@ -207,6 +207,16 @@ struct PitchAndSpeedPresetChange
     const PitchAndSpeedPreset newValue;
 };
 
+struct StretchMethodChange
+{
+    explicit StretchMethodChange(StretchMethod newValue)
+        : newValue(newValue)
+    {
+    }
+
+    const StretchMethod newValue;
+};
+
 struct StretchRatioChange
 {
     explicit StretchRatioChange(double oldValue, double newValue)
@@ -224,7 +234,8 @@ struct WaveClipDtorCalled
 
 class WAVE_TRACK_API WaveClip final : public ClipInterface, public WideChannelGroupInterval, public XMLTagHandler, public ClientData::Site<
         WaveClip, WaveClipListener, ClientData::DeepCopying>, public Observer::Publisher<CentShiftChange>,
-    public Observer::Publisher<PitchAndSpeedPresetChange>, public Observer::Publisher<StretchRatioChange>,
+    public Observer::Publisher<PitchAndSpeedPresetChange>, public Observer::Publisher<StretchMethodChange>,
+    public Observer::Publisher<StretchRatioChange>,
     public Observer::Publisher<WaveClipDtorCalled>
 {
 private:
@@ -444,6 +455,18 @@ public:
     [[nodiscard]] virtual Observer::Subscription
     SubscribeToPitchAndSpeedPresetChange(
         std::function<void(PitchAndSpeedPreset)> cb) const override;
+
+    StretchMethod GetStretchMethod() const override;
+    void SetStretchMethod(StretchMethod method);
+    [[nodiscard]] Observer::Subscription
+    SubscribeToStretchMethodChange(std::function<void(StretchMethod)> cb) const override;
+
+    //! The method new clips get; copies keep their original's.
+    //! The application sets it from its preferences.
+    //! @{
+    static StretchMethod GetDefaultStretchMethod();
+    static void SetDefaultStretchMethod(StretchMethod method);
+    //! @}
 
     [[nodiscard]] Observer::Subscription SubscribeToStretchRatioChange(
         std::function<void(double oldRatio, double newRatio)> cb) const override;
@@ -1005,6 +1028,7 @@ private:
     //! @}
 
     PitchAndSpeedPreset mPitchAndSpeedPreset { PitchAndSpeedPreset::Default };
+    StretchMethod mStretchMethod { StretchMethod::StaffPad };
     int mCentShift { 0 };
 
     double mClipStretchRatio = 1.;

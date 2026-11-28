@@ -49,7 +49,8 @@ from the project that will own the track.
 #include "au3-clip-processing/ClipTimeAndPitchSource.h"
 #include "au3-mixer/Envelope.h"
 #include "Sequence.h"
-#include "au3-time-and-pitch/StaffPadTimeAndPitch.h"
+#include "au3-time-and-pitch/AudioContainer.h"
+#include "au3-time-and-pitch/TimeAndPitchFactory.h"
 
 #include "au3-clip-processing/TempoChange.h"
 #include "au3-project/Project.h"
@@ -127,8 +128,9 @@ WaveTrack::IntervalHolder GetRenderedCopy(
     params.pitchRatio = std::pow(2., interval.GetCentShift() / 1200.);
     params.preserveFormants
         =interval.GetPitchAndSpeedPreset() == PitchAndSpeedPreset::OptimizeForVoice;
-    StaffPadTimeAndPitch stretcher { interval.GetRate(), numChannels,
-                                     stretcherSource, std::move(params) };
+    const auto stretcher = CreateTimeAndPitchStretcher(
+        interval.GetStretchMethod(), interval.GetRate(), numChannels, stretcherSource, params,
+        stretcherSource.NumRemainingSamples().as_long_long());
 
     // Post-rendering sample counts, i.e., stretched units
     const auto totalNumOutSamples
@@ -142,7 +144,7 @@ WaveTrack::IntervalHolder GetRenderedCopy(
     {
         const auto numSamplesToGet
             =limitSampleBufferSize(blockSize, totalNumOutSamples - numOutSamples);
-        stretcher.GetSamples(container.Get(), numSamplesToGet);
+        stretcher->GetSamples(container.Get(), numSamplesToGet);
         constSamplePtr data[2];
         data[0] = reinterpret_cast<constSamplePtr>(container.Get()[0]);
         if (interval.NChannels() == 2) {

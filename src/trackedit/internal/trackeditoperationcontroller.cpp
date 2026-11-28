@@ -207,6 +207,16 @@ bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& cli
     return clipsInteraction()->changeClipOptimizeForVoice(clipKey, optimize);
 }
 
+bool TrackeditOperationController::changeClipStretchMethod(const ClipKey& clipKey, ClipStretchMethod method)
+{
+    if (clipsInteraction()->changeClipStretchMethod(clipKey, method)) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Changed stretching method"),
+                                           muse::trc("trackedit", "Changed stretching method"));
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::resetClipPitchAndSpeed(const ClipKey& clipKey)
 {
     const bool pitchOk = clipsInteraction()->resetClipPitch(clipKey);

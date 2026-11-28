@@ -99,6 +99,7 @@ qt_add_qml_module(preferences_qml
         internal/SpectrogramColorsSection.qml
         internal/SpectrogramScaleSection.qml
         internal/SpectrogramSelectionSection.qml
+        internal/StretchMethodSection.qml
         internal/TemporaryFilesSection.qml
         internal/TrackDisplaySection.qml
         internal/ThemeAdditionalOptionsSection.qml

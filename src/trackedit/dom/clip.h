@@ -42,6 +42,7 @@ struct Clip {
     int pitch = 0;
     double speed = 0.0;
     bool optimizeForVoice = false;
+    ClipStretchMethod stretchMethod = ClipStretchMethod::StaffPad;
 
     bool stretchToMatchTempo = false;
 
