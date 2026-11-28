@@ -7,6 +7,7 @@ set(CI_TOOLS ${CMAKE_CURRENT_LIST_DIR})
 set(EVENT "" CACHE STRING "Action event")
 set(BUILD_MODE "" CACHE STRING "Build mode")
 set(ARTIFACT_INFO "" CACHE STRING "Artifact info")
+set(BUILD_NUMBER "" CACHE STRING "Build number (generated when empty)")
 
 # Make build mode env
 execute_process(
@@ -15,7 +16,7 @@ execute_process(
 
 # Make build number env
 execute_process(
-    COMMAND cmake -P ${CI_TOOLS}/make_build_number_env.cmake
+    COMMAND cmake -DBUILD_NUMBER=${BUILD_NUMBER} -P ${CI_TOOLS}/make_build_number_env.cmake
 )
 
 # Make revision env

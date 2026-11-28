@@ -26,3 +26,4 @@ set(MUSE_APP_IS_PRERELEASE ON)
 # MUSE_APP_RELEASE_CHANNEL is assigned per-mode in SetupConfigure.cmake based on AU4_BUILD_MODE.
 
 message(STATUS "MUSE_APP_VERSION ${MUSE_APP_VERSION}")
+message(STATUS "MUSE_APP_VERSION_LABEL ${MUSE_APP_VERSION_LABEL}") # the release scripts read both lines
